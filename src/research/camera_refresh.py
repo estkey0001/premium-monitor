@@ -93,6 +93,12 @@ def _to_price(v):
     return int(t) if re.fullmatch(r"\d{4,9}", t) else None
 
 
+def _foreign_ok(r: dict) -> bool:
+    cur, po = str(r.get("currency") or "").upper(), r.get("price_original")
+    return (cur not in ("", "JPY") and len(cur) == 3 and isinstance(po, (int, float)) and not isinstance(po, bool) and po > 0
+            and str(r.get("fx_status") or "") != "CONFIRMED")
+
+
 def clean_records(recs: list) -> list:
     """読めた行（result が FOUND か無し・価格が正の整数）だけ残す。公式の行にも同じ検査をする。入力の carried は受け付けない。"""
     out = []
@@ -104,6 +110,8 @@ def clean_records(recs: list) -> list:
                     pr = _to_price(r.get("price_jpy"))
                     if _is_price(pr):
                         rows.append({**r, "price_jpy": pr})
+                    elif _foreign_ok(r):                       # 外貨の行（為替未確認で円換算なし）。原通貨の価格として残し、利益には使わない
+                        rows.append({**r, "price_jpy": None})
             for r in rows:
                 r.pop("carried", None)
                 r.pop("from_pipeline", None)
@@ -194,7 +202,10 @@ def _row_of(o: dict) -> dict:
             "condition": o["condition"], "url": o.get("url"), "checked_at": o.get("checked_at"),
             "source_updated_at": o.get("source_updated_at"), "is_product_page": True, "stock": "UNKNOWN",
             "purchasable_now": None, "shipping_jpy": o.get("shipping_jpy"),
-            "shipping_url": o.get("shipping_url"), "result": "FOUND", "carried": True, "sold_at": o.get("sold_at")}
+            "shipping_url": o.get("shipping_url"), "result": "FOUND", "carried": True, "sold_at": o.get("sold_at"),
+            "currency": o.get("currency"), "price_original": o.get("price_original"), "fx_status": o.get("fx_status"), "fx_rate": o.get("fx_rate"),
+            "fx_checked_at": o.get("fx_checked_at"), "region": o.get("region"), "shipping_original": o.get("shipping_original"),
+            "shipping_currency": o.get("shipping_currency"), "import_duty_status": o.get("import_duty_status")}
 
 
 _LOT_SHOP = ("じゃんぱら", "セカンドストリート", "RICOH", "リコー", "GR SPACE", "FUJIFILM", "富士フイルム", "ソニー", "SONY", "キヤノン", "CANON", "ニコン", "NIKON",
@@ -364,7 +375,7 @@ def carry_over(recs: list, old_market: Optional[dict], now: datetime) -> tuple[l
 def refresh(src_dir: Path, date: str, *, now: datetime, old_market: Optional[dict] = None, cfg: Optional[dict] = None,
             obs_doc: Optional[dict] = None, names: Optional[dict] = None, official_shipping_fn=None, fixed_cost_fn=None,
             extra_records: Optional[list] = None, adapter_errors: Optional[dict] = None, env=None, market_cfg: Optional[dict] = None,
-            adapters_ran: Optional[set] = None) -> dict:
+            adapters_ran: Optional[set] = None, adapter_details: Optional[dict] = None) -> dict:
     cfg = cfg or load_config()
     names = names if names is not None else registered_cameras()
     recs_raw, srcs, disc, lots = load_research(src_dir)
@@ -388,13 +399,13 @@ def refresh(src_dir: Path, date: str, *, now: datetime, old_market: Optional[dic
     market = cr.build_market(recs, now, cfg, registered_names=set(names), official_shipping_fn=official_shipping_fn,
                              fixed_cost_fn=fixed_cost_fn)
     quality = cr.quality_checks(market, now, date, cfg, fixed_cost=int(fixed_cost_fn()))
-    secondary = sm.market_report(market, market_cfg, env, fees=cfg.get("fees"), adapter_errors=adapter_errors, adapters_ran=adapters_ran)
+    secondary = sm.market_report(market, market_cfg, env, fees=cfg.get("fees"), adapter_errors=adapter_errors, adapters_ran=adapters_ran, adapter_details=adapter_details)
     quality["blocked_treated_as_empty"] = sm.blocked_treated_as_empty(secondary)
     events = cr.diff_events(old_market, market)
     report = _report(market, srcs, disc, lots, carried, old_market, events)
     report["secondary_markets"] = {"attempted": [m["market"] for m in secondary],
                                    "succeeded": [m["market"] for m in secondary if m["status"] in (sm.AVAILABLE, sm.PARTIAL)],
-                                   "blocked": [m["market"] for m in secondary if m["status"] in (sm.BLOCKED, sm.FAILED, sm.NOT_SUPPORTED)],
+                                   "blocked": [m["market"] for m in secondary if m["status"] in sm._NO_DATA],
                                    "api_errors": {m["market"]: m["api_error"] for m in secondary if m.get("api_error")}}
     return {"secondary_markets": secondary, "retail_apis": sm.retail_api_states(market_cfg, env), "market": market, "quality": quality, "events": events, "report": report, "sources": srcs, "discovered": disc,
             "lotteries": lots, "carried": carried, "date": date, "now": now,
@@ -619,7 +630,8 @@ def _public_product(p: dict) -> Optional[dict]:
     return {"product": p["product"], "product_id": p.get("product_id"), "registered": True, "observations": obs,
             "secondary": {"listing": {k: {**v, "low_market": v.get("low_market") if v.get("low_market") in _MARKET_LABELS else "不明な市場",
                                                          "high_market": v.get("high_market") if v.get("high_market") in _MARKET_LABELS else "不明な市場",
-                                                         "low_source": v.get("low_market") if v.get("low_market") in _MARKET_LABELS and v.get("low_market") != "不明な市場" else "店頭の中古販売"} for k, v in (p["secondary"].get("listing") or {}).items()}, "sold": sold},
+                                                         "low_source": v.get("low_market") if v.get("low_market") in _MARKET_LABELS and v.get("low_market") != "不明な市場" else "店頭の中古販売"} for k, v in (p["secondary"].get("listing") or {}).items()}, "sold": sold,
+                          "listing_foreign": {k: {**v, "market": v["market"] if v["market"] in _MARKET_LABELS else "不明な市場"} for k, v in (p["secondary"].get("listing_foreign") or {}).items()}},
             "routes": routes, "best_route": p.get("best_route")}
 
 

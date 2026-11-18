@@ -209,40 +209,15 @@ def canary_report(pid: str, query: str, records: list, rejected: dict, stats: di
 
 
 def _http_get(url: str, headers: dict) -> dict:
-    """api_runtime.retry_with_backoff の形の結果（例外の文言から秘密の値を伏せる）。"""
-    from src.collectors.api.ebay_insights import redact
-    try:
-        from src.collectors.polite import HONEST_UA
-        req = urllib.request.Request(url, headers={**headers, "User-Agent": HONEST_UA})
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return {"status": r.getcode(), "data": json.loads(r.read().decode("utf-8")), "retry_after": None,
-                    "exc": None}
-    except urllib.error.HTTPError as e:
-        # Retry-After は秒数・HTTP-date のどちらも api_runtime.parse_retry_after が読む
-        ra = e.headers.get("Retry-After") if e.headers else None
-        return {"status": e.code, "data": None, "retry_after": ra, "exc": RuntimeError(redact(str(e)))}
-    except Exception as e:  # noqa: BLE001
-        return {"status": None, "data": None, "retry_after": None, "exc": RuntimeError(redact(str(e)))}
+    """api_runtime.retry_with_backoff の形の結果。実体は ebay_insights.http_get（二次流通のアダプターと共有）。"""
+    from src.collectors.api import ebay_insights as ei
+    return ei.http_get(url, headers)
 
 
 def _fetch_token() -> tuple[str | None, str]:
-    """(token, 状態)。token は戻り値だけで扱い、保存・表示しない。"""
+    """(token, 状態)。token は戻り値だけで扱い、保存・表示しない。実体は ebay_insights.fetch_token。"""
     from src.collectors.api import ebay_insights as ei
-    req = ei.token_request()
-    if req is None:
-        return None, ei.ST_PENDING
-    url, headers, body = req
-    try:
-        from src.collectors.polite import HONEST_UA
-        r = urllib.request.Request(url, data=body, headers={**headers, "User-Agent": HONEST_UA}, method="POST")
-        with urllib.request.urlopen(r, timeout=30) as resp:
-            tok = json.loads(resp.read().decode("utf-8")).get("access_token")
-            return (tok, ei.ST_OK) if tok else (None, ei.ST_ERROR)
-    except urllib.error.HTTPError as e:
-        # 401: 資格情報が違う。400（invalid_scope）・403: 許可（承認）が無い。どちらも再試行しない
-        return None, ei.status_from_error(f"permanent_{e.code}") if e.code in (400, 401, 403) else ei.ST_ERROR
-    except Exception:  # noqa: BLE001
-        return None, ei.ST_ERROR
+    return ei.fetch_token()
 
 
 def _status_body(now: datetime, status: str, *, mode: str, stage: str, targets: list, **kw) -> dict:

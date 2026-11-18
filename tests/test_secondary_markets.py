@@ -22,6 +22,7 @@ def _no_adapters():
     sm.clear_adapters()
     yield
     sm.clear_adapters()
+    sm.register_default_adapters()          # 他のテストへ標準のアダプター（eBay）を戻す
 
 
 def _fees(**over):
@@ -72,7 +73,8 @@ def test_default_markets_are_blocked_not_empty():
     by = {m["market"]: m for m in rep}
     assert [m["market"] for m in rep] == ["mercari", "yahoo_auction", "yahoo_flea", "rakuma", "ebay"]       # 優先順位
     assert by["yahoo_auction"]["status"] == sm.NOT_SUPPORTED
-    assert all(m["status"] in (sm.BLOCKED, sm.NOT_SUPPORTED) for m in rep)
+    assert all(m["status"] in (sm.BLOCKED, sm.NOT_SUPPORTED, sm.NOT_CONFIGURED) for m in rep)
+    assert by["ebay"]["status"] == sm.NOT_CONFIGURED                                                        # 資格情報が未登録
     assert all(m["listing_rows"] is None and m["sold_rows"] is None for m in rep)                            # 0 件ではなく未取得
     assert sm.blocked_treated_as_empty(rep) == 0
     assert by["ebay"]["credentials"] == sm.NOT_CONFIGURED and by["mercari"]["credentials"] == sm.NOT_REQUIRED
@@ -87,6 +89,7 @@ def test_blocked_with_zero_rows_would_be_flagged():
 
 def test_ebay_credentials_ladder_and_secret_never_printed():
     env = {"EBAY_CLIENT_ID": "id-" + SECRET, "EBAY_CLIENT_SECRET": SECRET}
+    assert _st("ebay", {})["status"] == sm.NOT_CONFIGURED
     s1 = _st("ebay", env)
     assert s1["status"] == sm.BLOCKED and s1["reason"] == "official_api_not_enabled" and s1["credentials"] == sm.CONFIGURED
     env["ENABLE_EBAY_API"] = "true"
@@ -97,6 +100,8 @@ def test_ebay_credentials_ladder_and_secret_never_printed():
     s3 = _st("ebay", env, adapters_ran={"ebay"})
     assert s3["status"] == sm.PARTIAL and s3["listing_access"] == sm.AVAILABLE and s3["sold_access"] == sm.BLOCKED     # 成約は審査制で未承認
     env["EBAY_INSIGHTS_APPROVED"] = "true"
+    assert _st("ebay", env, adapters_ran={"ebay"})["status"] == sm.PARTIAL                    # ライセンス未確認の間は成約を取らない
+    env["EBAY_SOLD_LICENSE_CONFIRMED"] = "true"
     assert _st("ebay", env, adapters_ran={"ebay"})["status"] == sm.AVAILABLE
     assert SECRET not in json.dumps([s1, s2, s3], ensure_ascii=False)
 
@@ -220,10 +225,10 @@ def test_sold_summary_checked_at_is_the_oldest_row():
 
 
 def test_adapter_error_stays_visible_even_with_research_rows():
-    m_ = build(rec(official=off(200000), buyback=_two_shops(), listing=[{**lst(150000, market="eBay"), "url": "https://www.ebay.com/itm/123456789"}]))
+    m_ = build(rec(official=off(200000), buyback=_two_shops(), listing=[{**lst(150000, market="メルカリ"), "url": "https://jp.mercari.com/item/m12345678901"}]))
     env = {"EBAY_CLIENT_ID": "a", "EBAY_CLIENT_SECRET": "b", "ENABLE_EBAY_API": "true"}
-    rep = sm.market_report(m_, MCFG, env, fees=CFG["fees"], adapter_errors={"ebay": "adapter_error:RuntimeError"})
-    e = next(m for m in rep if m["market"] == "ebay")
+    rep = sm.market_report(m_, MCFG, env, fees=CFG["fees"], adapter_errors={"mercari": "adapter_error:RuntimeError"})
+    e = next(m for m in rep if m["market"] == "mercari")
     assert e["api_error"] == "adapter_error:RuntimeError" and e["listing_rows"] == 1
 
 

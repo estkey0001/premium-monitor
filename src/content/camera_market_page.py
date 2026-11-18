@@ -40,12 +40,14 @@ REASON = {
     "host_not_allowed": "価格の根拠にできないサイト", "aggregator_source": "集約サイト由来（採用しない）", "not_item_page": "商品ページでない（検索・一覧）",
     "title_condition_mismatch": "商品名の状態が申告と違う", "junk_or_defective": "ジャンク・訳あり・付属品など", "model_continues": "別の機種の表記",
     "price_implausible": "価格が不自然（誤取得の疑い）", "roi_implausible": "ROI が不自然（誤取得の疑い）", "stock_check_old": "在庫の確認が古い",
+    "cross_border_cost_unknown": "海外の出品（送料・関税が不明のため仕入れに使わない）", "fx_unconfirmed": "為替が未確認（円換算しない）", "fx_mismatch": "円換算が為替と合わない", "currency_unspecified": "通貨・原価格の記載がない（海外の行は必須）",
     "duplicate_sold": "同じ成約の重複", "no_item_url": "個別の成約ページの URL がない",
     "price_kind_OPEN_PRICE": "オープン価格で金額が確認できない", "price_kind_NOT_FOUND": "公式の価格を確認できない",
 }
 
 
-MKT_STATUS = {"AVAILABLE": "取得できた", "PARTIAL": "一部取得", "BLOCKED": "取得できない（未取得）", "FAILED": "取得に失敗（未取得）", "NOT_SUPPORTED": "提供されていない（未取得）"}
+MKT_STATUS = {"AVAILABLE": "取得できた", "PARTIAL": "一部取得", "BLOCKED": "取得できない（未取得）", "FAILED": "取得に失敗（未取得）", "NOT_SUPPORTED": "提供されていない（未取得）",
+              "NOT_CONFIGURED": "未設定（NOT_CONFIGURED・未取得）", "PENDING_APPROVAL": "承認待ち（未取得）"}
 MKT_REASON = {
     "no_official_api_search_scrape_prohibited": "公式 API が無く、検索結果の取得は行わない方針のため",
     "official_api_discontinued": "公式 API が 2020 年に終了しているため",
@@ -56,6 +58,8 @@ MKT_REASON = {
     "rows_from_research_file": "調査員が根拠 URL つきで読んだ行だけ",
     "adapter_not_run": "公式 API のアダプターを今回は実行していないため",
     "api_listing_only": "公式 API で出品中の価格だけ（成約は審査制で未承認）", "api_ok": "公式 API で取得",
+    "api_dry_run": "API_DRY_RUN が有効のため通信していない", "ebay_insights_not_approved": "成約（Marketplace Insights）が未承認のため",
+    "sold_license_unconfirmed": "成約データの保存ライセンスが未確認のため", "listing_failed_sold_ok": "出品の取得に失敗（成約だけ取得）",
 }
 FEE_STATUS = {"CONFIRMED": "確認済み（一次情報の本文）", "UNVERIFIED": "未検証（本文を読めていない）", "UNKNOWN": "不明", "NOT_APPLICABLE": "なし（買取）"}
 CRED = {"NOT_CONFIGURED": "未登録", "CONFIGURED": "登録済み", "NOT_REQUIRED": "不要（API なし）"}
@@ -170,8 +174,11 @@ def _detail(p: dict, r: dict) -> str:
 
 def _secondary(p: dict) -> str:
     sec = p.get("secondary") or {}
-    if not sec.get("listing") and not sec.get("sold"):
+    if not sec.get("listing") and not sec.get("sold") and not sec.get("listing_foreign"):
         return ""
+    lf = "".join(f'<tr><th scope="row">{_e(v["market"])}（{_e(COND.get(v["family"], v["family"]))}）</th><td class="num">{_e(v["currency"])} {v["low"]:,.2f}</td>'
+                 f'<td class="num">{_e(v["currency"])} {v["high"]:,.2f}</td><td class="num">{v["n"]}</td><td>{"円換算あり" if v.get("fx_status") == "CONFIRMED" else "為替が未確認のため円換算なし"}</td></tr>'
+                 for v in (sec.get("listing_foreign") or {}).values())
     ls = "".join(f'<tr><th scope="row">{_e(COND.get(k, k))}</th><td class="num">{_yen(v["low"])}</td><td class="num">{_yen(v["high"])}</td>'
                  f'<td class="num">{v["n"]}</td><td>{_e(v["low_source"])}</td></tr>' for k, v in (sec.get("listing") or {}).items())
     sd = "".join(f'<tr><th scope="row">{_e(v["market"])}（{_e(COND.get(v["family"], v["family"]))}）</th><td class="num">{_yen(v["low"])}</td>'
@@ -181,6 +188,8 @@ def _secondary(p: dict) -> str:
     return (f'<section class="sku"><h3>{_e(p["product"])} — 二次流通</h3>'
             + (f'<div class="tw"><table><thead><tr><th>出品中（状態）</th><th>Listing Low</th><th>Listing High</th><th>件数</th><th>最安の出品元</th></tr></thead>'
                f'<tbody>{ls}</tbody></table></div><div class="mut">出品中の価格は売れた価格ではありません。Listing High は売値に使いません。</div>' if ls else "")
+            + (f'<div class="tw"><table><thead><tr><th>海外の出品中（市場・状態）</th><th>Listing Low（原通貨）</th><th>Listing High（原通貨）</th><th>件数</th><th>為替</th></tr></thead>'
+               f'<tbody>{lf}</tbody></table></div><div class="mut">海外の出品は希望価格で、売れた価格ではありません。送料・関税が不明のため、仕入れの利益計算には使いません。</div>' if lf else "")
             + (f'<div class="tw"><table><thead><tr><th>成約（市場・状態）</th><th>SOLD Low</th><th>SOLD High</th><th>SOLD Median</th><th>SOLD Samples</th><th>期間</th><th>扱い</th></tr></thead>'
                f'<tbody>{sd}</tbody></table></div>' if sd else "")
             + "</section>")

@@ -59,9 +59,10 @@ markets:
       exists: true
       name: "eBay Browse API（出品中のみ）／Marketplace Insights API（成約・審査制）"
       credential_env: [EBAY_CLIENT_ID, EBAY_CLIENT_SECRET]
+      credential_alias: {EBAY_CLIENT_ID: [EBAY_APP_ID]}      # 成約の収集（ebay_insights）が受け付ける別名
       enable_var: ENABLE_EBAY_API
       scope: listing
-      sold_requires: [EBAY_INSIGHTS_APPROVED]
+      sold_requires: [EBAY_INSIGHTS_APPROVED, EBAY_SOLD_LICENSE_CONFIRMED]
     status: BLOCKED
     reason: official_api_not_configured
     listing_access: BLOCKED

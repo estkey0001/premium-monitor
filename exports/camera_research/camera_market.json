@@ -2,7 +2,7 @@
   "schema": 1,
   "type": "CAMERA_MARKET",
   "research_date": "2026-11-18",
-  "generated_at": "2026-11-18T12:01:34+09:00",
+  "generated_at": "2026-11-18T14:40:55+09:00",
   "note": "週次の Web 調査（AI）と自動収集から、確認できた価格だけで利益を計算します。確認できない項目は計算せず（NOT_CALCULATED）、出品の最高値は売値に使いません。成約は件数 3 以上・期間・個別の根拠が揃った中央値だけが売値です。",
   "products": [
     {
@@ -33,7 +33,8 @@
       ],
       "secondary": {
         "listing": {},
-        "sold": {}
+        "sold": {},
+        "listing_foreign": {}
       },
       "routes": [
         {
@@ -185,7 +186,8 @@
       ],
       "secondary": {
         "listing": {},
-        "sold": {}
+        "sold": {},
+        "listing_foreign": {}
       },
       "routes": [
         {
@@ -354,7 +356,8 @@
       ],
       "secondary": {
         "listing": {},
-        "sold": {}
+        "sold": {},
+        "listing_foreign": {}
       },
       "routes": [
         {
@@ -466,7 +469,8 @@
       ],
       "secondary": {
         "listing": {},
-        "sold": {}
+        "sold": {},
+        "listing_foreign": {}
       },
       "routes": [
         {
@@ -600,7 +604,8 @@
       ],
       "secondary": {
         "listing": {},
-        "sold": {}
+        "sold": {},
+        "listing_foreign": {}
       },
       "routes": [
         {
@@ -789,7 +794,8 @@
       ],
       "secondary": {
         "listing": {},
-        "sold": {}
+        "sold": {},
+        "listing_foreign": {}
       },
       "routes": [
         {
@@ -982,7 +988,8 @@
       ],
       "secondary": {
         "listing": {},
-        "sold": {}
+        "sold": {},
+        "listing_foreign": {}
       },
       "routes": [
         {
@@ -1155,7 +1162,8 @@
       ],
       "secondary": {
         "listing": {},
-        "sold": {}
+        "sold": {},
+        "listing_foreign": {}
       },
       "routes": [
         {
@@ -1298,7 +1306,8 @@
       ],
       "secondary": {
         "listing": {},
-        "sold": {}
+        "sold": {},
+        "listing_foreign": {}
       },
       "routes": [
         {
@@ -1591,10 +1600,10 @@
       "market": "ebay",
       "label": "eBay",
       "priority": 5,
-      "status": "BLOCKED",
+      "status": "NOT_CONFIGURED",
       "reason": "official_api_not_configured",
-      "listing_access": "BLOCKED",
-      "sold_access": "BLOCKED",
+      "listing_access": "NOT_CONFIGURED",
+      "sold_access": "NOT_CONFIGURED",
       "credentials": "NOT_CONFIGURED",
       "api_error": null,
       "checked_on": "2026-11-18",
@@ -1602,6 +1611,15 @@
       "evidence": "Browse API は無料の開発者登録で出品中の価格が取れるが、資格情報が未登録。成約は Marketplace Insights（審査制）だけで、未承認。海外の売却先は為替・関税・送料が別で、手数料も UNKNOWN。",
       "listing_rows": null,
       "sold_rows": null,
+      "adapter": {
+        "attempted_at": "2026-11-18T14:40:55+09:00",
+        "requests": 0,
+        "approval": {
+          "insights_approved": false,
+          "sold_license_confirmed": false
+        },
+        "fx": {}
+      },
       "fee_status": "UNKNOWN",
       "fee_rate": null
     }

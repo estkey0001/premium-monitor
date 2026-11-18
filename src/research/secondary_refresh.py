@@ -4,7 +4,7 @@
     python -m src.research.secondary_refresh --apply    # 検証に通ったときだけ公開データ・履歴・ページへ書く
 
 camera_refresh（カメラの週次の更新）と同じ入口・同じ検証・同じ公開の許可リストを使い、二次流通の面だけを見せる。
-- 市場ごとの取得状態（AVAILABLE / PARTIAL / BLOCKED / FAILED / NOT_SUPPORTED）を記録する。取得できなかった市場は
+- 市場ごとの取得状態（AVAILABLE / PARTIAL / NOT_CONFIGURED / PENDING_APPROVAL / BLOCKED / FAILED / NOT_SUPPORTED）を記録する。取得できなかった市場は
   「出品なし・成約なし」にしない（件数は未取得 = null）。一部の市場が BLOCKED でも、取れた市場のデータは反映する。
 - 検索結果は取らない。入るのは公式 API のアダプター（secondary_markets.register_adapter。資格情報が無ければ NOT_CONFIGURED で通信 0）と、
   調査員が根拠 URL つきで読んだ行（research_camera_*.json）だけ。売値は SOLD_MEDIAN（件数・期間つき）だけ、手数料は CONFIRMED の市場だけ。
@@ -27,8 +27,27 @@ JST = crf.JST
 
 def run(src: Path, date: str, *, now: datetime, old: Optional[dict], env=None, **kw) -> dict:
     env = os.environ if env is None else env
-    extra, errs, ran = sm.run_adapters(env)
-    return crf.refresh(src, date, now=now, old_market=old, extra_records=extra, adapter_errors=errs, env=env, adapters_ran=ran, **kw)
+    extra, errs, ran, details = sm.run_adapters_full(env)
+    return crf.refresh(src, date, now=now, old_market=old, extra_records=extra, adapter_errors=errs, env=env, adapters_ran=ran,
+                       adapter_details=details, **kw)
+
+
+def ebay_summary(state: dict) -> dict:
+    """eBay の状態（dry-run の出力）。件数・状態だけ。秘密の値・自由記述を出さない。"""
+    m = next((x for x in state["secondary_markets"] if x["market"] == "ebay"), None)
+    if not m:
+        return {}
+    ad = m.get("adapter") or {}
+    ap = ad.get("approval") or {}
+    routes = [r for r in state["market"]["routes"] if r["profit_status"] != cr.NOT_CALCULATED and any(
+        (x or {}).get("source") == "eBay" for x in (r.get("buy"), r.get("sell")))]
+    return {"status": m["status"], "reason": m["reason"], "listing_status": m["listing_access"], "sold_status": m["sold_access"],
+            "credentials_configured": m["credentials"] == sm.CONFIGURED,
+            "approval_status": {"insights_approved": bool(ap.get("insights_approved")), "sold_license_confirmed": bool(ap.get("sold_license_confirmed")),
+                                "sold_access": m["sold_access"]},
+            "network_requests": ad.get("requests", 0), "items_found": ad.get("items_found"), "items_matched": ad.get("items_matched"),
+            "items_rejected_identity": ad.get("rejected_identity", 0), "items_rejected_condition": ad.get("rejected_condition", 0),
+            "fx": ad.get("fx", {}), "profit_routes_calculated": len(routes), "fee_status": m["fee_status"]}
 
 
 def secondary_summary(state: dict, *, apply: bool, written=None, problems=None) -> dict:
@@ -40,9 +59,10 @@ def secondary_summary(state: dict, *, apply: bool, written=None, problems=None) 
         "mode": "APPLY" if apply else "DRY_RUN",
         "markets_attempted": [m["market"] for m in mk],
         "markets_succeeded": [m["market"] for m in mk if m["status"] in (sm.AVAILABLE, sm.PARTIAL)],
-        "markets_blocked": [m["market"] for m in mk if m["status"] in (sm.BLOCKED, sm.FAILED, sm.NOT_SUPPORTED)],
+        "markets_blocked": [m["market"] for m in mk if m["status"] in sm._NO_DATA],
         "market_status": {m["market"]: {"status": m["status"], "reason": m["reason"], "credentials": m["credentials"],
                                         "listing_rows": m["listing_rows"], "sold_rows": m["sold_rows"], "fee_status": m["fee_status"]} for m in mk},
+        "ebay": ebay_summary(state),
         "api_errors": state["report"]["secondary_markets"].get("api_errors", {}),
         "retail_apis": state.get("retail_apis", []),
         "products_checked": state["report"]["products_checked"],

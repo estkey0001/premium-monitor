@@ -3,7 +3,7 @@
   "snapshots": [
     {
       "date": "2026-11-18",
-      "generated_at": "2026-11-18T12:01:34+09:00",
+      "generated_at": "2026-11-18T14:40:55+09:00",
       "observations": [
         {
           "product": "Canon EOS R5 Mark II",
@@ -491,7 +491,7 @@
         },
         {
           "market": "ebay",
-          "status": "BLOCKED",
+          "status": "NOT_CONFIGURED",
           "reason": "official_api_not_configured",
           "api_error": null,
           "listing_rows": null,

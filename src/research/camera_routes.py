@@ -351,6 +351,47 @@ def compatible(buy_cond: str, sell_cond: str) -> bool:
     return a is not None and a == b
 
 
+# ---------------------------------------------------------------- 外貨（海外の市場。円の利益には為替が確認できたときだけ使う）
+_FOREIGN_DISPLAY_OK = frozenset({"cross_border_cost_unknown", "fx_unconfirmed", "price_missing"})   # この理由だけなら、原通貨の出品として表示できる
+
+
+FX_MAX_AGE_DAYS = 3                                          # 為替の確認日がこれより古い円換算は使わない（アダプターの fx_state と同じ上限）
+
+
+def _foreign(r: dict, kind: str, now: Optional[datetime] = None) -> tuple[dict, list]:
+    """外貨の行の追加項目と除外の理由。円（JPY）の行は何も足さない。
+    - 為替が CONFIRMED でない・円換算が (原価格 × 為替) と合わない → fx_unconfirmed / fx_mismatch（円の利益に使わない）
+    - 海外の出品（listing）は、送料・関税を確認できないので cross_border_cost_unknown（ルート C / D の仕入れ候補にしない）"""
+    cur = str(r.get("currency") or "JPY").upper()
+    region = str(r.get("region") or "")
+    if cur == "JPY" and not region and market_from_url(r.get("url")) != "ebay":      # eBay の URL は、通貨・地域の記載が無くても海外扱い
+        return {}, []
+    region = region or ("EBAY" if market_from_url(r.get("url")) == "ebay" else "")
+    why = []
+    fx = str(r.get("fx_status") or "").upper()
+    if market_from_url(r.get("url")) == "ebay" and (not r.get("currency") or not isinstance(r.get("price_original"), (int, float))
+                                                      or isinstance(r.get("price_original"), bool) or r.get("price_original") <= 0):
+        why += ["currency_unspecified", "price_missing"]      # eBay の行は原通貨と原価格が必須（通貨の記載が無い円の値を使わない）
+    if cur != "JPY":
+        po, rate = r.get("price_original"), r.get("fx_rate")
+        if fx != "CONFIRMED" or not isinstance(rate, (int, float)) or isinstance(rate, bool) or rate <= 0 or not _d(r.get("fx_checked_at")) \
+                or not isinstance(po, (int, float)) or isinstance(po, bool) or po <= 0:
+            why.append("fx_unconfirmed")                      # 為替・確認日・原価格のどれかが無い
+        elif now is not None and not (0 <= (now.date() - _d(r.get("fx_checked_at")).date()).days <= FX_MAX_AGE_DAYS):
+            why.append("fx_unconfirmed")                      # 為替の確認日が古い・未来（行の自己申告 CONFIRMED を信用しない）
+        elif isinstance(r.get("price_jpy"), int) and isinstance(po, (int, float)) and abs(r["price_jpy"] - round(po * rate)) > 1:
+            why.append("fx_mismatch")
+        if "fx_unconfirmed" in why and isinstance(r.get("price_jpy"), int) and "price_missing" not in why:
+            why.append("price_missing")                       # 為替が未確認なのに円の値が付いている行は、円の価格として使わない
+    if kind == "listing" and (cur != "JPY" or region):
+        why.append("cross_border_cost_unknown")
+    fields = {"currency": cur, "price_original": r.get("price_original"), "fx_status": fx or ("NOT_NEEDED" if cur == "JPY" else "UNKNOWN"),
+              "fx_rate": r.get("fx_rate"), "fx_checked_at": r.get("fx_checked_at"), "region": region or None,
+              "shipping_original": r.get("shipping_original"), "shipping_currency": r.get("shipping_currency"),
+              "import_duty_status": str(r.get("import_duty_status") or "UNKNOWN").upper()}
+    return fields, why
+
+
 # ---------------------------------------------------------------- 入力 → 観測
 def observations(rec: dict, now: datetime, cfg: dict) -> list[dict]:
     """1 機種の調査レコード（kind 別の行）を、種別つきの観測の一覧にする。使えない行も reason つきで残す。"""
@@ -413,11 +454,14 @@ def observations(rec: dict, now: datetime, cfg: dict) -> list[dict]:
             extra.append("not_purchasable_now")
         if cond == UNKNOWN:
             extra.append("condition_unknown")
-        base(r, "listing", LISTING_LOW, r.get("price_jpy"), cond, r.get("market"), shipping_jpy=r.get("shipping_jpy"),
-             shipping_url=r.get("shipping_url"), stock=AVAILABLE if r.get("purchasable_now") is True else STOCK_UNKNOWN)
-        out[-1]["reasons"] = out[-1]["reasons"] + extra
+        ff, fwhy = _foreign(r, "listing", now)
+        base(r, "listing", LISTING_LOW, None if "price_missing" in fwhy else r.get("price_jpy"), cond, r.get("market"), shipping_jpy=r.get("shipping_jpy"),
+             shipping_url=r.get("shipping_url"), stock=AVAILABLE if r.get("purchasable_now") is True else STOCK_UNKNOWN, **ff)
+        out[-1]["reasons"] = out[-1]["reasons"] + extra + [w for w in fwhy if w not in out[-1]["reasons"]]
     for r in rec.get("sold") or []:
-        base(r, "sold", pt.SOLD, r.get("price_jpy"), condition_of(r.get("condition")), r.get("market"), sold_at=r.get("sold_at"))
+        ff, fwhy = _foreign(r, "sold", now)
+        base(r, "sold", pt.SOLD, None if "price_missing" in fwhy else r.get("price_jpy"), condition_of(r.get("condition")), r.get("market"), sold_at=r.get("sold_at"), **ff)
+        out[-1]["reasons"] = out[-1]["reasons"] + [w for w in fwhy if w not in out[-1]["reasons"]]
     return out
 
 
@@ -465,6 +509,20 @@ def secondary_summary(rec: dict, obs: list[dict], now: datetime, cfg: dict) -> d
                      "high_market": _market_label(max(rows, key=lambda x: x["price"])),
                      "checked_at": str(min(rows, key=lambda x: x["price"]).get("checked_at") or "")[:10] or None, "price_types": [LISTING_LOW, LISTING_HIGH],
                      "note": "出品中の希望価格（売れた価格ではない。LISTING_HIGH は売値に使わない）"} for fam, rows in lst.items()}
+    foreign: dict = {}                                       # 海外の出品（原通貨のまま・円換算しない・売値や仕入れ候補にしない）
+    for o in obs:
+        po = o.get("price_original")
+        if (o["kind"] != "listing" or not o.get("identity_ok") or o["freshness"] != FRESH or str(o.get("currency") or "JPY") == "JPY"
+                or set(o["reasons"]) - _FOREIGN_DISPLAY_OK or not isinstance(po, (int, float)) or isinstance(po, bool) or po <= 0):
+            continue
+        foreign.setdefault((_FAMILY.get(o["condition"], "?"), o["currency"]), []).append(o)
+    listing_foreign = {f"{fam}|{cur}": {"market": _market_label(min(rows, key=lambda x: x["price_original"])), "family": fam, "currency": cur,
+                                        "low": min(x["price_original"] for x in rows), "high": max(x["price_original"] for x in rows), "n": len(rows),
+                                        "fx_status": "CONFIRMED" if all(x.get("fx_status") == "CONFIRMED" for x in rows) else "UNKNOWN",
+                                        "checked_at": str(min(rows, key=lambda x: x["price_original"]).get("checked_at") or "")[:10] or None,
+                                        "price_types": [LISTING_LOW, LISTING_HIGH],
+                                        "note": "海外の出品中の希望価格（原通貨・円換算なし）。送料・関税が不明のため、仕入れの利益計算には使わない"}
+                       for (fam, cur), rows in foreign.items()}
     days = int((cfg.get("sold") or {}).get("period_days", 90))
     pe_, ps = now, now - timedelta(days=days)
     sold: dict = {}
@@ -493,7 +551,7 @@ def secondary_summary(rec: dict, obs: list[dict], now: datetime, cfg: dict) -> d
             "latest_sold_at": max(dts) if dts else None,
             "checked_at": min((str(x.get("checked_at") or "")[:10] for x in rows), default=None) or None,
             "status": st["status"], "eligible": pt.is_sold_median_eligible(st)}
-    return {"listing": listing, "sold": sold}
+    return {"listing": listing, "sold": sold, "listing_foreign": listing_foreign}
 
 
 # ---------------------------------------------------------------- 費用
@@ -650,6 +708,8 @@ def _routes_for_product(rec: dict, obs: list[dict], sec: dict, cfg: dict, now: d
             fee_applies = True
         ship, ship_src = _shipping(buy, official_shipping_fn, cfg.get("allowed_hosts"))
         why = []
+        if fee_applies and market_key(sell_view.get("source")) == "ebay":
+            why.append("cross_border_sell_cost_unknown")      # 海外の売り先は送料・関税・為替の費用を計算していない。手数料が確認できても利益を出さない
         if ship is None:
             why.append("purchase_shipping_unknown")
         if fee is None:

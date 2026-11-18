@@ -36,6 +36,8 @@ TOKEN_URL = "https://api.ebay.com/identity/v1/oauth2/token"
 SEARCH_URL = "https://api.ebay.com/buy/marketplace_insights/v1_beta/item_sales/search"
 SCOPE = "https://api.ebay.com/oauth/api_scope/buy.marketplace.insights"
 MARKETPLACE_ID = "EBAY_US"
+BROWSE_URL = "https://api.ebay.com/buy/browse/v1/item_summary/search"      # 出品（Browse API）。二次流通のアダプターが使う
+BROWSE_SCOPE = "https://api.ebay.com/oauth/api_scope"
 MAX_LIMIT = 200            # 1ページの最大件数
 MAX_PAGES = 3              # 1商品あたりのページ数の上限（取りすぎない）
 MAX_REQUESTS_PER_RUN = 30  # 1回の実行の検索リクエストの上限（HTTP の回数。再試行を含む・token を除く）
@@ -168,13 +170,22 @@ def build_search_request(*, q: str = "", gtin: str = "", category_ids: str = "",
     return url, {"X-EBAY-C-MARKETPLACE-ID": MARKETPLACE_ID, "Accept": "application/json"}
 
 
-def token_request() -> Optional[tuple[str, dict, bytes]]:
+def build_browse_request(query: str, *, limit: int = 50) -> tuple[str, dict]:
+    """出品中の固定価格だけ・日本への発送が可能なもの（Browse API）。Authorization は呼ぶ直前に付ける（ここには入れない）。"""
+    if not str(query or "").strip():
+        raise ValueError("query が必要")
+    params = {"q": query, "limit": str(max(1, min(int(limit), 200))), "sort": "price",
+              "filter": "buyingOptions:{FIXED_PRICE},deliveryCountry:JP"}
+    return BROWSE_URL + "?" + urllib.parse.urlencode(params, safe=":{},"), {"X-EBAY-C-MARKETPLACE-ID": MARKETPLACE_ID, "Accept": "application/json"}
+
+
+def token_request(scope: Optional[str] = None) -> Optional[tuple[str, dict, bytes]]:
     """token を取るリクエスト（URL・ヘッダー・本文）。資格情報が無ければ None。ログに出さない。"""
     cred = credentials()
     if not cred:
         return None
     basic = base64.b64encode(f"{cred[0]}:{cred[1]}".encode()).decode()
-    body = urllib.parse.urlencode({"grant_type": "client_credentials", "scope": SCOPE}).encode()
+    body = urllib.parse.urlencode({"grant_type": "client_credentials", "scope": scope or SCOPE}).encode()
     return TOKEN_URL, {"Authorization": f"Basic {basic}",
                        "Content-Type": "application/x-www-form-urlencoded"}, body
 
@@ -321,3 +332,41 @@ def dry_run_plan(targets: list[tuple[str, str]], now: datetime) -> dict:
 def dumps_safe(obj) -> str:
     """生成物に書くときの JSON（秘密の値を伏せる）。"""
     return redact(json.dumps(obj, ensure_ascii=False))
+
+
+# ── HTTP（成約の収集スクリプトと、二次流通のアダプターが共有する。通信はここだけ）──
+def http_get(url: str, headers: dict) -> dict:
+    """api_runtime.retry_with_backoff の形の結果（例外の文言から秘密の値を伏せる）。"""
+    import urllib.error
+    import urllib.request
+    try:
+        from src.collectors.polite import HONEST_UA
+        req = urllib.request.Request(url, headers={**headers, "User-Agent": HONEST_UA})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return {"status": r.getcode(), "data": json.loads(r.read().decode("utf-8")), "retry_after": None, "exc": None}
+    except urllib.error.HTTPError as e:
+        ra = e.headers.get("Retry-After") if e.headers else None      # 秒数・HTTP-date のどちらも api_runtime.parse_retry_after が読む
+        return {"status": e.code, "data": None, "retry_after": ra, "exc": RuntimeError(redact(str(e)))}
+    except Exception as e:  # noqa: BLE001
+        return {"status": None, "data": None, "retry_after": None, "exc": RuntimeError(redact(str(e)))}
+
+
+def fetch_token(scope: Optional[str] = None) -> tuple[Optional[str], str]:
+    """(token, 状態)。token は戻り値だけで扱い、保存・表示しない。scope 省略時は成約（Insights）の scope。"""
+    import urllib.error
+    import urllib.request
+    req = token_request(scope)
+    if req is None:
+        return None, ST_PENDING
+    url, headers, body = req
+    try:
+        from src.collectors.polite import HONEST_UA
+        r = urllib.request.Request(url, data=body, headers={**headers, "User-Agent": HONEST_UA}, method="POST")
+        with urllib.request.urlopen(r, timeout=30) as resp:
+            tok = json.loads(resp.read().decode("utf-8")).get("access_token")
+            return (tok, ST_OK) if tok else (None, ST_ERROR)
+    except urllib.error.HTTPError as e:
+        # 401: 資格情報が違う。400（invalid_scope）・403: 許可（承認）が無い。どちらも再試行しない
+        return None, status_from_error(f"permanent_{e.code}") if e.code in (400, 401, 403) else ST_ERROR
+    except Exception:  # noqa: BLE001
+        return None, ST_ERROR

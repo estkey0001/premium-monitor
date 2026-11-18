@@ -407,6 +407,25 @@ python3 -m pytest tests/test_weekly_import.py
 - 終了コード: 0＝全取得元が読めた／2＝読めなかった取得元あり（読めた分だけ更新）／1＝検証失敗。
 - 調査員（AI）が読めなかった店（ヨドバシ・ビック・マップカメラ・ソフマップ・フジヤ・キタムラ）は、タイムアウト・403・503・本文が空だった。回避しない（フリマ・オークション・Amazon・楽天・eBay の検索結果も取らない）ので、二次流通の出品・成約は今は空になりやすい。
 
+### eBay アダプター（`src/research/ebay_adapter.py`・2026-11-18〜）
+
+`secondary_refresh` に標準で登録済み（`secondary_markets.register_default_adapters()`）。資格情報が無くても呼ばれるが、**通信 0**（状態だけ返す）。
+
+| 条件 | 状態 | 通信 |
+|---|---|---|
+| `EBAY_CLIENT_ID`（または `EBAY_APP_ID`）・`EBAY_CLIENT_SECRET` なし | NOT_CONFIGURED | 0 |
+| `ENABLE_EBAY_API=true` でない | BLOCKED（official_api_not_enabled） | 0 |
+| `API_DRY_RUN=true` | BLOCKED（api_dry_run） | 0 |
+| 上がそろい、成約が未承認 | PARTIAL（出品だけ・sold_access = PENDING_APPROVAL） | 出品の検索のみ |
+| `EBAY_INSIGHTS_APPROVED=true` と `EBAY_SOLD_LICENSE_CONFIRMED=true` もそろう | AVAILABLE | 出品＋成約 |
+
+- 出品 = Browse API（固定価格のみ）。出品は希望価格で、成約価格ではない。成約 = Marketplace Insights（審査制）。出品だけで SOLD_MEDIAN は作らない。
+- 価格は原通貨のまま保存（`price_original`・`currency`・`fx_status`・`fx_rate`・`fx_checked_at`）。円換算は `config/fx_rates.yaml` の `USD_JPY` と `updated_at`（3 日以内）が確認できたときだけ。古ければ UNKNOWN で、円の利益は NOT_CALCULATED。
+- 海外の出品は送料・関税が不明なので、ルート C/D の仕入れ候補にしない（Camera ページに原通貨で表示）。eBay を売り先にするルートは手数料 UNKNOWN で NOT_CALCULATED。
+- 状態は NEW / UNOPENED / LIKE_NEW / USED / UNKNOWN に正規化（整備品・傷あり・ジャンクは除外。UNKNOWN は実行に使わない）。同一性は `camera_routes.identity_ok`。
+- 実通信は `ebay_insights.http_get` / `fetch_token` だけ。Browse の応答の形は公式仕様に沿うが、資格情報が無く実通信は未確認（モックの契約テストだけ）。
+- 登録後の最初の確認: Secrets に `EBAY_CLIENT_ID`・`EBAY_CLIENT_SECRET`、Variables に `ENABLE_EBAY_API=true`（`API_DRY_RUN` は未設定または false）にして `python -m src.research.secondary_refresh`（dry-run）。`ebay` の `items_found` / `items_matched` / `items_rejected_*` と `network_requests` を見る。
+
 ### 二次流通の週次の更新（`secondary_refresh`・2026-11-18〜）
 
 ```bash

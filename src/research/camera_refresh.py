@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Optional
 
 from src.research import camera_routes as cr
+from src.research import secondary_markets as sm
 
 JST = timezone(timedelta(hours=9))
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -361,10 +362,13 @@ def carry_over(recs: list, old_market: Optional[dict], now: datetime) -> tuple[l
 
 # ---------- 本体 ----------
 def refresh(src_dir: Path, date: str, *, now: datetime, old_market: Optional[dict] = None, cfg: Optional[dict] = None,
-            obs_doc: Optional[dict] = None, names: Optional[dict] = None, official_shipping_fn=None, fixed_cost_fn=None) -> dict:
+            obs_doc: Optional[dict] = None, names: Optional[dict] = None, official_shipping_fn=None, fixed_cost_fn=None,
+            extra_records: Optional[list] = None, adapter_errors: Optional[dict] = None, env=None, market_cfg: Optional[dict] = None,
+            adapters_ran: Optional[set] = None) -> dict:
     cfg = cfg or load_config()
     names = names if names is not None else registered_cameras()
     recs_raw, srcs, disc, lots = load_research(src_dir)
+    recs_raw = merge_extra_records(recs_raw, extra_records or [])
     recs, dropped_rows = drop_failed_source_rows(clean_records(recs_raw), srcs)
     if obs_doc is None:
         try:
@@ -384,11 +388,33 @@ def refresh(src_dir: Path, date: str, *, now: datetime, old_market: Optional[dic
     market = cr.build_market(recs, now, cfg, registered_names=set(names), official_shipping_fn=official_shipping_fn,
                              fixed_cost_fn=fixed_cost_fn)
     quality = cr.quality_checks(market, now, date, cfg, fixed_cost=int(fixed_cost_fn()))
+    secondary = sm.market_report(market, market_cfg, env, fees=cfg.get("fees"), adapter_errors=adapter_errors, adapters_ran=adapters_ran)
+    quality["blocked_treated_as_empty"] = sm.blocked_treated_as_empty(secondary)
     events = cr.diff_events(old_market, market)
     report = _report(market, srcs, disc, lots, carried, old_market, events)
-    return {"market": market, "quality": quality, "events": events, "report": report, "sources": srcs, "discovered": disc,
+    report["secondary_markets"] = {"attempted": [m["market"] for m in secondary],
+                                   "succeeded": [m["market"] for m in secondary if m["status"] in (sm.AVAILABLE, sm.PARTIAL)],
+                                   "blocked": [m["market"] for m in secondary if m["status"] in (sm.BLOCKED, sm.FAILED, sm.NOT_SUPPORTED)],
+                                   "api_errors": {m["market"]: m["api_error"] for m in secondary if m.get("api_error")}}
+    return {"secondary_markets": secondary, "retail_apis": sm.retail_api_states(market_cfg, env), "market": market, "quality": quality, "events": events, "report": report, "sources": srcs, "discovered": disc,
             "lotteries": lots, "carried": carried, "date": date, "now": now,
             "pipeline_rows_unused": pipeline_unused, "dropped_rows": dropped_rows, "old_market": old_market}
+
+
+def merge_extra_records(recs: list, extra: list) -> list:
+    """公式 API のアダプターが返した機種レコード（research_camera_*.json の機種と同じ形）を、同じ機種の listing / sold に足す。"""
+    out = copy.deepcopy(recs)
+    idx = {p.get("product"): p for p in out}
+    for x in extra:
+        if not isinstance(x, dict) or not x.get("product"):
+            continue
+        if x["product"] in idx:
+            for k in ("listing", "sold"):
+                idx[x["product"]][k] = list(idx[x["product"]].get(k) or []) + list(x.get(k) or [])
+        else:
+            out.append({k: v for k, v in x.items() if k in ("product", "listing", "sold", "brand", "model_code", "registered")})
+            idx[x["product"]] = out[-1]
+    return out
 
 
 def _prices(market: dict, kind: str) -> dict:
@@ -591,7 +617,9 @@ def _public_product(p: dict) -> Optional[dict]:
         routes.append(rr)
     sold = {k: {**v, "market": v["market"] if v["market"] in _MARKET_LABELS else "不明な市場"} for k, v in (p["secondary"].get("sold") or {}).items()}
     return {"product": p["product"], "product_id": p.get("product_id"), "registered": True, "observations": obs,
-            "secondary": {"listing": {k: {**v, "low_source": "店頭の中古販売"} for k, v in (p["secondary"].get("listing") or {}).items()}, "sold": sold},
+            "secondary": {"listing": {k: {**v, "low_market": v.get("low_market") if v.get("low_market") in _MARKET_LABELS else "不明な市場",
+                                                         "high_market": v.get("high_market") if v.get("high_market") in _MARKET_LABELS else "不明な市場",
+                                                         "low_source": v.get("low_market") if v.get("low_market") in _MARKET_LABELS and v.get("low_market") != "不明な市場" else "店頭の中古販売"} for k, v in (p["secondary"].get("listing") or {}).items()}, "sold": sold},
             "routes": routes, "best_route": p.get("best_route")}
 
 
@@ -644,6 +672,7 @@ def _public_market(state: dict) -> dict:
                 "出品の最高値は売値に使いません。成約は件数 3 以上・期間・個別の根拠が揃った中央値だけが売値です。",
         "products": pub, "summary": {k: v for k, v in state["report"].items() if k != "carried_rows"} | {"carried_rows": len(state["report"]["carried_rows"])},
         "events": _pub_events(state, pub), "quality": state["quality"],
+        "secondary_markets": state.get("secondary_markets", []), "retail_apis": state.get("retail_apis", []),
         "notification_dry_run": {"sent": 0, "would_notify": len(_pub_events(state, pub)), "events": _pub_events(state, pub)},
         "source_results": sorted(({"shop": _public_shop(v["shop"]), "brand": _public_brand(v["brand"]), "role": v["role"], "result": v["result"], "lump": v["lump"],
                                    "reason": reason_code(v.get("reason")) if v["result"] in _BAD else ""} for v in source_matrix(state["sources"]).values()),
@@ -692,6 +721,19 @@ def history_snapshot(state: dict) -> dict:
     reg = {x["product"] for x in pub}
     snap = {"date": state["date"], "generated_at": state["now"].isoformat(timespec="seconds"), "observations": [], "routes": [],
             "events": [e for e in (_public_event(e, reg) for e in state["events"]) if e]}
+    snap["secondary"] = []
+    for p in pub:
+        sec = p.get("secondary") or {}
+        for fam, v in (sec.get("listing") or {}).items():
+            for pt_, val, mk_ in (("LISTING_LOW", v["low"], v.get("low_market")), ("LISTING_HIGH", v["high"], v.get("high_market"))):
+                snap["secondary"].append({"product": p["product"], "market": mk_, "price_type": pt_, "condition": fam, "price": val,
+                                          "checked_at": _pub_date(v.get("checked_at")), "sold_at": None, "sample_count": v["n"]})
+        for v in (sec.get("sold") or {}).values():
+            for pt_, val in (("SOLD_LOW", v["low"]), ("SOLD_HIGH", v["high"]), ("SOLD_MEDIAN", v["median"])):
+                snap["secondary"].append({"product": p["product"], "market": v["market"], "price_type": pt_, "condition": v["family"], "price": val,
+                                          "checked_at": _pub_date(v.get("checked_at")), "sold_at": _pub_date(v.get("latest_sold_at")), "sample_count": v["sample_count"],
+                                          "period": f"{v['period_start']}〜{v['period_end']}"})
+    snap["secondary_markets"] = [{k: m[k] for k in ("market", "status", "reason", "api_error", "listing_rows", "sold_rows", "fee_status")} for m in state.get("secondary_markets", [])]
     for p in pub:
         for o in p["observations"]:
             snap["observations"].append({"product": p["product"], "source": o["source"], "market_type": o["kind"], "price_type": o["price_type"],

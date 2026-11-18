@@ -406,3 +406,14 @@ python3 -m pytest tests/test_weekly_import.py
 - 品質の数（すべて 0 でなければ `--apply` は書かない）: wrong_identity / wrong_condition / listing_high_used_as_sell / insufficient_sold_used_as_expected_sell / stale_price_used_as_fresh / fake_checked_at / double_count_fee / missing_fee。
 - 終了コード: 0＝全取得元が読めた／2＝読めなかった取得元あり（読めた分だけ更新）／1＝検証失敗。
 - 調査員（AI）が読めなかった店（ヨドバシ・ビック・マップカメラ・ソフマップ・フジヤ・キタムラ）は、タイムアウト・403・503・本文が空だった。回避しない（フリマ・オークション・Amazon・楽天・eBay の検索結果も取らない）ので、二次流通の出品・成約は今は空になりやすい。
+
+### 二次流通の週次の更新（`secondary_refresh`・2026-11-18〜）
+
+```bash
+python -m src.research.secondary_refresh            # dry-run（取得可否・件数・ルート C/D を表示するだけ）
+python -m src.research.secondary_refresh --apply    # 検証に通ったときだけ書く（camera_refresh と同じ公開データ）
+```
+
+- 市場の取得状態は `config/secondary_markets.yaml`。取得できない市場は「未取得」で、出品なし・成約なしとは書かない。検索結果は取得しない（公式 API と、根拠 URL つきで読んだ行だけ）。
+- 公式 API のキー（`EBAY_CLIENT_ID`・`EBAY_CLIENT_SECRET`・有効化 `ENABLE_EBAY_API=true`、成約は `EBAY_INSIGHTS_APPROVED=true`。楽天 `RAKUTEN_APP_ID`・Yahoo!ショッピング `YAHOO_SHOPPING_APP_ID`）は、後から GitHub Secrets / 環境変数に登録する。値は出力・保存しない。アダプターは `secondary_markets.register_adapter(market, fn)` で差し込む。
+- 手数料は `config/camera_routes.yaml` の `fees.<市場>.status`。CONFIRMED は公式ヘルプの本文を読んだもの（`evidence_read_body: true`・`confirmed_on` 必須）。UNVERIFIED / UNKNOWN の市場を売り先にするルート B/D は計算しない。

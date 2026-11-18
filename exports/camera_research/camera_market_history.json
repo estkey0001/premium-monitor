@@ -3,7 +3,7 @@
   "snapshots": [
     {
       "date": "2026-11-18",
-      "generated_at": "2026-11-18T03:58:18+09:00",
+      "generated_at": "2026-11-18T12:01:34+09:00",
       "observations": [
         {
           "product": "Canon EOS R5 Mark II",
@@ -450,7 +450,55 @@
           "roi_pct": null
         }
       ],
-      "events": []
+      "events": [],
+      "secondary": [],
+      "secondary_markets": [
+        {
+          "market": "mercari",
+          "status": "BLOCKED",
+          "reason": "no_official_api_search_scrape_prohibited",
+          "api_error": null,
+          "listing_rows": null,
+          "sold_rows": null,
+          "fee_status": "CONFIRMED"
+        },
+        {
+          "market": "yahoo_auction",
+          "status": "NOT_SUPPORTED",
+          "reason": "official_api_discontinued",
+          "api_error": null,
+          "listing_rows": null,
+          "sold_rows": null,
+          "fee_status": "CONFIRMED"
+        },
+        {
+          "market": "yahoo_flea",
+          "status": "BLOCKED",
+          "reason": "no_official_api_search_scrape_prohibited",
+          "api_error": null,
+          "listing_rows": null,
+          "sold_rows": null,
+          "fee_status": "UNVERIFIED"
+        },
+        {
+          "market": "rakuma",
+          "status": "BLOCKED",
+          "reason": "no_official_api_robots_disallow_search",
+          "api_error": null,
+          "listing_rows": null,
+          "sold_rows": null,
+          "fee_status": "UNKNOWN"
+        },
+        {
+          "market": "ebay",
+          "status": "BLOCKED",
+          "reason": "official_api_not_configured",
+          "api_error": null,
+          "listing_rows": null,
+          "sold_rows": null,
+          "fee_status": "UNKNOWN"
+        }
+      ]
     }
   ]
 }

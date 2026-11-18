@@ -53,16 +53,23 @@ _MARKET_KEYS = (("yahooフリマ", "yahoo_flea"), ("paypayフリマ", "yahoo_fle
                 ("メルカリ", "mercari"), ("mercari", "mercari"), ("ラクマ", "rakuma"), ("rakuma", "rakuma"), ("ebay", "ebay"))
 
 
+def _host_is(h: str, *domains: str) -> bool:
+    """ホストが登録ドメインそのもの、またはそのサブドメインか（接尾辞の文字列一致で別ドメインを市場と判定しない）。"""
+    return any(h == d or h.endswith("." + d) for d in domains)
+
+
 def market_from_url(url) -> Optional[str]:
     h = host_of(url)
     u = str(url or "")
-    if h.endswith("mercari.com"):
+    if _host_is(h, "mercari.com"):
         return None if "/shops/product/" in u else "mercari"          # メルカリ Shops は料率が別（確認していない）
-    if h.endswith("auctions.yahoo.co.jp"):
+    if _host_is(h, "auctions.yahoo.co.jp"):
         return "yahoo_auction"
-    if h == "item.fril.jp" or h.endswith("fril.jp"):
+    if h == "paypayfleamarket.yahoo.co.jp":
+        return "yahoo_flea"
+    if _host_is(h, "fril.jp"):
         return "rakuma"
-    if h.endswith("ebay.com"):
+    if _host_is(h, "ebay.com"):
         return "ebay"
     return None
 
@@ -424,6 +431,9 @@ def _sold_key(url) -> str:
     m = re.search(r"auctions\.yahoo\.co\.jp/jp/auction/([A-Za-z0-9]+)", u)
     if m:
         return "yauc:" + m.group(1).lower()
+    m = re.search(r"paypayfleamarket\.yahoo\.co\.jp/item/([A-Za-z0-9]+)", u)
+    if m:
+        return "yflea:" + m.group(1).lower()
     m = re.search(r"item\.fril\.jp/([A-Za-z0-9]+)", u)
     if m:
         return "fril:" + m.group(1).lower()
@@ -451,7 +461,9 @@ def secondary_summary(rec: dict, obs: list[dict], now: datetime, cfg: dict) -> d
             continue
         lst.setdefault(_FAMILY.get(o["condition"], "?"), []).append(o)
     listing = {fam: {"low": min(x["price"] for x in rows), "high": max(x["price"] for x in rows), "n": len(rows),
-                     "low_source": min(rows, key=lambda x: x["price"])["source"], "price_types": [LISTING_LOW, LISTING_HIGH],
+                     "low_source": min(rows, key=lambda x: x["price"])["source"], "low_market": _market_label(min(rows, key=lambda x: x["price"])),
+                     "high_market": _market_label(max(rows, key=lambda x: x["price"])),
+                     "checked_at": str(min(rows, key=lambda x: x["price"]).get("checked_at") or "")[:10] or None, "price_types": [LISTING_LOW, LISTING_HIGH],
                      "note": "出品中の希望価格（売れた価格ではない。LISTING_HIGH は売値に使わない）"} for fam, rows in lst.items()}
     days = int((cfg.get("sold") or {}).get("period_days", 90))
     pe_, ps = now, now - timedelta(days=days)
@@ -479,6 +491,7 @@ def secondary_summary(rec: dict, obs: list[dict], now: datetime, cfg: dict) -> d
             "sample_count": st["sample_count"], "min_samples": st["min_samples"],
             "period_start": st["period_start"][:10], "period_end": st["period_end"][:10],
             "latest_sold_at": max(dts) if dts else None,
+            "checked_at": min((str(x.get("checked_at") or "")[:10] for x in rows), default=None) or None,
             "status": st["status"], "eligible": pt.is_sold_median_eligible(st)}
     return {"listing": listing, "sold": sold}
 
@@ -502,11 +515,33 @@ def _shipping(o: dict, official_shipping_fn, cfg_hosts: Optional[dict] = None) -
     return None, "unknown"
 
 
+FEE_CONFIRMED, FEE_UNVERIFIED, FEE_UNKNOWN = "CONFIRMED", "UNVERIFIED", "UNKNOWN"
+
+
+def fee_status(f: Optional[dict]) -> str:
+    """手数料の状態。CONFIRMED は「一次情報（公式ヘルプなど）の本文を読んで確認した」ものだけ。
+    検索結果の要約だけ・本文を読めなかったものは UNVERIFIED、料率が分からないものは UNKNOWN。status が無い設定は UNKNOWN（古い confirmed: true を信用しない）。"""
+    f = f or {}
+    st = str(f.get("status") or "").upper()
+    rate = f.get("rate")
+    if (st == FEE_CONFIRMED and isinstance(rate, (int, float)) and not isinstance(rate, bool) and 0 < rate < 1
+            and f.get("evidence_read_body") is True and isinstance(f.get("confirmed_on"), str) and _d(f.get("confirmed_on")) is not None
+            and _d(f.get("confirmed_on")).date() <= datetime.now(JST).date()):          # 未来の確認日は無効
+        return FEE_CONFIRMED
+    if st == FEE_UNVERIFIED and isinstance(rate, (int, float)):
+        return FEE_UNVERIFIED
+    return FEE_UNKNOWN
+
+
+def fee_confirmed(f: Optional[dict]) -> bool:
+    return fee_status(f) == FEE_CONFIRMED
+
+
 def _fee(market_name, sell_price: int, cfg: dict) -> tuple[Optional[int], Optional[dict], str]:
     k = market_key(market_name)
     f = (cfg.get("fees") or {}).get(k or "") or {}
-    if not k or not f.get("confirmed") or not isinstance(f.get("rate"), (int, float)) or f["rate"] <= 0:
-        return None, f or None, "fee_unconfirmed"
+    if not k or not fee_confirmed(f):
+        return None, f or None, "fee_unconfirmed"       # UNVERIFIED / UNKNOWN の手数料では利益を出さない（0 円としても扱わない）
     return int(sell_price * f["rate"]), f, ""
 
 
@@ -638,6 +673,10 @@ def _routes_for_product(rec: dict, obs: list[dict], sec: dict, cfg: dict, now: d
         routes.append({**base, "profit_status": status, "decision": decision, "buy": _view(buy), "sell": sell_view,
                        "costs": costs, "net_profit": net, "roi_pct": roi, "executable": executable, "reasons": why2,
                        "confidence": _confidence(status, executable, route, sell_view, buy)})
+    for r in routes:                                           # 売り先の手数料の状態（買取は手数料なし = NOT_APPLICABLE）
+        sl = r.get("sell")
+        r["fee_status"] = ("NOT_APPLICABLE" if r["route_type"] in "AC" else
+                           fee_status((cfg.get("fees") or {}).get(market_key(sl["source"]) or "")) if sl else None)
     return routes
 
 
@@ -737,7 +776,8 @@ def quality_checks(market: dict, now: datetime, research_date: str, cfg: dict, *
     """出力された観測・二次流通の集計・ルートだけから、品質の数を**独立に**数え直す（すべて 0 でなければならない）。
     ルートに書かれたラベル・数値を信じず、生の観測・設定から再計算して突き合わせる。"""
     q = {"wrong_identity": 0, "wrong_condition": 0, "listing_high_used_as_sell": 0, "insufficient_sold_used_as_expected_sell": 0,
-         "stale_price_used_as_fresh": 0, "fake_checked_at": 0, "double_count_fee": 0, "missing_fee": 0}
+         "stale_price_used_as_fresh": 0, "fake_checked_at": 0, "double_count_fee": 0, "missing_fee": 0,
+         "unknown_fee_used": 0}
     rd = _d(research_date)
     other = int((cfg.get("costs") or {}).get("other_jpy", 0))
     sec_out = int((cfg.get("costs") or {}).get("secondary_outbound_shipping_jpy", 0))
@@ -779,7 +819,9 @@ def quality_checks(market: dict, now: datetime, research_date: str, cfg: dict, *
             # 費用: 設定から再計算して突き合わせる（手数料の欠落・料率違い・二重計上・買取への手数料）
             if r["route_type"] in "BD":
                 rate = ((cfg.get("fees") or {}).get(market_key(s["source"]) or "") or {})
-                expect = int(s["price"] * rate["rate"]) if rate.get("confirmed") and isinstance(rate.get("rate"), (int, float)) else None
+                expect = int(s["price"] * rate["rate"]) if fee_confirmed(rate) else None
+                if not fee_confirmed(rate):
+                    q["unknown_fee_used"] += 1
                 if expect is None or not c["selling_fee"] or c["selling_fee"] <= 0:
                     q["missing_fee"] += 1
                 elif c["selling_fee"] != expect:

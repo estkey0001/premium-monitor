@@ -1,0 +1,82 @@
+# 二次流通（フリマ・オークション）の市場ごとの「合法的に取得できる情報」の記録。
+# src/research/secondary_markets.py が読む。取得できないことを「出品なし・成約なし」と書かない（BLOCKED は未取得）。
+# 資格情報（API キー）は環境変数の名前だけをここに書く。値は書かない・出力しない。
+# 調査日 2026-11-18。変えるときは checked_on と根拠を更新する。
+policy:
+  scrape_search_results: false     # CLAUDE.md の絶対禁止: メルカリ・ラクマ・ヤフオク・eBay の検索結果をスクレイピングしない（公式 API だけ）
+
+markets:
+  mercari:
+    label: メルカリ
+    hosts: [jp.mercari.com, mercari.com]
+    priority: 1
+    checked_on: "2026-11-18"
+    official_api: {exists: false, name: null, credential_env: [], enable_var: null, scope: none}
+    status: BLOCKED
+    reason: no_official_api_search_scrape_prohibited
+    listing_access: BLOCKED
+    sold_access: BLOCKED
+    evidence: "公式の価格・出品データ API は確認できない。robots.txt は個別の商品ページを禁じていないが、出品の発見には検索結果が必要で、検索結果の取得はこのプロジェクトで禁止。検索エンジンも個別ページでなく検索結果ページを返す。"
+  yahoo_auction:
+    label: Yahoo!オークション
+    hosts: [auctions.yahoo.co.jp, page.auctions.yahoo.co.jp]
+    priority: 2
+    checked_on: "2026-11-18"
+    official_api: {exists: false, name: "Yahoo!オークション Web API", credential_env: [], enable_var: null, scope: none}
+    status: NOT_SUPPORTED
+    reason: official_api_discontinued
+    listing_access: NOT_SUPPORTED
+    sold_access: NOT_SUPPORTED
+    evidence: "公式の Auction Web API は 2020 年 1 月に終了（Yahoo!デベロッパーネットワークの告知）。robots.txt は落札相場（/closedsearch/）を禁止。入札中の現在価格は売れた価格でもない。"
+  yahoo_flea:
+    label: Yahoo!フリマ
+    hosts: [paypayfleamarket.yahoo.co.jp]
+    priority: 3
+    checked_on: "2026-11-18"
+    official_api: {exists: false, name: null, credential_env: [], enable_var: null, scope: none}
+    status: BLOCKED
+    reason: no_official_api_search_scrape_prohibited
+    listing_access: BLOCKED
+    sold_access: BLOCKED
+    evidence: "公式 API は確認できない。robots.txt は売り切れ（sold=）・価格帯・並び順つきの検索を禁止。検索結果の取得はこのプロジェクトで禁止。"
+  rakuma:
+    label: ラクマ
+    hosts: [fril.jp, item.fril.jp]
+    priority: 4
+    checked_on: "2026-11-18"
+    official_api: {exists: false, name: null, credential_env: [], enable_var: null, scope: none}
+    status: BLOCKED
+    reason: no_official_api_robots_disallow_search
+    listing_access: BLOCKED
+    sold_access: BLOCKED
+    evidence: "公式 API は確認できない。robots.txt が /search/ を禁止。"
+  ebay:
+    label: eBay
+    hosts: [ebay.com, ebay.co.jp]
+    priority: 5
+    checked_on: "2026-11-18"
+    official_api:
+      exists: true
+      name: "eBay Browse API（出品中のみ）／Marketplace Insights API（成約・審査制）"
+      credential_env: [EBAY_CLIENT_ID, EBAY_CLIENT_SECRET]
+      enable_var: ENABLE_EBAY_API
+      scope: listing
+      sold_requires: [EBAY_INSIGHTS_APPROVED]
+    status: BLOCKED
+    reason: official_api_not_configured
+    listing_access: BLOCKED
+    sold_access: BLOCKED
+    evidence: "Browse API は無料の開発者登録で出品中の価格が取れるが、資格情報が未登録。成約は Marketplace Insights（審査制）だけで、未承認。海外の売却先は為替・関税・送料が別で、手数料も UNKNOWN。"
+
+# 公式 API（買う側の小売の補完）。キーが無ければ NOT_CONFIGURED。値は出力しない。
+retail_apis:
+  rakuten_ichiba:
+    label: 楽天市場
+    credential_env: [RAKUTEN_APP_ID]
+    enable_var: ENABLE_RAKUTEN_API
+    scope: "新品の販売店（家電量販店・カメラ店の楽天店）"
+  yahoo_shopping:
+    label: Yahoo!ショッピング
+    credential_env: [YAHOO_SHOPPING_APP_ID]
+    enable_var: ENABLE_YAHOO_API
+    scope: "新品・中古の販売店"

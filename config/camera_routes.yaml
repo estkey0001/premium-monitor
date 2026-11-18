@@ -21,36 +21,43 @@ costs:
   secondary_outbound_shipping_jpy: 1500   # フリマ・オークションで売るときの、買い手への発送（scoring_rules.fee_defaults.shipping_fee と同じ）
   other_jpy: 0
 
-# 売り先の市場ごとの販売手数料（売値に対する割合）。市場ごとに分ける
+# 売り先の市場ごとの販売手数料（売値に対する割合）。市場ごとに分ける。
+# status: CONFIRMED=一次情報（公式ヘルプ）の本文を読んで確認した（evidence_read_body: true が必須）／UNVERIFIED=検索要約だけ・本文を読めていない／UNKNOWN=料率が分からない。
+# CONFIRMED 以外の市場を売り先にするルート（B・D）は NOT_CALCULATED。手数料 0 円・推測の料率で利益を出さない。
 fees:
   mercari:
     label: メルカリ
     rate: 0.10
-    confirmed: true
+    status: CONFIRMED
+    evidence_read_body: true
     confirmed_on: "2026-11-18"
-    evidence: "メルカリのヘルプ「価格の決め方」に販売価格の 10%（公式ヘルプの検索結果の要約で確認。本文は直接読めていない）"
+    evidence: "メルカリのヘルプ「メルカリの手数料」(help.jp.mercari.com/guide/articles/65/) の本文に、取引完了時に販売価格の 10% と記載（本文を読了。本文に更新日の表示は無い）"
   yahoo_flea:
     label: Yahoo!フリマ
     rate: 0.05
-    confirmed: true
-    confirmed_on: "2026-11-18"
-    evidence: "Yahoo! JAPAN ヘルプセンター「販売利益とは」に 5%（税込）（検索結果の要約で確認。本文は直接読めていない）"
+    status: UNVERIFIED
+    evidence_read_body: false
+    confirmed_on: null
+    evidence: "検索要約で 5% とあるだけ。公式ヘルプ（JavaScript 描画）の本文を読めなかった。本文で確認できるまで利益計算に使わない"
   yahoo_auction:
     label: Yahoo!オークション
     rate: 0.10
-    confirmed: true
+    status: CONFIRMED
+    evidence_read_body: true
     confirmed_on: "2026-11-18"
-    evidence: "Yahoo! JAPAN ヘルプセンター「落札システム利用料について」に 10%（税込）"
+    evidence: "ヤフオク!の「ご利用料金」(auctions.yahoo.co.jp/guide/guide/fee.html) とヘルプ H000005313・H000005317 の本文に、落札システム利用料 10%（税込）と記載（本文を読了。更新日の表示は無い。特定カテゴリ・キャンペーンは別）"
   rakuma:
     label: ラクマ
     rate: null
-    confirmed: false
+    status: UNKNOWN
+    evidence_read_body: false
     confirmed_on: null
-    evidence: "料率が変動制で、公式の最新の本文を確認できていない（6.6% は 2021〜2023 年の旧料率）。確認できるまで売り先に使わない"
+    evidence: "料率が変動制で、公式の最新の本文を確認できていない（6.6% は旧料率）。確認できるまで売り先に使わない"
   ebay:
     label: eBay
     rate: null
-    confirmed: false
+    status: UNKNOWN
+    evidence_read_body: false
     confirmed_on: null
     evidence: "未対応（為替・関税・送料の扱いが別。このプロジェクトでは海外の売却先を計算しない）"
 

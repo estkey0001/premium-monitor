@@ -97,6 +97,7 @@ _ITEM_URL_PATTERNS = (
     re.compile(r"^https://(page\.)?auctions\.yahoo\.co\.jp/jp/auction/[A-Za-z0-9]+/?$"),
     re.compile(r"^https://jp\.mercari\.com/(item|shops/product)/[A-Za-z0-9]+/?$"),
     re.compile(r"^https://item\.fril\.jp/[A-Za-z0-9]+/?$"),
+    re.compile(r"^https://paypayfleamarket\.yahoo\.co\.jp/item/[A-Za-z0-9]+/?$"),
     re.compile(r"^https://www\.ebay\.(com|co\.uk|de)/itm/\d+/?$"),
 )
 # ダミーの番号（x000000001・m00000000001 など、0 が5個以上続く）

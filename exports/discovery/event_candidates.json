@@ -3226,6 +3226,25 @@
       "discovered_at": "2026-11-17T22:18:58+09:00",
       "last_seen_on": "2026-11-18",
       "updated_at": "2026-11-18T02:01:10+09:00"
+    },
+    "tcg-event-5b5be08f56fb": {
+      "source": "CARD_LABO",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "ポケモンカードゲーム MEGA 拡張パック『30th CELEBRATION』",
+      "official_url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/624714/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-11-18",
+      "application_end": "2026-11-19",
+      "event_status": "UPCOMING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-5b5be08f56fb",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-11-18T13:34:58+09:00",
+      "last_seen_on": "2026-11-18",
+      "updated_at": "2026-11-18T13:34:58+09:00"
     }
   }
 }

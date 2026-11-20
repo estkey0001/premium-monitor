@@ -92,20 +92,24 @@ def test_no_executable_price_shows_waiting_without_guessing_price_or_profit():
 
 def test_reference_sku_is_labeled_and_never_green():
     html = P.render(_simple(), now=NOW)
-    assert "参考・正本に未登録" in html
+    assert "まだ監視対象に登録していない機種" in html
     ref_cards = html[html.index("iPhone 18 Pro（参考"):]
     assert 'class="pos"' not in ref_cards                                        # 参考の黒字は緑にしない
     ref_only = _comp([_simple()["skus"][2]])
     h2 = P.render(ref_only, now=NOW)
-    assert "参考・正本に未登録" in h2 and 'class="pos"' not in h2
+    assert "まだ監視対象に登録していない機種" in h2 and 'class="pos"' not in h2
     assert H.model_conclusion(ref_only["skus"])["status"] == "REFERENCE_ONLY"
     assert '<details class="model">' in h2 and '<details class="model" open>' not in h2      # 参考のモデルは折りたたみ
 
 
 def test_registered_positive_profit_is_green_only_for_registered():
+    # 表示仕様の変更: 緑は購入候補（登録済み・BUY）だけ。判定が様子見（WAIT）の黒字は中立色にする（HOME の様子見と同じ）。
     html = P.render(_simple(), now=NOW)
-    assert html.count('class="pos"') >= 1
-    first = html[html.index("今の結論"):html.index("iPhone 18 Pro")]
+    assert 'class="pos"' not in html.split("</style>")[-1]
+    buy = _comp([_sku("iPhone Duo 1TB", hx={"shop": "店A", "price": 483000}, net=11400, roi=9.0, opp="BUY",
+                      rows=[_row("iPhone Duo 1TB", "a", "店A", 483000)])])
+    html = P.render(buy, now=NOW)
+    first = html[html.index("今の結論"):]
     assert 'class="pos"' in first
 
 
@@ -152,7 +156,7 @@ def test_history_skips_dates_with_no_common_shop():
 def test_malformed_history_does_not_break_page():
     for bad in ({}, {"snapshots": "x"}, {"snapshots": [1, None, {"date": "2026-11-01"}]}, []):
         html = P.render(_simple(), now=NOW, history=bad)
-        assert "iPhone Product Hub" in html
+        assert "iPhone 買取比較" in html
 
 
 # ---- シグナル ----
@@ -209,7 +213,7 @@ def test_new_product_section_labels_and_release_date_is_no_data():
     sec = t[t.index("新製品・予約情報"):]
     assert "登録済み" in sec and "未登録（確認待ち）" in sec and "iPhone Air" in sec and "¥469,800" in sec
     assert "2026-10-17" in sec and "2026-11-18" in sec
-    assert "発売日・予約日" in sec and sec.count("データ無し") >= 3
+    assert "発売日・予約日: データ無し" in sec and sec.count("データ無し") == 1          # 全件データ無しの列は行に繰り返さず 1 回だけ
     assert "apple-secret123" not in html and "内部メモ" not in html and "BOX" not in html
     assert H.apple_candidates({"candidates": {}}) is None and H.apple_candidates(None) is None
 
@@ -231,7 +235,7 @@ def test_escaping_and_no_javascript_links_and_no_local_paths():
 
 def test_backward_compatible_signature_and_css_exports():
     html = P.render(_simple())                                                    # 追加引数なし・now なし
-    assert "<!doctype html>" in html and "iPhone Product Hub" in html
+    assert "<!doctype html>" in html and "iPhone 買取比較" in html
     assert isinstance(P.CSS, str) and isinstance(P.HUB_CSS, str) and P.HUB_CSS not in P.CSS
     assert P.age_banner("2026-11-01", NOW).startswith('<div class="note">')
     row = P._row_html({"shop": "店", "shop_status": "ACTIVE", "condition": "UNOPENED", "freshness": "FRESH", "basis": "uniform",

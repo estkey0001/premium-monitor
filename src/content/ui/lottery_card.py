@@ -7,13 +7,13 @@ updateCard）は同じ構造の要素を書き換えるので、ここの構造�
 from __future__ import annotations
 
 from src.content.ui.components import esc
-from src.content.ui.runtime import _fmt_day, _fmt_exact
+from src.content.ui.runtime import _fmt_day, _fmt_exact, _time_ok
 
 
 def _period(vm: dict, a: str, ad: str, b: str, bd: str) -> str:
     def one(k, kd):
         if vm.get(k):
-            return _fmt_exact(vm[k])
+            return _fmt_exact(vm[k], _time_ok(vm))
         if vm.get(kd):
             return f"{_fmt_day(vm[kd])}（時刻未公表）"
         return ""

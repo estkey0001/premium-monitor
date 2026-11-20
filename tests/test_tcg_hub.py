@@ -77,7 +77,9 @@ def test_date_only_never_gets_a_time():
     v = _hub([_ev()])["events"][0]
     assert v["end"] == {"date": "2026-11-22", "time": None, "precision": "date"}
     html = page.render(_hub([_ev()]))
-    assert "2026-11-22（日付のみ・時刻未公表）" in html and "2026-11-22 00:00" not in html
+    assert '<td data-label="締切" class="w2"><span title="2026-11-22（日付のみ・時刻未公表）">11/22</span>' in html     # 日付のみは `11/22` だけ（原値は title・注記は表の上）。時刻は作らない
+    assert "日付のみ" in html
+    assert "11/22 00:00" not in html and "2026-11-22 00:00" not in html
     cal = [c for c in _hub([_ev()])["calendar"] if c["kind"] == "END"]
     assert cal and cal[0]["time"] is None
 
@@ -246,3 +248,106 @@ def test_real_exports_pass_the_build_guard_and_dict_without_items_does_not_overw
     monkeypatch.setattr(bp, "PROJECT_ROOT", tmp_path)
     bp._build_tcg_hub_html(pub)
     assert (pub / "tcg.html").read_text(encoding="utf-8") == "PREVIOUS"
+
+
+# ---- UI/UX 刷新で追加した表示のテスト ----
+
+def _reg_with_image(url):
+    reg = {"products": [dict(REG["products"][0], official_image_url=url)]}
+    return reg
+
+
+def test_product_image_only_from_pokemon_official_https():
+    ok = page.render(_hub([_ev()], reg=_reg_with_image("https://www.pokemon-card.com/products/2026/images/x.jpg")))
+    assert 'src="https://www.pokemon-card.com/products/2026/images/x.jpg"' in ok
+    assert 'referrerpolicy="no-referrer"' in ok and "onerror" not in ok
+    for bad in ("https://evil.example.com/x.jpg", "http://www.pokemon-card.com/x.jpg", "javascript:alert(1)"):
+        html = page.render(_hub([_ev()], reg=_reg_with_image(bad)))
+        assert "<img" not in html and "evil.example.com" not in html and "javascript:" not in html
+
+
+def test_one_piece_never_gets_an_image():
+    h = _hub([_ev(tcg="ONE_PIECE", product_id="op-18", product_name="ブースター OP-18")])
+    h["products"][0]["image_url"] = "https://www.pokemon-card.com/x.jpg"
+    assert "<img" not in page.render(h)
+
+
+def test_each_lottery_appears_once_in_the_table():
+    evs = [_ev(lottery_id=f"L{i}", source_url=f"https://www.c-labo.jp/shop/x/blog/{i}/",
+               application_end_date="2026-11-20") for i in range(3)]
+    html = page.render(_hub(evs))
+    n = html.count('class="ev ') + html.count('class="ev"')
+    assert n == len(evs), n
+
+
+def test_empty_state_has_meaningful_text():
+    html = page.render(_hub([]))
+    assert "<h1>" in html and "受付中" in html
+
+
+# ── 00:00 規則（時刻が無い・未確認の行に 00:00 を出さない）──
+def _visible(html: str) -> str:
+    """属性（title の原値）を除いた、画面に見える文字だけ。"""
+    return re.sub(r"<[^>]+>", " ", html)
+
+
+def _midnight(text: str) -> bool:
+    """時刻としての 00:00（12:00:00 の秒・分の並びは除く）。"""
+    return re.search(r"(?<![\d:])00:00(?![\d:])", text) is not None
+
+
+def _midnight_ev(**kw):
+    d = dict(application_start="2026-11-04T00:00:00+09:00", application_end="2026-11-23T00:00:00+09:00",
+             winner_announcement_at="2026-11-24T00:00:00+09:00", purchase_start="2026-11-25T00:00:00+09:00",
+             purchase_end="2026-11-30T00:00:00+09:00", application_start_date=None, application_end_date=None)
+    d.update(kw)
+    return _ev(**d)
+
+
+def test_unverified_row_never_shows_midnight_or_any_time():
+    h = _hub([_midnight_ev(verified=False, lottery_id="U1")])
+    html = page.render(h)
+    assert not _midnight(_visible(html))                        # 表・カード・カレンダー・今後 7 日のどこにも出ない
+    assert "11/23" in _visible(html) and "時刻は未確認のため日付のみ" in html
+    assert "原値 2026-11-23 00:00" in html                      # 原値は title に残す
+    v = h["events"][0]
+    assert v["end"]["time"] == "00:00"                          # when() の結果は変えない（描画側で処理）
+
+
+def test_verified_date_only_and_midnight_get_no_time_but_real_times_stay():
+    only = page.render(_hub([_ev()]))
+    assert not _midnight(_visible(only)) and "11/22" in _visible(only)
+    mid = page.render(_hub([_midnight_ev(verified=True, lottery_id="V1")]))
+    assert not _midnight(_visible(mid))                         # 00:00 は明示か補完か区別できないので日付のみ
+    real = page.render(_hub([_ev(application_end="2026-11-22T23:59:00+09:00", application_end_date=None)]))
+    assert "11/22 23:59" in _visible(real)                      # 確認済みの 00:00 以外の時刻は残す
+
+
+def test_midnight_rule_applies_in_calendar_and_agenda_without_duplicates():
+    h = _hub([_midnight_ev(verified=False, lottery_id="U1", application_end="2026-11-21T00:00:00+09:00")])
+    html = page.render(h)
+    assert page.show_time("00:00", True) is None and page.show_time("00:00", False) is None
+    assert page.show_time("12:30", False) is None and page.show_time("12:30", True) == "12:30"
+    assert html.count('class="ev ') == 1                        # 同じ抽選を重ねて出さない
+    agenda = html[html.index('class="agenda"'):]
+    assert not _midnight(_visible(agenda.split("</details>")[0]))
+
+
+def test_count_labels_and_timestamp_labels_are_distinguished():
+    html = page.render(_hub([_ev(verified=False)]))
+    assert "未確認を含む" in html and "id=\"count-def\"" in html and "HOME" in html
+    assert "画面生成" in html and "情報の確認時刻ではありません" in html
+
+
+def test_priority_badge_is_not_hidden_by_new_or_deadline_flag():
+    ev = _ev(application_end_date="2026-11-20", published_at="2026-11-19T10:00:00+09:00",
+             application_url="https://www.c-labo.jp/x", entry_url="https://www.c-labo.jp/x")
+    html = page.render(_hub([ev]))
+    row = html[html.index('<tr class="ev'):html.index("</tr>", html.index('<tr class="ev'))]
+    assert "今日締切" in row and re.search(r"[SAB] (今すぐ|応募したい|余裕あり)", _visible(row))
+
+
+def test_calendar_collapses_empty_weeks():
+    h = _hub([_ev(application_end_date="2026-12-24", application_start_date="2026-12-20")])
+    html = page.render(h)
+    assert "予定のない週は省略しています" in html

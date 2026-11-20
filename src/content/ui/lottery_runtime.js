@@ -42,17 +42,19 @@ var NuLotteryRuntime = (function () {
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function jst(t) { return new Date(t + JST); }
   function ymd(t) { return jst(t).toISOString().slice(0, 10); }
-  function fmtExact(iso) {
-    var d = jst(exact(iso));
-    return (d.getUTCMonth() + 1) + '/' + d.getUTCDate() + '(' + WEEK[d.getUTCDay()] + ') ' +
-      pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
+  // Python の runtime._fmt_exact と同じ規則: 00:00 ちょうど・時刻が未確認の行は日付のみ
+  function fmtExact(iso, timeOk) {
+    var d = jst(exact(iso)), day = (d.getUTCMonth() + 1) + '/' + d.getUTCDate() + '(' + WEEK[d.getUTCDay()] + ')';
+    if (timeOk === false || (d.getUTCHours() === 0 && d.getUTCMinutes() === 0)) return day;
+    return day + ' ' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
   }
+  function timeOk(vm) { return vm.src !== 'tcg' || vm.tv === true; }
   function fmtDay(v) {
     var d = jst(day(v));
     return (d.getUTCMonth() + 1) + '/' + d.getUTCDate() + '(' + WEEK[d.getUTCDay()] + ')';
   }
   function when(vm, k, kd, suffix) {
-    if (vm[k]) return fmtExact(vm[k]) + ' ' + suffix;
+    if (vm[k]) return fmtExact(vm[k], timeOk(vm)) + ' ' + suffix;
     if (vm[kd]) return fmtDay(vm[kd]) + ' ' + suffix + '・時刻未公表';
     return '';
   }

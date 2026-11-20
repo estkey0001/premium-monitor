@@ -189,6 +189,7 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None) -> dict
             "series": _s(m.get("series_name")) or None, "product_type": _s(m.get("product_type")) or None,
             "release_date": _first_date(m.get("release_date")) if m else None,       # ONE PIECE（マスタ無し）は作らない
             "official_url": _s(m.get("official_url")) or None,
+            "image_url": _s(m.get("official_image_url")) or None,        # 表示専用（ポケカの公式一覧にある画像の URL。検査は描画側）
             "profit": pl.profit_view(msrp_hit),
             "events": evs, "status": st.aggregate_status(statuses),
             "counts": {"total": len(evs), "live": sum(1 for s in statuses if s != ls.L_ENDED),
@@ -237,6 +238,7 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None) -> dict
         "bind_rate": (exact_n / len(views)) if views else None,
         "bind_rate_live": (sum(1 for v in live if v["canonical"] in (C_MASTER, C_DISCOVERED)) / len(live)) if live else None,
         "products": len(products), "products_with_events": sum(1 for p in products if p["events"]),
+        "applying": sum(1 for v in views if v["status"] in st.APPLYING),         # 受付中 + 締切間近（表示用の合計。判定は変えない）
         "today": len(today_list), "deadline_today": len(deadline_today), "ending_soon": len(ending_soon), "upcoming": len(upcoming),
         "new": len(new), "calendar": len(cal), "skipped_malformed": skipped,
         "master": sum(1 for p in products if p["canonical"] == C_MASTER),

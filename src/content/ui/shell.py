@@ -22,6 +22,7 @@ from src.content.ui import categories as cats
 from src.content.ui import runtime as rt
 from src.content.ui.components import esc
 from src.content.ui.icons import icon
+from src.content.ui.shared_css import site_nav
 
 ROOT_ID = "new-ui-root"
 # root の終わりの目印（deploy-check が新UIの範囲だけを調べるのに使う）
@@ -1113,6 +1114,7 @@ def render_root(ctx: ShellContext) -> str:
         f"data-nu-pd-alias='{esc(json.dumps(pd_alias, ensure_ascii=False))}' "
         f'data-nu-vmcheck="tcg:{vmc["tcg"]};legacy:{vmc["legacy"]};n:{vmc["n"]}">'
         '<a class="nu-skip" href="#nu-main">本文へ移動</a>'
+        f'{site_nav("home")}'
         '<header class="nu-header"><div class="nu-header__inner">'
         f'<a class="nu-brand" href="{esc(navigation.page_href("home"))}" data-nu-nav-brand aria-label="{brand} HOME">'
         f'<span class="nu-brand__mark">{icon("trend", size=18)}</span>'

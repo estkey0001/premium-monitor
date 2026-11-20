@@ -103,10 +103,10 @@ def test_empty_data_shows_no_feed_at_all():
 
 def test_only_sections_with_cards_appear_and_none_says_zero():
     feed = _feed(_ctx(home_feed_data={"iphone": _iphone()}))
-    assert _keys(feed) == ["profit_watch"]                          # 既定の SKU は判定が WAIT の黒字 → 「今日の利益商品」ではなく様子見の枠
-    assert "今日の利益商品" not in feed and "黒字だが様子見" in feed
+    assert _keys(feed) == ["profit_watch"]                          # 既定の SKU は判定が WAIT の黒字 → 「利益商品」ではなく様子見の枠
+    assert "利益商品" not in feed and "黒字だが買いの条件に届いていない" in feed
     assert "0件" not in feed and "0 件" not in feed
-    for title in ("締切間近", "現在受付中", "新着抽選", "最新発売", "買取価格上昇", "WAIT → BUY", "BUY → WAIT"):
+    for title in ("今日やるべきこと", "締切間近", "現在受付中", "新着抽選", "最新発売", "買取価格上昇", "様子見 → 購入候補", "購入候補 → 様子見"):
         assert title not in feed
 
 
@@ -192,7 +192,7 @@ def test_stale_note_on_events_too():
 def test_lottery_cards_keep_runtime_attributes():
     soon = _lot(1, application_end=_iso(timedelta(hours=3)))
     feed = _feed(_ctx(tcg_report={"lotteries": [soon, _lot(2)], "events": []}))
-    assert _keys(feed) == ["ending", "open"]
+    assert _keys(feed) == ["hero", "open"]                           # 締切間近の抽選は「今日やるべきこと」へ出す（下の節からは外す）
     assert feed.count("data-nu-lot=") == 2
     assert 'data-nu-bucket="0"' in feed and 'data-nu-bucket="1"' in feed
     assert 'data-nu-status="ENDING_SOON"' in feed and 'data-nu-sort="' in feed
@@ -233,9 +233,9 @@ def test_new_lottery_uses_official_published_at_within_48h_only():
 
 def test_camera_profit_shown_only_for_confirmed_cd_routes():
     feed = _feed(_ctx(home_feed_data={"camera": _camera()}))
-    assert _keys(feed) == ["profit"] and "RICOH GR IV HDF" in feed and "+¥16,200（7.3%）" in feed
+    assert _keys(feed) == ["hero"] and "RICOH GR IV HDF" in feed and "+¥16,200（7.3%）" in feed   # 購入候補は「今日やるべきこと」へ
     d = _feed(_ctx(home_feed_data={"camera": _camera([_route("D")])}))
-    assert _keys(d) == ["profit"]
+    assert _keys(d) == ["hero"]
 
 
 @pytest.mark.parametrize("routes, registered", [
@@ -291,7 +291,8 @@ def test_section_order_matches_spec():
                             _lot(3, published_at=_iso(-timedelta(hours=5)), application_start=_iso(timedelta(days=2)), application_end=_iso(timedelta(days=5)))],
               "events": [release]}
     feed = _feed(_ctx(tcg_report=report, home_feed_data={"iphone": _iphone(events=evs)}))
-    assert _keys(feed) == ["profit_watch", "ending", "open", "new", "release", "surge", "w2b", "b2w"]
+    # 締切間近（lot1）は購入候補が無いのでヒーローへ。順: 今日やるべきこと → … → 新着 → 受付中 → 様子見 → 最新発売 → 買取変動
+    assert _keys(feed) == ["hero", "new", "open", "profit_watch", "release", "surge", "w2b", "b2w"]
     h = _home(_ctx(tcg_report=report, home_feed_data={"iphone": _iphone(events=evs)}))
     assert h.index("data-nu-feed") < h.index('id="nu-genres"')        # 先頭に追加。既存の構成は残る
 
@@ -392,8 +393,8 @@ def test_only_buy_decisions_appear_in_todays_profit_and_watch_is_separate():
     buy = _sku("iPhone Duo 2TB")
     buy["opportunity_status"] = "BUY"
     feed = _feed(_ctx(home_feed_data={"iphone": _iphone([buy, _sku()])}))
-    assert _keys(feed) == ["profit", "profit_watch"]
-    top = feed[feed.index('data-nu-feed-sec="profit"'):feed.index('data-nu-feed-sec="profit_watch"')]
+    assert _keys(feed) == ["hero", "profit_watch"]                                    # 購入候補 1 件はヒーローへ
+    top = feed[feed.index('data-nu-feed-sec="hero"'):feed.index('data-nu-feed-sec="profit_watch"')]
     assert "iPhone Duo 2TB" in top and "iPhone Duo 1TB" not in top                    # 様子見は上の節に出ない
     assert "週次の Web 調査" in feed                                                    # 7 日以内でも週次の価格であることを示す
 
@@ -402,3 +403,230 @@ def test_new_lottery_is_not_repeated_in_open_or_ending():
     report = {"lotteries": [_lot(1, published_at=_iso(-timedelta(hours=5)))], "events": []}        # 受付中かつ新着
     feed = _feed(_ctx(tcg_report=report))
     assert _keys(feed) == ["open"]
+
+
+# ── 今日のアクション（サマリー）・ヒーロー・表示語・色 ───────────────────────────
+
+def _today(ctx) -> str:
+    h = _home(ctx)
+    s = h.index("data-nu-today")
+    return h[s:h.index("</nav>", h.index("nu-hjump"))]
+
+
+def _buy_sku(name, **kw):
+    s = _sku(name, **kw)
+    s["opportunity_status"] = "BUY"
+    return s
+
+
+def test_today_summary_always_shown_and_zero_is_a_dash_not_zero_ken():
+    h = _home(_ctx())                                                # 入力が空でもサマリーは出る（フィードは出ない）
+    assert "data-nu-today" in h and "data-nu-feed" not in h.replace("data-nu-today", "")
+    assert "現在、購入候補の条件を満たす商品はありません" not in h   # タイルの「該当なし」で足りる（文は出さない）
+    assert "抽選・予約の受付状況は下のジャンルから確認できます" in h
+    t = _today(_ctx())
+    assert "0件" not in t and "0 件" not in t and t.count("該当なし") == 4
+    for label in ("購入候補", "締切間近", "受付中", "様子見"):
+        assert label in t
+    assert "nu-card" not in t                                        # feed の外に nu-card を置かない
+    assert "今日の状況" in t and "今日のアクション" not in h           # サマリー見出しとヒーロー見出し「今日やるべきこと」を分ける
+    assert re.findall(r'class="nu-today__tile nu-today__tile--\w+ nu-today__tile--zero"', t).__len__() == 4
+
+
+def test_h1_is_action_oriented_and_genre_shortcuts_follow_the_summary():
+    h = _home(_ctx())
+    title = h[h.index('id="nu-home-title"'):h.index("</h1>")]
+    assert "今日の判断" in title and "ジャンルから探す" not in title
+    nav = h[h.index("nu-hjump"):h.index("</nav>", h.index("nu-hjump"))]
+    assert h.index("data-nu-today") < h.index("nu-hjump") < h.index('id="nu-genres"')   # ジャンルより上に近道がある
+    assert 'href="./#nu-genres"' in nav and 'href="./#nu-purposes-h"' in nav and 'id="nu-purposes-h"' in h
+    # 抽選・予約への近道は置かない（同じ行き先を 1 画面に何度も並べない。目的から探す・ナビが担う）
+    assert "page=lottery" not in nav
+    # 近道は 44px 以上の操作部品（CSS）
+    css = shell.styles.css() if hasattr(shell, "styles") else __import__("src.content.ui.styles", fromlist=["x"]).css()
+    assert re.search(r"\.nu-hjump__a\{[^}]*min-height:var\(--tap-min\)", css)
+
+
+def test_notices_are_merged_into_one_block_under_the_tiles_in_priority_order():
+    h = _home(_ctx(source_issue=True))
+    assert h.count("nu-today__notes") == 1 and "nu-notice" not in h   # 別立ての注意バナーは出さない
+    block = h[h.index("nu-today__notes"):h.index("nu-hjump")]
+    order = [block.index(x) for x in ("一部の情報源を取得できていません", "件数はページ生成時点")]
+    assert order == sorted(order)                                    # 重要度の高い順
+    assert block.count("<p ") <= 2                                   # 注意は最大 2 行
+    assert h.index("nu-today__tiles") < h.index("nu-today__notes")
+    # 情報源の問題が無ければその行は出ない
+    assert "一部の情報源" not in _home(_ctx())
+
+
+def test_actionable_line_is_hidden_when_zero_but_kept_by_default():
+    from types import SimpleNamespace
+    from src.content.ui import pages
+    empty = SimpleNamespace(opportunity_set=None)
+    assert pages._actionable_line(empty, hide_zero=True) == ""        # 0 件の行は出さない（「0件」を増やさない）
+    assert "0件" in pages._actionable_line(empty) and "data-nu-act-untils=" in pages._actionable_line(empty)
+    assert "nu-home-act" not in _home(_ctx())
+
+
+def test_today_summary_counts_and_jump_targets():
+    report = {"lotteries": [_lot(1, application_end=_iso(timedelta(hours=3))), _lot(2), _lot(3)], "events": []}
+    ctx = _ctx(tcg_report=report, home_feed_data={"iphone": _iphone([_buy_sku("iPhone Duo 2TB"), _sku()])})
+    t = _today(ctx)
+    tiles = re.findall(r'nu-today__tile nu-today__tile--(\w+)[^"]*" href="([^"]+)"[^>]*>.*?nu-today__n">(\d+)', t)
+    got = {k: (href, n) for k, href, n in tiles}
+    assert got["buy"] == ("./#nu-sec-hero", "1")                     # ヒーローへ移した購入候補も数える
+    assert got["end"] == ("./#nu-sec-hero", "1")                     # 締切間近の抽選もヒーロー（購入候補 1 + 締切間近 1）
+    assert got["open"] == ("./#nu-sec-open", "2")
+    assert got["wait"] == ("./#nu-sec-profit_watch", "1")
+    assert 'id="nu-sec-hero"' in _home(ctx) and 'id="nu-sec-profit_watch"' in _home(ctx)
+    assert "現在、購入候補の条件を満たす商品はありません" not in t
+
+
+def test_open_tile_says_it_excludes_ending_soon_and_targets_match_counts():
+    report = {"lotteries": [_lot(1, application_end=_iso(timedelta(hours=3))),
+                            _lot(2, application_end=_iso(timedelta(hours=4))),
+                            _lot(3, application_end=_iso(timedelta(hours=5))), _lot(4)], "events": []}
+    ctx = _ctx(tcg_report=report)
+    t = _today(ctx)
+    open_tile = t[t.index("nu-today__tile--open"):t.index("</li>", t.index("nu-today__tile--open"))]
+    assert "締切間近を除く" in open_tile and ">1<" in open_tile        # 受付中は 1 件（締切間近の 3 件は含めない）
+    end_tile = t[t.index("nu-today__tile--end"):t.index("</li>", t.index("nu-today__tile--end"))]
+    assert ">3<" in end_tile and 'href="./#nu-sec-hero"' in end_tile   # ヒーローへ移した 2 件も数え、そこへ飛ぶ（残り 1 件は下の節）
+    assert 'id="nu-sec-hero"' in _home(ctx) and 'id="nu-sec-ending"' in _home(ctx)
+    zero = _today(_ctx())
+    assert "締切間近を除く" not in zero                                  # 0 件のタイルには付けない
+
+
+def test_hero_has_only_buy_and_ending_and_at_most_two_and_moves_them_down():
+    report = {"lotteries": [_lot(1, application_end=_iso(timedelta(hours=3))),
+                            _lot(2, application_end=_iso(timedelta(hours=4)))], "events": []}
+    buys = [_buy_sku(f"iPhone Duo {i}TB", net_profit=1000 + i * 1000) for i in (1, 2, 3)]
+    feed = _feed(_ctx(tcg_report=report, home_feed_data={"iphone": _iphone(buys + [_sku("iPhone Duo 9TB")])}))
+    assert _keys(feed)[:3] == ["hero", "profit", "ending"]
+    hero = feed[feed.index('data-nu-feed-sec="hero"'):feed.index('data-nu-feed-sec="profit"')]
+    assert hero.count("<li ") == hf.HERO_MAX == 2
+    assert "iPhone Duo 3TB" in hero and "ポケカ抽選1" in hero          # 利益の最大の購入候補 + 最も締切の近い抽選
+    assert "iPhone Duo 9TB" not in hero                              # 様子見は上げない
+    rest = feed[feed.index('data-nu-feed-sec="profit"'):]
+    assert "iPhone Duo 3TB" not in rest.split('data-nu-feed-sec="profit_watch"')[0]   # 重複しない
+    assert "ポケカ抽選2" in feed[feed.index('data-nu-feed-sec="ending"'):]
+
+
+def test_unconfirmed_and_stale_are_never_actionable_buys():
+    """要確認・古い調査は購入候補として数えない（サマリー件数とヒーローの対象外）。"""
+    unconfirmed = hf.FeedCard(product="X", category="カメラ", action="要確認", profit=5000, roi=0.1)
+    old = hf.FeedCard(product="Y", category="iPhone", action="買い", profit=5000, roi=0.1, note="調査から10日")
+    fresh = hf.FeedCard(product="Z", category="iPhone", action="購入可", profit=5000, roi=0.1)
+    assert hf.card_tone(unconfirmed) == "neutral" and not hf.is_buy(unconfirmed)
+    assert hf.is_buy(old) and not hf.is_actionable_buy(old)
+    assert hf.is_actionable_buy(fresh)
+    ctx = _ctx(home_feed_data={"camera": _camera()})
+    assert 'data-nu-feed-sec="hero"' in _feed(ctx)                   # 購入候補（買い）は上がる
+
+
+def test_display_words_and_colors():
+    buy = hf.FeedCard(product="A", action="購入可", profit=1000, roi=0.1)
+    old = hf.FeedCard(product="A", action="買い", profit=1000, roi=0.1, note="調査から10日")
+    wait = hf.FeedCard(product="A", action="様子見", profit=1000, roi=0.05)
+    chk = hf.FeedCard(product="A", action="要確認")
+    assert hf.card_tone(buy) == "success" and hf.card_tone(wait) == "warning"
+    assert hf.card_tone(old) == "neutral" and hf.card_tone(chk) == "neutral"        # 古い調査は灰
+    h = hf._card_html(buy, hf._PROFIT_FIELDS, "std")
+    assert "購入候補" in h and "購入可" not in h and "nu-tone-success" in h and "黒字" in h
+    assert "nu-fc--stale" in hf._card_html(old, hf._PROFIT_FIELDS, "std")
+    assert "nu-tone-warning" in hf._card_html(wait, hf._PROFIT_FIELDS, "std") and "様子見" in hf._card_html(wait, hf._PROFIT_FIELDS, "std")
+    assert "BUY" not in h and "WAIT" not in h and "PROFITABLE" not in h
+
+
+def test_card_kinds_and_best_route_row():
+    c = hf.FeedCard(product="A", category="iPhone", action="購入可", buy_source="Apple 公式", sell_source="店B",
+                    profit=11400, roi=0.0243, checked_at="2026-11-17")
+    for kind in ("hero", "std", "compact"):
+        assert f"nu-fc--{kind}" in hf._card_html(c, hf._PROFIT_FIELDS, kind)
+    std = hf._card_html(c, hf._PROFIT_FIELDS, "std")
+    assert "最適ルート</dt><dd>Apple 公式 → 店B" in std and "確認日</dt><dd>2026-11-17" in std
+    assert std.count("+¥11,400") == 1                                # 利益は大きな 1 行だけ（dl と重ねない）
+    compact = hf._card_html(c, hf._EVENT_FIELDS, "compact")
+    assert "nu-fc__profit" not in compact and "利益の見込み" in compact
+
+
+def test_green_is_only_for_buy_candidates_in_amounts_and_chips():
+    """様子見・要確認・古い調査の金額と「黒字」チップは緑にしない（CSS は tone ごとに色を決める）。"""
+    from src.content.ui import styles
+    css = styles.css()
+    base = re.search(r"\.nu-fc__profit\{([^}]*)\}", css).group(1)
+    assert "color:var(--color-text)" in base and "tone-success" not in base
+    assert re.search(r"\.nu-fc--success \.nu-fc__profit\{color:var\(--tone-success-fg\)\}", css)
+    tag = re.search(r"\.nu-fc__tag\{([^}]*)\}", css).group(1)
+    assert "tone-success" not in tag
+    assert re.search(r"\.nu-fc--warning \.nu-fc__tag\{[^}]*tone-warning-fg", css)
+    wait = hf._card_html(hf.FeedCard(product="A", action="様子見", profit=1000, roi=0.05), hf._PROFIT_FIELDS, "std")
+    old = hf._card_html(hf.FeedCard(product="A", action="買い", profit=1000, roi=0.1, note="調査から10日"), hf._PROFIT_FIELDS, "std")
+    buy = hf._card_html(hf.FeedCard(product="A", action="購入可", profit=1000, roi=0.1), hf._PROFIT_FIELDS, "std")
+    assert "nu-fc--warning" in wait and "nu-fc--success" not in wait
+    assert "nu-fc--neutral" in old and "nu-fc--success" not in old
+    assert "nu-fc--success" in buy
+
+
+def test_one_main_button_per_card_and_no_duplicate_links():
+    c = hf.FeedCard(product="A", category="iPhone", action="購入可", profit=1000, roi=0.1, href="./iphone-buyback.html")
+    hero = hf._card_html(c, hf._PROFIT_FIELDS, "hero")
+    std = hf._card_html(c, hf._PROFIT_FIELDS, "std")
+    compact = hf._card_html(c, hf._EVENT_FIELDS, "compact")
+    assert all(h.count("<a ") == 1 and "詳細と情報元を見る" in h for h in (hero, std, compact))
+    assert "nu-btn--primary" in hero and "nu-btn--secondary" in std and "nu-btn--link" in compact
+    # 同じ行き先は 1 節に 1 つだけ（様子見の節: base_link・iPhone 買取比較・カードのボタンが同じ → カードのボタンだけ残す）
+    feed = _feed(_ctx(home_feed_data={"iphone": _iphone()}))
+    assert feed.count('href="./iphone-buyback.html"') == feed.count("詳細と情報元を見る") == 1
+    # 抽選の節は「抽選・予約をすべて見る」だけ（TCG 抽選ハブと二重に出さない）
+    lot = _feed(_ctx(tcg_report={"lotteries": [_lot(2), _lot(3)], "events": []}))
+    assert "抽選・予約をすべて見る" in lot and "TCG 抽選ハブ" not in lot
+
+
+# ── 独立審査の指摘（HOME と他 3 ページの一体感・CTA の重複・未確認の購入候補） ──────────────
+
+def test_wait_to_buy_event_is_not_green_unless_a_verified_buy_exists():
+    ev = [{"type": "WAIT_TO_BUY", "sku": "iPhone Duo 1TB", "from": "WAIT", "to": "BUY", "net": 30000}]
+    feed = _feed(_ctx(home_feed_data={"iphone": _iphone(events=ev)}))
+    sec = feed[feed.index("nu-feed__sec--w2b"):]
+    assert "nu-tone-success" not in sec and "nu-fc--success" not in sec          # 実行可能・FRESH の確認が無い → 緑にしない
+    assert "購入候補に変化" in sec and "購入できるかは未確認" in sec and "様子見 → 購入候補" in sec
+    assert "BUY" not in sec and "WAIT" not in sec                               # 旧語は HOME に出さない
+    # 同じ商品が確認済みの購入候補（利益商品）にもいるなら緑のまま
+    sku = _buy_sku("iPhone Duo 1TB")
+    feed = _feed(_ctx(home_feed_data={"iphone": _iphone(skus=[sku], events=ev)}))
+    assert "nu-fc--success" in feed[feed.index("nu-feed__sec--w2b"):]
+    assert hf.card_tone(hf.FeedCard(action="買い", unverified=True)) == "info"
+
+
+def test_plain_words_replace_judgement_codes_on_home():
+    assert hf.plain_reason("黒字だが ROI が BUY の条件（8%）未満") == "黒字だが ROI が購入候補の条件（8%）未満"
+    assert hf.judge_word("WAIT") == "様子見" and hf.judge_word("BUY") == "購入候補" and hf.judge_word(None) == "—"
+    feed = _feed(_ctx(home_feed_data={"iphone": _iphone()}))
+    assert "BUY" not in feed and "WAIT" not in feed
+
+
+def test_lottery_all_link_appears_once_in_the_feed_and_zero_tile_is_one_word():
+    lots = [_lot(2), _lot(3), _lot(4)]
+    feed = _feed(_ctx(tcg_report={"lotteries": lots, "events": []}))
+    assert feed.count('href="?page=lottery"') <= 1
+    t = _today(_ctx())
+    assert 'nu-today__n">—<' not in t and t.count("該当なし") == 4
+
+
+def test_home_has_dark_theme_and_header_matches_site_nav():
+    from src.content.ui import design_tokens as dt, shared_css
+    from src.content.ui import styles
+    css = styles.css()
+    legacy = shared_css.legacy_css()
+    # ダーク: 他ページと同じ条件（prefers-color-scheme:dark・data-theme=light で無効）・同じトークン値
+    assert dt.dark_variables() in css and dt.dark_variables() in legacy
+    assert '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #new-ui-root{' in css
+    assert f"background:{dt.DARK_BASE_COLORS['bg']}" in css
+    # フォントスタックは HOME・他ページで同じ値（正本は design_tokens.FONT_STACK）
+    assert dt.FONT_STACK in css and dt.FONT_STACK in legacy
+    # ヘッダーのリンクは site_nav と同じピル型（枠・角丸・primary の現在地）
+    assert re.search(r"\.nu-topnav__link\{[^}]*border:1px solid var\(--color-border-strong\);border-radius:var\(--radius-sm\)", css)
+    assert ".nu-topnav__link[aria-current=page]{background:var(--color-primary)" in css
+    # 他ページ向けの共通クラス: 様子見の利益は中立色
+    assert ".is-wait .pos" in legacy and ".sbadge--profit-neutral" in legacy

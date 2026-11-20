@@ -114,25 +114,34 @@ def render_home(catalog: cl.Catalog, *, source_issue: bool = False, feed: str = 
     purpose_cards = "".join(_purpose_card(p, catalog.count(p)) for p in cl.PURPOSES)
     issue = (c.notice("一部の情報源を取得できていません。必ず公式サイトでもご確認ください。")
              if source_issue else "")
+    # 順: タイトル → 今日の状況（サマリー。注意・件数の行は home_feed がサマリー直下の 1 ブロックにまとめる）→ 横断セクション → ジャンル …
+    # サマリーが無い（feed が空）ときだけ、バナーと件数の行をここでタイトルの下に置く
+    from src.content.ui.home_feed import TODAY_END
+    today, sep, rest = feed.partition(TODAY_END)
+    if sep:
+        issue, notes = "", ""
+    else:
+        today, rest, notes = "", feed, _actionable_line(catalog)
     return (
         '<section class="nu-page nu-home" data-nu-page="home" aria-labelledby="nu-home-title">'
-        '<h1 id="nu-home-title" class="nu-home__title">利益が出る商品と抽選を、ジャンルから探す</h1>'
-        '<p class="nu-lead nu-lead--home">定価・買取価格・抽選・在庫を毎日チェックしています（毎日 12:00 更新）。</p>'
+        '<h1 id="nu-home-title" class="nu-home__title">今日の判断</h1>'
+        '<p class="nu-lead nu-lead--home">買う・応募する・待つを、定価・買取価格・抽選・在庫の毎日のチェック（毎日 12:00 更新）から。</p>'
+        f'{today}'
         f'{issue}'
-        f'{feed}'
+        f'{notes}'
+        f'{rest}'
         '<h2 class="nu-h2" id="nu-genres">ジャンルから探す</h2>'
         f'<ul class="nu-cats" role="list">{cat_cards}</ul>'
-        '<div class="nu-h2row"><h2 class="nu-h2">目的から探す</h2>'
+        '<div class="nu-h2row"><h2 class="nu-h2" id="nu-purposes-h">目的から探す</h2>'
         '<p class="nu-ctx" data-nu-home-ctx hidden><span data-nu-catlabel></span>で絞り込み中'
         f'<a class="nu-ctx__clear" href="{esc(page_href("home"))}">すべてのジャンル</a></p></div>'
         f'<ul class="nu-purposes" role="list">{purpose_cards}</ul>'
-        f'{_actionable_line(catalog)}'
         f'{_quick_links()}'
         '</section>'
     )
 
 
-def _actionable_line(catalog: cl.Catalog) -> str:
+def _actionable_line(catalog: cl.Catalog, *, hide_zero: bool = False) -> str:
     """今すぐ行動できる利益商品の件数（Phase 18。判定は src/market/actionability。利益があるだけでは数えない）。
 
     ページは1日1回作るので、件数は各商品の「行動できると言える期限」（生成時に決めた値）のうち、閲覧時より後の
@@ -142,10 +151,11 @@ def _actionable_line(catalog: cl.Catalog) -> str:
     acts = [v.action for v in (getattr(os_, "eligible", None) or []) if getattr(v, "actionable", False)]
     untils = ",".join(str(int(a.until_ms)) for a in acts if a.until_ms)
     n = sum(1 for a in acts if a.until_ms)
-    return ('<p class="nu-ctx nu-home-act">今すぐ行動できる利益商品（購入可能・抽選受付中・予約受付中の確認がそろうもの）: '
-            f'<b data-nu-act-untils="{esc(untils)}">{n}件</b>'
-            # ページは生成時に判定する（閲覧時は期限を過ぎたものを除くだけ。新しく行動できるようになったものは次の生成まで出ない）
-            '<span class="nu-osub">（ページの生成時の判定。期限を過ぎたものは閲覧時に除く）</span></p>')
+    if hide_zero and n == 0:           # 0 件の行は出さない（サマリーの「購入候補の条件を満たす商品はありません」で足りる）
+        return ""
+    # ページは生成時に判定する（閲覧時は期限を過ぎたものを除くだけ。新しく行動できるようになったものは次の生成まで出ない）
+    return ('<p class="nu-ctx nu-home-act">今すぐ行動できる利益商品（購入可・受付中を確認済み）: '
+            f'<b data-nu-act-untils="{esc(untils)}">{n}件</b></p>')
 
 
 # ── 目的のページ ────────────────────────────────────────────────────

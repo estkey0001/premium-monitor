@@ -625,7 +625,7 @@ def test_iphone_page_warns_when_the_research_is_old_and_labels_reference_route()
     assert "調査から" not in fresh
     old = P.render(comp, now=datetime(2026, 11, 25, tzinfo=JST))
     assert "調査から 12 日たっています" in old
-    assert "参考の最大ルート（正本に未登録のため確定ではない）" in fresh and "最大利益ルート:" not in fresh
+    assert "参考の最大ルート（監視対象に未登録のため確定ではない）" in fresh and "最大利益ルート:" not in fresh
 
 
 def test_public_build_creates_the_linked_pages(tmp_path):

@@ -105,6 +105,37 @@ def sku_trend(timeline: dict | None, sku: str) -> list[dict]:
     return out
 
 
+def spark_layout(trend: list, width: int = 300, height: int = 120, pad_l: int = 46, pad_r: int = 10,
+                 pad_t: int = 30, pad_b: int = 28) -> dict:
+    """sku_trend の best_price を SVG 座標にするだけの純関数（表示用。価格・利益の計算はしない）。
+
+    点が 2 つ未満なら {"status": "ONE"|"NONE"}（描かない）。店数（shops）が前の点と違う日は線でつながず、点だけにする
+    （取得店数が違う日どうしは同列に比べない、という既存の方針）。
+    {"status": "OK", "dots": [...], "segments": [[(x, y)...]], "lo", "hi", "width", "height", "x0", "x1", "y_hi", "y_lo"}
+    """
+    pts = [t for t in trend or [] if isinstance(t.get("best_price"), int)]
+    if not pts:
+        return {"status": "NONE", "dots": [], "segments": []}
+    if len(pts) == 1:
+        return {"status": "ONE", "dots": [], "segments": []}
+    lo, hi = min(t["best_price"] for t in pts), max(t["best_price"] for t in pts)
+    span = (hi - lo) or 1
+    n = len(pts)
+    x0, x1, y_hi, y_lo = pad_l, width - pad_r, pad_t, height - pad_b
+    dots, segments, cur = [], [], []
+    for i, t in enumerate(pts):
+        x = round(x0 + (x1 - x0) * i / (n - 1), 1)
+        y = round(y_lo - (y_lo - y_hi) * (t["best_price"] - lo) / span, 1) if hi != lo else round((y_hi + y_lo) / 2, 1)
+        dots.append({"x": x, "y": y, "date": t["date"], "price": t["best_price"], "shops": t.get("shops")})
+        if cur and pts[i - 1].get("shops") != t.get("shops"):
+            segments.append(cur)
+            cur = []
+        cur.append((x, y))
+    segments.append(cur)
+    return {"status": "OK", "dots": dots, "segments": [sg for sg in segments if len(sg) >= 2], "lo": lo, "hi": hi,
+            "width": width, "height": height, "x0": x0, "x1": x1, "y_hi": y_hi, "y_lo": y_lo}
+
+
 def prev_compare(timeline: dict | None, sku: str) -> dict:
     """同じ店・同じ SKU の組だけで、今回と「共通の店がある直近の過去」を比べる。比べられなければ NO_DATA と理由。"""
     if timeline is None:
@@ -221,26 +252,45 @@ def sku_answer(s: dict) -> dict:
     return out
 
 
-def model_conclusion(skus: list) -> dict:
-    """モデルの見出しの答え: どの容量を買うか。正本に登録済みで、実行可能価格と純利益がある SKU の中で純利益が最大のもの。
+def is_buy_candidate(s: dict) -> bool:
+    """購入候補（登録済み・実行可能な買取価格あり・黒字・週次の判定が BUY・Apple で購入可と確認済み）。値の再判定ではなく、既存の値の読み取りだけ。"""
+    return (s.get("identity") == "REGISTERED" and bool(s.get("highest_executable")) and isinstance(s.get("net_profit"), int)
+            and s["net_profit"] > 0 and str(s.get("opportunity_status") or "").upper() == "BUY"
+            and (s.get("apple_availability") or {}).get("status") == "BUYABLE")
 
-    純利益が 0 以下なら「黒字の容量なし」。登録済みが無い・価格が無いときは「確認待ち」（参考の SKU から結論を出さない）。
+
+def pick_best(cands: list) -> dict:
+    """候補の中の 1 件。購入候補が 1 つでもあればその中で純利益が最大のもの、無ければ全体で純利益が最大のもの。"""
+    buyable = [s for s in cands if is_buy_candidate(s)]
+    return max(buyable or cands, key=lambda s: s["net_profit"])
+
+
+def model_conclusion(skus: list) -> dict:
+    """モデルの見出しの答え: どの容量を買うか。正本に登録済みで、実行可能価格と純利益がある SKU の中から選ぶ。
+
+    購入候補（BUY・購入可）があればそれを優先し、無ければ純利益が最大のもの。純利益が 0 以下なら「黒字の容量なし」。
+    登録済みが無い・価格が無いときは「確認待ち」（参考の SKU から結論を出さない）。
     """
     reg = [s for s in skus if s.get("identity") == "REGISTERED"]
     if not reg:
-        return {"status": "REFERENCE_ONLY", "reason": "正本に未登録のため結論を出さない（参考表示のみ）"}
+        return {"status": "REFERENCE_ONLY", "reason": "監視対象に未登録のため結論を出さない（参考表示のみ）"}
     cand = [s for s in reg if s.get("highest_executable") and isinstance(s.get("net_profit"), int)]
     if not cand:
         return {"status": "WAITING", "reason": "確定できる実行可能価格がある容量がない（確認待ち）"}
-    best = max(cand, key=lambda s: s["net_profit"])
+    best = pick_best(cand)
     a = sku_answer(best)
     if best["net_profit"] > 0:
-        buy_ok = (str(best.get("opportunity_status") or "").upper() == "BUY"
-                  and (best.get("apple_availability") or {}).get("status") == "BUYABLE")
-        if not buy_ok:                                     # 黒字でも、週次の判定が BUY でない（ROI が条件未満・Apple で購入可と確認できない）なら「買い」と断定しない
+        if not is_buy_candidate(best):                     # 黒字でも、週次の判定が BUY でない（ROI が条件未満・Apple で購入可と確認できない）なら「買い」と断定しない
             return {"status": "PROFIT_WATCH", "answer": a}
         return {"status": "PROFIT", "answer": a}
     return {"status": "NO_PROFIT", "answer": a, "reason": "計算上の黒字になる容量がない"}
+
+
+def info_rank(s: dict) -> int:
+    """「今の結論」の行順。判断材料のある行（実行可能な買取あり）を先に、確認待ちだけの行、何も無い行の順（同順位内は容量順を保つ）。"""
+    if s.get("highest_executable"):
+        return 0
+    return 1 if s.get("highest_unconfirmed") else 2
 
 
 # ---- 新製品・予約情報（product_candidates.json の Apple 候補。表示だけで、正本へは登録しない） ----

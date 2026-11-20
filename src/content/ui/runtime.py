@@ -178,6 +178,7 @@ def tcg_vm(ev: dict, idx: int) -> dict:
         "result": official_url(ev.get("result_url")),
         "purchase": official_url(ev.get("purchase_url")),
         "conf": conf,
+        "tv": ev.get("verified") is True,      # 時刻を出してよいか（TCG ハブの verified と同じ判定）
         # 人による確認待ちの転記・確かさが低いものには「応募する」を出さない（manual.py の方針）
         "unv": conf in ("確認待ち", "参考情報"),
         "k": KIND_PREORDER if str(ev.get("event_type") or "").upper() == "PREORDER" else KIND_LOTTERY,
@@ -317,9 +318,18 @@ def _ms(d: datetime | None) -> int | None:
     return None if d is None else int(round(d.timestamp() * 1000))
 
 
-def _fmt_exact(iso: str) -> str:
+def _fmt_exact(iso: str, verified: bool = True) -> str:
+    """締切・開始の表示。TCG ハブの show_time と同じ規則: 00:00 ちょうど・時刻が未確認の行は日付のみ（時刻を作らない）。"""
     d = parse_dt(iso).astimezone(JST)
-    return f"{d.month}/{d.day}({_WEEK[d.weekday()]}) {d.hour:02d}:{d.minute:02d}"
+    day = f"{d.month}/{d.day}({_WEEK[d.weekday()]})"
+    if not verified or (d.hour == 0 and d.minute == 0):
+        return day
+    return f"{day} {d.hour:02d}:{d.minute:02d}"
+
+
+def _time_ok(vm: dict) -> bool:
+    """時刻まで出してよい行か。TCG の抽選は公式確認済みのものだけ（TCG ハブの verified と同じ）。"""
+    return vm.get("src") != "tcg" or vm.get("tv") is True
 
 
 def _fmt_day(ymd: str) -> str:
@@ -329,7 +339,7 @@ def _fmt_day(ymd: str) -> str:
 
 def _when(vm: dict, exact_key: str, day_key: str, suffix: str) -> str:
     if vm.get(exact_key):
-        return f"{_fmt_exact(vm[exact_key])} {suffix}"
+        return f"{_fmt_exact(vm[exact_key], _time_ok(vm))} {suffix}"
     if vm.get(day_key):
         return f"{_fmt_day(vm[day_key])} {suffix}・時刻未公表"
     return ""

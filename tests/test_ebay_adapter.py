@@ -294,7 +294,7 @@ def test_page_shows_not_configured_and_never_zero_for_ebay(tmp_path):
     html = pg.render(cf._public_market(rep), now=NOW)
     eb = next(m for m in rep["secondary_markets"] if m["market"] == "ebay")
     assert eb["status"] == "NOT_CONFIGURED" and eb["listing_rows"] is None and eb["sold_rows"] is None
-    assert "未設定（NOT_CONFIGURED・未取得）" in html
+    assert "未設定（未取得）" in html and "NOT_CONFIGURED" in html  # 平易語を表示し、原文は title に残す
     row = html.split("eBay</th>")[1].split("</tr>")[0]
     assert "未取得" in row and "0 件" not in row
 

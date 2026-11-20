@@ -568,6 +568,7 @@ class DailyLPGenerator:
         CI はここで止まり、前回の公開が残る）。
         """
         from src.content.ui import shell as _ui_shell
+        from src.content.ui import home_feed as _ui_home_feed
         report = self._load_tcg_report()
         report = report if isinstance(report, dict) else {}
         cov = report.get("lottery_coverage")
@@ -600,6 +601,8 @@ class DailyLPGenerator:
             actionable_delivered=self._nu_actionable_delivered(),
             admin_data=self._nu_admin_data(),
             cta_links=self._nu_cta_links(),
+            # HOME の横断セクション用（iPhone・カメラの週次の調査 JSON。壊れていれば {}。読むだけ）
+            home_feed_data=_ui_home_feed.load_sources(self._load_export_json),
         )
         # 候補の診断（内部用）を先に作り、運営者向けのページにも同じ生成のものを渡す（前回の生成を読まない）
         diag = self._write_opportunity_diagnostics(ctx)

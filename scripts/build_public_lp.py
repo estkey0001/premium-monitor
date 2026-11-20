@@ -95,6 +95,7 @@ def build():
     # iphone-buyback.html（週次の調査の買取比較。調査結果が無ければ作らない）
     _build_iphone_buyback_html(PUBLIC_DIR)
     _build_camera_research_html(PUBLIC_DIR)
+    _build_tcg_hub_html(PUBLIC_DIR)
 
     # ファイル数カウント
     total = sum(1 for _ in PUBLIC_DIR.rglob("*") if _.is_file())
@@ -131,7 +132,16 @@ def _build_iphone_buyback_html(public_dir: Path) -> None:
         comp = json.loads(json_path.read_text(encoding="utf-8"))
         sys.path.insert(0, str(PROJECT_ROOT))
         from src.content.iphone_buyback_page import render
-        html_text = render(comp)
+        history = candidates = None            # 読めなければ None（ページ側は「データ無し」と表示する。推測で埋めない）
+        try:
+            history = json.loads((PROJECT_ROOT / "exports" / "iphone_buyback" / "iphone_buyback_history.json").read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001
+            history = None
+        try:
+            candidates = json.loads((PROJECT_ROOT / "exports" / "discovery" / "product_candidates.json").read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001
+            candidates = None
+        html_text = render(comp, history=history, candidates=candidates)
     except Exception as e:  # noqa: BLE001 — 壊れた調査結果でサイト全体のビルドを止めない
         print(f"  ⚠️  iphone-buyback.html を作れなかった: {e}")
         return
@@ -162,6 +172,38 @@ def _build_camera_research_html(public_dir: Path) -> None:
         print(f"  ⚠️  camera-research.html を作れなかった: {e}")
         return
     dst = public_dir / "camera-research.html"
+    dst.write_text(html_text, encoding="utf-8")
+    print(f"  ✅ {dst}")
+
+
+def _build_tcg_hub_html(public_dir: Path) -> None:
+    """TCG 抽選ハブ docs/tcg.html を生成する（exports/tcg/ の公開済み JSON だけを読む。lotteries.json が無ければ作らない）。
+    サイトマップには載せない（camera-research.html・iphone-buyback.html と同じ扱い）。"""
+    exp = PROJECT_ROOT / "exports" / "tcg"
+    lot = exp / "lotteries.json"
+    if not lot.exists():
+        print("  ⚠️  exports/tcg/lotteries.json not found — skipping tcg.html")
+        return
+
+    def _load(name: str):
+        try:
+            return json.loads((exp / name).read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001 — 補助の JSON が無い・壊れていても空として扱う（商品の束ね・定価が出なくなるだけ）
+            return {}
+
+    main = _load("lotteries.json")
+    if not (isinstance(main, dict) and isinstance(main.get("items"), list)):      # 主の入力が壊れている: 空ページを正常として公開せず、前回のページを残す
+        print("  ⚠️  exports/tcg/lotteries.json が壊れている（items が無い）— tcg.html は更新しない")
+        return
+
+    try:
+        sys.path.insert(0, str(PROJECT_ROOT))
+        from src.content.tcg_hub_page import render_from_json
+        html_text = render_from_json(main, _load("pokemon_registry.json"), _load("msrp.json"))
+    except Exception as e:  # noqa: BLE001 — 壊れた入力でサイト全体のビルドを止めない
+        print(f"  ⚠️  tcg.html を作れなかった: {e}")
+        return
+    dst = public_dir / "tcg.html"
     dst.write_text(html_text, encoding="utf-8")
     print(f"  ✅ {dst}")
 

@@ -11,6 +11,8 @@ from __future__ import annotations
 import html as _html
 from datetime import datetime, timedelta, timezone
 
+from src.content import iphone_hub_model as H
+
 _JST = timezone(timedelta(hours=9))
 
 BASIS_LABEL = {
@@ -74,7 +76,7 @@ OUTLIER_LABEL = {"NONE": "外れ値なし", "OUTLIER_REVIEW": "OUTLIER_REVIEW（
                  "REVIEWED": "外れ値を確認済み", "SINGLE_SOURCE": "比較できる店が1つだけ（確認待ち）", "NO_DATA": "比較できる価格なし"}
 
 
-def _row_html(r: dict) -> str:
+def _row_html(r: dict, rank: int | None = None) -> str:
     notes = []
     if r.get("shop_status") != "ACTIVE":
         notes.append(STATUS_LABEL.get(r.get("shop_status"), ""))
@@ -96,10 +98,11 @@ def _row_html(r: dict) -> str:
             f'<td>{_e(COND_LABEL.get(r.get("condition"), r.get("condition")))}</td><td>{_colors(r)}</td>'
             f'<td>{_e(r.get("updated_on") or "更新日の記載なし")}{_e(age)}<div class="mut">{_e(FRESH_LABEL.get(r.get("freshness"), ""))}</div>'
             f'<div class="mut">確認: {_e(str(r.get("checked_at") or "記載なし")[:60])}</div></td>'
-            f'<td>{_e("、".join(n for n in notes if n)) or ("利益計算の候補" if r.get("eligible") else "利益計算に使わない（同じ店の他の行・キャンペーンなど）")}{extra}</td></tr>')
+            f'<td>{_e("、".join(n for n in notes if n)) or ("利益計算の候補" if r.get("eligible") else "利益計算に使わない（同じ店の他の行・キャンペーンなど）")}{extra}</td>'
+            f'<td class="num">{f"{rank} 位" if rank else "—"}</td></tr>')
 
 
-def _sku_html(s: dict) -> str:
+def _sku_html(s: dict, extra_html: str = "", prev_html: str = "") -> str:
     ref = s.get("identity") != "REGISTERED"
     badge = ('<span class="chip chip--ref">参考・正本に未登録</span>' if ref else '<span class="chip chip--ok">正本に登録済み</span>')
     hl, hx, unc = s.get("highest_listed"), s.get("highest_executable"), s.get("highest_unconfirmed")
@@ -123,7 +126,8 @@ def _sku_html(s: dict) -> str:
     route = (f'<div class="route">最大利益ルート: {_e(s["best_route"])}</div>' if s.get("best_route")
              else f'<div class="route">参考の最大ルート（正本に未登録のため確定ではない）: {_e(s["reference_route"])}</div>' if s.get("reference_route")
              else '<div class="route mut">利益が出るルートは確認できません</div>')
-    rows = "".join(_row_html(r) for r in s.get("rows") or [])
+    ranks = H.rank_rows(s)
+    rows = "".join(_row_html(r, ranks.get(id(r))) for r in s.get("rows") or [])
     return (f'<section class="sku"><h3>{_e(s["sku"])} {badge}</h3>'
             f'<div class="grid"><div class="kv"><span>Apple 定価（税込）</span><b>{_yen(s["apple_price"])}</b></div>'
             f'{one("掲載の最高値", hl, listed_note)}{exec_card}{one("実行可能 2位", sec)}{one("実行可能 3位", thi)}'
@@ -134,12 +138,13 @@ def _sku_html(s: dict) -> str:
             f'<div class="kv"><span>判定（週次・BUY とは別）</span><b>{_e(OPP_LABEL.get(s.get("opportunity_status"), "—"))}</b>'
             f'<em>{_e(s.get("opportunity_reason") or "")}</em></div>'
             f'<div class="kv"><span>外れ値の判定</span><b>{_e(OUTLIER_LABEL.get(out, out))}</b></div>'
+            f'{prev_html}'
             f'<div class="kv"><span>諸経費</span><b>{_yen(s.get("costs"))}</b></div>'
             f'<div class="kv"><span>純利益{"（参考）" if ref else ""}</span><b class="{net_cls}">{_signed(net)}</b>'
             f'<em>ROI {("%.1f%%" % s["roi_pct"]) if s.get("roi_pct") is not None else "—"}</em></div></div>'
-            f'{route}{ref_html}<div class="mut">{_e(s.get("identity_note"))}</div>'
+            f'{route}{ref_html}<div class="mut">{_e(s.get("identity_note"))}</div>{extra_html}'
             f'<details><summary>買取店ごとの価格（{len(s.get("rows") or [])} 行）</summary>'
-            f'<div class="tw"><table><thead><tr><th>買取店</th><th>買取価格</th><th>条件</th><th>色減額</th><th>更新日・鮮度</th><th>扱い</th></tr></thead>'
+            f'<div class="tw"><table><thead><tr><th>買取店</th><th>買取価格</th><th>条件</th><th>色減額</th><th>更新日・鮮度</th><th>扱い</th><th>順位</th></tr></thead>'
             f'<tbody>{rows}</tbody></table></div></details></section>')
 
 
@@ -154,34 +159,165 @@ main{max-width:980px;margin:0 auto;padding:16px}a{color:var(--link)}h1{font-size
 .kv{background:var(--card);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column}.kv span{color:var(--mut);font-size:.78rem}.kv b{font-size:1.05rem;overflow-wrap:anywhere}.kv em{font-style:normal;color:var(--mut);font-size:.82rem;overflow-wrap:anywhere}
 .pos{color:var(--ok)}.neg{color:var(--ng)}.chip{font-size:.72rem;padding:2px 8px;border-radius:99px;border:1px solid var(--line);vertical-align:middle;font-weight:600}.chip--ref{color:var(--ref)}.chip--ok{color:var(--ok)}
 .route{margin:.6rem 0 .2rem;font-weight:700}details{margin-top:.6rem}summary{cursor:pointer;color:var(--link)}.tw{overflow-x:auto;margin-top:.5rem}
-table{border-collapse:collapse;width:100%;min-width:640px}th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;font-size:.85rem;vertical-align:top}th[scope=row]{font-weight:600}.num{text-align:right;white-space:nowrap}tr.ng td,tr.ng th{color:var(--mut)}
+table{border-collapse:collapse;width:100%;min-width:700px}th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;font-size:.85rem;vertical-align:top}th[scope=row]{font-weight:600}.num{text-align:right;white-space:nowrap}tr.ng td,tr.ng th{color:var(--mut)}
 ul{padding-left:1.1rem}
 """
 
 
-def render(comp: dict, *, now: datetime | None = None) -> str:
-    now = now or datetime.now(_JST)
-    counts = comp.get("counts") or {}
-    skus = "".join(_sku_html(s) for s in comp.get("skus") or [])
-    missing = [s for s in comp.get("shops") or [] if s.get("status") != "ACTIVE" or s.get("rows_count", 0) == 0]
-    miss_html = "".join(
-        f'<li><b>{_link(s.get("price_page_url") or s.get("official_url"), s.get("shop"))}</b> — {_e(STATUS_LABEL.get(s.get("status"), s.get("status")))}'
-        f'{("（新規に発見した店）" if s.get("discovered") else "")}<span class="mut"> {_e(s.get("reason"))}</span></li>' for s in missing)
-    events = comp.get("events") or []
+HUB_CSS = """
+.hub-note{border-left:4px solid var(--ref)}.ans{margin:.4rem 0 1rem}.ans h3{margin:.2rem 0}.q{font-weight:700}
+.ans .head{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:.4rem 0}
+.wait{color:var(--ref);font-weight:600}.nodata{color:var(--mut)}
+details.model{border:1px solid var(--line);border-radius:12px;padding:6px 12px;margin:12px 0}details.model>summary{font-weight:700;font-size:1.05rem;padding:4px 0}
+.mini{min-width:0}.mini th,.mini td{font-size:.8rem;padding:4px 6px}.hist{margin-top:.6rem}.hist h4{margin:.4rem 0 .2rem;font-size:.9rem}
+.sig li{margin:.2rem 0}
+"""
+
+
+REF_CHIP = ' <span class="chip chip--ref">参考</span>'
+REF_CHIP_LONG = ' <span class="chip chip--ref">参考・正本に未登録</span>'
+
+
+def _fmt_age_date(v) -> str:
+    return _e(v) if v else "データ無し"
+
+
+def _answer_cells(a: dict, cmp_: dict) -> str:
+    """5 つの問いのうち、容量ごとに答えられる 4 つ（どの店・利益・前回比・判断）。出せないものは理由つきで「確認待ち」「データ無し」。"""
+    if a["sell_shop"]:
+        sell = f'<b>{_e(a["sell_shop"])}</b> {_yen(a["sell_price"])}'
+    else:
+        sell = f'<span class="wait">確認待ち</span><div class="mut">{_e(a["sell_reason"])}</div>'
+    if a["net"] is not None:
+        cls = "pos" if a["net"] > 0 and not a["reference"] else "neg" if a["net"] < 0 else ""
+        roi = f'（ROI {a["roi"]:.1f}%）' if a.get("roi") is not None else ""
+        net = f'<b class="{cls}">{_signed(a["net"])}</b>{_e(roi)}{"<div class=mut>参考（正本に未登録）</div>" if a["reference"] else ""}'
+    else:
+        net = f'<span class="nodata">データ無し</span><div class="mut">{_e(a["net_reason"])}</div>'
+    if cmp_["status"] == "OK":
+        prev = (f'{_signed(cmp_["delta"])}<div class="mut">{_e(cmp_["prev_date"])} の同じ {cmp_["common"]} 店の最高 {_yen(cmp_["prev_best"])}'
+                f' → {_yen(cmp_["cur_best"])}</div>')
+    else:
+        prev = f'<span class="nodata">データ無し</span><div class="mut">{_e(cmp_["reason"])}</div>'
+    dec = _e(OPP_LABEL.get(a["decision"], a["decision"] or "—"))
+    dec_note = f'<div class="mut">{_e(a["decision_reason"])}</div>' if a.get("decision_reason") else ""
+    return (f'<td>{sell}</td><td class="num">{net}</td><td>{prev}</td>'
+            f'<td><b>{dec}</b>{"<div class=mut>参考・正本に未登録</div>" if a["reference"] else ""}{dec_note}</td>')
+
+
+def _conclusion_html(group: dict, tl) -> str:
+    skus = group["skus"]
+    c = H.model_conclusion(skus)
+    if c["status"] in ("PROFIT", "NO_PROFIT", "PROFIT_WATCH"):
+        a = c["answer"]
+        if c["status"] == "PROFIT_WATCH":
+            roi = f'・ROI {a["roi"]}%' if a.get("roi") is not None else ""
+            head = (f'<span class="wait">様子見</span> — 計算上は <b>{_e(a["capacity"])}</b>（{_e(a["sell_shop"])}・{_yen(a["sell_price"])}）が最大で、'
+                    f'純利益 {_signed(a["net"])}{roi}（週次の掲載価格での計算）ですが、週次の判定は <b>{_e(a["decision"] or "—")}</b>'
+                    f'（{_e(a["decision_reason"] or "BUY の条件に届いていない")}）のため、「買い」とは案内しません')
+        elif c["status"] == "PROFIT":
+            head = (f'<b>{_e(a["capacity"])}</b> を買い、<b>{_e(a["sell_shop"])}</b>（{_yen(a["sell_price"])}）へ売る。'
+                    f'純利益 {_signed(a["net"])}（週次の掲載価格での計算）')
+        else:
+            head = f'黒字になる容量は確認できません（{_e(c["reason"])}）。最大でも {_e(a["capacity"])} で純利益 {_signed(a["net"])}'
+    else:
+        head = f'<span class="wait">確認待ち</span> — {_e(c["reason"])}'
+    rows = "".join(
+        f'<tr class="{"ng" if a["reference"] else "ok"}"><th scope="row">{_e(a["capacity"] or a["sku"])}'
+        f'{REF_CHIP if a["reference"] else ""}</th>{_answer_cells(a, H.prev_compare(tl, s.get("sku")))}</tr>'
+        for s in skus for a in [H.sku_answer(s)])
+    return (f'<div class="ans"><div class="head"><span class="q">どの容量を買うか:</span> {head}</div>'
+            f'<div class="tw"><table class="mini"><thead><tr><th>容量</th><th>どの店へ売る（実行可能な最高買取）</th><th>利益</th><th>前回比</th>'
+            f'<th>BUY か WAIT か（週次の判定）</th></tr></thead><tbody>{rows}</tbody></table></div></div>')
+
+
+def _hist_html(history, tl, s: dict, comp: dict) -> str:
+    sku = s.get("sku")
+    trend = H.sku_trend(tl, sku)
+    if tl is None:
+        body = f'<p class="mut nodata">買取の履歴: {H.NO_HISTORY}</p>'
+    else:
+        shown = [t for t in trend if t["best_price"] is not None]
+        if not shown:
+            body = '<p class="mut nodata">買取の履歴: この SKU の記録なし（データ無し）</p>'
+        else:
+            rows = "".join(
+                f'<tr><td>{_e(t["date"])}</td><td class="num">{_yen(t["best_price"])}</td><td>{_e(t["best_shop"])}</td>'
+                f'<td class="num">{t["shops"]} 店</td><td class="num">{_signed(t["net"]) if t["net"] is not None else "—"}</td></tr>' for t in shown)
+            one = '<p class="mut">記録 1 件のみ（推移は比較できない）</p>' if len(shown) == 1 else ""
+            body = (f'<div class="tw"><table class="mini"><thead><tr><th>調査日</th><th>最高買取</th><th>店</th><th>取得店数</th>'
+                    f'<th>純利益（最高買取の行）</th></tr></thead><tbody>{rows}</tbody></table></div>{one}'
+                    f'<p class="mut">取得店数が違う日どうしは同列に比べない（前回比は同じ店の組だけ）。実行可能でない価格は含まない。</p>')
+    ap = H.apple_trend(history, sku, comp)
+    if ap["status"] == "NO_DATA":
+        apple = f'Apple 価格の推移: {H.NO_HISTORY}'
+    elif ap["status"] == "ONE":
+        d, p = ap["points"][0]
+        apple = f'Apple 価格の推移: 記録 1 件のみ（{_e(d)} {_yen(p)}）'
+    else:
+        apple = "Apple 価格の推移: " + _e(" → ".join(f"{d} {_yen(p)}" for d, p in ap["points"]))
+    return f'<div class="hist"><h4>履歴</h4>{body}<p class="mut">{apple}</p></div>'
+
+
+def _signals_html(comp: dict, tl) -> str:
+    sg = H.signals(comp, tl)
+
     def _ev(e):
         move = (f"（{_yen(e['from'])} → {_yen(e['to'])}）" if isinstance(e.get("from"), int) and isinstance(e.get("to"), int)
                 else f"（{_e(e.get('from'))} → {_e(e.get('to'))}）" if e.get("from") and e.get("to") else "")
         return f"<li>{_e(EVENT_LABEL.get(e.get('type'), e.get('type')))}: {_e(e.get('sku'))} {_e(e.get('shop') or '')}{move}</li>"
-    ev_html = ("".join(_ev(e) for e in events)
-               or f'<li class="mut">{_e(comp.get("events_note") or "変動の記録はまだありません")}</li>')
+    parts = []
+    for g in sg["groups"]:
+        parts.append(f'<li><b>{_e(g["date"])}</b><ul>{"".join(_ev(e) for e in g["events"])}</ul></li>')
+    if not parts:
+        parts.append(f'<li class="mut">検出なし（{_e(comp.get("events_note") or "変動の記録はまだありません")}）</li>')
+    note = f'<p class="mut">{_e(sg["history_note"])}</p>' if sg["history_note"] else ""
+    return f'<ul class="sig">{"".join(parts)}</ul>{note}'
+
+
+def _candidates_html(candidates) -> str:
+    groups = H.apple_candidates(candidates)
+    if groups is None:
+        return '<p class="nodata">データ無し（新製品・予約情報を読めない）</p>'
+    out = []
+    for g in groups:
+        rows = "".join(
+            f'<tr><th scope="row">{_e(i["capacity"])}</th><td>{_e(i["status_label"])}</td><td class="num">{_yen(i["price"])}</td>'
+            f'<td>{_fmt_age_date(i["first_seen"])}</td><td>{_fmt_age_date(i["last_seen"])}</td><td class="nodata">データ無し</td></tr>' for i in g["items"])
+        out.append(f'<h3>{_e(g["model"])}</h3><div class="tw"><table class="mini"><thead><tr><th>容量</th><th>状態</th><th>Apple 公式価格</th>'
+                   f'<th>初確認日</th><th>最終確認日</th><th>発売日・予約日</th></tr></thead><tbody>{rows}</tbody></table></div>')
+    return "".join(out) + '<p class="mut">Apple 公式ページで確認した候補の表示だけです。正本（商品の登録）には、ここからは登録しません。</p>'
+
+
+def render(comp: dict, *, now: datetime | None = None, history=None, candidates=None) -> str:
+    now = now or datetime.now(_JST)
+    counts = comp.get("counts") or {}
+    tl = H.build_timeline(comp, history)
+    groups = H.group_models(comp.get("skus") or [])
+    concl, models = [], []
+    for g in groups:
+        concl.append(f'<h3>{_e(g["model"])}{"" if g["primary"] else REF_CHIP_LONG}</h3>'
+                     + _conclusion_html(g, tl))
+        cards = "".join(_sku_html(s, extra_html=_hist_html(history, tl, s, comp),
+                                  prev_html=_prev_kv(H.prev_compare(tl, s.get("sku")))) for s in g["skus"])
+        if g["primary"]:
+            models.append(f'<details class="model" open><summary>{_e(g["model"])}（{len(g["skus"])} 容量）</summary>{cards}</details>')
+        else:
+            models.append(f'<details class="model"><summary>{_e(g["model"])}（参考・正本に未登録／{len(g["skus"])} 容量・押すと開く）</summary>'
+                          f'<p class="mut">正本に未登録の参考表示です。買う・売るの判断には使わないでください。</p>{cards}</details>')
+    missing = [s for s in comp.get("shops") or [] if s.get("status") != "ACTIVE" or s.get("rows_count", 0) == 0]
+    miss_html = "".join(
+        f'<li><b>{_link(s.get("price_page_url") or s.get("official_url"), s.get("shop"))}</b> — {_e(STATUS_LABEL.get(s.get("status"), s.get("status")))}'
+        f'{("（新規に発見した店）" if s.get("discovered") else "")}<span class="mut"> {_e(s.get("reason"))}</span></li>' for s in missing)
     return f"""<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>iPhone 買取比較 | プレ値速報</title><meta name="robots" content="index,follow"><style>{CSS}</style></head>
+<title>iPhone 買取比較 | プレ値速報</title><meta name="robots" content="index,follow"><style>{CSS}{HUB_CSS}</style></head>
 <body><main>
 <p><a href="./">← プレ値速報へ戻る</a></p>
-<h1>iPhone 買取比較（新品未開封）</h1>
+<h1>iPhone Product Hub（買取比較・新品未開封）</h1>
 <p class="mut">調査日 {_e(comp.get("research_date"))}（週1回の Web 調査・調査データの生成 {_e(comp.get("generated_at"))}）／このページの作成 {_e(now.strftime("%Y-%m-%d %H:%M"))}</p>
 {age_banner(comp.get("research_date"), now)}
+<div class="note hub-note"><b>週次の調査です。確定ではありません。</b>価格は調査日の掲載価格で、現在の価格とは限りません。各所に調査日・確認日・鮮度を出しています。</div>
 <div class="note">{_e(comp.get("note"))}</div>
 <div class="sum"><div><span class="mut">調べた買取店</span><b>{_e(comp.get("shops_researched"))}</b></div>
 <div><span class="mut">価格を取れた店</span><b>{_e(counts.get("ACTIVE", 0))}</b></div>
@@ -190,10 +326,23 @@ def render(comp: dict, *, now: datetime | None = None) -> str:
 <div><span class="mut">更新日の記載なし</span><b>{_e(counts.get("UNKNOWN_FRESHNESS", 0))}</b></div>
 <div><span class="mut">価格なし</span><b>{_e(counts.get("NO_PRICE", 0))}</b></div>
 <div><span class="mut">取得失敗・拒否</span><b>{_e(counts.get("FAILED", 0) + counts.get("BLOCKED", 0))}</b></div></div>
-<h2>SKU ごとの比較</h2>
-{skus}
-<h2>価格を取れなかった店・価格が部分的な店</h2><ul>{miss_html}</ul>
-<h2>前回からの変動</h2><ul>{ev_html}</ul>
+<h2>今の結論</h2>
+<p class="mut">どの容量を買うか／どの店へ売るか／利益／前回比／BUY か WAIT か。答えを出せないものは理由つきで「確認待ち」「データ無し」にしています（推測の価格・利益は出しません）。</p>
+{"".join(concl)}
+<h2>モデル別・容量別の詳細</h2>
+{"".join(models)}
+<h2>シグナル（前回からの変動）</h2>
+{_signals_html(comp, tl)}
 <p class="mut">通知は送信していません（検出の記録だけ）。</p>
+<h2>新製品・予約情報</h2>
+{_candidates_html(candidates)}
+<h2>価格を取れなかった店・価格が部分的な店</h2><ul>{miss_html}</ul>
 <p class="mut">この表は週次の調査で、価格が変わっている場合があります。売る前に各店の公式の価格ページで最新の価格・条件（事前申込・検品・減額）を必ず確認してください。取得できない店の回避（認証の突破・過剰なアクセス）は行っていません。</p>
 </main></body></html>"""
+
+
+def _prev_kv(cmp_: dict) -> str:
+    if cmp_["status"] == "OK":
+        return (f'<div class="kv"><span>前回比（同じ店の組だけ）</span><b>{_signed(cmp_["delta"])}</b>'
+                f'<em>{_e(cmp_["prev_date"])} の共通 {cmp_["common"]} 店: 最高 {_yen(cmp_["prev_best"])} → {_yen(cmp_["cur_best"])}</em></div>')
+    return f'<div class="kv"><span>前回比</span><b class="nodata">データ無し</b><em>{_e(cmp_["reason"])}</em></div>'

@@ -17,7 +17,7 @@ from src.content.ui import (account, admin, home, lottery_page, mypage, navigati
                             restock_page, routes_page)
 from src.content.ui import product_detail, product_page
 from src.content.ui import catalog as cl
-from src.content.ui import vm_check
+from src.content.ui import home_feed, vm_check
 from src.content.ui import categories as cats
 from src.content.ui import runtime as rt
 from src.content.ui.components import esc
@@ -49,6 +49,7 @@ class ShellContext:
     actionable_delivered: list | None = None  # 実際に送った今すぐ行動の通知（outbox の DELIVERED だけ。Phase 23）
     admin_data: dict | None = None      # 運営者向けの生成物（表示する項目だけ。admin.build が読む。秘密の値は入れない）
     cta_links: list | None = None       # フッターの外部リンク（設定 lp_settings の note・LINE など。URL があるものだけ）
+    home_feed_data: dict | None = None  # HOME の横断セクションの元データ（iPhone・カメラの週次の調査 JSON。読むだけ）
 
 
 def _css() -> str:
@@ -1081,7 +1082,7 @@ def render_root(ctx: ShellContext) -> str:
                f'<span class="nu-header__metalabel">情報確認 </span>{esc(ctx.updated_text)}</span>'
                if ctx.updated_text else "")
     body = (
-        pages.render_home(catalog, source_issue=ctx.source_issue)
+        pages.render_home(catalog, source_issue=ctx.source_issue, feed=home_feed.render(catalog, model, ctx))
         + opportunities_page.render(catalog, has_data=has_data)
         + lottery_page.render(catalog, model, has_data=has_data)
         + restock_page.render(catalog, now=model.now)

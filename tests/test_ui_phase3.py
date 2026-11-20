@@ -303,7 +303,7 @@ def test_dom_cta_disappears_at_deadline_without_reload(tmp_path):
     """締切の時刻を過ぎたら、再読み込みなしで「応募する」が消え、件数・一覧からも外れる。"""
     js = _LOT + """
     var o = {};
-    var row = function(){ return R.querySelector('[data-nu-lot="L1"]'); };
+    var row = function(){ return R.querySelector('[data-nu-page="lottery"] [data-nu-lot="L1"]'); };
     o.before = {cta: !!row().querySelector('a[data-nu-cta="apply"]'), hidden: row().hidden,
                 status: row().getAttribute('data-nu-status'), count: R.querySelector('.nu-purposes [data-nu-count="lottery"]').textContent};
     var t = Date.now() + 6 * 3600000;             // 締切ちょうど
@@ -314,8 +314,8 @@ def test_dom_cta_disappears_at_deadline_without_reload(tmp_path):
     var t2 = Date.now() - 6 * 3600000 + 3 * 3600000;   // 開始の時刻ちょうど（L3）
     Date.now = function(){ return t2; };
     window.dispatchEvent(new Event('pageshow'));
-    o.l3 = R.querySelector('[data-nu-lot="L3"]').getAttribute('data-nu-status');
-    o.l3cta = !!R.querySelector('[data-nu-lot="L3"] a[data-nu-cta="apply"]');
+    o.l3 = R.querySelector('[data-nu-page="lottery"] [data-nu-lot="L3"]').getAttribute('data-nu-status');
+    o.l3cta = !!R.querySelector('[data-nu-page="lottery"] [data-nu-lot="L3"] a[data-nu-cta="apply"]');
     done(o);
     """
     o = _run(tmp_path, js, query="?ui=new&page=lottery", tcg_report={"lotteries": SET[:3], "events": []},

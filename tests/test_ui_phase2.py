@@ -370,7 +370,7 @@ def test_dom_home_genre_count_equals_list_with_routes(tmp_path):
     o.homeCam = R.querySelector('[data-nu-catcount="camera"]').textContent;
     o.cat = click('a[data-nu-cat-link="camera"]');
     o.purpose = R.querySelector('[data-nu-count="opportunities"]').textContent;
-    o.list = click('a.nu-purpose[href*="page=opportunities"], [data-nu-page="home"] a[href*="page=opportunities"]');
+    o.list = click('a.nu-purpose[href*="page=opportunities"]');   // 目的の入口（横断セクション nu-feed の絞り込み付きリンクは対象外）
     o.res = res(); o.ids = vis().length;
     done(o);
     """

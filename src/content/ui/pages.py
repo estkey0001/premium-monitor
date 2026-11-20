@@ -99,15 +99,17 @@ def _quick_links() -> str:
             f'{icon("target", size=16)}今すぐ狙う TOP10</a>')
     # 週次の調査の買取比較（別ファイル docs/iphone-buyback.html。相対リンク）
     iphone = (f'<a class="nu-quick" href="./iphone-buyback.html">{icon("box", size=16)}iPhone 買取比較</a>')
+    # TCG 抽選ハブ（静的ページ docs/tcg.html。TCG の抽選・発売・買取の全件）
+    tcg = f'<a class="nu-quick" href="./tcg.html">{icon("cards", size=16)}TCG 抽選ハブ</a>'
     soon = "".join(
         f'<span class="nu-quick nu-quick--soon" aria-disabled="true">{icon(ic, size=16)}{esc(lbl)}'
         f'<span class="nu-quick__tag">準備中</span></span>'
         for ic, lbl in (("flame", "買取急騰"), ("sparkle", "新着商品")))
-    return f'<div class="nu-quicks" aria-label="よく使うリンク">{live}{iphone}{soon}</div>'
+    return f'<div class="nu-quicks" aria-label="よく使うリンク">{live}{iphone}{tcg}{soon}</div>'
 
 
-def render_home(catalog: cl.Catalog, *, source_issue: bool = False) -> str:
-    """HOME（ジャンル → 目的 → 補助リンクの順だけ）。"""
+def render_home(catalog: cl.Catalog, *, source_issue: bool = False, feed: str = "") -> str:
+    """HOME（今日の横断セクション（feed。0 件なら空）→ ジャンル → 目的 → 補助リンクの順）。"""
     cat_cards = "".join(_category_card(cat, catalog.category_total(cat.key)) for cat in cats.CATEGORIES)
     purpose_cards = "".join(_purpose_card(p, catalog.count(p)) for p in cl.PURPOSES)
     issue = (c.notice("一部の情報源を取得できていません。必ず公式サイトでもご確認ください。")
@@ -117,6 +119,7 @@ def render_home(catalog: cl.Catalog, *, source_issue: bool = False) -> str:
         '<h1 id="nu-home-title" class="nu-home__title">利益が出る商品と抽選を、ジャンルから探す</h1>'
         '<p class="nu-lead nu-lead--home">定価・買取価格・抽選・在庫を毎日チェックしています（毎日 12:00 更新）。</p>'
         f'{issue}'
+        f'{feed}'
         '<h2 class="nu-h2" id="nu-genres">ジャンルから探す</h2>'
         f'<ul class="nu-cats" role="list">{cat_cards}</ul>'
         '<div class="nu-h2row"><h2 class="nu-h2">目的から探す</h2>'

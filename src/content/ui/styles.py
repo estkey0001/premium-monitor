@@ -775,4 +775,22 @@ def _product_css(m: int, d: int, w: int) -> str:
         f"@media (min-width:{m}px){{.nu-srow{{grid-template-columns:minmax(0,1fr) auto auto}}"
         ".nu-srow .nu-pdlink{grid-column:auto;justify-self:end;padding:0 var(--space-2)}}"
         f"@media (min-width:{d}px){{.nu-slist{{grid-template-columns:repeat(2,minmax(0,1fr))}}}}"
+        # HOME の「今日何をするか」（home_feed.py）。抽選カードは閲覧時に runtime が data-nu-bucket を書き換える。
+        # 99（掲載しない）になったカードは消し、カードが全部消えた抽選のセクションと、中身が無くなった全体も消す
+        ".nu-feed{margin:0 0 var(--space-5)}"
+        ".nu-feed__list{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-3);margin:0;padding:0;list-style:none}"
+        f"@media (min-width:{d}px){{.nu-feed__list{{grid-template-columns:repeat(2,minmax(0,1fr))}}}}"
+        f"@media (min-width:{w}px){{.nu-feed__list{{grid-template-columns:repeat(3,minmax(0,1fr))}}}}"
+        ".nu-feed__item{min-width:0;display:flex}.nu-feed__item>.nu-card{flex:1}"
+        ".nu-feed [data-nu-bucket=\"99\"],.nu-feed__item:has(>[data-nu-bucket=\"99\"]){display:none}"
+        ".nu-feed__sec[data-nu-lotsec]:not(:has([data-nu-bucket]:not([data-nu-bucket=\"99\"]))){display:none}"
+        ".nu-feed:not(:has(.nu-feed__sec:not([data-nu-lotsec]))):not(:has([data-nu-bucket]:not([data-nu-bucket=\"99\"]))){display:none}"
+        ".nu-feed__dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--space-1) var(--space-3);"
+        "margin:0;font-size:var(--font-sm)}.nu-feed__dl dt{color:var(--color-muted)}"
+        ".nu-feed__dl dd{margin:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}"
+        ".nu-feed__stale{margin:0;font-size:var(--font-xs);font-weight:700;color:var(--color-warning)}"
+        ".nu-feed__more{display:flex;flex-wrap:wrap;gap:var(--space-1) var(--space-4);align-items:center;"
+        "margin:var(--space-2) 0 var(--space-4);font-size:var(--font-sm)}"
+        ".nu-feed__more a{color:var(--color-primary);min-height:44px;display:inline-flex;align-items:center}"
+        ".nu-feed__rest{color:var(--color-muted)}"
     )

@@ -494,3 +494,12 @@ def test_canary_oauth_failure_includes_only_safe_diagnostic(monkeypatch):
     monkeypatch.setattr(ei, "LAST_TOKEN_ERROR", {"http_status": 401, "error": "invalid_client", "secret": SECRET})
     rep = ea.browse_canary({**LIVE, "API_DRY_RUN": "false"}, http_get=never, token_fn=lambda s: (None, "AUTH_FAILED"), now=NOW)
     assert rep["oauth"]["http_status"] == 401 and rep["oauth"]["error"] == "invalid_client" and SECRET not in json.dumps(rep)
+
+
+def test_credential_shape_never_contains_values_and_detects_environment():
+    s = ea.credential_shape({"EBAY_CLIENT_ID": "App-Name-PRD-abcdef123456", "EBAY_CLIENT_SECRET": "PRD-sec ret\n"})
+    assert s["client_id_environment"] == "PRD" and s["client_secret_has_inner_whitespace"] is True and s["client_id_has_inner_whitespace"] is False
+    assert "abcdef" not in json.dumps(s) and "sec" not in json.dumps(s).replace("secret", "")
+    assert ea.credential_shape({"EBAY_CLIENT_ID": "x-SBX-1"})["client_id_environment"] == "SBX"
+    rep = ea.browse_canary({**LIVE, "API_DRY_RUN": "false"}, http_get=never, token_fn=lambda s_: (None, "AUTH_FAILED"), now=NOW)
+    assert rep["oauth"]["credential_shape"]["client_secret_length"] == len(SECRET) and SECRET not in json.dumps(rep)

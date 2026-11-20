@@ -127,6 +127,17 @@ def fx_state(currency: str, now: datetime, path: Path = FX_PATH) -> dict:
     return out
 
 
+def credential_shape(env) -> dict:
+    """資格情報の「形」だけ（値・先頭文字は返さない）。環境名（Client ID に含まれる -PRD- / -SBX-）・文字数・途中の空白の有無。
+    Sandbox と Production の取り違え、貼り付けの混入の切り分けに使う。"""
+    cid = str((env or {}).get("EBAY_CLIENT_ID") or (env or {}).get("EBAY_APP_ID") or "").strip()
+    sec = str((env or {}).get("EBAY_CLIENT_SECRET") or "").strip()
+    tag = "PRD" if "-PRD-" in cid.upper() else "SBX" if "-SBX-" in cid.upper() else "UNKNOWN"
+    return {"client_id_environment": tag, "client_id_length": len(cid), "client_secret_length": len(sec),
+            "client_id_has_inner_whitespace": bool(re.search(r"\s", cid)), "client_secret_has_inner_whitespace": bool(re.search(r"\s", sec)),
+            "client_id_has_quote_or_ctrl": bool(re.search(r"[\"'\x00-\x1f]", cid)), "client_secret_has_quote_or_ctrl": bool(re.search(r"[\"'\x00-\x1f]", sec))}
+
+
 def _convert(value: float, currency: str, fx: dict) -> Optional[int]:
     """為替が確認できる（JPY・または CONFIRMED）ときだけ円にする。"""
     if currency == "JPY":
@@ -416,6 +427,7 @@ def browse_canary(env, *, http_get: Optional[Callable] = None, token_fn: Optiona
     rep["oauth"] = {"status": "SUCCESS" if tok else "FAILED", "detail": str(tst)}
     if not tok:                                                          # 失敗の診断（HTTP の状態と eBay のエラーコードだけ）
         rep["oauth"].update({k: v for k, v in getattr(ei, "LAST_TOKEN_ERROR", {}).items() if k in ("http_status", "error")})
+        rep["oauth"]["credential_shape"] = credential_shape(env)
     if not tok:
         rep.update(browse={"requests": 0}, verdict_hint="BLOCKED:oauth_" + str(tst).lower())
         return rep

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T16:25:48+09:00",
+  "generated_at": "2026-11-20T22:10:51+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-17e",
-      "iphone-18-pro"
+      "iphone-air",
+      "iphone-duo"
     ],
     "errors": {},
-    "unknown_parts": 38,
-    "matched": 0,
-    "pending": 10,
+    "unknown_parts": 10,
+    "matched": 4,
+    "pending": 3,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -31,11 +31,11 @@
       "latest": true
     },
     "inputs_stale": [],
-    "review_required": 2,
+    "review_required": 3,
     "matched_events": 38,
     "release": 7,
     "by_kind": {
-      "LOTTERY": 39,
+      "LOTTERY": 40,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -46,7 +46,7 @@
       "configured": 22,
       "implemented": 11,
       "unimplemented": 11,
-      "blocked": 5,
+      "blocked": 4,
       "robots_unreachable": 5,
       "unreachable": 5,
       "table": [
@@ -54,9 +54,9 @@
           "source_id": "POKEMON_CENTER_ONLINE",
           "retailer": "ポケモンセンターオンライン",
           "adapter": "pco_lottery",
-          "state": "SOURCE_BLOCKED",
+          "state": "NO_ACTIVE_LOTTERY",
           "health": "OK_NO_EVENTS",
-          "blocked": true,
+          "blocked": false,
           "robots": null,
           "unreachable": false
         },
@@ -302,7 +302,7 @@
     "configured": 22,
     "implemented": 11,
     "unimplemented": 11,
-    "blocked": 5,
+    "blocked": 4,
     "robots_unreachable": 5,
     "unreachable": 5,
     "table": [
@@ -310,9 +310,9 @@
         "source_id": "POKEMON_CENTER_ONLINE",
         "retailer": "ポケモンセンターオンライン",
         "adapter": "pco_lottery",
-        "state": "SOURCE_BLOCKED",
+        "state": "NO_ACTIVE_LOTTERY",
         "health": "OK_NO_EVENTS",
-        "blocked": true,
+        "blocked": false,
         "robots": null,
         "unreachable": false
       },

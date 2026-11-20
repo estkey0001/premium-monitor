@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20 15:55 JST",
+  "generated_at": "2026-11-20 21:40 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -1756,7 +1756,7 @@
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-11-20T15:47:53+09:00"
+        "at": "2026-11-20T21:32:57+09:00"
       },
       {
         "product_id": "prod_switch2",
@@ -1807,7 +1807,7 @@
         "product_id": "prod_a1ii",
         "action": "stock_observed",
         "stock": "在庫あり",
-        "at": "2026-11-20T15:51:59+09:00"
+        "at": "2026-11-20T21:37:04+09:00"
       },
       {
         "product_id": "prod_a7cr",
@@ -1841,7 +1841,7 @@
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-11-20T15:47:53+09:00"
+      "at": "2026-11-20T21:32:57+09:00"
     },
     {
       "product_id": "prod_switch2",
@@ -1892,7 +1892,7 @@
       "product_id": "prod_a1ii",
       "action": "stock_observed",
       "stock": "在庫あり",
-      "at": "2026-11-20T15:51:59+09:00"
+      "at": "2026-11-20T21:37:04+09:00"
     },
     {
       "product_id": "prod_a7cr",

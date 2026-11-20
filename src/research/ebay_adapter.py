@@ -47,8 +47,25 @@ _COND = {"1000": cr.UNOPENED, "1500": cr.LIKE_NEW, "2750": cr.LIKE_NEW, "3000": 
 _COND_REJECT = {"1750": "new_with_defects", "2000": "refurbished", "2010": "refurbished", "2020": "refurbished", "2030": "refurbished",
                 "2500": "refurbished", "7000": "for_parts"}
 _COND_TEXT = (("new", cr.UNOPENED), ("open box", cr.LIKE_NEW), ("new other", cr.LIKE_NEW), ("like new", cr.LIKE_NEW), ("used", cr.USED))
-_ACCESSORY = re.compile(r"(?i)\b(case|strap|battery|batteries|charger|box only|empty box|manual|instruction|protector|lens cap|cap only|hood|cover|pouch|bag|sticker|decal|"
-                        r"grip only|thumb grip|guard|tripod|cage|body cap|adapter|accessor(?:y|ies)|bundle|lot of)\b|no camera|付属品のみ|ケースのみ")
+_ACCESSORY_WORD = re.compile(r"(?i)\b(case|strap|battery|batteries|charger|manual|instruction|protector|lens cap|cap|hood|cover|pouch|bag|sticker|decal|"
+                             r"grip|guard|tripod|cage|adapter|accessor(?:y|ies)|screen|glass|filter ring|hot shoe)\b")
+_ACCESSORY_ONLY = re.compile(r"(?i)\bonly\b|\b(for|fits?|compatible|replacement|designed for)\b|\blot of\b|\bno camera\b|付属品のみ|ケースのみ")
+_BODY_WORD = re.compile(r"(?i)\b(camera|body|digital|mirrorless|kit)\b")
+
+
+def is_accessory_only(title: str) -> bool:
+    """付属品・アクセサリーだけの出品か。正しい本体 + アクセサリーのセット（"X100VI Digital Camera with case"）は除外しない。
+    除外: (1) 「only / for / fits / compatible / replacement」を伴う付属品語、(2) 本体を表す語（camera / body / digital / mirrorless / kit）が無く付属品語がある、
+    (3) 題名が付属品語で始まる（"Screen Protector X100VI Camera"）。"""
+    t = str(title or "")
+    m = _ACCESSORY_WORD.search(t)
+    if not m:
+        return bool(re.search(r"(?i)\bbox only\b|\bempty box\b|\bno camera\b|付属品のみ|ケースのみ", t))
+    if _ACCESSORY_ONLY.search(t) or not _BODY_WORD.search(t):
+        return True
+    return m.start() == 0 or bool(re.match(r"(?i)\s*(screen|tempered|replacement|leather|silicone|metal)\b", t))
+
+
 _PARTS = re.compile(r"(?i)for parts|not working|broken|as[- ]is|junk|defective|ジャンク|故障|部品取り")
 INSIGHTS_CONDITION_IDS = ("1000", "1500", "2750", "3000", "4000", "5000")
 
@@ -153,7 +170,7 @@ def _classify(product: str, item: dict, stats: dict) -> Optional[tuple[str, Opti
     状態が UNKNOWN のものは残す（表示はできるが、ルート C / D の実行には使われない）。"""
     title = str(item.get("title") or "")
     ok, _why = cr.identity_ok(product, title)
-    if ok and _ACCESSORY.search(title):                    # 英語のアクセサリ・付属品だけの出品（identity_ok は日本語中心）
+    if ok and is_accessory_only(title):                    # 英語のアクセサリ・付属品だけの出品（identity_ok は日本語中心）
         ok = False
     if not ok:
         stats["rejected_identity"] = stats.get("rejected_identity", 0) + 1
@@ -369,3 +386,67 @@ def fetch(market_id: str, env, *, http_get: Optional[Callable] = None, token_fn:
             rec_["sold"] = []
     return AdapterResult(status=status, reason=reason, listing_access=la, sold_access=sold_access,
                          records=[r for r in records.values() if r["listing"] or r["sold"]], stats=stats, **base)
+
+
+# ---------------------------------------------------------------- canary（1 商品・最小件数・成約には通信しない）
+CANARY_PRODUCT = ("FUJIFILM X100VI", "Fujifilm X100VI")
+CANARY_LIMIT = 10
+
+
+def browse_canary(env, *, http_get: Optional[Callable] = None, token_fn: Optional[Callable] = None, now: Optional[datetime] = None,
+                  product=CANARY_PRODUCT, limit: int = CANARY_LIMIT) -> dict:
+    """Production の Browse API へ、1 商品・1 リクエストだけ送って結果を報告する（成約 API には一切通信しない）。
+    報告は件数・状態・出品の公開情報（題名・価格・URL など）だけ。資格情報・token・Authorization は含めない。
+    通信するのは、資格情報・ENABLE_EBAY_API=true・API_DRY_RUN が false のときだけ。"""
+    from src.collectors.api import ebay_insights as ei
+    now = now or datetime.now(JST)
+    g = gates(env)
+    rep: dict = {"product": product[0], "checked_at": now.isoformat(timespec="seconds"),
+                 "credentials_detected": g["credentials"], "flags": {"enable_ebay_api": g["enabled"], "api_dry_run": g["dry_run"],
+                                                                      "insights_approved": g["insights_approved"], "sold_license_confirmed": g["sold_license_confirmed"]},
+                 "sold": {"requests": 0, "status": "PENDING_APPROVAL", "note": "Marketplace Insights は審査制（新規は制限あり）。今回は通信しない"},
+                 "profit": "NOT_CALCULATED"}
+    if not g["credentials"] or not g["enabled"] or g["dry_run"]:
+        rep.update(oauth={"status": "NOT_ATTEMPTED"}, browse={"requests": 0},
+                   verdict_hint="BLOCKED:" + ("no_credentials" if not g["credentials"] else "not_enabled" if not g["enabled"] else "api_dry_run"))
+        return rep
+    http_get = http_get or ei.http_get
+    token_fn = token_fn or ei.fetch_token
+    tok, tst = token_fn(ei.BROWSE_SCOPE)
+    rep["oauth"] = {"status": "SUCCESS" if tok else "FAILED", "detail": str(tst)}
+    if not tok:
+        rep.update(browse={"requests": 0}, verdict_hint="BLOCKED:oauth_" + str(tst).lower())
+        return rep
+    url, headers = build_browse_request(product[1], limit=limit)
+    res = _page(http_get, tok, url, headers, [1])                      # 1 リクエスト・再試行なし
+    data = res.get("data") if res.get("ok") else None
+    br: dict = {"requests": 1, "http_status": res.get("status"), "ok": bool(res.get("ok")), "error_kind": res.get("error_kind")}
+    rep["browse"] = br
+    if not res.get("ok"):
+        rep["verdict_hint"] = "BLOCKED:browse_http_" + str(res.get("status"))
+        return rep
+    items = parse_browse(data)
+    first = items[0] if items else {}
+    br["schema"] = {"top_level_keys": sorted(str(k) for k in (data or {}).keys())[:20], "item_keys": sorted(str(k) for k in first.keys())[:40],
+                    "total": (data or {}).get("total"), "has_item_summaries": "itemSummaries" in (data or {})}
+    br["returned"] = len(items)
+    fx_cache: dict = {}
+    matched, rejected, rej_rows = [], {}, []
+    for it in items:
+        st: dict = {}
+        row = listing_row(product[0], it, now=now, checked_at=rep["checked_at"], fx_cache=fx_cache, stats=st)
+        if row is None:
+            why = next(iter(st), "unknown")
+            rejected[why] = rejected.get(why, 0) + 1
+            rej_rows.append({"title": str(it.get("title") or "")[:120], "reason": why})
+        else:
+            matched.append(row)
+    br["matched"] = len(matched)
+    br["rejected"] = {"total": sum(rejected.values()), "by_reason": rejected}
+    rep["listings"] = [{"item_id": str(x["url"]).rsplit("/", 1)[-1], "title": x["item_title"], "price": x["price_original"], "currency": x["currency"],
+                        "condition": x["condition"], "shipping": x.get("shipping_original"), "shipping_currency": x.get("shipping_currency"),
+                        "location": x.get("location"), "url": x["url"], "checked_at": x["checked_at"], "fx_status": x["fx_status"]} for x in matched[:5]]
+    rep["rejected_examples"] = rej_rows[:10]
+    rep["fx"] = {c: {"status": f["status"], "checked_at": f.get("checked_at")} for c, f in fx_cache.items()}
+    rep["verdict_hint"] = "PASS" if matched else "PARTIAL:no_matched_items"
+    return rep

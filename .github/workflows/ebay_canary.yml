@@ -1,0 +1,43 @@
+name: eBay Browse Canary
+
+# 手動実行のみ（定時・push では発火しない）。1 商品・1 リクエスト。成約（Marketplace Insights）には通信しない。
+# リポジトリには何も書かない（結果はログと Step Summary だけ）。
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ebay-browse-canary
+  cancel-in-progress: false
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TZ: Asia/Tokyo
+      PYTHONPATH: .
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: eBay Browse canary (1 product, 1 request)
+        run: python scripts/ebay_browse_canary.py
+        env:
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+          ENABLE_EBAY_API: ${{ vars.ENABLE_EBAY_API || 'false' }}
+          API_DRY_RUN: ${{ vars.API_DRY_RUN || 'true' }}
+          EBAY_INSIGHTS_APPROVED: 'false'
+          EBAY_SOLD_LICENSE_CONFIRMED: 'false'

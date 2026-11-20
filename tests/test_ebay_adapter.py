@@ -439,3 +439,42 @@ def test_truncated_sold_is_failed_and_rows_dropped():
 def test_more_accessories_rejected(title):
     st: dict = {}
     assert ea.listing_row("RICOH GR IV", item(title), now=NOW, checked_at="x", fx_cache={}, stats=st) is None
+
+
+# ---- canary / 付属品つきの本体 ----
+@pytest.mark.parametrize("title,exp", [
+    ("Fujifilm X100VI Silver Digital Camera with Leather Case and Strap", False), ("Fujifilm X100VI Camera Body + Original Battery and Charger", False),
+    ("Ricoh GR IV Digital Camera", False), ("Fujifilm X100VI Black Mirrorless Camera Body Only", False),
+    ("Leather Case for Fujifilm X100VI", True), ("Fujifilm X100VI Camera Strap Only", True), ("Battery NP-W126S for X100VI", True),
+    ("Screen Protector X100VI Camera", True), ("Ricoh GR IV box only", True), ("Ricoh GR IV Instruction Manual", True)])
+def test_bundle_with_body_is_kept_and_accessory_only_is_rejected(title, exp):
+    assert ea.is_accessory_only(title) is exp
+
+
+def test_canary_blocked_without_credentials_makes_no_request(_guard):
+    rep = ea.browse_canary({}, http_get=never, token_fn=never, now=NOW)
+    assert rep["verdict_hint"] == "BLOCKED:no_credentials" and rep["browse"]["requests"] == 0 and rep["sold"]["requests"] == 0 and _guard == []
+    for env, hint in ((CRED, "BLOCKED:not_enabled"), ({**LIVE, "API_DRY_RUN": "true"}, "BLOCKED:api_dry_run")):
+        assert ea.browse_canary(env, http_get=never, token_fn=never, now=NOW)["verdict_hint"] == hint
+
+
+def test_canary_one_request_one_product_never_touches_sold():
+    fx_ok()
+    calls = []
+    items = [item("Fujifilm X100VI Silver Digital Camera"), item("Leather Case for Fujifilm X100VI", iid="v1|123456789031|0"),
+             item("Fujifilm X100V Silver", iid="v1|123456789032|0"), item("Fujifilm X100VI with Case and Strap Camera", iid="v1|123456789033|0")]
+    rep = ea.browse_canary({**APPROVED, "API_DRY_RUN": "false", "EBAY_INSIGHTS_APPROVED": "false", "EBAY_SOLD_LICENSE_CONFIRMED": "false"},
+                           http_get=fake_http(listing=items, calls=calls), token_fn=tok_ok, now=NOW)
+    assert len(calls) == 1 and "marketplace_insights" not in calls[0] and "limit=10" in calls[0]
+    b = rep["browse"]
+    assert b["http_status"] == 200 and b["returned"] == 4 and b["matched"] == 2 and b["rejected"]["total"] == 2 and rep["oauth"]["status"] == "SUCCESS"
+    assert rep["sold"]["requests"] == 0 and rep["profit"] == "NOT_CALCULATED" and rep["verdict_hint"] == "PASS"
+    assert rep["listings"][0]["currency"] == "USD" and rep["listings"][0]["price"] == 1500.0
+    assert SECRET not in json.dumps(rep, ensure_ascii=False) and "Bearer" not in json.dumps(rep)
+
+
+def test_canary_oauth_failure_and_http_failure_are_reported_not_hidden():
+    r1 = ea.browse_canary({**LIVE, "API_DRY_RUN": "false"}, http_get=never, token_fn=lambda s: (None, "AUTH_FAILED"), now=NOW)
+    assert r1["oauth"]["status"] == "FAILED" and r1["verdict_hint"].startswith("BLOCKED:oauth")
+    r2 = ea.browse_canary({**LIVE, "API_DRY_RUN": "false"}, http_get=fake_http(fail=403), token_fn=tok_ok, now=NOW)
+    assert r2["browse"]["http_status"] == 403 and r2["verdict_hint"] == "BLOCKED:browse_http_403" and "listings" not in r2

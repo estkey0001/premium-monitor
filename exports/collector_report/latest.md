@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-11-20 20:42:39 UTC+09:00
+生成日時: 2026-11-21 00:53:39 UTC+09:00
 
 ## サマリ
 
@@ -198,13 +198,9 @@
 | ps5_pro | tsutaya | SKIP | not_supported |
 | iphone16pro256 | kaitori_shouten | FAILED | product_not_listed |
 
-## 価格変動一覧 (3件)
+## 価格変動一覧 (0件)
 
-| 商品 | 店舗 | 前回 | 今回 | 変化率 |
-|------|------|------|------|--------|
-| iphoneduo_256 | kaitori_shouten | ¥356,000 | ¥352,000 | ↓1.1% |
-| iphone17pm256 | kaitori_itchome | ¥194,000 | ¥192,000 | ↓1.0% |
-| iphone17pro512 | kaitori_shouten | ¥203,500 | ¥204,000 | ↑0.2% |
+（前回との変動なし）
 
 ## ⚠️ suspicious_price 一覧 (1件)
 

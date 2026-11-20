@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T22:10:51+09:00",
+  "generated_at": "2026-11-21T02:21:57+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-air",
-      "iphone-duo"
+      "iphone-16",
+      "iphone-17"
     ],
     "errors": {},
     "unknown_parts": 10,
-    "matched": 4,
-    "pending": 3,
+    "matched": 1,
+    "pending": 2,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -114,7 +114,7 @@
           "source_id": "FUKUFUKU_TOREKA",
           "retailer": "福福トレカ",
           "adapter": "fukufuku_lottery",
-          "state": "ACTIVE_LOTTERY",
+          "state": "NO_ACTIVE_LOTTERY",
           "health": "HEALTHY",
           "blocked": false,
           "robots": null,
@@ -293,8 +293,8 @@
     "tcg_products": 25,
     "event_candidates": 170,
     "review_required_announcements": 6,
-    "matched_events": 65,
-    "stale_events": 99,
+    "matched_events": 62,
+    "stale_events": 102,
     "approved_events": 0,
     "registered_events": 0
   },
@@ -370,7 +370,7 @@
         "source_id": "FUKUFUKU_TOREKA",
         "retailer": "福福トレカ",
         "adapter": "fukufuku_lottery",
-        "state": "ACTIVE_LOTTERY",
+        "state": "NO_ACTIVE_LOTTERY",
         "health": "HEALTHY",
         "blocked": false,
         "robots": null,

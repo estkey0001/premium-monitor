@@ -19,7 +19,21 @@
     "lot-3c0dda17b6b2:deadline_24h": "suppressed:2026-11-15T21:09:53.457124+09:00",
     "lot-3c0dda17b6b2:deadline_6h": "2026-11-15T21:09:53.457124+09:00",
     "lot-44adf3638512:deadline_24h": "suppressed:2026-11-15T21:09:53.457124+09:00",
-    "lot-44adf3638512:deadline_6h": "2026-11-15T21:09:53.457124+09:00"
+    "lot-44adf3638512:deadline_6h": "2026-11-15T21:09:53.457124+09:00",
+    "lot-7cfed02af5de:lottery_open": "2026-11-20T16:25:48.702302+09:00"
   },
-  "candidates": []
+  "candidates": [
+    {
+      "lottery_id": "lot-7cfed02af5de",
+      "milestone": "lottery_open",
+      "label": "抽選開始",
+      "fires_at": "2026-11-20T00:00:00+09:00",
+      "tcg": "ONE_PIECE",
+      "product_name": "世界最強の戦士",
+      "retailer": "ONE PIECE 麦わらストア",
+      "entry_url": null,
+      "source_url": "https://www.mugiwara-store.com/news/3131/",
+      "message": "世界最強の戦士（ONE PIECE 麦わらストア） 抽選開始"
+    }
+  ]
 }

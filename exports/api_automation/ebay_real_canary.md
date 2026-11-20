@@ -1,11 +1,11 @@
 # eBay Real API Canary
 
-> 生成: 2026-11-19 22:28 JST
+> 生成: 2026-11-20 16:41 JST
 
 ## Verdict: **EBAY_PENDING_CONFIGURATION**  (real_api_called=False, mode=not_executed)
 
 ## Configuration
-- EBAY_APP_ID = NOT_CONFIGURED / ENABLE_EBAY_API = false / EBAY_API_STAGE = 0 / API_DRY_RUN = True
+- EBAY_APP_ID = NOT_CONFIGURED / ENABLE_EBAY_API = true_or_default / EBAY_API_STAGE = 0 / API_DRY_RUN = true(default)
 - rollout_state = NOT_CONFIGURED
 
 > EBAY_APP_ID 未設定。実APIを呼ばず PENDING。PASS を偽らない。

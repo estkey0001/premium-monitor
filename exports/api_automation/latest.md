@@ -1,13 +1,13 @@
 # API Automation Quality Dashboard
 
-> 生成: 2026-11-19 22:28 JST / API自動化（eBay/楽天/Yahoo）の統合状態と品質。利益/AI/DQ思想は不変
+> 生成: 2026-11-20 16:41 JST / API自動化（eBay/楽天/Yahoo）の統合状態と品質。利益/AI/DQ思想は不変
 
-- dry_run: True / target: canary / いずれか設定済: False
+- dry_run: False / target: canary / いずれか設定済: False
 
 ## API 別ステータス
 | API | Configured | Status | Requests | Success | Items | Exact | Rejected | Main | Latency | LastSuccess |
 |---|---|---|--:|--:|--:|--:|--:|--:|--:|---|
-| ebay | not_configured | disabled_kill_switch | 0 | 0% | 0 | 0 | 0 | 0 | 0ms | – |
+| ebay | not_configured | NOT_CONFIGURED | 0 | 0% | 0 | 0 | 0 | 0 | 0ms | – |
 | rakuten | not_configured | disabled_kill_switch | 0 | 0% | 0 | 0 | 0 | 0 | 0ms | – |
 | yahoo | not_configured | disabled_kill_switch | 0 | 0% | 0 | 0 | 0 | 0 | 0ms | – |
 

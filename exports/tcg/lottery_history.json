@@ -1,6 +1,35 @@
 {
-  "generated_at": "2026-11-19T22:12:05.070024+09:00",
+  "generated_at": "2026-11-20T16:25:48.709450+09:00",
   "items": [
+    {
+      "first_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "lottery_id": "lot-a98308b4bcd6",
+      "tcg": "ONE_PIECE",
+      "product_name": "プレミアムカードコレクション -熊本県スペシャル-",
+      "product_id": null,
+      "retailer": "MUGIWARA_STORE",
+      "retailer_name": "ONE PIECE 麦わらストア",
+      "store_name": null,
+      "store_specific": false,
+      "event_type": "LOTTERY",
+      "application_start": "2026-11-21T00:00:00+09:00",
+      "application_end": "2026-11-23T23:59:00+09:00",
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": "2026-11-24",
+      "purchase_start_date": "2026-11-28",
+      "purchase_end_date": "2026-12-05",
+      "retail_price": null,
+      "source_url": "https://www.mugiwara-store.com/news/3153/",
+      "source_type": "RETAILER_OFFICIAL",
+      "confidence": "high",
+      "published_at": "2026-11-20T00:00:00+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "UPCOMING"
+    },
     {
       "first_seen_at": "2026-11-19T22:12:05.059869+09:00",
       "lottery_id": "lot-7cfed02af5de",
@@ -27,8 +56,8 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": "2026-11-19T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "UPCOMING"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "OPEN"
     },
     {
       "first_seen_at": "2026-11-13T21:15:53.993505+09:00",
@@ -56,7 +85,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "CLOSED"
     },
     {
@@ -114,7 +143,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-10T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "CLOSED"
     },
     {
@@ -143,7 +172,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "OPEN"
     },
     {
@@ -172,7 +201,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "RESULT_PENDING"
     },
     {
@@ -259,7 +288,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-20T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "ENDED"
     },
     {
@@ -317,7 +346,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "ENDED"
     },
     {
@@ -433,7 +462,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "ENDED"
     },
     {
@@ -462,7 +491,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "ENDED"
     },
     {
@@ -491,7 +520,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "ENDED"
     },
     {
@@ -549,7 +578,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-02T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "ENDED"
     },
     {
@@ -694,7 +723,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-18T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "ENDED"
     },
     {
@@ -723,7 +752,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "ENDED"
     },
     {
@@ -752,7 +781,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "ENDED"
     },
     {
@@ -1332,7 +1361,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "ENDED"
     },
     {
@@ -2435,7 +2464,7 @@
       "confidence": "medium",
       "published_at": "2026-11-03T00:00:00+09:00",
       "last_seen_at": "2026-11-04T21:21:30.152962+09:00",
-      "status": "ENDING_SOON"
+      "status": "CLOSED"
     },
     {
       "first_seen_at": "2026-11-03T21:18:44.097266+09:00",
@@ -3391,7 +3420,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -3479,7 +3508,7 @@
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
       "last_seen_at": "2026-11-15T21:09:53.457124+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-13T21:15:53.993505+09:00",
@@ -3508,7 +3537,7 @@
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
       "last_seen_at": "2026-11-15T21:09:53.457124+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-13T21:15:53.993505+09:00",
@@ -3537,7 +3566,7 @@
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
       "last_seen_at": "2026-11-15T21:09:53.457124+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-13T21:15:53.993505+09:00",
@@ -3624,7 +3653,7 @@
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
       "last_seen_at": "2026-11-15T21:09:53.457124+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-13T21:15:53.993505+09:00",
@@ -3653,7 +3682,7 @@
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
       "last_seen_at": "2026-11-18T13:34:58.376778+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-13T21:15:53.993505+09:00",
@@ -3710,8 +3739,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-13T21:15:53.993505+09:00",
@@ -3798,7 +3827,7 @@
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
       "last_seen_at": "2026-11-18T13:34:58.376778+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-13T21:15:53.993505+09:00",
@@ -3884,7 +3913,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -3913,8 +3942,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-14T01:38:49.658825+09:00",
@@ -3942,7 +3971,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -3971,8 +4000,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-14T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-14T20:44:31.060038+09:00",
@@ -4000,8 +4029,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-14T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-14T20:44:31.060038+09:00",
@@ -4029,8 +4058,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-14T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "WINNER_ANNOUNCED"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "WINNER_PURCHASE_PERIOD"
     },
     {
       "first_seen_at": "2026-11-15T21:09:53.457124+09:00",
@@ -4058,8 +4087,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-15T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "RESULT_PENDING"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "WINNER_ANNOUNCED"
     },
     {
       "first_seen_at": "2026-11-16T18:38:48.055495+09:00",
@@ -4087,8 +4116,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "RESULT_PENDING"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "WINNER_ANNOUNCED"
     },
     {
       "first_seen_at": "2026-11-16T18:38:48.055495+09:00",
@@ -4116,8 +4145,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "RESULT_PENDING"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "WINNER_ANNOUNCED"
     },
     {
       "first_seen_at": "2026-11-16T18:38:48.055495+09:00",
@@ -4145,8 +4174,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "ENDING_SOON"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-16T21:35:07.302801+09:00",
@@ -4174,7 +4203,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -4203,7 +4232,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -4232,8 +4261,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "ENDING_SOON"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-17T15:51:06.361434+09:00",
@@ -4261,8 +4290,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-17T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "ENDING_SOON"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-17T22:18:58.637355+09:00",
@@ -4290,7 +4319,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-17T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "OPEN"
     },
     {
@@ -4319,8 +4348,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-17T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "ENDING_SOON"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-18T13:34:58.376778+09:00",
@@ -4348,8 +4377,8 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-18T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
-      "status": "ENDING_SOON"
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "RESULT_PENDING"
     },
     {
       "first_seen_at": "2026-11-18T22:08:32.983916+09:00",
@@ -4377,7 +4406,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-18T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "OPEN"
     },
     {
@@ -4406,15 +4435,44 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-18T00:00:00+09:00",
-      "last_seen_at": "2026-11-19T22:12:05.059869+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
       "status": "OPEN"
+    },
+    {
+      "first_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "lottery_id": "lot-23d9de049e56",
+      "tcg": "ONE_PIECE",
+      "product_name": "ONE PIECE Heroines Edition vol.2【EB-05】",
+      "product_id": null,
+      "retailer": "CARD_LABO",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ池袋店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-20",
+      "application_end_date": "2026-11-21",
+      "winner_announcement_date": "2026-11-22",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://www.c-labo.jp/shop/ikebukuro/blog/624925/",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-20T00:00:00+09:00",
+      "last_seen_at": "2026-11-20T16:25:48.702302+09:00",
+      "status": "UPCOMING"
     }
   ],
   "frequency_by_retailer": {
     "MUGIWARA_STORE": {
-      "events_total": 7,
-      "events_last_30d": 4,
-      "events_last_90d": 7,
+      "events_total": 8,
+      "events_last_30d": 5,
+      "events_last_90d": 8,
       "average_lead_time_hours": 24.0,
       "average_application_window_hours": 72.0
     },
@@ -4454,11 +4512,11 @@
       "average_application_window_hours": 79.0
     },
     "CARD_LABO": {
-      "events_total": 116,
+      "events_total": 117,
       "events_last_30d": 111,
-      "events_last_90d": 116,
+      "events_last_90d": 117,
       "average_lead_time_hours": 0.2,
-      "average_application_window_hours": 59.2
+      "average_application_window_hours": 58.9
     },
     "FUKUFUKU_TOREKA": {
       "events_total": 5,

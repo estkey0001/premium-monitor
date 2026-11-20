@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-19 22:28 JST",
-  "dry_run": true,
+  "generated_at": "2026-11-20 16:41 JST",
+  "dry_run": false,
   "target_mode": "canary",
   "targets": [
     "prod_iphone17pro_256",
@@ -11,7 +11,7 @@
   "results": {
     "ebay": {
       "api": "ebay",
-      "status": "disabled_kill_switch",
+      "status": "NOT_CONFIGURED",
       "configured": "not_configured",
       "observations": [],
       "health": {

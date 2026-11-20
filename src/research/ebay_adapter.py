@@ -92,7 +92,7 @@ def _truthy(env, name: str) -> bool:
 
 
 def has_credentials(env) -> bool:
-    cid = (env or {}).get("EBAY_CLIENT_ID") or (env or {}).get("EBAY_APP_ID")
+    cid = (env or {}).get("EBAY_CLIENT_ID") or (env or {}).get("EBAY_APP_ID")        # 空白だけの値は未設定
     return bool(str(cid or "").strip()) and bool(str((env or {}).get("EBAY_CLIENT_SECRET") or "").strip())
 
 
@@ -414,6 +414,8 @@ def browse_canary(env, *, http_get: Optional[Callable] = None, token_fn: Optiona
     token_fn = token_fn or ei.fetch_token
     tok, tst = token_fn(ei.BROWSE_SCOPE)
     rep["oauth"] = {"status": "SUCCESS" if tok else "FAILED", "detail": str(tst)}
+    if not tok:                                                          # 失敗の診断（HTTP の状態と eBay のエラーコードだけ）
+        rep["oauth"].update({k: v for k, v in getattr(ei, "LAST_TOKEN_ERROR", {}).items() if k in ("http_status", "error")})
     if not tok:
         rep.update(browse={"requests": 0}, verdict_hint="BLOCKED:oauth_" + str(tst).lower())
         return rep

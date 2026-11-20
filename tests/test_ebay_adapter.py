@@ -478,3 +478,19 @@ def test_canary_oauth_failure_and_http_failure_are_reported_not_hidden():
     assert r1["oauth"]["status"] == "FAILED" and r1["verdict_hint"].startswith("BLOCKED:oauth")
     r2 = ea.browse_canary({**LIVE, "API_DRY_RUN": "false"}, http_get=fake_http(fail=403), token_fn=tok_ok, now=NOW)
     assert r2["browse"]["http_status"] == 403 and r2["verdict_hint"] == "BLOCKED:browse_http_403" and "listings" not in r2
+
+
+def test_credentials_are_stripped_and_token_error_code_is_diagnosed(monkeypatch):
+    from src.collectors.api import ebay_insights as ei
+    monkeypatch.setenv("EBAY_CLIENT_ID", "  idvalue-123456\n")
+    monkeypatch.setenv("EBAY_CLIENT_SECRET", "secretvalue-123456\n")
+    assert ei.credentials() == ("idvalue-123456", "secretvalue-123456")
+    assert ei._error_code(b'{"error":"invalid_client","error_description":"client authentication failed"}') == "invalid_client"
+    assert ei._error_code(b'{"error":"Bad Value With Spaces"}') is None and ei._error_code(b"not json") is None
+
+
+def test_canary_oauth_failure_includes_only_safe_diagnostic(monkeypatch):
+    from src.collectors.api import ebay_insights as ei
+    monkeypatch.setattr(ei, "LAST_TOKEN_ERROR", {"http_status": 401, "error": "invalid_client", "secret": SECRET})
+    rep = ea.browse_canary({**LIVE, "API_DRY_RUN": "false"}, http_get=never, token_fn=lambda s: (None, "AUTH_FAILED"), now=NOW)
+    assert rep["oauth"]["http_status"] == 401 and rep["oauth"]["error"] == "invalid_client" and SECRET not in json.dumps(rep)

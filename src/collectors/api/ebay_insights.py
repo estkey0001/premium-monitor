@@ -97,8 +97,8 @@ def redact(text: str) -> str:
 
 
 def credentials() -> Optional[tuple[str, str]]:
-    cid = os.environ.get("EBAY_CLIENT_ID") or os.environ.get("EBAY_APP_ID")
-    sec = os.environ.get("EBAY_CLIENT_SECRET")
+    cid = (os.environ.get("EBAY_CLIENT_ID") or os.environ.get("EBAY_APP_ID") or "").strip()      # 貼り付け時の前後の空白・改行を除く
+    sec = (os.environ.get("EBAY_CLIENT_SECRET") or "").strip()
     return (cid, sec) if cid and sec else None
 
 
@@ -351,6 +351,18 @@ def http_get(url: str, headers: dict) -> dict:
         return {"status": None, "data": None, "retry_after": None, "exc": RuntimeError(redact(str(e)))}
 
 
+LAST_TOKEN_ERROR: dict = {}      # 直近の token 失敗の診断（HTTP の状態と eBay のエラーコードだけ。秘密・本文は入れない）
+
+
+def _error_code(body: bytes) -> Optional[str]:
+    """eBay の token エラー応答の `error`（invalid_client / invalid_scope など）だけを取り出す。短い英小文字のときだけ。"""
+    try:
+        v = json.loads(body.decode("utf-8")).get("error")
+        return v if isinstance(v, str) and re.fullmatch(r"[a-z_]{1,40}", v) else None
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def fetch_token(scope: Optional[str] = None) -> tuple[Optional[str], str]:
     """(token, 状態)。token は戻り値だけで扱い、保存・表示しない。scope 省略時は成約（Insights）の scope。"""
     import urllib.error
@@ -367,6 +379,11 @@ def fetch_token(scope: Optional[str] = None) -> tuple[Optional[str], str]:
             return (tok, ST_OK) if tok else (None, ST_ERROR)
     except urllib.error.HTTPError as e:
         # 401: 資格情報が違う。400（invalid_scope）・403: 許可（承認）が無い。どちらも再試行しない
+        try:
+            LAST_TOKEN_ERROR.clear()
+            LAST_TOKEN_ERROR.update(http_status=e.code, error=_error_code(e.read(2000)))
+        except Exception:  # noqa: BLE001
+            LAST_TOKEN_ERROR.update(http_status=e.code, error=None)
         return None, status_from_error(f"permanent_{e.code}") if e.code in (400, 401, 403) else ST_ERROR
     except Exception:  # noqa: BLE001
         return None, ST_ERROR

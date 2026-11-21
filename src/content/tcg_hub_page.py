@@ -325,7 +325,7 @@ def _ev_row(v: dict, pidx: dict, yr: str, flags: set) -> str:
             f'<td data-label="状態">{st_cell}</td>'
             f'<td data-label="店舗"><b>{_e(shop)}</b>{"<small>" + _e(sub) + "</small>" if sub and sub != shop else ""}</td>'
             f'<td data-label="商品">{product}</td>'
-            f'<td data-label="締切"{' class="w2"' if no_res else ""}>{_md(v["end"], yr, ok)}<small>開始 {_md(v["start"], yr, ok)}</small></td>'
+            f'<td data-label="締切"{W2 if no_res else ""}>{_md(v["end"], yr, ok)}<small>開始 {_md(v["start"], yr, ok)}</small></td>'
             f'<td data-label="応募方法" class="how"><span title="{_e(CHANNEL_LABEL.get(ch, ch))}">{_e(CHANNEL_SHORT.get(ch, ch))}</span>・{_e(kind)}'
             f'{"<small>" + links + "</small>" if links else ""}{nolink}{cond}</td>'
             f'<td data-label="地域"{"" if region else NA}>{_e(region) if region else "—"}</td>'
@@ -334,6 +334,7 @@ def _ev_row(v: dict, pidx: dict, yr: str, flags: set) -> str:
             f'<td data-label="確認">{verify}<small title="{_e(ver_raw)}">確認 {_vshort(ver_raw)}</small>{nolink_m}</td></tr>')
 
 
+W2 = ' class="w2"'                                      # 当選日の列が無いときの締切セル
 NA = ' class="na"'                                      # 値が無いセル（モバイルのカードでは出さない）
 _HEAD = ("<tr><th>状態</th><th>店舗</th><th>商品</th><th>締切</th><th>応募方法</th><th>地域</th>"
          "<th>当選日</th><th>購入期間</th><th>確認</th></tr>")

@@ -395,6 +395,18 @@ def _profit_cards(catalog, data: dict, now: datetime) -> list[FeedCard]:
     return uniq
 
 
+def _lottery_priority(ev, now: datetime) -> str | None:
+    """TCG ハブの応募優先度（S / A / B / WATCH）。新しい基準は作らず、ハブの関数をそのまま使う。読めなければ None。"""
+    if not isinstance(ev, dict):
+        return None
+    try:
+        from src.tcg.hub import product_view as pv
+        from src.tcg.hub import status as hub_st
+        return hub_st.priority_of_event(ev, now, bound_exact=(pv._bind_state(ev)[0] == "exact"))
+    except Exception:  # noqa: BLE001 — 優先度が出せなくても HOME の抽選カードは出す
+        return None
+
+
 def _lottery_cards(catalog, model, tcg_report: dict, now: datetime) -> dict[str, list[FeedCard]]:
     """抽選系 4 セクションの候補（生成時点の runtime 状態で選ぶ。閲覧時の失効は属性と CSS で消す）。"""
     raw = {str(e.get("lottery_id")): e for e in ((tcg_report or {}).get("lotteries") or [])
@@ -410,6 +422,9 @@ def _lottery_cards(catalog, model, tcg_report: dict, now: datetime) -> dict[str,
         cat = catalog.lottery_cats.get(vm["id"])
         label = "TCG" if cat == "tcg" else cats.LABELS.get(cat or "", None)
         ev = raw.get(vm["id"])
+        prio = _lottery_priority(ev, now)                 # 応募優先度（TCG ハブと同じ判定。未確認・未紐付けは WATCH で強く勧めない）
+        if prio in ("S", "A"):
+            vm = {**vm, "prio": prio}
         card = card_from_lottery(vm, st, ev, label, idx)
         if vm.get("k") == rt.KIND_RELEASE:
             if st["status"] == "RELEASE_WAIT":
@@ -417,10 +432,11 @@ def _lottery_cards(catalog, model, tcg_report: dict, now: datetime) -> dict[str,
             continue
         if vm.get("unv") or vm.get("conflict"):          # 確認待ち・参考情報・日程の食い違いは HOME に出さない
             continue
+        rank = 0 if prio == "S" else 1                    # 優先度 S を同じ節の先頭へ（それ以外の並びは変えない）
         if st["status"] == "ENDING_SOON":
-            ending.append((st["sort"], idx, card))
+            ending.append(((rank, st["sort"]), idx, card))
         elif st["status"] == "OPEN":
-            opened.append((st["sort"], idx, card))
+            opened.append(((rank, st["sort"]), idx, card))
         pub = parse_dt(str((ev or {}).get("published_at") or "").replace(" ", "T", 1)) if ev else None
         if pub is not None and st["status"] in ("ENDING_SOON", "OPEN", "UPCOMING"):
             hours = (now - pub.astimezone(JST)).total_seconds() / 3600

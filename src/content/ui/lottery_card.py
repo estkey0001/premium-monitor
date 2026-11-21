@@ -45,6 +45,17 @@ def cta_html(cta: dict | None) -> str:
             f'{esc(cta["label"])}</a>')
 
 
+_PRIO_TITLE = {"S": "応募優先度 S: 締切間近で、応募ページまで確認できています",
+               "A": "応募優先度 A: 受付中で、商品に紐付け済みです"}
+
+
+def _prio_badge(vm: dict) -> str:
+    p = vm.get("prio")
+    if p not in _PRIO_TITLE:
+        return ""
+    return f'<span class="nu-badge nu-tone-info nu-prio" title="{esc(_PRIO_TITLE[p])}">優先 {esc(p)}</span>'
+
+
 def render(vm: dict, state: dict, idx: int, *, hidden: bool = False) -> str:
     parts = [
         f'<article class="nu-card" data-nu-lot="{esc(vm["id"])}" data-nu-bucket="{state["bucket"]}"'
@@ -53,7 +64,7 @@ def render(vm: dict, state: dict, idx: int, *, hidden: bool = False) -> str:
         f'{" hidden" if hidden else ""}>',
         f'<div class="nu-card__head"><h3 class="nu-card__title">{esc(vm.get("t"))}</h3>'
         f'<span class="nu-badge nu-tone-{esc(state["tone"])}" data-status="{esc(state["status"])}">'
-        f'<span aria-hidden="true">{esc(state["icon"])}</span> {esc(state["label"])}</span></div>',
+        f'<span aria-hidden="true">{esc(state["icon"])}</span> {esc(state["label"])}</span>{_prio_badge(vm)}</div>',
     ]
     if vm.get("sub"):
         parts.append(f'<p class="nu-card__sub">{esc(vm["sub"])}</p>')

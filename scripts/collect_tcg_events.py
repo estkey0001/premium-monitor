@@ -54,6 +54,7 @@ from src.tcg.secondary import (                                  # noqa: E402
 )
 from src.tcg.sources import SOURCES                                 # noqa: E402
 from src.tcg.lottery.registry import load_source_candidates         # noqa: E402
+from src.tcg.verified_products import merge as merge_verified_products, is_manual as is_manual_product   # noqa: E402
 
 EXPORT_DIR = PROJECT_ROOT / "exports" / "tcg"
 RETAIL_CONFIG = PROJECT_ROOT / "config" / "tcg_retail_prices.yaml"
@@ -234,9 +235,24 @@ def run_lottery(registry: list[dict], events: list[dict], collected: tuple | Non
     from src.tcg.lottery.pipeline import run_lottery_pipeline
     onepiece = [{"product_id": e.get("product_id"), "name": e.get("product_name")}
                 for e in events if e.get("tcg") == TCG_ONE_PIECE and e.get("product_id")]
+    # 公式ページで確認した ONE PIECE の商品マスター（data/tcg_verified_products.json）も照合の対象にする
+    # 同じ商品がイベント由来と台帳の両方に出て 2 件にならないよう、商品 ID・商品名・商品コードで重複を除く
+    from src.tcg.lottery.products import _codes, _core_names
+    have = {o["product_id"] for o in onepiece}
+    have_codes = set().union(*(_codes(o.get("name") or "") for o in onepiece)) if onepiece else set()
+    have_names = {n for o in onepiece for n in _core_names(o.get("name") or "")}
+    for r in registry or []:
+        if r.get("tcg") != TCG_ONE_PIECE or r.get("product_id") in have:
+            continue
+        if (_codes(r["name"]) | ({str(r.get("product_code"))} if r.get("product_code") else set())) & have_codes \
+                or (_core_names(r["name"]) & have_names):
+            continue
+        onepiece.append({"product_id": r["product_id"], "name": r["name"], "product_code": r.get("product_code"),
+                         "release_date": r.get("release_date")})
+    pokemon = [r for r in registry or [] if r.get("tcg", "POKEMON") == "POKEMON"]
     try:
         # 既存コレクターの抽選（TcgEvent）も抽選セクションに統合する
-        return run_lottery_pipeline(registry, onepiece, legacy_events=events, collected=collected)
+        return run_lottery_pipeline(pokemon, onepiece, legacy_events=events, collected=collected)
     except Exception as exc:  # noqa: BLE001 - 既存の TCG 出力を止めない
         print(f"  ❌ 抽選パイプラインに失敗: {type(exc).__name__}: {exc}")
         return empty_lottery_payload(f"{type(exc).__name__}: {exc}")
@@ -314,7 +330,7 @@ def build_exports(events: list[dict], signals: list[dict],
             # 抽選インテリジェンスの件数（counts.lotteries は従来の TcgEvent の抽選件数）
             "lottery_intel": len(lottery["lotteries"]),
             "pokemon_events": sum(1 for e in events if e.get("tcg") == TCG_POKEMON),
-            "pokemon_registry": len(registry),
+            "pokemon_registry": sum(1 for r in registry if not is_manual_product(r)),
         },
         "events": events,
         "signals": signals,
@@ -378,14 +394,16 @@ def build_exports(events: list[dict], signals: list[dict],
     (EXPORT_DIR / "pokemon_registry.json").write_text(
         json.dumps({"generated_at": now.isoformat(),
                     "source": "https://www.pokemon-card.com/products/resultAPI.php",
+                    "verified_products_source": "data/tcg_verified_products.json（公式ページで確認した商品。manual_verified: true の行）",
                     "products": registry,
                     # Task20: 二次流通価格を投入するための mapping（BOX 対象のみ）
-                    "secondary_mapping": [m for m in (secondary_mapping(r) for r in registry) if m]},
+                    "secondary_mapping": [m for m in (secondary_mapping(r) for r in registry
+                                                      if not is_manual_product(r)) if m]},
                    ensure_ascii=False, indent=2), encoding="utf-8")
     # 定価の台帳（公式 API が商品1個の希望小売価格と明示したものだけ・同一性つき。取得に成功した実行だけ書く）
     # 公式の商品 API から1件も取れなかった日（registry が空）は書かない（前回の台帳を空で上書きしない）
     from src.tcg.msrp import build_msrp
-    if registry:
+    if any(not is_manual_product(r) for r in registry):     # 台帳の行（手動で確認済み）だけの日は書かない
         try:
             _prev_msrp = json.loads((EXPORT_DIR / "msrp.json").read_text(encoding="utf-8"))
         except (OSError, ValueError):
@@ -704,6 +722,7 @@ def _finish_run(raw, health, registry, retail_prices, lottery_collected, t0, col
     print(f"  収集イベント（重複排除前）: {len(raw)}件")
     events, signals = enrich(raw, retail_prices, registry_retail_prices(registry))
     print(f"  重複排除後: {len(events)}件 / シグナル: {len(signals)}件")
+    registry = merge_verified_products(registry)       # 公式ページで確認した商品（API の取得窓の外・ONE PIECE）を足す
     lottery = run_lottery(registry, events, lottery_collected)
     metrics = cm.summarize(health, lottery.get("sources") or [], total_seconds=time.monotonic() - t0, cache_stats=cache.stats(),
                            collector_seconds=col_t, lottery_seconds=lot_t, global_cap=runcache.GLOBAL_CAP)

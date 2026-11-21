@@ -48,8 +48,10 @@ def build_msrp(registry: list[dict], generated_at: str, previous: dict | None = 
             "product_id": pid, "name": rec.get("name", ""), "tcg": rec.get("tcg", ""),
             "product_type": rec.get("product_type", ""), "box_opportunity_eligible": bool(rec.get("box_opportunity_eligible")),
             "release_date": rec.get("release_date") or "", "retail_price": price, "price_text": rec.get("price_text") or "",
-            "basis": BASIS_UNIT, "source": "official_product_api", "official_url": url,
-            "checked_at": generated_at})
+            "basis": BASIS_UNIT, "source": "official_page" if rec.get("manual_verified") else "official_product_api",
+            "official_url": url,
+            # 台帳（手動で確認した行）の確認日は、確認した日のまま。実行日で更新しない（再確認していない値の確認日を進めない）
+            "checked_at": ((rec.get("evidence") or {}).get("checked_on") or generated_at) if rec.get("manual_verified") else generated_at})
     today = {v["product_id"] for v in verified} | {e["product_id"] for e in excluded}
     for old in ((previous or {}).get("verified") or []):
         if isinstance(old, dict) and old.get("product_id") and old["product_id"] not in today and old.get("checked_at"):

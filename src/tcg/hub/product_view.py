@@ -180,7 +180,9 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None) -> dict
     for b in blocks.values():
         m = _d(b["master"])
         evs = sorted(b["events"], key=_sort_key)
-        statuses = [v["status"] for v in evs]
+        # 未確認（verified でない）・日程の食い違いの抽選は、商品の集約状態と「受付中」等の件数に数えない（応募できると見せない）
+        statuses = [(v["status"] if (v["verified"] and not v["ev"].get("conflict")) or v["status"] not in st.INTAKE else ls.L_UNKNOWN)
+                    for v in evs]
         name = _s(m.get("name")) or next((_s(v["ev"].get("product_name")) for v in evs if _s(v["ev"].get("product_name"))), b["product_id"])
         msrp_hit = pl.msrp_for(b["product_id"], b["tcg"], _s(m.get("product_type")) or None, msrp_rows) if m else None
         prios = [v["priority"] for v in evs if v["priority"]]
@@ -191,6 +193,9 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None) -> dict
             "official_url": _s(m.get("official_url")) or None,
             "image_url": _s(m.get("official_image_url")) or None,        # 表示専用（ポケカの公式一覧にある画像の URL。検査は描画側）
             "profit": pl.profit_view(msrp_hit),
+            "buyback": None,                                       # TCG の買取は根拠のある実データが無い（作らない）。入ったときの差し込み口
+            "pack_price": (m.get("pack_price") if isinstance(m.get("pack_price"), int) and not isinstance(m.get("pack_price"), bool)
+                           and m.get("pack_price") > 0 and _s(m.get("retail_price_basis")) == "pack" else None),     # 1 パックの公式価格（BOX の定価ではない）
             "events": evs, "status": st.aggregate_status(statuses),
             "counts": {"total": len(evs), "live": sum(1 for s in statuses if s != ls.L_ENDED),
                        "open": statuses.count(ls.L_OPEN), "ending_soon": statuses.count(ls.L_ENDING_SOON),

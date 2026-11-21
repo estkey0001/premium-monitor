@@ -367,8 +367,14 @@ def _product_card(p: dict, i: int, yr: str) -> str:
         unknown.append("発売日")
     if m:
         meta += f'<div><dt>定価</dt><dd title="確認 {_e(m["checked_at"] or "不明")}">{_yen(m["retail_price"])}</dd></div>'
+    elif p.get("pack_price"):
+        meta += (f'<div><dt>1パック</dt><dd title="公式が明記した価格は 1 パックの分だけです。BOX の定価はパック価格から計算していません">'
+                 f'{_yen(p["pack_price"])}</dd></div>')
+        unknown.append("BOX定価")
     else:
         unknown.append("定価")
+    if not p.get("buyback"):
+        unknown.append("最高買取")                              # TCG の買取は根拠のある実データが無い（作らない）
     if pr.get("net_profit") is not None:
         meta += f'<div><dt>利益</dt><dd title="{_e(pr["reason"])}">{_e(pr["label"])}</dd></div>'
     else:
@@ -566,7 +572,7 @@ def render(hub: dict, *, generated_label: Optional[str] = None) -> str:
         '<a href="#calendar">カレンダー</a><a href="#checked">確認日</a></nav>'
         f'{low}<h2 id="products">商品（{s["products"]}）</h2>'
         '<details class="note"><summary>商品の束ね方</summary><p class="mut">商品に束ねたのは、商品 ID まで一致（exact）した抽選だけです。ポケモンカードは公式の商品一覧と照合しています。'
-        'ONE PIECE は商品一覧が無いため、イベントの商品名だけで表示します（発売日・定価・画像は出しません）。</p></details>'
+        'ONE PIECE は公式の商品ページで確認できた商品だけを商品一覧に入れています（確認した発売日・価格だけ。画像は出しません）。商品コード（EB-05 等）が一致するか、商品名の本体が完全一致して候補が 1 件のときだけ束ねます。部分一致だけでは束ねません。</p></details>'
         f'{prod_html}'
         f'<h2 id="lottery">抽選一覧（{len(live)}）</h2>{filters}'
         '<p class="mut">日付（例 <b>11/22</b>）だけのものは、公式が時刻を出していない「日付のみ」の項目です。</p>'

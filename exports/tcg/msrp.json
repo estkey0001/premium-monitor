@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-21T02:21:57.626042+09:00",
+  "generated_at": "2026-11-21T12:43:22.191571+09:00",
   "note": "公式の商品 API で商品1個の希望小売価格と明示されたものだけ（パック価格から BOX の価格は作らない）。利益の計算には使っていない",
   "verified": [
     {
@@ -15,7 +15,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/products/mega/mg.html",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-スターターセットex-イーブイex",
@@ -29,7 +29,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/ex/me/",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-スターターセットex-ゾロア-ゾロアークex",
@@ -43,7 +43,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/ex/me/",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-スターターセットex-ニャオハ-マスカーニャex",
@@ -57,7 +57,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/ex/me/",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-プレミアムデッキセット-エーフィ-ブラッキー",
@@ -71,7 +71,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/mf",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ニャオハ-ホゲータ-クワッス",
@@ -85,7 +85,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-サルノリ-ヒバニー-メッソン",
@@ -99,7 +99,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-モクロー-ニャビー-アシマリ",
@@ -113,7 +113,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ハリマロン-フォッコ-ケロマツ",
@@ -127,7 +127,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ツタージャ-ポカブ-ミジュマル",
@@ -141,7 +141,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ナエトル-ヒコザル-ポッチャマ",
@@ -155,7 +155,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-キモリ-アチャモ-ミズゴロウ",
@@ -169,7 +169,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-チコリータ-ヒノアラシ-ワニノコ",
@@ -183,7 +183,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-フシギダネ-ヒトカゲ-ゼニガメ",
@@ -197,7 +197,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-futuristic-box",
@@ -211,7 +211,203 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/furbox",
-      "checked_at": "2026-11-21T02:21:57.626042+09:00"
+      "checked_at": "2026-11-21T12:43:22.191571+09:00"
+    },
+    {
+      "product_id": "スタートデッキ-砂漠の王女と海賊たち-st-37",
+      "name": "スタートデッキ 砂漠の王女と海賊たち【ST-37】",
+      "tcg": "ONE_PIECE",
+      "product_type": "STARTER_DECK",
+      "box_opportunity_eligible": false,
+      "release_date": "2026-12-19T00:00:00+09:00",
+      "retail_price": 1430,
+      "price_text": "1430円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/st37.html",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "スタートデッキ-バロックワークス-st-38",
+      "name": "スタートデッキ バロックワークス【ST-38】",
+      "tcg": "ONE_PIECE",
+      "product_type": "STARTER_DECK",
+      "box_opportunity_eligible": false,
+      "release_date": "2026-12-19T00:00:00+09:00",
+      "retail_price": 1430,
+      "price_text": "1430円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/st38.html",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "スタートデッキ-黄-ユースタス-キッド-st-36",
+      "name": "スタートデッキ 黄 ユースタス・キッド【ST-36】",
+      "tcg": "ONE_PIECE",
+      "product_type": "STARTER_DECK",
+      "box_opportunity_eligible": false,
+      "release_date": "2026-07-11T00:00:00+09:00",
+      "retail_price": 550,
+      "price_text": "550円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/st36.html",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "スタートデッキ-赤黒-サボ-st-35",
+      "name": "スタートデッキ 赤黒 サボ【ST-35】",
+      "tcg": "ONE_PIECE",
+      "product_type": "STARTER_DECK",
+      "box_opportunity_eligible": false,
+      "release_date": "2026-07-11T00:00:00+09:00",
+      "retail_price": 550,
+      "price_text": "550円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/st35.html",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "スタートデッキ-紫-シャーロット-カタクリ-st-34",
+      "name": "スタートデッキ 紫 シャーロット・カタクリ【ST-34】",
+      "tcg": "ONE_PIECE",
+      "product_type": "STARTER_DECK",
+      "box_opportunity_eligible": false,
+      "release_date": "2026-07-11T00:00:00+09:00",
+      "retail_price": 550,
+      "price_text": "550円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/st34.html",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "スタートデッキ-青-クザン-st-33",
+      "name": "スタートデッキ 青 クザン【ST-33】",
+      "tcg": "ONE_PIECE",
+      "product_type": "STARTER_DECK",
+      "box_opportunity_eligible": false,
+      "release_date": "2026-07-11T00:00:00+09:00",
+      "retail_price": 550,
+      "price_text": "550円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/st33.html",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "スタートデッキ-緑-ロロノア-ゾロ-st-32",
+      "name": "スタートデッキ 緑 ロロノア・ゾロ【ST-32】",
+      "tcg": "ONE_PIECE",
+      "product_type": "STARTER_DECK",
+      "box_opportunity_eligible": false,
+      "release_date": "2026-07-11T00:00:00+09:00",
+      "retail_price": 550,
+      "price_text": "550円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/st32.html",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "スタートデッキ-赤-モンキー-d-ルフィ-st-31",
+      "name": "スタートデッキ 赤 モンキー・D・ルフィ【ST-31】",
+      "tcg": "ONE_PIECE",
+      "product_type": "STARTER_DECK",
+      "box_opportunity_eligible": false,
+      "release_date": "2026-07-11T00:00:00+09:00",
+      "retail_price": 550,
+      "price_text": "550円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/st31.html",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "スタートデッキex-ルフィ-エース-st-30",
+      "name": "スタートデッキEX ルフィ&エース【ST-30】",
+      "tcg": "ONE_PIECE",
+      "product_type": "STARTER_DECK",
+      "box_opportunity_eligible": false,
+      "release_date": "2026-04-11T00:00:00+09:00",
+      "retail_price": 1980,
+      "price_text": "1980円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/st30.html",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "スタートデッキ-egghead-st-29",
+      "name": "スタートデッキ EGGHEAD【ST-29】",
+      "tcg": "ONE_PIECE",
+      "product_type": "STARTER_DECK",
+      "box_opportunity_eligible": false,
+      "release_date": "2025-12-20T00:00:00+09:00",
+      "retail_price": 1430,
+      "price_text": "1430円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/decks/st29.php",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "one-pieceカードゲーム-one-piece-heroines-precious-box",
+      "name": "ONE PIECEカードゲーム ONE PIECE HEROINES PRECIOUS BOX",
+      "tcg": "ONE_PIECE",
+      "product_type": "PREMIUM_COLLECTION",
+      "box_opportunity_eligible": false,
+      "release_date": "2026-10-31T00:00:00+09:00",
+      "retail_price": 8470,
+      "price_text": "8470円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/heroines-box.html",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "プレミアムカードコレクション-熊本県スペシャル",
+      "name": "プレミアムカードコレクション -熊本県スペシャル-",
+      "tcg": "ONE_PIECE",
+      "product_type": "PREMIUM_COLLECTION",
+      "box_opportunity_eligible": false,
+      "release_date": "2026-02-22T00:00:00+09:00",
+      "retail_price": 2200,
+      "price_text": "2200円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/other/premium-card_collection_kumamoto-sp.php",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "プレミアムカードコレクション-6-assort-vol-2",
+      "name": "プレミアムカードコレクション -6 assort vol.2-",
+      "tcg": "ONE_PIECE",
+      "product_type": "PREMIUM_COLLECTION",
+      "box_opportunity_eligible": false,
+      "release_date": "",
+      "retail_price": 1650,
+      "price_text": "1650円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.onepiece-cardgame.com/products/collection-6assort-vol2.html",
+      "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "pokemon-プレミアムトレーナーボックスmega",
+      "name": "プレミアムトレーナーボックスMEGA",
+      "tcg": "POKEMON",
+      "product_type": "PREMIUM_COLLECTION",
+      "box_opportunity_eligible": false,
+      "release_date": "2025-08-01T00:00:00+09:00",
+      "retail_price": 6350,
+      "price_text": "6350円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.pokemon-card.com/ex/m1/",
+      "checked_at": "2026-11-21"
     }
   ],
   "excluded": [
@@ -244,11 +440,89 @@
       "name": "カードイラストフィギュアコレクション みずべのポケモン",
       "tcg": "POKEMON",
       "reason": "NO_OFFICIAL_URL"
+    },
+    {
+      "product_id": "ブースターパック-神の支配-op-18",
+      "name": "ブースターパック 神の支配【OP-18】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "エクストラブースター-one-piece-heroines-edition-vol-2-eb-05",
+      "name": "エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "エクストラブースター-east-blue-eb-06",
+      "name": "エクストラブースター EAST BLUE【EB-06】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "ブースターパック-応答せよ-世界-op-19",
+      "name": "ブースターパック 応答せよ、世界【OP-19】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "プレミアムエクストラブースター-夢の一枚-peb-01",
+      "name": "プレミアムエクストラブースター 夢の一枚【PEB-01】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "ブースターパック-世界最強の戦士-op-17",
+      "name": "ブースターパック 世界最強の戦士【OP-17】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "ブースターパック-決戦の刻-op-16",
+      "name": "ブースターパック 決戦の刻【OP-16】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "ブースターパック-神の島の冒険-op-15",
+      "name": "ブースターパック 神の島の冒険【OP-15】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "エクストラブースター-egghead-crisis-eb-04",
+      "name": "エクストラブースター EGGHEAD CRISIS【EB-04】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "ブースターパック-蒼海の七傑-op-14",
+      "name": "ブースターパック 蒼海の七傑【OP-14】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "pokemon-拡張パック-インフェルノx",
+      "name": "拡張パック「インフェルノX」",
+      "tcg": "POKEMON",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "pokemon-拡張パック-メガブレイブ",
+      "name": "拡張パック「メガブレイブ」",
+      "tcg": "POKEMON",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "pokemon-拡張パック-メガシンフォニア",
+      "name": "拡張パック「メガシンフォニア」",
+      "tcg": "POKEMON",
+      "reason": "PACK_PRICE_ONLY"
     }
   ],
   "counts": {
-    "verified": 15,
-    "excluded": 5,
+    "verified": 29,
+    "excluded": 18,
     "box_eligible": 10,
     "carried_over": 0
   }

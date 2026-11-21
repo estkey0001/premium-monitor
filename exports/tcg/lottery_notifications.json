@@ -21,11 +21,12 @@
     "lot-44adf3638512:deadline_24h": "suppressed:2026-11-15T21:09:53.457124+09:00",
     "lot-44adf3638512:deadline_6h": "2026-11-15T21:09:53.457124+09:00",
     "lot-7cfed02af5de:lottery_open": "2026-11-20T16:25:48.702302+09:00",
-    "lot-a98308b4bcd6:lottery_open": "2026-11-21T02:21:57.618870+09:00"
+    "lot-a98308b4bcd6:lottery_open": "2026-11-21T02:21:57.618870+09:00",
+    "lot-d951335b1a89:lottery_open": "2026-11-21T12:43:22.181703+09:00"
   },
   "candidates": [
     {
-      "lottery_id": "lot-a98308b4bcd6",
+      "lottery_id": "lot-d951335b1a89",
       "milestone": "lottery_open",
       "label": "抽選開始",
       "fires_at": "2026-11-21T00:00:00+09:00",

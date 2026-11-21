@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T02:21:57+09:00",
+  "generated_at": "2026-11-21T12:43:22+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-16",
-      "iphone-17"
+      "iphone-17e",
+      "iphone-18-pro"
     ],
     "errors": {},
-    "unknown_parts": 10,
-    "matched": 1,
-    "pending": 2,
+    "unknown_parts": 38,
+    "matched": 0,
+    "pending": 10,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -41,14 +41,14 @@
       "RESTOCK": 1,
       "RELEASE": 7
     },
-    "tcg_products": 26,
+    "tcg_products": 53,
     "sources": {
       "configured": 22,
       "implemented": 11,
       "unimplemented": 11,
-      "blocked": 4,
-      "robots_unreachable": 5,
-      "unreachable": 5,
+      "blocked": 5,
+      "robots_unreachable": 4,
+      "unreachable": 4,
       "table": [
         {
           "source_id": "POKEMON_CENTER_ONLINE",
@@ -154,11 +154,11 @@
           "source_id": "EDION",
           "retailer": "エディオン",
           "adapter": null,
-          "state": "SOURCE_UNREACHABLE",
-          "health": "FAILED",
-          "blocked": false,
-          "robots": "robots_unreachable",
-          "unreachable": true
+          "state": "SOURCE_BLOCKED",
+          "health": "BLOCKED",
+          "blocked": true,
+          "robots": null,
+          "unreachable": false
         },
         {
           "source_id": "YAMADA",
@@ -279,10 +279,10 @@
     "events": 0
   },
   "metrics": {
-    "product_candidates": 44,
-    "new_product_candidates": 39,
-    "pending_review": 24,
-    "review_required": 15,
+    "product_candidates": 69,
+    "new_product_candidates": 64,
+    "pending_review": 26,
+    "review_required": 38,
     "matched_existing": 1,
     "approved": 0,
     "rejected": 0,
@@ -290,11 +290,11 @@
     "stale": 1,
     "unknown_official_products": 58,
     "apple_candidates": 15,
-    "tcg_products": 25,
-    "event_candidates": 170,
+    "tcg_products": 50,
+    "event_candidates": 195,
     "review_required_announcements": 6,
-    "matched_events": 62,
-    "stale_events": 102,
+    "matched_events": 88,
+    "stale_events": 101,
     "approved_events": 0,
     "registered_events": 0
   },
@@ -302,9 +302,9 @@
     "configured": 22,
     "implemented": 11,
     "unimplemented": 11,
-    "blocked": 4,
-    "robots_unreachable": 5,
-    "unreachable": 5,
+    "blocked": 5,
+    "robots_unreachable": 4,
+    "unreachable": 4,
     "table": [
       {
         "source_id": "POKEMON_CENTER_ONLINE",
@@ -410,11 +410,11 @@
         "source_id": "EDION",
         "retailer": "エディオン",
         "adapter": null,
-        "state": "SOURCE_UNREACHABLE",
-        "health": "FAILED",
-        "blocked": false,
-        "robots": "robots_unreachable",
-        "unreachable": true
+        "state": "SOURCE_BLOCKED",
+        "health": "BLOCKED",
+        "blocked": true,
+        "robots": null,
+        "unreachable": false
       },
       {
         "source_id": "YAMADA",

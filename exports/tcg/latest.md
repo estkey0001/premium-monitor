@@ -1,4 +1,4 @@
-# TCG 入荷・抽選・プレミア レポート（2026-11-21 02:21 JST）
+# TCG 入荷・抽選・プレミア レポート（2026-11-21 12:43 JST）
 
 ## Current Active
 
@@ -35,28 +35,28 @@
 
 | Retailer | Collector | Reachable | Health | Last Check | Active Lotteries | Active Preorders |
 |---|---|---|---|---|---|---|
-| ポケモンセンターオンライン (P0) | pco_lottery | yes | 現在の抽選なし | 2026-11-21 01:56 | 0 | 0 |
-| ポケモンカードゲーム公式（ニュース） (P0) | pokemon_news_lottery | yes | 現在の抽選なし | 2026-11-21 01:56 | 0 | 0 |
-| ゲオ (P1) | geo_lottery | no | アクセス拒否 | 2026-11-21 01:56 | 0 | 0 |
-| カードラボ (P1) | card_labo_lottery | yes | 抽選あり | 2026-11-21 01:56 | 21 | 0 |
-| ホビーステーション (P1) | hobby_station_lottery | yes | 抽選あり | 2026-11-21 01:56 | 2 | 0 |
-| キッズリパブリック（イオン） (P1) | kids_republic_lottery | no | アクセス拒否 | 2026-11-21 01:56 | 0 | 0 |
-| 福福トレカ (P2) | fukufuku_lottery | yes | 現在の抽選なし | 2026-11-21 01:56 | 0 | 0 |
-| ONE PIECE 麦わらストア (P1) | mugiwara_store_lottery | yes | 抽選あり | 2026-11-21 01:56 | 2 | 0 |
-| トイザらス (P1) | 未実装 | no | アクセス拒否 | 2026-11-21 01:56 | 0 | 0 |
-| Joshin (P1) | 未実装 | no | アクセス拒否 | 2026-11-21 01:56 | 0 | 0 |
-| エディオン (P1) | 未実装 | no | 接続できない | 2026-11-21 01:56 | 0 | 0 |
-| ヤマダデンキ (P1) | 未実装 | no | 接続できない | 2026-11-21 01:56 | 0 | 0 |
-| TSUTAYA (P1) | 未実装 | yes | 未監視（未実装） | 2026-11-21 01:56 | 0 | 0 |
-| ビックカメラ (P1) | 未実装 | no | 接続できない | 2026-11-21 01:56 | 0 | 0 |
-| ヨドバシカメラ (P1) | 未実装 | no | 接続できない | 2026-11-21 01:56 | 0 | 0 |
-| Amazon (P2) | 未実装 | yes | 未監視（未実装） | 2026-11-21 01:56 | 0 | 0 |
-| 楽天ブックス (P2) | 未実装 | no | 接続できない | 2026-11-21 01:56 | 0 | 0 |
-| セブンネットショッピング (P2) | 未実装 | yes | 未監視（未実装） | 2026-11-21 01:56 | 0 | 0 |
-| ローソン (P2) | lawson_lottery | yes | 現在の抽選なし | 2026-11-21 01:56 | 0 | 0 |
-| ONE PIECEカードゲーム公式 (P0) | onepiece_news_lottery | yes | 現在の抽選なし | 2026-11-21 01:56 | 0 | 0 |
+| ポケモンセンターオンライン (P0) | pco_lottery | yes | 現在の抽選なし | 2026-11-21 12:18 | 0 | 0 |
+| ポケモンカードゲーム公式（ニュース） (P0) | pokemon_news_lottery | yes | 現在の抽選なし | 2026-11-21 12:18 | 0 | 0 |
+| ゲオ (P1) | geo_lottery | no | アクセス拒否 | 2026-11-21 12:18 | 0 | 0 |
+| カードラボ (P1) | card_labo_lottery | yes | 抽選あり | 2026-11-21 12:18 | 21 | 0 |
+| ホビーステーション (P1) | hobby_station_lottery | yes | 抽選あり | 2026-11-21 12:18 | 2 | 0 |
+| キッズリパブリック（イオン） (P1) | kids_republic_lottery | no | アクセス拒否 | 2026-11-21 12:18 | 0 | 0 |
+| 福福トレカ (P2) | fukufuku_lottery | yes | 現在の抽選なし | 2026-11-21 12:18 | 0 | 0 |
+| ONE PIECE 麦わらストア (P1) | mugiwara_store_lottery | yes | 抽選あり | 2026-11-21 12:18 | 2 | 0 |
+| トイザらス (P1) | 未実装 | no | アクセス拒否 | 2026-11-21 12:18 | 0 | 0 |
+| Joshin (P1) | 未実装 | no | アクセス拒否 | 2026-11-21 12:18 | 0 | 0 |
+| エディオン (P1) | 未実装 | no | アクセス拒否 | 2026-11-21 12:18 | 0 | 0 |
+| ヤマダデンキ (P1) | 未実装 | no | 接続できない | 2026-11-21 12:18 | 0 | 0 |
+| TSUTAYA (P1) | 未実装 | yes | 未監視（未実装） | 2026-11-21 12:18 | 0 | 0 |
+| ビックカメラ (P1) | 未実装 | no | 接続できない | 2026-11-21 12:18 | 0 | 0 |
+| ヨドバシカメラ (P1) | 未実装 | no | 接続できない | 2026-11-21 12:18 | 0 | 0 |
+| Amazon (P2) | 未実装 | yes | 未監視（未実装） | 2026-11-21 12:18 | 0 | 0 |
+| 楽天ブックス (P2) | 未実装 | no | 接続できない | 2026-11-21 12:18 | 0 | 0 |
+| セブンネットショッピング (P2) | 未実装 | yes | 未監視（未実装） | 2026-11-21 12:18 | 0 | 0 |
+| ローソン (P2) | lawson_lottery | yes | 現在の抽選なし | 2026-11-21 12:18 | 0 | 0 |
+| ONE PIECEカードゲーム公式 (P0) | onepiece_news_lottery | yes | 現在の抽選なし | 2026-11-21 12:18 | 0 | 0 |
 | ONE PIECEカードゲーム公式ショップ (P0) | 未実装 | no | 未監視（未実装） | — | 0 | 0 |
-| プレミアムバンダイ (P0) | premium_bandai_lottery | yes | 現在の抽選なし | 2026-11-21 01:56 | 0 | 0 |
+| プレミアムバンダイ (P0) | premium_bandai_lottery | yes | 現在の抽選なし | 2026-11-21 12:18 | 0 | 0 |
 
 ## Active（受付中・締切間近）
 
@@ -113,7 +113,7 @@
 - キッズリパブリック（イオン）: アクセス拒否（HTTP 403: https://www.kidsrepublic.jp/campaign）
 - トイザらス: アクセス拒否（HTTP 403: https://www.toysrus.co.jp/）
 - Joshin: アクセス拒否（HTTP 403: https://joshinweb.jp/）
-- エディオン: 接続できない（robots.txt unreachable: https://www.edion.com/）
+- エディオン: アクセス拒否（HTTP 403: https://www.edion.com/）
 - ヤマダデンキ: 接続できない（robots.txt unreachable: https://www.yamada-denkiweb.com/）
 - ビックカメラ: 接続できない（robots.txt unreachable: https://www.biccamera.com/）
 - ヨドバシカメラ: 接続できない（robots.txt unreachable: https://www.yodobashi.com/）
@@ -121,7 +121,7 @@
 
 ## Coverage
 
-- Configured: 22 / Implemented: 11 / Healthy: 9 / Blocked: 4 / Unreachable: 5 / Not Implemented: 11 / Lottery events: 25
+- Configured: 22 / Implemented: 11 / Healthy: 9 / Blocked: 5 / Unreachable: 4 / Not Implemented: 11 / Lottery events: 25
 
 ### Rejected（抽選・理由別件数）
 
@@ -137,7 +137,7 @@
 |---|---|---|---|---|---|---|---|
 | ポケモンカードゲーム公式（商品API） | 4/4 | 18 | 8 | 20 | 2 | 0 | HEALTHY |
 | ポケモンカードゲーム公式（ニュース） | 3/3 | 0 | 0 | 122 | 0 | 0 | OK_NO_EVENTS |
-| ポケモンセンターオンライン | 1/1 | 0 | 0 | 21 | 2 | 0 | HEALTHY |
+| ポケモンセンターオンライン | 1/1 | 0 | 0 | 22 | 2 | 0 | HEALTHY |
 | ローソン（ポケモンカード告知） | 2/2 | 0 | 0 | 0 | 0 | 0 | OK_NO_EVENTS |
 
 - ポケモンカードゲーム公式（商品API）: 正常（採用 2件）
@@ -164,20 +164,20 @@
 | article_too_old | 18 |
 | non_sale_announcement | 15 |
 | no_product_context | 13 |
-| no_sale_context | 8 |
+| no_sale_context | 9 |
 | non_card_product | 1 |
 
 ## Source Health（各監視元の取得状況）
 
 | Source | TCG | Status | Last checked | Last success | Events | Errors | Blocked | robots |
 |---|---|---|---|---|---|---|---|---|
-| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-11-21 01:56 | 2026-11-21 02:00 | 2 | 0 | no | not_found |
-| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-11-21 01:56 | 2026-11-21 01:56 | 0 | 0 | no | not_found |
-| ポケモンセンターオンライン | POKEMON | HEALTHY | 2026-11-21 01:56 | 2026-11-21 01:56 | 2 | 0 | no | allowed |
-| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-11-21 01:56 | 2026-11-21 01:57 | 0 | 0 | no | allowed |
-| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-11-21 01:56 | 2026-11-21 01:56 | 0 | 0 | no | not_found |
-| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-11-21 01:56 | 2026-11-21 01:57 | 6 | 0 | no | not_found |
-| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-11-21 01:56 | 2026-11-21 01:56 | 0 | 0 | no | allowed |
+| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-11-21 12:18 | 2026-11-21 12:22 | 2 | 0 | no | not_found |
+| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-11-21 12:18 | 2026-11-21 12:18 | 0 | 0 | no | not_found |
+| ポケモンセンターオンライン | POKEMON | HEALTHY | 2026-11-21 12:18 | 2026-11-21 12:18 | 2 | 0 | no | allowed |
+| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-11-21 12:18 | 2026-11-21 12:19 | 0 | 0 | no | allowed |
+| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-11-21 12:18 | 2026-11-21 12:18 | 0 | 0 | no | not_found |
+| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-11-21 12:18 | 2026-11-21 12:19 | 6 | 0 | no | not_found |
+| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-11-21 12:18 | 2026-11-21 12:18 | 0 | 0 | no | allowed |
 
 監視登録 source 数: 27
 

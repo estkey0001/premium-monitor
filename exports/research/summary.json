@@ -2,7 +2,7 @@
   "schema": 1,
   "type": "RESEARCH_SUMMARY",
   "audience": "public_aggregate",
-  "generated_at": "2026-11-21T02:38:05+09:00",
+  "generated_at": "2026-11-21T12:59:29+09:00",
   "description": "調査候補の集計（件数だけ）。個別の候補（商品・価格・価格差・売却先）は公開しない。確定の利益ではない",
   "research_candidate_count": 4,
   "positive_raw_spread_count": 5,
@@ -121,14 +121,14 @@
   "retail_api_sources": {
     "PENDING_USER_CONFIGURATION": 2
   },
-  "official_discovery_candidates": 44,
+  "official_discovery_candidates": 69,
   "tcg_source_coverage": {
     "configured_sources": 22,
     "implemented_collectors": 11,
     "reachable_sources": 12,
     "healthy_sources": 9,
-    "blocked_sources": 4,
-    "unreachable_sources": 5,
+    "blocked_sources": 5,
+    "unreachable_sources": 4,
     "not_implemented_sources": 11,
     "sources_with_active_lottery": 3,
     "lottery_events_found": 25,
@@ -155,7 +155,7 @@
     "skipped_ended": 0,
     "sources_list_ok": 12,
     "sources_detail_ok": 5,
-    "sources_blocked": 4,
+    "sources_blocked": 5,
     "sources_parser_degraded": 0,
     "zero_active_interpretation": null
   },
@@ -180,9 +180,9 @@
   "tcg_fast_lane": {
     "events_measured": 37,
     "median_application_duration_hours": 72.0,
-    "median_age_at_observation_hours": 170.2,
+    "median_age_at_observation_hours": 180.6,
     "windows_under_24h_at_observation": 28,
-    "observed_after_half_window": 32,
+    "observed_after_half_window": 33,
     "tolerated_age_at_observation_hours_p25": 30.0,
     "suggested_max_detection_interval_hours": 30,
     "date_precision_events": 23
@@ -193,7 +193,7 @@
     "supply_pressure_candidates": 0,
     "buyback_rising_candidates": 0,
     "positive_spread_candidates": 0,
-    "active_tcg_priority": 1,
+    "active_tcg_priority": 2,
     "stock_unknown_not_counted": 0,
     "momentum_observed": 334,
     "momentum_new_observation": 0,
@@ -201,11 +201,11 @@
     "momentum_not_comparable": 0
   },
   "tcg_profit_dense": {
-    "active_tcg_priority": 1,
+    "active_tcg_priority": 2,
     "tcg_new_release": 0,
     "tcg_limited": 0,
     "tcg_supply_pressure": 7,
-    "tcg_msrp_linked_active": 0,
+    "tcg_msrp_linked_active": 1,
     "tcg_actionable_events": 0,
     "tcg_incomplete_active": 7,
     "tcg_stock_unknown_not_counted": 0,
@@ -222,7 +222,7 @@
     "tcg_quality_partial": 7,
     "tcg_quality_review_required": 0,
     "tcg_msrp_link_rejected": 0,
-    "tcg_channel_ready": 0
+    "tcg_channel_ready": 1
   },
   "operator_queue_counts": {
     "queue_build_failed": 0,
@@ -242,8 +242,8 @@
     "tcg_queue_count": 6,
     "tcg_deadline_boosted": 6,
     "tcg_missing_application_url": 2,
-    "tcg_missing_identity": 6,
-    "tcg_missing_msrp": 6
+    "tcg_missing_identity": 4,
+    "tcg_missing_msrp": 5
   },
   "operator_queue_next_actions": {
     "next_VERIFY_OFFICIAL_PRICE": 0,
@@ -255,9 +255,9 @@
     "next_FIND_CORROBORATING_SOURCE": 1,
     "next_REGISTER_CANONICAL_PRODUCT": 0,
     "next_WAIT_FOR_FRESH_PRICE": 3,
-    "next_VERIFY_APPLICATION_URL": 0,
-    "next_VERIFY_PRODUCT_IDENTITY": 6,
-    "next_VERIFY_MSRP": 0,
+    "next_VERIFY_APPLICATION_URL": 1,
+    "next_VERIFY_PRODUCT_IDENTITY": 4,
+    "next_VERIFY_MSRP": 1,
     "next_VERIFY_DEADLINE": 0,
     "next_VERIFY_ELIGIBILITY": 0,
     "next_REGISTER_OFFICIAL_SOURCE": 0
@@ -330,6 +330,6 @@
     "previously_observable_excluded": 0,
     "already_processed": 6
   },
-  "tcg_msrp_verified": 15,
+  "tcg_msrp_verified": 29,
   "tcg_source_candidates": 7
 }

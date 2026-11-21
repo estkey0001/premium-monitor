@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T12:59:28+09:00",
+  "generated_at": "2026-11-21T20:07:41+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 3,
@@ -11,10 +11,10 @@
     "success_rate_pct": 30.3
   },
   "comparison": {
-    "prev_success_rate_pct": 28.8,
+    "prev_success_rate_pct": 30.3,
     "current_success_rate_pct": 30.3,
-    "delta_pct": 1.5,
-    "trend": "改善",
+    "delta_pct": 0.0,
+    "trend": "横ばい",
     "moving_avg_7d_pct": 29.4,
     "top5_failure_reasons": [
       {
@@ -269,55 +269,55 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 264
+      "consecutive_failures": 265
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 264
+      "consecutive_failures": 265
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 264
+      "consecutive_failures": 265
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 264
+      "consecutive_failures": 265
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 264
+      "consecutive_failures": 265
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 264
+      "consecutive_failures": 265
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 264
+      "consecutive_failures": 265
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 264
+      "consecutive_failures": 265
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 264
+      "consecutive_failures": 265
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 264
+      "consecutive_failures": 265
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 197
+      "consecutive_failures": 198
     },
     {
       "shop_id": "netoff",
-      "consecutive_failures": 124
+      "consecutive_failures": 125
     },
     {
       "shop_id": "geo",
-      "consecutive_failures": 56
+      "consecutive_failures": 57
     }
   ],
   "improvement_priority": [

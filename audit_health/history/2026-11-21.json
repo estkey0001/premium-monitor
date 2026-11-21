@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21 12:59 JST",
+  "generated_at": "2026-11-21 20:07 JST",
   "date": "2026-11-21",
   "health_score": {
     "data_quality": 14.5,
@@ -337,15 +337,15 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.6203,
+      "prev": 0.6176,
       "cur": 0.6176
     },
     "zero_rate": {
-      "prev": 0.1603,
+      "prev": 0.1597,
       "cur": 0.1597
     },
     "item_url_rate": {
-      "prev": 0.4768,
+      "prev": 0.479,
       "cur": 0.479
     },
     "main_route_count": {

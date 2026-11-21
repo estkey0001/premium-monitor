@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T12:43:22.191571+09:00",
+  "generated_at": "2026-11-21T19:47:31.475155+09:00",
   "source": "https://www.pokemon-card.com/products/resultAPI.php",
   "verified_products_source": "data/tcg_verified_products.json（公式ページで確認した商品。manual_verified: true の行）",
   "products": [
@@ -27,9 +27,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=expansion&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": true
     },
     {
@@ -56,9 +56,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=expansion&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -85,9 +85,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=expansion&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -114,9 +114,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=construction&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -143,9 +143,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=construction&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -172,9 +172,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=construction&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -201,9 +201,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=construction&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -230,9 +230,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=construction&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -259,9 +259,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -288,9 +288,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -317,9 +317,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -346,9 +346,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -375,9 +375,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -404,9 +404,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -433,9 +433,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -462,9 +462,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -491,9 +491,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -520,9 +520,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -549,9 +549,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {
@@ -578,9 +578,9 @@
       "series_name": null,
       "product_code": null,
       "source_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=24&dateUpperY=2027&dateUpperM=12&dateUpperD=26",
-      "discovered_at": "2026-11-21T12:18:19.197133+09:00",
+      "discovered_at": "2026-11-21T19:22:28.560262+09:00",
       "verified": true,
-      "last_verified_at": "2026-11-21T12:18:19.197133+09:00",
+      "last_verified_at": "2026-11-21T19:22:28.560262+09:00",
       "detail_fetched": false
     },
     {

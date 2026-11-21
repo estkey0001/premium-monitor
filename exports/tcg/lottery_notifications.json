@@ -22,7 +22,47 @@
     "lot-44adf3638512:deadline_6h": "2026-11-15T21:09:53.457124+09:00",
     "lot-7cfed02af5de:lottery_open": "2026-11-20T16:25:48.702302+09:00",
     "lot-a98308b4bcd6:lottery_open": "2026-11-21T02:21:57.618870+09:00",
-    "lot-d951335b1a89:lottery_open": "2026-11-21T12:43:22.181703+09:00"
+    "lot-d951335b1a89:lottery_open": "2026-11-21T12:43:22.181703+09:00",
+    "lot-126f2a270919:deadline_24h": "2026-11-22T01:42:23.132231+09:00",
+    "lot-7b9528915ee7:deadline_24h": "2026-11-22T01:42:23.132231+09:00",
+    "lot-7cfed02af5de:deadline_24h": "2026-11-22T01:42:23.132231+09:00"
   },
-  "candidates": []
+  "candidates": [
+    {
+      "lottery_id": "lot-126f2a270919",
+      "milestone": "deadline_24h",
+      "label": "締切24時間前",
+      "fires_at": "2026-11-21T23:59:00+09:00",
+      "tcg": "ONE_PIECE",
+      "product_name": "【ワンピースカードゲーム】再販品",
+      "retailer": "カードラボ",
+      "entry_url": null,
+      "source_url": "https://www.c-labo.jp/shop/shizuoka/blog/624730/",
+      "message": "【ワンピースカードゲーム】再販品（カードラボ・カードラボ静岡店） 締切24時間前"
+    },
+    {
+      "lottery_id": "lot-7b9528915ee7",
+      "milestone": "deadline_24h",
+      "label": "締切24時間前",
+      "fires_at": "2026-11-21T23:59:00+09:00",
+      "tcg": "POKEMON",
+      "product_name": "【ポケモンカードゲーム】再販品",
+      "retailer": "カードラボ",
+      "entry_url": null,
+      "source_url": "https://www.c-labo.jp/shop/shizuoka/blog/624731/",
+      "message": "【ポケモンカードゲーム】再販品（カードラボ・カードラボ静岡店） 締切24時間前"
+    },
+    {
+      "lottery_id": "lot-7cfed02af5de",
+      "milestone": "deadline_24h",
+      "label": "締切24時間前",
+      "fires_at": "2026-11-21T23:59:00+09:00",
+      "tcg": "ONE_PIECE",
+      "product_name": "世界最強の戦士",
+      "retailer": "ONE PIECE 麦わらストア",
+      "entry_url": null,
+      "source_url": "https://www.mugiwara-store.com/news/3131/",
+      "message": "世界最強の戦士（ONE PIECE 麦わらストア） 締切24時間前"
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 {
   "audience": "public_aggregate",
   "lane": "daily",
-  "last_run_at": "2026-11-21T11:07:47Z",
-  "runtime_seconds": 6473,
+  "last_run_at": "2026-11-21T17:02:34Z",
+  "runtime_seconds": 6556,
   "schedule_delay_seconds": null,
   "schema": 1,
   "trigger": "manual",

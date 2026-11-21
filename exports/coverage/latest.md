@@ -1,6 +1,6 @@
 # Market Coverage Engine
 
-生成: 2026-11-21 20:07 JST
+生成: 2026-11-22 02:02 JST
 総商品 49 / カテゴリ 7
 
 ## Coverage Score: **44 / 100**

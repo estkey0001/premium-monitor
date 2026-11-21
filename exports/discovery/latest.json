@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T19:51:34+09:00",
+  "generated_at": "2026-11-22T01:46:26+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-air",
-      "iphone-duo"
+      "iphone-16",
+      "iphone-17"
     ],
     "errors": {},
     "unknown_parts": 10,
-    "matched": 4,
-    "pending": 3,
+    "matched": 1,
+    "pending": 2,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -46,9 +46,9 @@
       "configured": 22,
       "implemented": 11,
       "unimplemented": 11,
-      "blocked": 5,
-      "robots_unreachable": 4,
-      "unreachable": 4,
+      "blocked": 6,
+      "robots_unreachable": 3,
+      "unreachable": 3,
       "table": [
         {
           "source_id": "POKEMON_CENTER_ONLINE",
@@ -194,11 +194,11 @@
           "source_id": "YODOBASHI",
           "retailer": "ヨドバシカメラ",
           "adapter": null,
-          "state": "SOURCE_UNREACHABLE",
-          "health": "FAILED",
-          "blocked": false,
-          "robots": "robots_unreachable",
-          "unreachable": true
+          "state": "SOURCE_BLOCKED",
+          "health": "BLOCKED",
+          "blocked": true,
+          "robots": null,
+          "unreachable": false
         },
         {
           "source_id": "AMAZON",
@@ -293,8 +293,8 @@
     "tcg_products": 50,
     "event_candidates": 195,
     "review_required_announcements": 6,
-    "matched_events": 88,
-    "stale_events": 101,
+    "matched_events": 84,
+    "stale_events": 105,
     "approved_events": 0,
     "registered_events": 0
   },
@@ -302,9 +302,9 @@
     "configured": 22,
     "implemented": 11,
     "unimplemented": 11,
-    "blocked": 5,
-    "robots_unreachable": 4,
-    "unreachable": 4,
+    "blocked": 6,
+    "robots_unreachable": 3,
+    "unreachable": 3,
     "table": [
       {
         "source_id": "POKEMON_CENTER_ONLINE",
@@ -450,11 +450,11 @@
         "source_id": "YODOBASHI",
         "retailer": "ヨドバシカメラ",
         "adapter": null,
-        "state": "SOURCE_UNREACHABLE",
-        "health": "FAILED",
-        "blocked": false,
-        "robots": "robots_unreachable",
-        "unreachable": true
+        "state": "SOURCE_BLOCKED",
+        "health": "BLOCKED",
+        "blocked": true,
+        "robots": null,
+        "unreachable": false
       },
       {
         "source_id": "AMAZON",

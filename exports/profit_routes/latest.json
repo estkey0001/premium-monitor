@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21 20:07 JST",
+  "generated_at": "2026-11-22 02:02 JST",
   "ebay_api_configured": false,
   "overseas_source_mode": "manual",
   "summary": {
@@ -112,13 +112,13 @@
     "prod_iphone17pm_256": {
       "product_name": "iPhone 17 Pro Max 256GB SIMフリー",
       "buy_candidates": 0,
-      "sell_candidates": 3,
+      "sell_candidates": 2,
       "min_usable_buy": null,
       "min_usable_buy_source": "",
       "max_usable_sell": 192000,
-      "max_usable_sell_source": "モバイル一番",
+      "max_usable_sell_source": "買取商店",
       "min_usable_buy_identity_verified": false,
-      "max_usable_sell_identity_verified": false,
+      "max_usable_sell_identity_verified": true,
       "target_buy_price": 191999,
       "gross_gap": null,
       "net_domestic": null,
@@ -997,6 +997,10 @@
         ],
         [
           "official_stale_over_180d",
+          1
+        ],
+        [
+          "model_mismatch",
           1
         ],
         [

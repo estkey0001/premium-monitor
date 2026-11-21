@@ -107,6 +107,7 @@
 3. eBay: ユーザーの操作待ち（開発者登録 → Production キー → Marketplace Insights の申請 → Secrets/Variables 登録。`ops/構成とCLI.md` の「eBay アダプター」）。アダプター基盤は完了。登録後の最初の dry-run は `python -m src.research.secondary_refresh`（`API_DRY_RUN` を外して通信する）で、実通信の応答の形を確認する（未確認）。為替（`config/fx_rates.yaml`）は古い（2026-06-01）ので、円換算は更新するまで UNKNOWN。
 
 ## 注意（次の人へ）
+- **CI は Python 3.11。** ローカル（3.13）で通っても、f 文字列の波括弧の中で外側と同じ引用符を使うと CI で SyntaxError になる。`build_public_lp` は失敗を警告にして続行するので、`tcg.html` が前回のまま残る形で静かに壊れる。`tests/test_py311_fstring_compat.py` が検出する。Daily LP のあとは CI ログの「⚠️」も見る。
 - **着手前に `internal/DEV_NOTES.md` の関係する節を読む**
 - **取得を足すときは必ず `src/collectors/polite.py` を通す**（robots_allowed → polite_wait → 取得、失敗は ShopCutoff に記録）。ブラウザを名乗る UA・ブロックの後の Playwright での取り直し・429 の再試行はしない（deploy-check #842 が検出する）。テストでは conftest が polite を差し替えるので、robots・間隔を確かめるテストには `@pytest.mark.real_polite` を付ける（価格の照合・時刻の扱い・runtime・route_id・deploy-check 番号など、過去に本番で踏んだ罠がすべてある）
 - 価格は「商品行」と照合して取る。見出しや最初の価格で代用しない

@@ -27,8 +27,12 @@ jobs:
       TZ: Asia/Tokyo
 
     steps:
+      # ref: main — 待機していた実行（手動の実行が終わるのを待った定時の実行など）は、既定だとキューに入った時点の古いコミットを
+      # checkout する。そのまま生成して push すると、先に終わった実行の push と同じファイルが衝突する。待機の後の最新の main から始める
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -47,6 +51,16 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      # Python 3.11 gate: CI の実際の Python 3.11 で、構文（compileall）・主要モジュールの import・TCG の対象テストを通す。
+      # 3.12 だけで動く書き方（f 文字列の入れ子の引用符など）は、ここで失敗させる（continue-on-error にしない）。
+      # 失敗したらこの実行は何も commit せず止まる（古いページを正常な公開として残さない）
+      - name: Python 3.11 gate
+        run: |
+          python -c "import sys; assert sys.version_info[:2] == (3, 11), sys.version"
+          python -m compileall -q src scripts
+          python -c "import src.tcg.buyback, src.content.tcg_hub_page, src.tcg.hub.product_view, src.tcg.lottery.products"
+          python -m pytest -q tests/test_py311_fstring_compat.py tests/test_tcg_buyback.py tests/test_tcg_hub.py tests/test_tcg_business_value.py tests/test_tcg_lottery.py tests/test_tcg_reliability.py
 
       - name: Install Playwright browsers
         run: python -m playwright install --with-deps chromium
@@ -757,7 +771,7 @@ jobs:
                   git rebase --abort || true
                   exit 1
                 fi
-                OTHERS=$(echo "$CONFLICTS" | grep -vE '^(exports/|audit_health/|docs/index\.html$|docs/beta/|docs/archive/|docs/sitemap\.xml$|docs/latest\.md$|docs/collector_report\.html$)' || true)
+                OTHERS=$(echo "$CONFLICTS" | grep -vE '^(exports/|audit_health/|docs/index\.html$|docs/beta/|docs/archive/|docs/sitemap\.xml$|docs/latest\.md$|docs/collector_report\.html$|docs/(tcg|iphone-buyback|camera-research)\.html$)' || true)
                 # 発見の候補の台帳には人の判断（承認・却下・登録）も入るので、衝突したらこの実行の側で上書きしない（Phase 28）
                 HUMAN=$(echo "$CONFLICTS" | grep -E '^exports/discovery/(product|event)_candidates\.json$' || true)
                 OTHERS=$(printf '%s\n%s\n' "$OTHERS" "$HUMAN" | sed '/^$/d')

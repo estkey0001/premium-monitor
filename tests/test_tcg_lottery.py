@@ -725,7 +725,8 @@ def test_date_only_deadline_status_is_conservative():
 
 
 def test_lp_shows_time_not_announced():
-    n = now_jst()
+    from src.tcg.models import JST as _JST
+    n = datetime(2026, 11, 21, 12, 0, tzinfo=_JST)           # 実行時刻が 00:00 台でも「00:00確認」を拾って落ちないよう固定
     ev = _lot(application_start=None, application_end=None,
               application_start_date=(n - timedelta(days=1)).date().isoformat(),
               application_end_date=(n + timedelta(days=2)).date().isoformat())

@@ -29,6 +29,8 @@ def msrp_for(product_id, tcg, product_type, msrp_rows) -> Optional[dict]:
             continue
         if _price(r.get("retail_price")) is None or r.get("basis") != "product_unit":
             continue
+        if r.get("carried_over"):                                # 公式の API から消えた商品の古い定価は、利益の根拠にしない
+            continue
         hits.append(r)
     if len(hits) != 1:                                           # 0 件も、複数ヒット（曖昧）も採用しない
         return None

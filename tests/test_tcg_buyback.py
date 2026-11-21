@@ -341,3 +341,68 @@ def test_page_records_the_source_time_so_deploy_check_can_detect_a_stale_page():
     assert '<meta name="tcg-source-generated-at" content="2026-11-21T12:43:22+09:00">' in html
     other = page_mod.render_from_json({**lots, "generated_at": "2026-11-22T12:00:00+09:00"}, {}, {}, NOW)
     assert 'content="2026-11-22T12:00:00+09:00"' in other and 'content="2026-11-21T12:43:22+09:00"' not in other
+
+
+# ── 独立監査（Production Reliability Closure）の指摘の回帰 ──
+def test_price_events_ignore_carried_over_and_stale_rows():
+    """取得していない日・古い価格から、新しい日付のイベントを作らない（Auditor M1）。"""
+    h = bb.update_history([], ann(row(price=8000, obs=NOW - timedelta(days=1))), "2026-11-20")
+    carried = {**row(price=9500), "carried_over": True}
+    assert bb.price_events(h, ann(carried), "2026-11-21", CFG) == []
+    old = ann(row(price=9500, obs=NOW - timedelta(hours=40)))
+    assert old[0]["freshness"] == bb.STALE and bb.price_events(h, old, "2026-11-21", CFG) == []
+    assert bb.price_events(h, ann(row(price=9500)), "2026-11-21", CFG)[0]["to"] == 9500          # 新鮮な取得なら出る
+
+
+def test_default_freshness_window_is_short_and_real_config_matches():
+    """収集が丸ごと止まった日の約 30 時間前の価格を FRESH にしない（Auditor M2・Reviewer M-2）。"""
+    cfg = bb.load_config()
+    assert cfg["freshness"]["observed_max_hours"] <= 8
+    cfg2 = {**CFG, "freshness": {"page_date_fresh_days": 1, "page_asof_tolerance_minutes": 30, "observed_max_hours": 8}}
+    old = bb.annotate([row(price=8000, obs=NOW - timedelta(hours=30))], cfg2, NOW)[0]
+    assert old["freshness"] == bb.STALE and old["executable"] is False
+    assert bb.annotate([row(price=8000, obs=NOW - timedelta(hours=2))], cfg2, NOW)[0]["executable"] is True
+
+
+def test_single_source_far_above_msrp_is_not_called_highest_executable():
+    """1 店だけで定価の 3 倍を超える価格は、最高買取として出さない（Auditor M3）。利益も出ない。"""
+    cfg = {**CFG, "outlier": {"ratio": 1.5, "single_source_max_multiple": 3.0}}
+    rows = bb.annotate([row(price=30000, jan="4500000000111")], cfg, NOW)
+    s = bb.summarize_product("deck", rows, cfg, 2200)
+    assert s["status"] == bb.OUTLIER_REVIEW and s["highest_executable"] is None and s["outlier"]["price"] == 30000
+    assert bb.profit_for(s, {"retail_price": 2200}, cfg)["status"] == bb.NOT_CALCULATED
+    ok = bb.summarize_product("deck", rows, cfg, 20000)                 # 定価の 3 倍以内なら通常どおり
+    assert ok["status"] == "EXECUTABLE" and ok["highest_executable"]["price"] == 30000
+
+
+def test_msrp_carried_over_row_is_not_used_for_profit():
+    """公式の API から消えて引き継がれた定価は、利益の根拠にしない（Auditor M4）。"""
+    from src.tcg.hub import profit_link as pl
+    base = {"product_id": "p", "tcg": "POKEMON", "retail_price": 6200, "basis": "product_unit", "price_text": "6,200円"}
+    assert pl.msrp_for("p", "POKEMON", None, [base])["retail_price"] == 6200
+    assert pl.msrp_for("p", "POKEMON", None, [{**base, "carried_over": True}]) is None
+
+
+def test_dedupe_drops_conflicting_prices_even_when_the_raw_name_differs():
+    """同じ店・JAN・単位・条件で、商品名だけ違って価格が食い違う行は、高いほうを採らず両方捨てる（Reviewer Low 4）。"""
+    a = {**row(price=6500, name="BOX"), "unit": "BOX"}
+    b = {**row(price=9999, name="BOX 特価"), "unit": "BOX"}
+    assert bb.dedupe([a, b]) == []
+    assert len(bb.dedupe([a, {**a}])) == 1
+
+
+def test_push_conflict_allowlist_includes_generated_pages():
+    """衝突時に生成物として扱うページに、tcg.html などを含める（Reviewer M-1）。人が書く CSV と発見の台帳は含めない。"""
+    t = (ROOT / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
+    assert "docs/(tcg|iphone-buyback|camera-research)\\.html$" in t
+    assert "data/" not in t[t.index("OTHERS=$(echo"):t.index("OTHERS=$(echo") + 400]
+
+
+def test_build_export_summary_applies_the_single_source_gap_gate():
+    """公開 JSON の summaries も、1 店だけで定価の数倍の価格を最高買取にしない（再レビュー M1）。"""
+    cfg = {**CFG, "outlier": {"ratio": 1.5, "single_source_max_multiple": 3.0}}
+    msrp = [{"product_id": "deck", "tcg": "POKEMON", "retail_price": 2200, "basis": "product_unit", "price_text": "2,200円"}]
+    ex, _h = bb.build_export([row(price=30000, jan="4500000000111")], [], {}, cfg, NOW, msrp)
+    assert ex["summaries"]["deck"]["status"] == bb.OUTLIER_REVIEW and ex["summaries"]["deck"]["highest_executable"] is None
+    ex2, _h2 = bb.build_export([row(price=30000, jan="4500000000111")], [], {}, cfg, NOW, [])      # 定価が無ければゲートは掛からない（従来どおり）
+    assert ex2["summaries"]["deck"]["status"] == "EXECUTABLE"

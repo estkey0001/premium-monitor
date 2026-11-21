@@ -124,7 +124,8 @@ def main(argv=None) -> int:
     prev = _load(OUT, {})
     prev_rows = [r for r in prev.get("rows", []) if isinstance(r, dict)] if isinstance(prev, dict) else []
     rows, state = collect(cfg, prev_rows, now)
-    export, hist = bb.build_export(rows, _load(HIST, []), state, cfg, now)
+    now = datetime.now(bb.JST)                         # 取得時刻より前の now で鮮度を判定しない（取得は数分かかる）
+    export, hist = bb.build_export(rows, _load(HIST, []), state, cfg, now, _load(PROJECT_ROOT / "exports" / "tcg" / "msrp.json", {}).get("verified") or [])
     c = export["counts"]
     print(f"TCG 買取: 行 {c['rows']} / 同一性確認 {c['confirmed']} / 実行可能 {c['executable']} / "
           f"買取のある商品 {c['products_listed']}（うち実行可能 {c['products_with_executable']}）")

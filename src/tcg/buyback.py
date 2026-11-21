@@ -40,7 +40,7 @@ OUTLIER_REVIEW = "OUTLIER_REVIEW"
 ID_CONFIRMED = "CONFIRMED"
 
 _DEFAULTS = {
-    "freshness": {"page_date_fresh_days": 1, "page_asof_tolerance_minutes": 30, "observed_max_hours": 36},
+    "freshness": {"page_date_fresh_days": 1, "page_asof_tolerance_minutes": 30, "observed_max_hours": 8},
     "outlier": {"ratio": 1.5},
     "surge": {"yen": 1000, "pct": 15},
     "route_costs": {},
@@ -208,7 +208,7 @@ def dedupe(rows: list) -> list:
     同じキーで価格が食い違う行は、どちらも採用しない（ambiguous_rows）。"""
     groups: dict = {}
     for r in rows:
-        k = (r.get("shop"), r.get("jan"), r.get("condition"), r.get("raw_product_name"))
+        k = (r.get("shop"), r.get("jan"), r.get("condition"))      # 商品名は含めない（名前だけ違って価格が食い違う行を両方残さない）
         groups.setdefault(k, []).append(r)
     out = []
     for k, g in groups.items():
@@ -237,7 +237,7 @@ def classify_freshness(row: dict, cfg: dict, now: datetime) -> tuple[str, str]:
     obs = _parse_iso(row.get("observed_at"))
     if obs is None or obs > now + timedelta(minutes=5):
         return UNKNOWN_FRESHNESS, "取得時刻が読めない（または未来）"
-    if now - obs > timedelta(hours=float(fr.get("observed_max_hours", 36))):
+    if now - obs > timedelta(hours=float(fr.get("observed_max_hours", 8))):
         return STALE, "取得してから時間が経っている（取得に失敗した日の古い価格）"
     basis = ((cfg.get("shops") or {}).get(row.get("shop")) or {}).get("freshness_basis")
     if basis == "page_asof":
@@ -286,7 +286,7 @@ def annotate(rows: list, cfg: dict, now: datetime) -> list:
     return out
 
 
-def summarize_product(product_id: str, rows: list, cfg: dict) -> dict:
+def summarize_product(product_id: str, rows: list, cfg: dict, msrp_price: Optional[int] = None) -> dict:
     """商品 1 件の買取の要約。rows は annotate() 済みの全行。"""
     mine = [r for r in rows if r.get("product_id") == product_id and r.get("identity_status") == ID_CONFIRMED]
     listed = _best_per_shop(mine)
@@ -300,6 +300,10 @@ def summarize_product(product_id: str, rows: list, cfg: dict) -> dict:
         ratio = float((cfg.get("outlier") or {}).get("ratio", 1.5))
         if len(execs) >= 2 and execs[0]["price"] > execs[1]["price"] * ratio:
             status, highest_exec, outlier = OUTLIER_REVIEW, None, execs[0]     # 最高値は外れ値の疑い。次点を最高とは呼ばない
+        elif len(execs) == 1 and isinstance(msrp_price, int) and msrp_price > 0:
+            mult = float((cfg.get("outlier") or {}).get("single_source_max_multiple", 3.0))
+            if execs[0]["price"] > msrp_price * mult:                          # 1 店だけで定価の数倍: 別の店で確認できるまで最高買取と呼ばない
+                status, highest_exec, outlier = OUTLIER_REVIEW, None, execs[0]
     elif listed:
         status = "LISTED_ONLY"                                                 # 載っているが、鮮度・条件のどれかが足りない
     return {
@@ -322,6 +326,8 @@ def profit_for(summary: dict, msrp: Optional[dict], cfg: dict) -> dict:
     if not isinstance(msrp, dict) or not isinstance(msrp.get("retail_price"), int) or msrp["retail_price"] <= 0:
         return pending("公式の定価（この販売単位の価格）が確認できていない。パック価格から BOX の定価は作らない")
     if summary.get("status") == OUTLIER_REVIEW:
+        if summary.get("shop_count") == 1:
+            return pending("買取が 1 店のみで、定価の数倍と大きく離れた価格のため確認待ち（別の店でも確認できたら算出する）")
         return pending("最高の買取価格が他店と大きく離れており、確認待ち（外れ値の疑い）")
     if summary.get("status") != "EXECUTABLE":
         return pending("鮮度・同一性・単位・条件を満たす買取価格が無い")
@@ -379,8 +385,8 @@ def price_events(history: list, rows: list, today: str, cfg: dict) -> list:
         prev[history_key(h)] = h
     events = []
     for r in rows:
-        if r.get("identity_status") != ID_CONFIRMED:
-            continue
+        if r.get("identity_status") != ID_CONFIRMED or r.get("carried_over") or r.get("freshness") != FRESH:
+            continue                                   # 取得していない日・古い価格から、新しい日付のイベントを作らない
         p = prev.get(history_key(r))
         if not p or p["price"] == r["price"]:
             continue
@@ -392,12 +398,17 @@ def price_events(history: list, rows: list, today: str, cfg: dict) -> list:
     return events
 
 
-def build_export(rows: list, history: list, shops_state: dict, cfg: dict, now: datetime) -> dict:
+def build_export(rows: list, history: list, shops_state: dict, cfg: dict, now: datetime, msrp_rows: Optional[list] = None) -> dict:
     """exports/tcg/buyback.json の中身。"""
     today = now.strftime("%Y-%m-%d")
     ann = annotate(rows, cfg, now)
     hist = update_history(history, ann, today)
-    summaries = {t["product_id"]: summarize_product(t["product_id"], ann, cfg) for t in cfg.get("targets") or []}
+    from src.tcg.hub.profit_link import msrp_for       # 画面と同じ定価の選び方（単一ソースの乖離ゲートを JSON の要約にも効かせる）
+
+    def _msrp(t: dict) -> Optional[int]:
+        hit = msrp_for(t["product_id"], t.get("tcg"), None, msrp_rows or [])
+        return hit["retail_price"] if hit else None
+    summaries = {t["product_id"]: summarize_product(t["product_id"], ann, cfg, _msrp(t)) for t in cfg.get("targets") or []}
     kept = [r for r in ann if r["identity_status"] != "NO_TARGET"]      # 対象外の商品（店の一覧の他の商品）は公開しない
     return {
         "schema": 1, "generated_at": now.isoformat(), "shops": shops_state, "rows": kept,

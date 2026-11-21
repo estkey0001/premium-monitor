@@ -137,7 +137,7 @@ def _first_date(v) -> Optional[str]:
 def _buyback_for(product_id: str, bb_rows: list, bb_cfg: dict, now: datetime, msrp_hit: Optional[dict]) -> tuple[Optional[dict], dict]:
     """(買取の表示用の要約 or None, 利益欄)。買取は src/tcg/buyback.py の規則（JAN で同一性・単位・条件・鮮度）を通ったものだけ。"""
     from src.tcg import buyback as bb
-    summary = bb.summarize_product(product_id, bb_rows, bb_cfg)
+    summary = bb.summarize_product(product_id, bb_rows, bb_cfg, (msrp_hit or {}).get("retail_price"))
     pr = pl.profit_view(msrp_hit, bb.profit_for(summary, msrp_hit, bb_cfg))
     if pr.get("sell_shop"):
         pr["sell_shop_name"] = ((bb_cfg.get("shops") or {}).get(pr["sell_shop"]) or {}).get("name") or pr["sell_shop"]

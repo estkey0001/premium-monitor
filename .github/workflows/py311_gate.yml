@@ -1,0 +1,52 @@
+name: Python 3.11 Gate
+
+# CI（Daily LP Update）は Python 3.11。ローカルは 3.13 なので、3.12 以降だけで動く書き方がここで初めて見つかる事故があった。
+# push（main）のたびに、実際の Python 3.11 で構文・import・TCG の対象テストを通す。読み取り専用・Secrets なし・commit も push もしない。
+# 公開ページの再ビルドは起こさない（docs/ を変えない）。
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'config/**'
+      - 'requirements.txt'
+      - '.github/workflows/py311_gate.yml'
+      - '.github/workflows/daily_lp.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: py311-gate
+  cancel-in-progress: true   # 検査だけで、データを書かない。古い検査は取り消してよい
+
+jobs:
+  py311:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TZ: Asia/Tokyo
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Python 3.11 gate
+        run: |
+          python -c "import sys; assert sys.version_info[:2] == (3, 11), sys.version"
+          python -m compileall -q src scripts
+          python -c "import src.tcg.buyback, src.content.tcg_hub_page, src.tcg.hub.product_view, src.tcg.lottery.products"
+          python -m pytest -q tests/test_py311_fstring_compat.py tests/test_tcg_buyback.py tests/test_tcg_hub.py tests/test_tcg_business_value.py tests/test_tcg_lottery.py tests/test_tcg_reliability.py

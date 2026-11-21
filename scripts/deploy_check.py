@@ -34,6 +34,20 @@ FORBIDDEN = [
 ]
 
 
+def tcg_page_matches_source(lotteries_path, page_path) -> tuple:
+    """#850 の判定。tcg.html の <meta name="tcg-source-generated-at"> が lotteries.json の generated_at と一致すれば (True, 取得時刻)。
+    ページが無い・古い・meta が無い・元データが読めないときは (False, 取得時刻)。"""
+    import json as _j
+    import re as _r
+    try:
+        gen = str((_j.loads(Path(lotteries_path).read_text(encoding="utf-8")) or {}).get("generated_at") or "")
+    except Exception:  # noqa: BLE001
+        gen = ""
+    page = Path(page_path)
+    m = _r.search(r'<meta name="tcg-source-generated-at" content="([^"]*)"', page.read_text(encoding="utf-8")) if page.exists() else None
+    return bool(gen) and bool(m) and m.group(1) == gen, gen
+
+
 def check() -> list[dict]:
     """デプロイチェックを実行する。結果リストを返す。"""
     results = []
@@ -890,8 +904,21 @@ def check() -> list[dict]:
                         "message": "Commit and push ステップが、push を拒否されたら git pull --rebase --autostash で"
                                    "取り込み直す"
                                    + ("" if _t206e3 else " ← push競合の二重安全策が未設定")})
+        # 待機していた実行は、キューに入った時点の古いコミットを既定で checkout する（手動の実行の後ろに並んだ定時の実行が、
+        # 手動の実行の push より前の土台から生成して衝突した）。待機の後の最新の main から始める
+        import re as _re206
+        _t206e4 = bool(_re206.search(r"uses: actions/checkout@v4\s*\n\s*with:\s*\n\s*ref: main\b", _workflow_text))
+        results.append({"level": "ok" if _t206e4 else "error", "check": "workflow_checkout_latest_main",
+                        "message": "daily_lp.yml の checkout が ref: main（待機した実行が古い土台で始まらない）"
+                                   + ("" if _t206e4 else " ← 待機した実行が古いコミットから生成して push が衝突する")})
+        _t206e5 = ("Python 3.11 gate" in _workflow_text and "compileall" in _workflow_text
+                   and (PROJECT_ROOT / ".github" / "workflows" / "py311_gate.yml").exists())
+        results.append({"level": "ok" if _t206e5 else "error", "check": "workflow_py311_gate",
+                        "message": "daily_lp.yml と py311_gate.yml に、実際の Python 3.11 での compileall / import / TCG の対象テストがある"
+                                   + ("" if _t206e5 else " ← 3.12 だけで動く書き方が CI で初めて見つかる")})
     else:
-        for _ck in ("workflow_concurrency_set", "workflow_concurrency_no_cancel", "workflow_pull_rebase_before_push"):
+        for _ck in ("workflow_concurrency_set", "workflow_concurrency_no_cancel", "workflow_pull_rebase_before_push",
+                    "workflow_checkout_latest_main", "workflow_py311_gate"):
             results.append({"level": "warning", "check": _ck,
                             "message": ".github/workflows/daily_lp.yml が見つからない"})
 
@@ -8629,14 +8656,8 @@ def _check_tcg_lottery(report: dict) -> list[dict]:
     # build-public-lp は壊れた入力・生成の失敗を警告にして続行するため、ここで「元データの取得時刻がページに入っているか」を照合する。
     _lot850 = PROJECT_ROOT / "exports" / "tcg" / "lotteries.json"
     if _lot850.exists():
-        import json as _j850, re as _re850
-        try:
-            _gen850 = str((_j850.loads(_lot850.read_text(encoding="utf-8")) or {}).get("generated_at") or "")
-        except Exception:  # noqa: BLE001
-            _gen850 = ""
-        _page850 = PUBLIC_DIR / "tcg.html"
-        _m850 = _re850.search(r'<meta name="tcg-source-generated-at" content="([^"]*)"', _page850.read_text(encoding="utf-8")) if _page850.exists() else None
-        _add(850, "tcg_page_matches_source", bool(_gen850) and bool(_m850) and _m850.group(1) == _gen850,
+        _ok850, _gen850 = tcg_page_matches_source(_lot850, PUBLIC_DIR / "tcg.html")
+        _add(850, "tcg_page_matches_source", _ok850,
              "docs/tcg.html は、いまの exports/tcg/lotteries.json（取得時刻 " + (_gen850[:16] or "不明") + "）から作られている",
              "docs/tcg.html が無い、または元データと取得時刻が違う（生成に失敗して前回のページが残っている）。build-public-lp のログの「⚠️」を確認")
 

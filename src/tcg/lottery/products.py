@@ -20,9 +20,20 @@ _KINDS = (
     ("cardset", ("カードセット",)),
     ("premium", ("FUTURISTIC BOX", "プレミアムトレーナーボックス", "スペシャルBOX",
                  "スペシャルボックス", "コレクション")),
-    ("booster", ("拡張パック", "強化拡張パック", "ハイクラスパック", "ブースターパック",
-                 "エクストラブースター", "プレミアムブースター")),
+    # パックの種類は別商品（拡張パックとハイクラスパックは同じ名前でも別物）。長い語を先に判定する
+    ("enhanced", ("強化拡張パック",)),
+    ("highclass", ("ハイクラスパック",)),
+    ("booster", ("拡張パック", "ブースターパック")),
+    ("extra", ("エクストラブースター",)),
+    ("premium_booster", ("プレミアムブースター",)),
 )
+
+# 商品の派生を表す語（バラ売り・ミニ・プロモ・プレシャス・付き・1パック）。イベントと台帳の両方で同じ集合のときだけ同一商品として扱う
+_VARIANT = re.compile(r"バラ|ミニ|プロモ|プレシャス|PRECIOUS|付き|付属|特典|限定|(?<![\d])1\s*パック|ジャンボ|カートン|ケース|アンソロジー", re.I)
+
+
+def _variants(name: str) -> frozenset:
+    return frozenset(m.group(0).upper() for m in _VARIANT.finditer(unicodedata.normalize("NFKC", name or "")))
 
 
 def _norm(s: str) -> str:
@@ -98,7 +109,8 @@ def resolve_product(product_name: str, registry: list[dict]) -> dict:
     exact（商品 ID まで確定して公開してよい）は次のどちらかだけ:
       1. 商品コード（【EB-05】等）が双方にあり、registry で 1 件に定まる
       2. 名前の本体（「」内、無ければ種別語・店舗の言い回しを除いた全体）が完全一致し、候補が 1 件、
-         種別が食い違わず、かつ（名前が「」で囲まれているか、種別語が名前に含まれている）
+         種別が食い違わず、種別語が名前に含まれ（引用符だけでは足りない）、
+         派生語（バラ・ミニ・プロモ・プレシャス・付き・1パック）の集合が台帳と同じ
     部分一致・汎用語（再販品など）・複数候補は紐付けない（partial / none / ambiguous）。
     """
     registry = registry or []
@@ -106,7 +118,8 @@ def resolve_product(product_name: str, registry: list[dict]) -> dict:
     if codes:
         kind0 = _kind(product_name)
         hits = [r for r in registry if codes & _rec_codes(r)
-                and not (kind0 and _kind(r.get("name", "")) and kind0 != _kind(r.get("name", "")))]   # コードが同じでも種別が食い違えば別商品
+                and not (kind0 and _kind(r.get("name", "")) and kind0 != _kind(r.get("name", "")))   # コードが同じでも種別が食い違えば別商品
+                and _variants(product_name) == _variants(r.get("name", ""))]                          # バラ・付き・プレシャス等の派生が食い違えば別商品
         if len(hits) == 1:
             h = hits[0]
             return {"product_id": h["product_id"], "product_match": "exact", "provisional_product": False,
@@ -127,9 +140,11 @@ def resolve_product(product_name: str, registry: list[dict]) -> dict:
         rkind = _kind(rec.get("name", ""))
         if kind and rkind and kind != rkind:
             continue
+        if _variants(product_name) != _variants(rec.get("name", "")):
+            continue
         cands.append(rec)
     exact = [c for c in cands if names & _core_names(c.get("name", ""))]
-    if len(exact) == 1 and (_has_quote(product_name) or kind):
+    if len(exact) == 1 and kind:      # 引用符だけでは exact にしない（同名シリーズが多い）。種別語が要る
         return {"product_id": exact[0]["product_id"], "product_match": "exact",
                 "provisional_product": False,
                 "release_date": exact[0].get("release_date")}

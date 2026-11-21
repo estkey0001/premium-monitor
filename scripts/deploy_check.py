@@ -8625,6 +8625,57 @@ def _check_tcg_lottery(report: dict) -> list[dict]:
          "抽選も正常取得の監視元も無い", level_ng="warning")
 
     # #766（旧UIの TCG タブで抽選が在庫より上）は UI Phase 10 で旧UIと一緒に削除した（新UIは抽選・在庫が別のページ）
+    # #850 tcg.html は、いま公開している exports/tcg/lotteries.json から作ったページである（生成に失敗して前回のページが残っていない）。
+    # build-public-lp は壊れた入力・生成の失敗を警告にして続行するため、ここで「元データの取得時刻がページに入っているか」を照合する。
+    _lot850 = PROJECT_ROOT / "exports" / "tcg" / "lotteries.json"
+    if _lot850.exists():
+        import json as _j850, re as _re850
+        try:
+            _gen850 = str((_j850.loads(_lot850.read_text(encoding="utf-8")) or {}).get("generated_at") or "")
+        except Exception:  # noqa: BLE001
+            _gen850 = ""
+        _page850 = PUBLIC_DIR / "tcg.html"
+        _m850 = _re850.search(r'<meta name="tcg-source-generated-at" content="([^"]*)"', _page850.read_text(encoding="utf-8")) if _page850.exists() else None
+        _add(850, "tcg_page_matches_source", bool(_gen850) and bool(_m850) and _m850.group(1) == _gen850,
+             "docs/tcg.html は、いまの exports/tcg/lotteries.json（取得時刻 " + (_gen850[:16] or "不明") + "）から作られている",
+             "docs/tcg.html が無い、または元データと取得時刻が違う（生成に失敗して前回のページが残っている）。build-public-lp のログの「⚠️」を確認")
+
+    # #851 TCG の買取（exports/tcg/buyback.json）: 同一性（JAN）・単位が対象商品と一致し、実行可能な行は FRESH ＋ 条件が新品未開封、重複行が無い。
+    # #852 tcg.html に「純利益」が出ているなら、根拠になる実行可能な買取の行がある（買取が無いのに利益を出さない）。
+    _bb851 = PROJECT_ROOT / "exports" / "tcg" / "buyback.json"
+    if _bb851.exists():
+        import json as _j851
+        from src.tcg import buyback as _b851
+        _bad851: list = []
+        _d851: dict = {}
+        try:
+            _d851 = _j851.loads(_bb851.read_text(encoding="utf-8"))
+            _tg851 = {t["product_id"]: t for t in _b851.load_config().get("targets") or []}
+            _seen851: set = set()
+            for _r in _d851.get("rows") or []:
+                if _r.get("identity_status") == _b851.ID_CONFIRMED:
+                    _t = _tg851.get(_r.get("product_id"))
+                    if not _t or _r.get("jan") != _t.get("jan") or _r.get("unit") != _t.get("unit"):
+                        _bad851.append(f"同一性・単位: {_r.get('product_id')}/{_r.get('shop')}")
+                    _k = (_r.get("shop"), _r.get("jan"), _r.get("condition"), _r.get("raw_product_name"))
+                    if _k in _seen851:
+                        _bad851.append(f"重複: {_k}")
+                    _seen851.add(_k)
+                if _r.get("executable") and (_r.get("freshness") != _b851.FRESH or _r.get("condition") not in _b851.EXECUTABLE_CONDITIONS
+                                             or _r.get("identity_status") != _b851.ID_CONFIRMED):
+                    _bad851.append(f"実行可能の条件違反: {_r.get('product_id')}/{_r.get('shop')}")
+        except Exception as _e851:  # noqa: BLE001
+            _bad851.append(f"読めない: {_e851}")
+        _add(851, "tcg_buyback_quality", not _bad851,
+             "TCG の買取: 同一性（JAN）・単位が対象と一致し、実行可能な行は FRESH・新品未開封・重複なし",
+             f"{_bad851[:5]}")
+        _pg852 = PUBLIC_DIR / "tcg.html"
+        if _pg852.exists():
+            _cards852 = _pg852.read_text(encoding="utf-8").split('<section class="pcard"')[1:]
+            _ok852 = all(("<dt>最高買取</dt>" in c) for c in _cards852 if "<dt>純利益</dt>" in c)       # カードごとに、純利益には最高買取の根拠がある
+            _add(852, "tcg_profit_has_buyback_evidence", _ok852,
+                 "tcg.html の純利益が出ている商品カードには、必ず最高買取（実行可能な買取）が出ている", "最高買取の無い商品に純利益が出ている")
+
     # #841 UI Phase 10: 公式の発売予定（公式のページ・発売日が読める・今日以降）は、新UIの抽選・予約に全部出ている
     # （旧UIの「販売・入荷・プレミア」の発売予定の後継。日付の書き方の違い（2026.11.21 など）で黙って消えない）
     from datetime import datetime as _dt841

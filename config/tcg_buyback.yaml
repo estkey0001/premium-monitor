@@ -1,0 +1,110 @@
+# TCG の「公式定価 → 国内買取店」ルート（Route T1）の設定。
+#
+# 重要:
+#   - 買取価格は、買取店自身のページに載っている価格だけを使う（集計サイト・フリマ・オークションの相場は使わない）。
+#   - 商品の同一性は JAN（バーコード）で照合する。店のページの JAN が、下の targets の JAN と一致したものだけを採用する。
+#     名前の一部一致で同一扱いしない。BOX とカートン、シュリンクの有無、通常版と限定版は別の行として扱う。
+#   - 利益に使うのは「鮮度が FRESH・同一性が確認済み・単位が一致・条件が新品未開封（シュリンク付き）」の価格だけ。
+#   - 公式が BOX 価格を公表していない商品（拡張パック・ブースターパックの BOX）は、パック価格×入数で BOX の定価を作らない。
+#     その商品の BOX 買取との利益は NOT_CALCULATED にする。
+
+# 鮮度
+freshness:
+  # ページに日付だけが載る店（買取商店）: 取得日との差がこの日数以内なら FRESH。超えたら STALE
+  page_date_fresh_days: 1
+  # 取得した時刻が載る店（買取ルデヤ: 「○時○分現在」が取得時刻になる）: ページの時刻と、こちらが取得した時刻の差がこの分数以内のときだけ
+  # 「その時点の最新」と認める。ずれているページ（キャッシュ等）は UNKNOWN_FRESHNESS
+  page_asof_tolerance_minutes: 30
+  # こちらが取得してから、この時間を超えた行は STALE（取得に失敗した日の古い価格を利益に使わない）
+  observed_max_hours: 36
+
+# 外れ値: 新鮮な店が 2 つ以上あるとき、最高値が 2 位の何倍を超えたら OUTLIER_REVIEW（実行可能な最高値にしない）にするか。
+# iPhone の週次（3%）は店ごとの差が小さい端末向け。TCG は店ごとの差が大きい（BOX で 1.3 倍程度）ので別の値にする。
+outlier:
+  ratio: 1.5
+  # 買取が 1 店だけのとき、その価格が定価の何倍を超えたら、別の店でも確認できるまで利益を算出しない（単一ソースの大きな乖離）
+  single_source_max_multiple: 3.0
+
+# 価格の変化（既存の語彙: PRICE_RISE / PRICE_DROP / BUYBACK_SURGE）
+surge:
+  yen: 1000
+  pct: 15
+
+# 費用。「不明なものを 0 円にしない」。送料が不明な経路は純利益を算出しない（NOT_CALCULATED）。
+# 店頭受取で購入し、買取店の店頭へ持ち込む経路（store_counter）だけ、送料が発生しない（0 円）として計算する。
+# 交通費・時間・手数料は含まない（含まないことを画面にも出す）。郵送買取は送料がお客様負担（金額は荷物の大きさで決まる）なので、
+# この経路は計算しない。
+route_costs:
+  store_counter:
+    label: 店頭受取で購入 → 買取店の店頭に持ち込み
+    purchase_shipping_yen: 0
+    outbound_shipping_yen: 0
+    other_yen: 0
+    note: 交通費・時間は含まない。購入元が通販の抽選のときは送料がかかるので当てはまらない。店頭での買取価格が Web 掲載価格と同じかは未確認
+    shops_supporting: [rudeya]
+
+shops:
+  rudeya:
+    name: 買取ルデヤ
+    host: kaitori-rudeya.com
+    freshness_basis: page_asof
+    counter_buyback_evidence: https://kaitori-rudeya.com/
+    pages:
+      - https://kaitori-rudeya.com/category/detail/224   # ワンピースカード
+      - https://kaitori-rudeya.com/category/detail/114   # ポケモンカード
+  kaitorishouten:
+    name: 買取商店
+    host: www.kaitorishouten-co.jp
+    freshness_basis: page_date
+    counter_buyback_evidence: null
+
+# 調べる商品。unit は買取の単位、official_unit は定価が付いている単位。両方が同じときだけ利益を計算する。
+targets:
+  - product_id: pokemon-拡張パック-30th-celebration
+    tcg: POKEMON
+    name: 拡張パック「30th CELEBRATION」
+    unit: BOX
+    jan: "4521329462424"
+    pages: {kaitorishouten: https://www.kaitorishouten-co.jp/products/detail/27142}
+  - product_id: pokemon-拡張パック-ストームエメラルダ
+    tcg: POKEMON
+    name: 拡張パック「ストームエメラルダ」
+    unit: BOX
+    jan: "4521329462233"
+    pages: {kaitorishouten: https://www.kaitorishouten-co.jp/products/detail/26717}
+  - product_id: pokemon-拡張パック-メガシンフォニア
+    tcg: POKEMON
+    name: 拡張パック「メガシンフォニア」
+    unit: BOX
+    jan: "4521329431185"
+    pages: {kaitorishouten: https://www.kaitorishouten-co.jp/products/detail/24300}
+  - product_id: pokemon-拡張パック-ハドウシーカー
+    tcg: POKEMON
+    name: 拡張パック「ハドウシーカー」
+    unit: BOX
+    jan: "4521329462448"
+    pages: {}
+  - product_id: pokemon-30th-celebration-プレミアムデッキセット-エーフィ-ブラッキー
+    tcg: POKEMON
+    name: 30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー
+    unit: SET
+    jan: "4521329462189"
+    pages: {kaitorishouten: https://www.kaitorishouten-co.jp/products/detail/27143}
+  - product_id: エクストラブースター-one-piece-heroines-edition-vol-2-eb-05
+    tcg: ONE_PIECE
+    name: エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】
+    unit: BOX
+    jan: "4582770059229"
+    pages: {}
+  - product_id: ブースターパック-神の支配-op-18
+    tcg: ONE_PIECE
+    name: ブースターパック 神の支配【OP-18】
+    unit: BOX
+    jan: "4582770067194"
+    pages: {}
+  - product_id: プレミアムカードコレクション-熊本県スペシャル
+    tcg: ONE_PIECE
+    name: プレミアムカードコレクション -熊本県スペシャル-
+    unit: SET
+    jan: "4582770012040"
+    pages: {}

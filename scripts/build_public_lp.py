@@ -199,7 +199,7 @@ def _build_tcg_hub_html(public_dir: Path) -> None:
     try:
         sys.path.insert(0, str(PROJECT_ROOT))
         from src.content.tcg_hub_page import render_from_json
-        html_text = render_from_json(main, _load("pokemon_registry.json"), _load("msrp.json"))
+        html_text = render_from_json(main, _load("pokemon_registry.json"), _load("msrp.json"), buyback=_load("buyback.json"))
     except Exception as e:  # noqa: BLE001 — 壊れた入力でサイト全体のビルドを止めない
         print(f"  ⚠️  tcg.html を作れなかった: {e}")
         return

@@ -91,7 +91,7 @@ nav.jump a{flex:none;display:inline-flex;align-items:center;border:1px solid var
 .phead{grid-row:1;grid-column:2;min-width:0;display:flex;flex-direction:column;gap:2px}.phead h3{font-size:15px;line-height:1.35;margin:0}
 .pcard>.pmeta,.pcard>.chips,.pcard>.pfoot,.pcard>.pnote{grid-column:1/-1}.pnote.nw{white-space:nowrap}
 .pmeta{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 12px;margin:0}.pmeta dl{display:contents;margin:0}.pmeta dl>div{min-width:0;display:flex;gap:4px;align-items:baseline}
-.pmeta dt{color:var(--mut);font-size:12px;line-height:1.4}.pmeta dd{margin:0;font-weight:700;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.pmeta dd small{display:block;font-weight:400;color:var(--mut);font-size:12px}.pmeta dt{color:var(--mut);font-size:12px;line-height:1.4}.pmeta dd{margin:0;font-weight:700;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
 .pnote,.pcard>p.pnote{margin:0;color:var(--mut);font-size:13px}
 .chips{display:flex;flex-wrap:wrap;gap:4px}.chip{border:1px solid var(--line);border-radius:8px;padding:0 8px;font-size:12px;line-height:1.6;color:var(--mut)}
 .chip b{font-size:14px;color:var(--fg);margin-right:3px}
@@ -374,14 +374,36 @@ def _product_card(p: dict, i: int, yr: str) -> str:
         unknown.append("BOX定価")
     else:
         unknown.append("定価")
-    if not p.get("buyback"):
-        unknown.append("最高買取")                              # TCG の買取は根拠のある実データが無い（作らない）
+    bbv = p.get("buyback")
+    bb_note = ""
+    if not bbv:
+        unknown.append("最高買取")                              # 買取店自身のページの価格が無い（作らない）
+    else:
+        ex, lst = bbv.get("highest_executable"), bbv.get("highest_listed")
+        if ex:
+            src = "単一ソース" if bbv.get("single_source") else f'{bbv["shop_count"]}店'
+            meta += (f'<div><dt>最高買取</dt><dd title="{_e(ex["shop_name"])}・{_e(ex.get("unit") or "")}・確認 {_e(_short(ex["checked_at"]))}">'
+                     f'{_yen(ex["price"])}<small>{_e(ex["shop_name"])}・{_e(ex.get("unit") or "")}・{_e(src)}</small></dd></div>')
+            meta += f'<div><dt>確認</dt><dd>{_e(_short(ex["checked_at"]))}</dd></div>'
+        elif bbv.get("outlier"):
+            bb_note = "最高の買取価格が他店と大きく離れているため、確認待ちです（利益に使っていません）。"
+            unknown.append("最高買取")
+        elif lst:
+            meta += (f'<div><dt>掲載の買取</dt><dd title="鮮度・条件を確認できていない掲載価格（参考）">{_yen(lst["price"])}'
+                     f'<small>{_e(lst["shop_name"])}・{_e(lst.get("unit") or "")}・条件 {_e(lst.get("condition") or "不明")}・参考</small></dd></div>')
+            bb_note = "掲載されている買取価格は、鮮度か条件を確認できていないため参考表示です（利益に使っていません）。"
+            unknown.append("最高買取")
     if pr.get("net_profit") is not None:
-        meta += f'<div><dt>利益</dt><dd title="{_e(pr["reason"])}">{_e(pr["label"])}</dd></div>'
+        meta += (f'<div><dt>純利益</dt><dd title="{_e(pr.get("route") or "")}">{_e(pr["label"])}'
+                 f'<small>基準: {_e(pr.get("sell_shop_name") or "")} 買取 {_yen(pr["sell_price"])}・定価 {_yen(pr["acquisition_cost"])}</small></dd></div>'
+                 f'<div><dt>ROI</dt><dd>{pr["roi_pct"]:.1f}%</dd></div>')
+        bb_note = (f'前提: {pr.get("route") or ""}（交通費・時間は含みません）'
+                   + ("・買取は 1 店のみ（単一ソース）" if pr.get("single_source") else "")) + (" " + bb_note if bb_note else "")
     else:
         unknown.append("利益")
     unk = (f'<span class="pnote" title="{_e(pr["reason"])}（利益: {_e(pr["label"])}）">未確認の項目: {_e("・".join(unknown))}</span>'
            if unknown else "")
+    unk = unk + (f'<span class="pnote">{_e(bb_note)}</span>' if bb_note else "")
     meta = f'<div class="pmeta">{"<dl>" + meta + "</dl>" if meta else ""}{unk}</div>' if (meta or unk) else ""
     chip = lambda n, lbl, tone: f'<span class="chip {tone}"><b>{n}</b>{lbl}</span>' if n else ""
     chips = chip(c["open"], "受付中", "info") + chip(c["ending_soon"], "締切間近", "danger") + chip(c["upcoming"], "近日開始", "info")
@@ -551,7 +573,8 @@ def render(hub: dict, *, generated_label: Optional[str] = None) -> str:
         'WATCH=日程未確認・未確認・商品に紐付けできていないもの。利益や点数ではなく、既存の判定を並べたものです。</p>'
         '<p class="mut">色: 青=受付中・近日開始／赤=締切間近／橙=結果待ち・様子見・未確認／灰=終了。'
         'ポ・OP の色は TCG の種類を表すだけで、状態とは関係ありません。</p>'
-        '<p class="mut">利益: TCG の買取・二次流通・eBay の根拠が無いため、純利益や順位は<b>算出前</b>です。出せるのは公式の定価だけです。'
+        '<p class="mut">利益: 買取店自身のページの価格（同一商品・同じ単位・新品未開封・新鮮なもの）と公式の定価が<b>そろった商品だけ</b>、純利益などの利益を出します。'
+        '公式が BOX 価格を公表していない商品の BOX 買取は、利益を<b>算出前</b>にしています（パック価格から BOX の定価は作りません）。順位は利益では決めません。'
         '日付が「日付のみ」のものは、公式が時刻を出していません（時刻を補っていません）。</p></details>')
 
     if live:
@@ -590,11 +613,12 @@ def render(hub: dict, *, generated_label: Optional[str] = None) -> str:
     legacy = _shared.legacy_css()
     nav = _shared.site_nav("tcg")
     return ('<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
-            f'<title>TCG 抽選ハブ | プレ値速報</title><meta name="robots" content="index,follow"><style>{legacy}{CSS}</style></head>'
+            f'<title>TCG 抽選ハブ | プレ値速報</title><meta name="robots" content="index,follow">'
+            f'<meta name="tcg-source-generated-at" content="{_e(ck["lotteries_generated_at"] or "")}"><style>{legacy}{CSS}</style></head>'
             f'<body>{nav}<main>{body}</main><script>{JS}</script></body></html>')
 
 
-def render_from_json(lotteries, registry, msrp, now: Optional[datetime] = None) -> str:
+def render_from_json(lotteries, registry, msrp, now: Optional[datetime] = None, buyback=None) -> str:
     """公開済み JSON の辞書から直接ページを作る。"""
     now = (now or now_jst()).astimezone(JST)
-    return render(build_hub(lotteries, registry, msrp, now), generated_label=now.strftime("%Y-%m-%d %H:%M JST"))
+    return render(build_hub(lotteries, registry, msrp, now, buyback), generated_label=now.strftime("%Y-%m-%d %H:%M JST"))

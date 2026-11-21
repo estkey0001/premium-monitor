@@ -134,11 +134,60 @@ def _first_date(v) -> Optional[str]:
     return d.strftime("%Y-%m-%d") if d else None
 
 
-def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None) -> dict:
-    """商品中心のビュー全体。lotteries / registry / msrp は公開済み JSON を読んだ辞書（壊れていても空として扱う）。"""
+def _buyback_for(product_id: str, bb_rows: list, bb_cfg: dict, now: datetime, msrp_hit: Optional[dict]) -> tuple[Optional[dict], dict]:
+    """(買取の表示用の要約 or None, 利益欄)。買取は src/tcg/buyback.py の規則（JAN で同一性・単位・条件・鮮度）を通ったものだけ。"""
+    from src.tcg import buyback as bb
+    summary = bb.summarize_product(product_id, bb_rows, bb_cfg)
+    pr = pl.profit_view(msrp_hit, bb.profit_for(summary, msrp_hit, bb_cfg))
+    if pr.get("sell_shop"):
+        pr["sell_shop_name"] = ((bb_cfg.get("shops") or {}).get(pr["sell_shop"]) or {}).get("name") or pr["sell_shop"]
+    if summary["status"] == "NO_BUYBACK":
+        return None, pr
+
+    def slim(r):
+        return None if not r else {"shop": r["shop"], "shop_name": ((bb_cfg.get("shops") or {}).get(r["shop"]) or {}).get("name") or r["shop"],
+                                   "price": r["price"], "unit": r.get("unit"), "condition": r.get("condition"),
+                                   "freshness": r.get("freshness"), "checked_at": r.get("observed_at"),
+                                   "source_updated_at": r.get("source_updated_at"), "source_url": r.get("source_url"),
+                                   "item_url": r.get("item_url")}
+    return {"status": summary["status"], "unit": summary["unit"],
+            "highest_listed": slim(summary["highest_listed"]), "highest_executable": slim(summary["highest_executable"]),
+            "ranking": [slim(r) for r in summary["ranking"]], "shop_count": summary["shop_count"],
+            "single_source": summary["single_source"], "outlier": slim(summary["outlier"])}, pr
+
+
+def profit_map(registry, msrp, buyback, now: Optional[datetime] = None) -> dict:
+    """{(tcg, product_id): 利益欄}。HOME が「利益根拠あり」を出すための軽い版（build_hub と同じ規則: _buyback_for）。"""
+    now = (now or now_jst()).astimezone(JST)
+    out: dict = {}
+    try:
+        from src.tcg import buyback as bb
+        cfg = bb.load_config()
+        rows = bb.annotate([r for r in _l(_d(buyback).get("rows")) if isinstance(r, dict)], cfg, now)
+        master = {(p.get("tcg"), p.get("product_id")): p for p in _l(_d(registry).get("products")) if isinstance(p, dict)}
+        msrp_rows = _l(_d(msrp).get("verified"))
+        for t in cfg.get("targets") or []:
+            m = _d(master.get((t["tcg"], t["product_id"])))
+            hit = pl.msrp_for(t["product_id"], t["tcg"], _s(m.get("product_type")) or None, msrp_rows) if m else None
+            out[(t["tcg"], t["product_id"])] = _buyback_for(t["product_id"], rows, cfg, now, hit)[1]
+    except Exception:  # noqa: BLE001 — 読めなければ空（利益根拠は出さない）
+        return {}
+    return out
+
+
+def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback=None) -> dict:
+    """商品中心のビュー全体。lotteries / registry / msrp / buyback は公開済み JSON を読んだ辞書（壊れていても空として扱う）。"""
     now = (now or now_jst()).astimezone(JST)
     today = now.strftime("%Y-%m-%d")
     lot, reg, ms = _d(lotteries), _d(registry), _d(msrp)
+    bb_rows: list = []
+    bb_cfg: dict = {}
+    try:
+        from src.tcg import buyback as _bb
+        bb_cfg = _bb.load_config()
+        bb_rows = _bb.annotate([r for r in _l(_d(buyback).get("rows")) if isinstance(r, dict)], bb_cfg, now)    # 鮮度は今の時刻で付け直す
+    except Exception:  # noqa: BLE001 — 買取の読み込みに失敗しても、抽選のページは出す（買取は「未確認」になる）
+        bb_rows, bb_cfg = [], {}
     master = {}
     for p in _l(reg.get("products")):
         if isinstance(p, dict) and _s(p.get("product_id")) and _s(p.get("tcg")):
@@ -186,14 +235,15 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None) -> dict
         name = _s(m.get("name")) or next((_s(v["ev"].get("product_name")) for v in evs if _s(v["ev"].get("product_name"))), b["product_id"])
         msrp_hit = pl.msrp_for(b["product_id"], b["tcg"], _s(m.get("product_type")) or None, msrp_rows) if m else None
         prios = [v["priority"] for v in evs if v["priority"]]
+        bbv = _buyback_for(b["product_id"], bb_rows, bb_cfg, now, msrp_hit) if bb_cfg else (None, pl.profit_view(msrp_hit))
         products.append({
             "tcg": b["tcg"], "product_id": b["product_id"], "canonical": b["canonical"], "name": name,
             "series": _s(m.get("series_name")) or None, "product_type": _s(m.get("product_type")) or None,
             "release_date": _first_date(m.get("release_date")) if m else None,       # ONE PIECE（マスタ無し）は作らない
             "official_url": _s(m.get("official_url")) or None,
             "image_url": _s(m.get("official_image_url")) or None,        # 表示専用（ポケカの公式一覧にある画像の URL。検査は描画側）
-            "profit": pl.profit_view(msrp_hit),
-            "buyback": None,                                       # TCG の買取は根拠のある実データが無い（作らない）。入ったときの差し込み口
+            "profit": bbv[1],
+            "buyback": bbv[0],                                     # 買取店自身のページの価格だけ（JAN で同一性・単位・条件・鮮度を確認したもの）
             "pack_price": (m.get("pack_price") if isinstance(m.get("pack_price"), int) and not isinstance(m.get("pack_price"), bool)
                            and m.get("pack_price") > 0 and _s(m.get("retail_price_basis")) == "pack" else None),     # 1 パックの公式価格（BOX の定価ではない）
             "events": evs, "status": st.aggregate_status(statuses),

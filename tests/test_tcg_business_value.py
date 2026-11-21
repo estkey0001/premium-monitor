@@ -222,3 +222,27 @@ def test_quantity_that_distinguishes_a_product_is_kept():
 def test_product_code_does_not_override_a_different_kind():
     assert m("【OP-18】スタートデッキ", OP)["product_id"] is None             # コードが同じでも種別が違えば別商品
     assert m("ブースターパック 神の支配【OP-18】", OP)["product_id"] == "op18"
+
+
+@pytest.mark.parametrize("name", [
+    "ポケモンカードゲーム「ハドウシーカー」ハイクラスパック",          # パックの種類違い（拡張パックではない）
+    "拡張パック ハドウシーカー 1パック",                              # 1 パックは BOX 商品ではない
+    "拡張パック ハドウシーカー バラパック",
+    "「ハドウシーカー」拡張パック プロモーションパック",
+    "拡張パック ハドウシーカー ミニ",
+])
+def test_pack_variants_never_match_the_box_product(name):
+    assert m(name)["product_match"] != "exact"
+
+
+def test_variant_words_must_agree_with_the_registry_name():
+    r = m("ブースターパック 神の支配【OP-18】 ドン!!カード付きセット", REG + OP)
+    assert r["product_match"] != "exact"
+    assert m("ワンピースカードゲーム「ONE PIECE Heroines Edition vol.2」プレシャスBOX", REG + OP)["product_match"] != "exact"
+    r = m("ワンピースカードゲーム「ONE PIECE HEROINES PRECIOUS BOX」", REG + OP)
+    assert r["product_id"] != "eb05"
+
+
+@pytest.mark.parametrize("name", ["「30th CELEBRATION」", "「ハドウシーカー」", "ポケモンカードゲーム 「ハドウシーカー」"])
+def test_quote_alone_is_not_enough_for_exact(name):
+    assert m(name)["product_match"] != "exact"

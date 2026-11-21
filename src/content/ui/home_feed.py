@@ -407,6 +407,20 @@ def _lottery_priority(ev, now: datetime) -> str | None:
         return None
 
 
+def _profit_evidence(now: datetime) -> dict:
+    """{(tcg, product_id): 利益欄}。買取店のページの価格（鮮度・同一性・単位・条件を確認したもの）から出した PROFITABLE のものだけを使う。読めなければ空。"""
+    try:
+        import json as _json
+        from pathlib import Path as _P
+        from src.tcg.hub import product_view as pv
+        d = _P(__file__).resolve().parents[3] / "exports" / "tcg"
+        load = lambda n: _json.loads((d / n).read_text(encoding="utf-8"))          # noqa: E731
+        return {k: v for k, v in pv.profit_map(load("pokemon_registry.json"), load("msrp.json"), load("buyback.json"), now).items()
+                if v.get("status") == "PROFITABLE"}
+    except Exception:  # noqa: BLE001 — 読めなくても HOME は出す（利益根拠は出さない）
+        return {}
+
+
 def _lottery_cards(catalog, model, tcg_report: dict, now: datetime) -> dict[str, list[FeedCard]]:
     """抽選系 4 セクションの候補（生成時点の runtime 状態で選ぶ。閲覧時の失効は属性と CSS で消す）。"""
     raw = {str(e.get("lottery_id")): e for e in ((tcg_report or {}).get("lotteries") or [])
@@ -415,6 +429,8 @@ def _lottery_cards(catalog, model, tcg_report: dict, now: datetime) -> dict[str,
     opened: list = []
     fresh: list = []
     release: list = []
+    from src.tcg.hub import product_view as pv
+    profits = _profit_evidence(now)
     for idx, vm in enumerate(model.vms):
         st = model.states.get(vm["id"])
         if not st or st["bucket"] >= rt.BUCKET_HIDDEN or vm.get("ann"):
@@ -425,6 +441,11 @@ def _lottery_cards(catalog, model, tcg_report: dict, now: datetime) -> dict[str,
         prio = _lottery_priority(ev, now)                 # 応募優先度（TCG ハブと同じ判定。未確認・未紐付けは WATCH で強く勧めない）
         if prio in ("S", "A"):
             vm = {**vm, "prio": prio}
+            kind, pid = pv._bind_state(ev) if isinstance(ev, dict) else ("", None)
+            pf = profits.get((str((ev or {}).get("tcg") or ""), pid)) if (kind == "exact" and st["status"] in ("OPEN", "ENDING_SOON")
+                                                       and str((ev or {}).get("channel") or "") == "STORE") else None   # 利益の前提は店頭受取。通販の抽選には出さない
+            if pf:                                          # 利益根拠あり + 受付中 + 確認済み（S/A）の抽選だけ。買取が未確認なら出さない
+                vm = {**vm, "prof": {"net": pf["net_profit"], "roi": pf["roi_pct"], "single": bool(pf.get("single_source"))}}
         card = card_from_lottery(vm, st, ev, label, idx)
         if vm.get("k") == rt.KIND_RELEASE:
             if st["status"] == "RELEASE_WAIT":

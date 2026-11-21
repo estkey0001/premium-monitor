@@ -56,6 +56,16 @@ def _prio_badge(vm: dict) -> str:
     return f'<span class="nu-badge nu-tone-info nu-prio" title="{esc(_PRIO_TITLE[p])}">優先 {esc(p)}</span>'
 
 
+def _profit_badge(vm: dict) -> str:
+    """買取店のページの価格から利益を出せた商品の抽選だけ（買取が未確認の商品には出さない）。"""
+    pf = vm.get("prof")
+    if not isinstance(pf, dict) or not isinstance(pf.get("net"), int):
+        return ""
+    tip = (f'買取店のページの価格と公式定価の差から計算（店頭受取・店頭持込の前提。交通費は含みません）。純利益 {pf["net"]:+,}円・ROI {pf["roi"]}%'
+           + ("。買取は 1 店のみ（単一ソース）" if pf.get("single") else ""))
+    return f'<span class="nu-badge nu-tone-info nu-profit" title="{esc(tip)}">利益根拠あり</span>'
+
+
 def render(vm: dict, state: dict, idx: int, *, hidden: bool = False) -> str:
     parts = [
         f'<article class="nu-card" data-nu-lot="{esc(vm["id"])}" data-nu-bucket="{state["bucket"]}"'
@@ -64,7 +74,7 @@ def render(vm: dict, state: dict, idx: int, *, hidden: bool = False) -> str:
         f'{" hidden" if hidden else ""}>',
         f'<div class="nu-card__head"><h3 class="nu-card__title">{esc(vm.get("t"))}</h3>'
         f'<span class="nu-badge nu-tone-{esc(state["tone"])}" data-status="{esc(state["status"])}">'
-        f'<span aria-hidden="true">{esc(state["icon"])}</span> {esc(state["label"])}</span>{_prio_badge(vm)}</div>',
+        f'<span aria-hidden="true">{esc(state["icon"])}</span> {esc(state["label"])}</span>{_prio_badge(vm)}{_profit_badge(vm)}</div>',
     ]
     if vm.get("sub"):
         parts.append(f'<p class="nu-card__sub">{esc(vm["sub"])}</p>')

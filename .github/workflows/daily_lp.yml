@@ -204,6 +204,14 @@ jobs:
         env:
           PYTHONPATH: .
 
+      # 5.05 TCG の国内買取価格（Route T1: 公式定価 → 買取店）。買取店自身のページだけを polite.py 経由で読む。
+      #      失敗した店の古い行は日付を進めずに残す（鮮度で STALE になり、利益に使われない）。失敗しても LP の更新は止めない。
+      - name: Collect TCG buyback
+        run: python scripts/collect_tcg_buyback.py
+        continue-on-error: true
+        env:
+          PYTHONPATH: .
+
       # 5.1 新商品・新しいイベントの発見（Phase 27）: Apple 公式（iPhone）と TCG の生成物から、人が確認する候補を作る。
       # 読むだけ（robots.txt・間隔・正直な User-Agent・403 は止める）・正本（config/products.yaml・products の表）に
       # 登録しない・送信しない・Secrets を渡さない。失敗しても LP の更新は止めない（報告だけ）

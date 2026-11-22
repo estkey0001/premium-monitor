@@ -40,7 +40,7 @@ OUTLIER_REVIEW = "OUTLIER_REVIEW"
 ID_CONFIRMED = "CONFIRMED"
 
 _DEFAULTS = {
-    "freshness": {"page_date_fresh_days": 1, "page_asof_tolerance_minutes": 30, "observed_max_hours": 8},
+    "freshness": {"page_date_fresh_days": 1, "page_asof_tolerance_minutes": 30, "observed_max_hours": 8, "future_tolerance_minutes": 5},
     "outlier": {"ratio": 1.5},
     "surge": {"yen": 1000, "pct": 15},
     "route_costs": {},
@@ -234,10 +234,13 @@ def classify_freshness(row: dict, cfg: dict, now: datetime) -> tuple[str, str]:
     if row.get("carried_over"):
         return STALE, "取得に失敗したので前回の行を引き継いでいる（新鮮とは言わない）"
     fr = cfg.get("freshness") or {}
+    from src.tcg import runtime_freshness as rf          # 生成時とページ表示時で同じ規則（しきい値は設定が唯一の定義）
+    mx, fut = rf.thresholds(cfg)
     obs = _parse_iso(row.get("observed_at"))
-    if obs is None or obs > now + timedelta(minutes=5):
-        return UNKNOWN_FRESHNESS, "取得時刻が読めない（または未来）"
-    if now - obs > timedelta(hours=float(fr.get("observed_max_hours", 8))):
+    age = rf.evaluate(row.get("observed_at"), now, mx, fut)
+    if obs is None or age == UNKNOWN_FRESHNESS:
+        return UNKNOWN_FRESHNESS, "取得時刻が読めない（タイムゾーンが無い・未来を含む）"
+    if age == STALE:
         return STALE, "取得してから時間が経っている（取得に失敗した日の古い価格）"
     basis = ((cfg.get("shops") or {}).get(row.get("shop")) or {}).get("freshness_basis")
     if basis == "page_asof":
@@ -348,7 +351,7 @@ def profit_for(summary: dict, msrp: Optional[dict], cfg: dict) -> dict:
     return {
         "status": PROFITABLE if net > 0 else NO_PROFIT, "reason": None,
         "net_profit": net, "roi_pct": round(net / acq * 100, 1), "sell_price": sell["price"], "sell_shop": sell["shop"],
-        "acquisition_cost": acq, "retail_price": msrp["retail_price"],
+        "acquisition_cost": acq, "retail_price": msrp["retail_price"], "sell_observed_at": sell.get("observed_at"),
         "route": route.get("label"), "route_note": route.get("note"),
         "single_source": bool(summary.get("single_source")),
     }

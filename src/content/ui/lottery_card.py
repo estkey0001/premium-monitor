@@ -63,7 +63,15 @@ def _profit_badge(vm: dict) -> str:
         return ""
     tip = (f'買取店のページの価格と公式定価の差から計算（店頭受取・店頭持込の前提。交通費は含みません）。純利益 {pf["net"]:+,}円・ROI {pf["roi"]}%'
            + ("。買取は 1 店のみ（単一ソース）" if pf.get("single") else ""))
-    return f'<span class="nu-badge nu-tone-info nu-profit" title="{esc(tip)}">利益根拠あり</span>'
+    from src.tcg import buyback as _bb, runtime_freshness as _rf
+    cfg = _bb.load_config()
+    g = f'data-fb-group="{esc(vm.get("id"))}"'
+    # 閲覧時に取得時刻から鮮度を判定し直す（最初は hidden。FRESH を確認できたときだけ出す）。8 時間を超えたら「再確認待ち」にする
+    live = (f'<span class="nu-badge nu-tone-info nu-profit" data-fb-live {g} {_rf.attrs(pf.get("obs"), cfg)} hidden title="{esc(tip)}">'
+            f'利益根拠あり</span>')
+    stale = (f'<span class="nu-badge nu-tone-neutral" data-fb-stale {g} data-fb-max="{_rf.thresholds(cfg)[0]:g}" '
+             f'title="取得から{_rf.thresholds(cfg)[0]:g}時間を超えた買取価格は、利益の根拠にしません">買取価格 再確認待ち</span>')
+    return live + stale
 
 
 def render(vm: dict, state: dict, idx: int, *, hidden: bool = False) -> str:

@@ -92,7 +92,7 @@ nav.jump a{flex:none;display:inline-flex;align-items:center;border:1px solid var
 .pcard>.pmeta,.pcard>.chips,.pcard>.pfoot,.pcard>.pnote{grid-column:1/-1}.pnote.nw{white-space:nowrap}
 .pmeta{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 12px;margin:0}.pmeta dl{display:contents;margin:0}.pmeta dl>div{min-width:0;display:flex;gap:4px;align-items:baseline}
 .pmeta dd small{display:block;font-weight:400;color:var(--mut);font-size:12px}.pmeta dt{color:var(--mut);font-size:12px;line-height:1.4}.pmeta dd{margin:0;font-weight:700;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
-.pnote,.pcard>p.pnote{margin:0;color:var(--mut);font-size:13px}
+[data-fb-live][hidden],[data-fb-stale][hidden]{display:none!important}.pnote,.pcard>p.pnote{margin:0;color:var(--mut);font-size:13px}
 .chips{display:flex;flex-wrap:wrap;gap:4px}.chip{border:1px solid var(--line);border-radius:8px;padding:0 8px;font-size:12px;line-height:1.6;color:var(--mut)}
 .chip b{font-size:14px;color:var(--fg);margin-right:3px}
 .chip.info{border-color:var(--t-info-bd);background:var(--t-info-bg)}.chip.danger{border-color:var(--t-danger-bd);background:var(--t-danger-bg)}
@@ -153,6 +153,15 @@ main{padding:12px}h1{font-size:20px}h2{margin:1.2em 0 .4em}.sum{gap:6px}.sum .c{
 .pfoot details[open]{flex-basis:100%}.lt tr.ev{margin:6px 0;padding:4px 10px}.box{margin:6px 0}}
 @media(min-width:901px){.dot{display:none!important}}
 """
+
+from src.tcg import runtime_freshness as rf               # noqa: E402
+
+
+def _CFG() -> dict:
+    """買取の設定（しきい値は config/tcg_buyback.yaml が唯一の定義。ページの属性に出す値もここから）。"""
+    from src.tcg import buyback as _bb
+    return _bb.load_config()
+
 
 JS = """
 (function(){try{
@@ -355,6 +364,7 @@ def _img_block(p: dict) -> str:
 
 
 def _product_card(p: dict, i: int, yr: str) -> str:
+    cfg = _CFG()
     pr = p["profit"]
     m = pr["msrp"]
     c = p["counts"]
@@ -376,15 +386,21 @@ def _product_card(p: dict, i: int, yr: str) -> str:
         unknown.append("定価")
     bbv = p.get("buyback")
     bb_note = ""
+    premise_html = ""
     if not bbv:
         unknown.append("最高買取")                              # 買取店自身のページの価格が無い（作らない）
     else:
         ex, lst = bbv.get("highest_executable"), bbv.get("highest_listed")
         if ex:
             src = "単一ソース" if bbv.get("single_source") else f'{bbv["shop_count"]}店'
-            meta += (f'<div><dt>最高買取</dt><dd title="{_e(ex["shop_name"])}・{_e(ex.get("unit") or "")}・確認 {_e(_short(ex["checked_at"]))}">'
+            fb = f'data-fb-live data-fb-group="p{i}" {rf.attrs(ex["checked_at"], cfg)} hidden'      # 表示時に鮮度を判定し直す（FRESH でなければ出さない）
+            meta += (f'<div {fb}><dt>最高買取</dt><dd title="{_e(ex["shop_name"])}・{_e(ex.get("unit") or "")}・確認 {_e(_short(ex["checked_at"]))}">'
                      f'{_yen(ex["price"])}<small>{_e(ex["shop_name"])}・{_e(ex.get("unit") or "")}・{_e(src)}</small></dd></div>')
-            meta += f'<div><dt>確認</dt><dd>{_e(_short(ex["checked_at"]))}</dd></div>'
+            meta += f'<div {fb}><dt>確認</dt><dd>{_e(_short(ex["checked_at"]))}</dd></div>'
+            stale_ref = (f'<div data-fb-stale data-fb-group="p{i}" data-fb-max="{rf.thresholds(cfg)[0]:g}"><dt>買取（参考）</dt><dd>{_yen(ex["price"])}'
+                         f'<small>{_e(ex["shop_name"])}・{_e(ex.get("unit") or "")}・価格再確認待ち（<span data-fb-why>表示時点の鮮度を確認できていません</span>）'
+                         f'・取得 {_e(_short(ex["checked_at"]))}</small></dd></div>')
+            meta += stale_ref
         elif bbv.get("outlier"):
             bb_note = "最高の買取価格が他店と大きく離れているため、確認待ちです（利益に使っていません）。"
             unknown.append("最高買取")
@@ -394,23 +410,33 @@ def _product_card(p: dict, i: int, yr: str) -> str:
             bb_note = "掲載されている買取価格は、鮮度か条件を確認できていないため参考表示です（利益に使っていません）。"
             unknown.append("最高買取")
     if pr.get("net_profit") is not None:
-        meta += (f'<div><dt>純利益</dt><dd title="{_e(pr.get("route") or "")}">{_e(pr["label"])}'
+        fp = f'data-fb-live data-fb-group="p{i}-pf" {rf.attrs(pr.get("sell_observed_at"), cfg)} hidden'
+        meta += (f'<div {fp}><dt>純利益</dt><dd title="{_e(pr.get("route") or "")}">{_e(pr["label"])}'
                  f'<small>基準: {_e(pr.get("sell_shop_name") or "")} 買取 {_yen(pr["sell_price"])}・定価 {_yen(pr["acquisition_cost"])}</small></dd></div>'
-                 f'<div><dt>ROI</dt><dd>{pr["roi_pct"]:.1f}%</dd></div>')
-        bb_note = (f'前提: {pr.get("route") or ""}（交通費・時間は含みません）'
-                   + ("・買取は 1 店のみ（単一ソース）" if pr.get("single_source") else "")) + (" " + bb_note if bb_note else "")
+                 f'<div {fp}><dt>ROI</dt><dd>{pr["roi_pct"]:.1f}%</dd></div>')
+        premise = (f'前提: {pr.get("route") or ""}（交通費・時間は含みません）'
+                   + ("・買取は 1 店のみ（単一ソース）" if pr.get("single_source") else ""))
+        premise_html = f'<span class="pnote" {fp}>{_e(premise)}</span>'            # 前提も、価格が新鮮なときだけ出す
+        meta += (f'<div data-fb-stale data-fb-group="p{i}-pf" data-fb-max="{rf.thresholds(cfg)[0]:g}"><dt>純利益・ROI</dt><dd>価格再確認待ち'
+                 f'<small>取得から{rf.thresholds(cfg)[0]:g}時間を超えた買取価格は、利益の根拠にしません</small></dd></div>')
     else:
         unknown.append("利益")
-    unk = (f'<span class="pnote" title="{_e(pr["reason"])}（利益: {_e(pr["label"])}）">未確認の項目: {_e("・".join(unknown))}</span>'
+    plabel = pr["label"] if pr.get("net_profit") is None else "算出済み（表示は価格の鮮度確認後）"      # 金額は鮮度の判定を通る行だけに出す
+    unk = (f'<span class="pnote" title="{_e(pr["reason"])}（利益: {_e(plabel)}）">未確認の項目: {_e("・".join(unknown))}</span>'
            if unknown else "")
-    unk = unk + (f'<span class="pnote">{_e(bb_note)}</span>' if bb_note else "")
+    unk = unk + (f'<span class="pnote">{_e(bb_note)}</span>' if bb_note else "") + premise_html
     meta = f'<div class="pmeta">{"<dl>" + meta + "</dl>" if meta else ""}{unk}</div>' if (meta or unk) else ""
     chip = lambda n, lbl, tone: f'<span class="chip {tone}"><b>{n}</b>{lbl}</span>' if n else ""
     chips = chip(c["open"], "受付中", "info") + chip(c["ending_soon"], "締切間近", "danger") + chip(c["upcoming"], "近日開始", "info")
     chips = f'<div class="chips">{chips}</div>' if chips else '<p class="pnote nw">受付中・開始前なし</p>'
     off = _product_link(p["official_url"]) or '<span class="mut">公式ページ未確認</span>'
+    if pr.get("net_profit") is not None:                        # 補足の利益の金額も、表の行と同じく表示時に鮮度を判定する
+        profit_note = (f'<span {fp}>利益 {_e(pr["label"])}（{_e(pr["reason"])}）</span>'
+                       f'<span data-fb-stale data-fb-group="p{i}-pf" data-fb-max="{rf.thresholds(cfg)[0]:g}">利益 価格再確認待ち</span>')
+    else:
+        profit_note = f'利益 {_e(pr["label"])}（{_e(pr["reason"])}）'
     more = (f'<details><summary>補足</summary><div><span class="pnote">{_e(ptype) + "・" if ptype else ""}'
-            f'{"" if m else "定価 未確認・"}利益 {_e(pr["label"])}（{_e(pr["reason"])}）</span>{off}</div></details>')
+            f'{"" if m else "定価 未確認・"}{profit_note}</span>{off}</div></details>')
     lot_link = (f'<a href="#lottery" data-pf="p{i}">この商品の抽選 {c["live"]} 件を表で見る</a>' if c["live"]
                 else '<span class="pnote">この商品の抽選 0 件</span>')
     return (f'<section class="pcard" id="p{i}">{_img_block(p)}<div class="phead">'
@@ -615,7 +641,7 @@ def render(hub: dict, *, generated_label: Optional[str] = None) -> str:
     return ('<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>TCG 抽選ハブ | プレ値速報</title><meta name="robots" content="index,follow">'
             f'<meta name="tcg-source-generated-at" content="{_e(ck["lotteries_generated_at"] or "")}"><style>{legacy}{CSS}</style></head>'
-            f'<body>{nav}<main>{body}</main><script>{JS}</script></body></html>')
+            f'<body>{nav}<main>{body}</main><script>{JS}{rf.JS_FRESHNESS}</script></body></html>')
 
 
 def render_from_json(lotteries, registry, msrp, now: Optional[datetime] = None, buyback=None) -> str:

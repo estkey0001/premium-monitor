@@ -445,7 +445,7 @@ def _lottery_cards(catalog, model, tcg_report: dict, now: datetime) -> dict[str,
             pf = profits.get((str((ev or {}).get("tcg") or ""), pid)) if (kind == "exact" and st["status"] in ("OPEN", "ENDING_SOON")
                                                        and str((ev or {}).get("channel") or "") == "STORE") else None   # 利益の前提は店頭受取。通販の抽選には出さない
             if pf:                                          # 利益根拠あり + 受付中 + 確認済み（S/A）の抽選だけ。買取が未確認なら出さない
-                vm = {**vm, "prof": {"net": pf["net_profit"], "roi": pf["roi_pct"], "single": bool(pf.get("single_source"))}}
+                vm = {**vm, "prof": {"net": pf["net_profit"], "roi": pf["roi_pct"], "single": bool(pf.get("single_source")), "obs": pf.get("sell_observed_at")}}
         card = card_from_lottery(vm, st, ev, label, idx)
         if vm.get("k") == rt.KIND_RELEASE:
             if st["status"] == "RELEASE_WAIT":

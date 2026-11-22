@@ -46,6 +46,7 @@ def profit_view(msrp: Optional[dict], calc: Optional[dict] = None) -> dict:
         return {"msrp": msrp, "net_profit": calc["net_profit"], "roi_pct": calc["roi_pct"],
                 "label": f'{calc["net_profit"]:+,}円', "reason": calc.get("route_note") or "", "status": calc["status"],
                 "sell_price": calc["sell_price"], "sell_shop": calc["sell_shop"], "acquisition_cost": calc["acquisition_cost"],
+                "sell_observed_at": calc.get("sell_observed_at"),
                 "route": calc.get("route"), "single_source": bool(calc.get("single_source"))}
     reason = (calc or {}).get("reason") or PENDING_REASON
     return {"msrp": msrp, "net_profit": None, "roi_pct": None, "label": PENDING_LABEL, "reason": reason,

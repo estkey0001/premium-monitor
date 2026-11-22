@@ -83,10 +83,35 @@ def test_stale_tcg_html_is_detected_by_850(tmp_path):
 def test_850_in_deploy_check_uses_the_tested_function():
     """#850 は、上のテストで確かめた関数をそのまま使っている（本物の deploy-check でも古いページ fixture で Errors 1 を確認済み）。"""
     src = (ROOT / "scripts" / "deploy_check.py").read_text(encoding="utf-8")
-    assert 'tcg_page_matches_source(_lot850, PUBLIC_DIR / "tcg.html")' in src
+    assert 'tcg_page_source_check(_lot850, PUBLIC_DIR / "tcg.html")' in src
     assert '_add(850, "tcg_page_matches_source", _ok850' in src
+    assert "return tcg_page_matches_source(lotteries_path, page_path)" in src
 
 
 def test_deploy_check_has_workflow_checks():
     src = (ROOT / "scripts" / "deploy_check.py").read_text(encoding="utf-8")
     assert "workflow_checkout_latest_main" in src and "workflow_py311_gate" in src
+
+
+def test_850_fails_closed_in_production_but_not_in_dev(tmp_path):
+    """公開する tcg.html があるのに元データが無い・壊れている・generated_at が無いときは ERROR（検査を飛ばさない）。TCG 未使用の環境は対象外。"""
+    from deploy_check import tcg_page_source_check
+    page, lot = tmp_path / "tcg.html", tmp_path / "lotteries.json"
+    meta = '<meta name="tcg-source-generated-at" content="%s">'
+    assert tcg_page_source_check(lot, page) is None                                        # どちらも無い: 開発 fixture・TCG 未使用 → 対象外
+    page.write_text(meta % "2026-11-22T01:00:00+09:00", encoding="utf-8")
+    assert tcg_page_source_check(lot, page)[0] is False                                     # 元データが無い（検査を飛ばさず ERROR）
+    lot.write_text("{broken", encoding="utf-8")
+    assert tcg_page_source_check(lot, page)[0] is False                                     # 元データが壊れている
+    lot.write_text(json.dumps({"events": []}), encoding="utf-8")
+    assert tcg_page_source_check(lot, page)[0] is False                                     # generated_at が無い
+    lot.write_text(json.dumps({"generated_at": "2026-11-22T01:00:00+09:00"}), encoding="utf-8")
+    assert tcg_page_source_check(lot, page)[0] is True                                      # 一致
+    page.unlink()
+    assert tcg_page_source_check(lot, page)[0] is False                                     # 元データだけあってページが無い
+
+
+def test_850_in_deploy_check_uses_the_fail_closed_helper():
+    src = (ROOT / "scripts" / "deploy_check.py").read_text(encoding="utf-8")
+    assert 'tcg_page_source_check(_lot850, PUBLIC_DIR / "tcg.html")' in src and "if _r850 is not None" in src
+    assert "if _lot850.exists():" not in src                                                # 元データが無いときに検査ごと飛ばす形に戻さない

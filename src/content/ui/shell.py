@@ -20,6 +20,7 @@ from src.content.ui import catalog as cl
 from src.content.ui import home_feed, vm_check
 from src.content.ui import categories as cats
 from src.content.ui import runtime as rt
+from src.tcg import runtime_freshness as rfresh
 from src.content.ui.components import esc
 from src.content.ui.icons import icon
 from src.content.ui.shared_css import site_nav
@@ -1139,6 +1140,7 @@ def render_root(ctx: ShellContext) -> str:
         f'<script type="application/json" id="nu-lot-data">{rt.data_json(model.vms)}</script>'
         f'<script type="application/json" id="nu-catalog">{esc_json(catalog.data_json())}</script>'
         f'<script>{rt.runtime_js()}</script>'
+        f'<script>{rfresh.JS_FRESHNESS}</script>'
         f'{mypage.script(details)}{admin.script()}'
         f'{_router_script()}'
         f'</div>{ROOT_END_MARK}'

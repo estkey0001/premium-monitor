@@ -48,6 +48,15 @@ def tcg_page_matches_source(lotteries_path, page_path) -> tuple:
     return bool(gen) and bool(m) and m.group(1) == gen, gen
 
 
+def tcg_page_source_check(lotteries_path, page_path):
+    """#850 の判定（production のときだけ fail-closed）。公開する docs/tcg.html か元データのどちらかがあるなら必ず照合する。
+    tcg.html があるのに lotteries.json が無い・壊れている・generated_at が無いときは ERROR（検査を飛ばさない）。
+    どちらも無い環境（TCG を使わない開発環境・fixture）だけ None（対象外）。戻り値は (ok, 取得時刻) または None。"""
+    if not Path(lotteries_path).exists() and not Path(page_path).exists():
+        return None
+    return tcg_page_matches_source(lotteries_path, page_path)
+
+
 def check() -> list[dict]:
     """デプロイチェックを実行する。結果リストを返す。"""
     results = []
@@ -8655,11 +8664,13 @@ def _check_tcg_lottery(report: dict) -> list[dict]:
     # #850 tcg.html は、いま公開している exports/tcg/lotteries.json から作ったページである（生成に失敗して前回のページが残っていない）。
     # build-public-lp は壊れた入力・生成の失敗を警告にして続行するため、ここで「元データの取得時刻がページに入っているか」を照合する。
     _lot850 = PROJECT_ROOT / "exports" / "tcg" / "lotteries.json"
-    if _lot850.exists():
-        _ok850, _gen850 = tcg_page_matches_source(_lot850, PUBLIC_DIR / "tcg.html")
+    _r850 = tcg_page_source_check(_lot850, PUBLIC_DIR / "tcg.html")
+    if _r850 is not None:                                          # docs/tcg.html（production の公開物）があるなら、元データが無くても検査する
+        _ok850, _gen850 = _r850
         _add(850, "tcg_page_matches_source", _ok850,
              "docs/tcg.html は、いまの exports/tcg/lotteries.json（取得時刻 " + (_gen850[:16] or "不明") + "）から作られている",
-             "docs/tcg.html が無い、または元データと取得時刻が違う（生成に失敗して前回のページが残っている）。build-public-lp のログの「⚠️」を確認")
+             "docs/tcg.html が無い、または元データ（exports/tcg/lotteries.json）が無い・壊れている・generated_at が無い・取得時刻が違う"
+             "（生成に失敗して前回のページが残っている）。build-public-lp のログの「⚠️」を確認")
 
     # #851 TCG の買取（exports/tcg/buyback.json）: 同一性（JAN）・単位が対象商品と一致し、実行可能な行は FRESH ＋ 条件が新品未開封、重複行が無い。
     # #852 tcg.html に「純利益」が出ているなら、根拠になる実行可能な買取の行がある（買取が無いのに利益を出さない）。
@@ -8696,6 +8707,78 @@ def _check_tcg_lottery(report: dict) -> list[dict]:
             _ok852 = all(("<dt>最高買取</dt>" in c) for c in _cards852 if "<dt>純利益</dt>" in c)       # カードごとに、純利益には最高買取の根拠がある
             _add(852, "tcg_profit_has_buyback_evidence", _ok852,
                  "tcg.html の純利益が出ている商品カードには、必ず最高買取（実行可能な買取）が出ている", "最高買取の無い商品に純利益が出ている")
+
+    # #853 買取の鮮度は、ページを見る時点でも成立する: tcg.html の「最高買取・純利益・ROI」は data-fb-live（最初は hidden）で、
+    # 取得時刻（タイムゾーン付き）と設定のしきい値を持ち、共通の JS（tcgFreshApply）がページに入っている。HOME も同じ JS を入れている。
+    _tcg853 = PUBLIC_DIR / "tcg.html"
+    if _tcg853.exists():
+        import json as _j853
+        import re as _re853
+        from src.tcg import buyback as _b853, runtime_freshness as _rf853
+        _h853 = _tcg853.read_text(encoding="utf-8")
+        _cfg853 = _b853.load_config()
+        _mx853, _fut853 = _rf853.thresholds(_cfg853)
+        _bad853: list = []
+
+        def _num853(v):
+            try:
+                return float(v)
+            except (TypeError, ValueError):
+                return None
+
+        # 取得時刻の属性は、元データ（exports/tcg/buyback.json の各行の observed_at）のどれかと一致する（生成時刻などで偽装しない）
+        _obs853: set = set()
+        try:
+            for _r in (_j853.loads((PROJECT_ROOT / "exports" / "tcg" / "buyback.json").read_text(encoding="utf-8")).get("rows") or []):
+                _d = _rf853.parse_aware(_r.get("observed_at"))
+                if _d:
+                    _obs853.add(_d.replace(microsecond=0).isoformat())
+        except Exception:  # noqa: BLE001
+            _obs853 = set()
+
+        def _check_attrs853(_a: str, _where: str) -> None:
+            _o = _re853.search(r'data-fb-obs="([^"]*)"', _a)
+            _m = _re853.search(r'data-fb-max="([^"]*)"', _a)
+            _f = _re853.search(r'data-fb-fut="([^"]*)"', _a)
+            if not _o or _rf853.parse_aware(_o.group(1)) is None:
+                _bad853.append(f"{_where}: 取得時刻（タイムゾーン付き）が読めない")
+            elif _o.group(1) not in _obs853:
+                _bad853.append(f"{_where}: 取得時刻が元データ（buyback.json の observed_at）と一致しない")
+            if not _m or _num853(_m.group(1)) != _mx853 or not _f or _num853(_f.group(1)) != _fut853:
+                _bad853.append(f"{_where}: しきい値が設定と違う")
+            if " hidden" not in " " + _a:
+                _bad853.append(f"{_where}: 最初から表示されている（JS が鮮度を確認する前に出てしまう）")
+
+        _live = _re853.findall(r"<(?:div|span) ([^>]*data-fb-live[^>]*)>", _h853)
+        for _a in _live:
+            _check_attrs853(_a, "tcg.html")
+        # 鮮度に依存する行（最高買取・確認・純利益・ROI・前提）は、1 つ残らず data-fb-live（属性なしの <div> に戻った退行も検出する）
+        for _g in _re853.findall(r"<div((?: [^>]*)?)><dt>(?:最高買取|確認|純利益|ROI)</dt>", _h853):
+            if "data-fb-live" not in _g:
+                _bad853.append("最高買取・確認・純利益・ROI の行が鮮度の判定なしで出ている")
+        for _g in _re853.findall(r"<span((?: [^>]*)?)>前提:", _h853):
+            if "data-fb-live" not in _g:
+                _bad853.append("利益の前提が鮮度の判定なしで出ている")
+        # 鮮度の判定の外（live / stale 以外）に、買取由来の利益の金額（+1,800円 など）が出ていない（補足・title など、行の見落としを検出する）
+        _rest853 = _re853.sub(r"<div [^>]*data-fb-live[^>]*>.*?</div>|<span [^>]*data-fb-live[^>]*>.*?</span>", "", _h853, flags=_re853.S)
+        if _re853.search(r"利益[ ]*[+\-−][\d,]+円|純利益[^<]{0,12}[+\-−][\d,]+円", _rest853):
+            _bad853.append("利益の金額が、鮮度の判定の外（補足・title など）に出ている")
+        # 共通の JS が、そのまま（改変なしで）ページに入っている（判定式を壊す・別の JS にする退行を検出する）
+        if (_live or "最高買取</dt>" in _h853) and _rf853.JS_FRESHNESS not in _h853:
+            _bad853.append("共通の JS（runtime_freshness.JS_FRESHNESS）が、そのままの形でページに入っていない")
+        _hp853 = PUBLIC_DIR / "index.html"
+        if _hp853.exists():
+            _hh853 = _hp853.read_text(encoding="utf-8")
+            for _g in _re853.findall(r"<span ([^>]*)>利益根拠あり</span>", _hh853):
+                if "data-fb-live" not in _g:
+                    _bad853.append("HOME の利益根拠が鮮度の判定なしで出ている")
+                else:
+                    _check_attrs853(_g, "HOME")
+            if "利益根拠あり" in _hh853 and _rf853.JS_FRESHNESS not in _hh853:
+                _bad853.append("HOME に共通の JS がそのままの形で入っていない")
+        _add(853, "tcg_buyback_runtime_freshness", not _bad853,
+             f"tcg.html の最高買取・純利益・ROI は、表示時に取得時刻から鮮度を判定し直す（{_mx853:g} 時間を超えたら出さない。HOME の利益根拠も同じ）",
+             "；".join(sorted(set(_bad853))[:4]))
 
     # #841 UI Phase 10: 公式の発売予定（公式のページ・発売日が読める・今日以降）は、新UIの抽選・予約に全部出ている
     # （旧UIの「販売・入荷・プレミア」の発売予定の後継。日付の書き方の違い（2026.11.21 など）で黙って消えない）

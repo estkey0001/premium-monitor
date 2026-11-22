@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22 02:02 JST",
+  "generated_at": "2026-11-22 22:10 JST",
   "scores": {
     "Security": 90,
     "Reliability": 85,
@@ -22,7 +22,7 @@
     ],
     "Medium": [
       "stale率 62%（サンプル/手動データ鮮度・日次運用で改善）",
-      "item_url率 47%（確認導線/再現性の改善余地）",
+      "item_url率 48%（確認導線/再現性の改善余地）",
       "Coverage 7カテゴリ（Apple/GPU等の拡充で候補増）"
     ],
     "Low": [
@@ -50,11 +50,11 @@
     "auth_billing_env_gated": true
   },
   "data_quality": {
-    "stale_rate": 0.6176,
-    "zero_rate": 0.1597,
-    "item_url_rate": 0.4748,
+    "stale_rate": 0.6203,
+    "zero_rate": 0.1603,
+    "item_url_rate": 0.4768,
     "usable": 76,
-    "total": 238,
+    "total": 237,
     "ebay_configured": false,
     "coverage_score": 44,
     "main_routes": 0,

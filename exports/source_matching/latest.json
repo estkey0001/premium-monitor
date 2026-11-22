@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22 02:02 JST",
+  "generated_at": "2026-11-22 22:10 JST",
   "scope": "商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）",
   "accuracy": {
     "product_match_accuracy": 1.0,
@@ -7,8 +7,8 @@
     "model_match_accuracy": 1.0,
     "condition_match_accuracy": 1.0,
     "confirmed_mismatches_active": 0,
-    "detected_mismatches_total": 1,
-    "detected_mismatches_rejected": 1,
+    "detected_mismatches_total": 0,
+    "detected_mismatches_rejected": 0,
     "independently_verified_exact": 14,
     "unverifiable_trusted": 220,
     "accessory_misclassification": 0,
@@ -26,12 +26,11 @@
     "false_main_promotion": 0
   },
   "totals": {
-    "total": 238,
-    "product_mismatch_or_unverified": 224,
+    "total": 237,
+    "product_mismatch_or_unverified": 223,
     "model_unverifiable": 220,
-    "main_rejected": 224,
+    "main_rejected": 223,
     "model_match": 17,
-    "model_mismatch": 1,
     "manual_review_required": 73,
     "accessory_detected": 7,
     "exact_product_match": 14,
@@ -59,17 +58,6 @@
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
-      "main_eligible": 0
-    },
-    "カメラのキタムラ": {
-      "total": 10,
-      "product_mismatch_or_unverified": 10,
-      "model_mismatch": 1,
-      "main_rejected": 10,
-      "model_unverifiable": 9,
-      "manual_review_required": 5,
-      "exact_product_match": 0,
-      "capacity_mismatch": 0,
       "main_eligible": 0
     },
     "モバイル一番": {
@@ -145,6 +133,17 @@
       "model_unverifiable": 9,
       "main_rejected": 9,
       "manual_review_required": 6,
+      "exact_product_match": 0,
+      "capacity_mismatch": 0,
+      "model_mismatch": 0,
+      "main_eligible": 0
+    },
+    "カメラのキタムラ": {
+      "total": 9,
+      "product_mismatch_or_unverified": 9,
+      "model_unverifiable": 9,
+      "main_rejected": 9,
+      "manual_review_required": 5,
       "exact_product_match": 0,
       "capacity_mismatch": 0,
       "model_mismatch": 0,
@@ -297,19 +296,7 @@
     }
   },
   "false_main_promotion": [],
-  "detected_mismatches": [
-    {
-      "product_id": "prod_x100vi",
-      "source": "カメラのキタムラ",
-      "title": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点",
-      "kinds": [
-        "model"
-      ],
-      "rejected": true,
-      "rejection_reason": "model_mismatch",
-      "usable_pro": false
-    }
-  ],
+  "detected_mismatches": [],
   "duplicate_price_pattern": [
     {
       "source_name": "フジヤカメラ",
@@ -334,7 +321,7 @@
         "new",
         "used"
       ],
-      "first_seen": 91.6,
+      "first_seen": 92.4,
       "last_seen": 0.1,
       "risk_level": "high",
       "possible_reason": [
@@ -365,7 +352,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.1,
+      "last_seen": 0.9,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -395,7 +382,7 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 103.6,
+      "first_seen": 104.4,
       "last_seen": 0.1,
       "risk_level": "high",
       "possible_reason": [
@@ -427,7 +414,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.1,
+      "last_seen": 0.9,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -457,8 +444,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 103.6,
-      "last_seen": 103.6,
+      "first_seen": 104.4,
+      "last_seen": 104.4,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -487,8 +474,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 103.6,
-      "last_seen": 103.6,
+      "first_seen": 104.4,
+      "last_seen": 104.4,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -517,8 +504,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 103.6,
-      "last_seen": 103.6,
+      "first_seen": 104.4,
+      "last_seen": 104.4,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -547,7 +534,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 45.1,
+      "last_seen": 45.9,
       "risk_level": "low",
       "possible_reason": [
         "same_price_multiple_skus"
@@ -757,6 +744,17 @@
       "main_eligible": 0
     },
     {
+      "source": "カメラのキタムラ",
+      "observations": 9,
+      "score": 70,
+      "identity": 0.0,
+      "capacity": 1.0,
+      "model": 1.0,
+      "condition": 1.0,
+      "freshness": 0.0,
+      "main_eligible": 0
+    },
+    {
       "source": "eBay sold(新品)",
       "observations": 5,
       "score": 70,
@@ -809,17 +807,6 @@
       "model": 1.0,
       "condition": 1.0,
       "freshness": 0.0,
-      "main_eligible": 0
-    },
-    {
-      "source": "カメラのキタムラ",
-      "observations": 10,
-      "score": 68,
-      "identity": 0.0,
-      "capacity": 1.0,
-      "model": 0.9,
-      "condition": 1.0,
-      "freshness": 0.1,
       "main_eligible": 0
     }
   ],

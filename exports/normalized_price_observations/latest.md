@@ -1,6 +1,6 @@
 # Normalized Price Observations
 
-生成: 2026-11-22 02:02 JST
+生成: 2026-11-22 22:10 JST
 
 全価格（買取/販売/出品/落札/海外/下取/公式）を単一スキーマに正規化。
 `price_role`（buy/sell/official/trade_in）を必ず付与し、
@@ -9,9 +9,9 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 
 ## サマリ
 
-- 総観測数: **238**
+- 総観測数: **237**
 - Beginner 利用可: 76 / Pro 利用可: 28
-- fresh(≤14日): 123
+- fresh(≤14日): 122
 
 ### price_role 別
 
@@ -19,13 +19,13 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 |---|---|
 | buy | 38 |
 | official | 49 |
-| sell | 151 |
+| sell | 150 |
 
 ### price_type 別
 
 | type | 件数 |
 |---|---|
-| buyback_price | 145 |
+| buyback_price | 144 |
 | flea_listing_price | 5 |
 | official_price | 49 |
 | overseas_listing_price | 5 |
@@ -38,7 +38,6 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 |---|---|
 | accessory_or_wrong_product | 5 |
 | duplicate_price_collision | 3 |
-| model_mismatch | 1 |
 | official_stale_over_180d | 1 |
 | price_zero | 38 |
 | sold_label_without_evidence | 5 |
@@ -52,12 +51,12 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPhone 17 Pro 512GB SI | official | official_price | ¥214,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 17 Pro Max 256G | official | official_price | ¥219,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 17 Pro Max 512G | official | official_price | ¥254,800 | medium | 9999.0d | メーカー公式/定価 |
-| iPhone 17 256GB SIMフリー | official | official_price | ¥159,800 | high | 0.1d | メーカー公式/定価 |
+| iPhone 17 256GB SIMフリー | official | official_price | ¥159,800 | high | 0.9d | メーカー公式/定価 |
 | iPhone 16 Pro 256GB SI | official | official_price | ¥159,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 16 Pro Max 256G | official | official_price | ¥189,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone 16 Pro Max 512G | official | official_price | ¥224,800 | medium | 9999.0d | メーカー公式/定価 |
-| iPhone Air 256GB SIMフリ | official | official_price | ¥189,800 | high | 0.1d | メーカー公式/定価 |
-| iPhone Duo 256GB SIMフリ | official | official_price | ¥364,800 | high | 0.1d | メーカー公式/定価 |
+| iPhone Air 256GB SIMフリ | official | official_price | ¥189,800 | high | 0.9d | メーカー公式/定価 |
+| iPhone Duo 256GB SIMフリ | official | official_price | ¥364,800 | high | 0.9d | メーカー公式/定価 |
 | iPhone Duo 1TB SIMフリー | official | official_price | ¥469,800 | medium | 9999.0d | メーカー公式/定価 |
 | iPhone Duo 2TB SIMフリー | official | official_price | ¥574,800 | medium | 9999.0d | メーカー公式/定価 |
 | MacBook Air M4 13インチ | official | official_price | ¥164,800 | medium | 9999.0d | メーカー公式/定価 |
@@ -69,11 +68,11 @@ ranking / sedori / LP はこの定義（src/market/normalized_prices.py）を唯
 | iPad Air M3 | official | official_price | ¥98,800 | medium | 9999.0d | メーカー公式/定価 |
 | Apple Watch Series 11 | official | official_price | ¥59,800 | medium | 9999.0d | メーカー公式/定価 |
 | Apple Watch Ultra 3 | official | official_price | ¥128,800 | medium | 9999.0d | メーカー公式/定価 |
-| AirPods Pro 3 | official | official_price | ¥42,800 | high | 0.1d | メーカー公式/定価 |
+| AirPods Pro 3 | official | official_price | ¥42,800 | high | 0.9d | メーカー公式/定価 |
 | AirPods Max | official | official_price | ¥84,800 | medium | 9999.0d | メーカー公式/定価 |
-| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 45.1d | メーカー公式/定価 |
+| Nintendo Switch 2 | official | official_price | ¥59,980 | high | 45.9d | メーカー公式/定価 |
 | Nintendo Switch 2 マリオカ | official | official_price | ¥59,980 | medium | 9999.0d | メーカー公式/定価 |
-| PlayStation 5 Pro | official | official_price | ¥137,980 | high | 0.1d | メーカー公式/定価 |
+| PlayStation 5 Pro | official | official_price | ¥137,980 | high | 0.9d | メーカー公式/定価 |
 | PlayStation 5 Digital  | official | official_price | ¥72,980 | medium | 9999.0d | メーカー公式/定価 |
 | Xbox Series X | official | official_price | ¥59,978 | medium | 9999.0d | メーカー公式/定価 |
 | RICOH GR IV | official | official_price | ¥211,800 | high | 0.0d | メーカー公式/定価 |

@@ -1,21 +1,21 @@
 {
-  "generated_at": "2026-11-22T00:27:48+09:00",
+  "generated_at": "2026-11-22T20:35:30+09:00",
   "summary": {
     "total": 60,
-    "ok": 18,
-    "failed": 42,
+    "ok": 17,
+    "failed": 43,
     "skip": 0,
-    "success_rate_pct": 30.0,
-    "saved_to_db": 18
+    "success_rate_pct": 28.3,
+    "saved_to_db": 17
   },
   "failure_reasons": [
     {
-      "reason": "price_not_found",
-      "count": 22
+      "reason": "site_blocked",
+      "count": 40
     },
     {
-      "reason": "site_blocked",
-      "count": 20
+      "reason": "price_not_found",
+      "count": 3
     }
   ],
   "shop_cutoffs": {
@@ -45,9 +45,11 @@
       ]
     },
     "src_kitamura": {
-      "reason": "price_not_found",
-      "after_attempts": 2,
+      "reason": "site_blocked",
+      "after_attempts": 1,
       "skipped": [
+        "gfx100rf",
+        "xt5",
         "gr3",
         "gr3x",
         "gr4",
@@ -99,17 +101,17 @@
     },
     "src_kitamura": {
       "jobs": 20,
-      "ok": 1,
+      "ok": 0,
       "html_saved": 0,
       "cloudflare": 0,
       "js_required": 0,
-      "playwright_attempted": 3,
-      "playwright_success": 3,
-      "screenshot_saved": 3,
+      "playwright_attempted": 1,
+      "playwright_success": 0,
+      "screenshot_saved": 0,
       "top_reason": {
-        "price_not_found": 19
+        "site_blocked": 20
       },
-      "diagnosis": "price_not_found"
+      "diagnosis": "site_blocked"
     }
   },
   "detail": [
@@ -165,7 +167,7 @@
       "price": 213000,
       "reason": "",
       "html_saved": false,
-      "html_size": 357992,
+      "html_size": 357831,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -173,7 +175,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 357992,
+      "rendered_html_size": 357831,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -425,7 +427,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X100VI&search=検索",
-      "buyback_page_html_size": 357992,
+      "buyback_page_html_size": 357831,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -671,567 +673,44 @@
     {
       "product_alias": "x100vi",
       "shop_id": "src_kitamura",
-      "status": "OK",
+      "status": "FAILED",
       "brand": "FUJIFILM",
-      "price": 187000,
-      "reason": "",
+      "price": 0,
+      "reason": "site_blocked",
       "html_saved": false,
-      "html_size": 674294,
+      "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
-      "selector_found": true,
-      "extracted_price": 187000,
+      "selector_found": false,
+      "extracted_price": null,
       "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 674294,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
-      "extraction_strategy": "kitamura_render",
-      "body_text_preview": "トクトク買取なら｢Bランク｣以上で上限価格買取り\n​\n買取り\n​\n全てのカテゴリから\nログイン\n見積一覧\nTOP\n店舗買取\n宅配買取\n出張買取\n新品・中古購入\nキーワードから商品を検索し、買取り価格の目安を調べる事ができます\nキーワードから買取り価格を調べる\n買取り対象商品\n交換レンズ\nデジタル一眼\nミラーレス一眼\nコンパクトデジタルカメラ\nフィルムカメラ\nビデオカメラ\nカメラアクセサリー・用品\n三脚\nスマホ\n腕時計\nブランド品・貴金属買取\nミラーレス一眼の高価買取り\n交換レンズ\nミラーレス一眼\nデジタル一眼レフ\nフィルムカメラ\n\n※表示価格は買取り最高値です\n\nカメラ用品 買取り事例\n一覧を見る \nDJI\nOsmo Action 3 AC2023\nトクトク買取対象\n買取上限価格\n9,270円\n\n状態：AB(良品)\n\n防水テスト未実施、外観小スレ・小キズあり\n\n2026年9月時点\nOM SYSTEM\nOM-1 Mark II ボディ\nトクトク買取対象\n買取上限価格\n181,200円\n\n状態：A(美品)\n\n外観スレ・キズあり（小）\n\n2026年9月時点\nキヤノン\nEOS R3 ボディ【2",
-      "matched_selectors": [
-        {
-          "selector": "[class*='price']",
-          "hits": 9
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "hits": 6
-        }
-      ],
-      "selector_candidates": [
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,151,800円",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ライカ  M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小ス",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,060,000円",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ニコン  NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,002,300円",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ハッセルブラッド  X2D II 100C トクトク買取対象買取上限価格1,002,300円状態：AB(良品)外観小スレ",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格335,400円",
-          "price": 335400,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格270,238円",
-          "price": 270238,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(良品) 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格187,000円",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "フジフイルム  X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格181,200円",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "OM SYSTEM  OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ソニー  FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270",
-          "price": 70200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格34,430円",
-          "price": 34430,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格30,434円",
-          "price": 30434,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        }
-      ],
-      "iframe_count": 3,
+      "extraction_strategy": "requests",
+      "body_text_preview": "",
+      "matched_selectors": [],
+      "selector_candidates": [],
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
-      "has_buyback_context": true,
-      "sales_price_sample": 1151800,
-      "buyback_link_candidates": [
-        {
-          "text": "トクトク買取なら｢Bランク｣以上で上限価格買取り",
-          "href": "/ec/page/service/tokutoku-kaitori"
-        },
-        {
-          "text": "見積一覧",
-          "href": "/ec/sell/item-price"
-        },
-        {
-          "text": "店舗買取",
-          "href": "/#selling-store-link"
-        },
-        {
-          "text": "宅配買取",
-          "href": "/ec/page/service/tyokusou-kaitori"
-        },
-        {
-          "text": "出張買取",
-          "href": "/ec/page/service/syuttyou-kaitori"
-        },
-        {
-          "text": "",
-          "href": "/lp/kaitori_kitamura/?utm_source=netchuko&utm_medium=owned&utm_campaign=kaitoricp"
-        },
-        {
-          "text": "",
-          "href": "/ec/service/syuttyou-kaitori.html"
-        },
-        {
-          "text": "",
-          "href": "/ec/sell/item-list?category_id=E023&maker=%E3%82%A2%E3%83%83%E3%83%97%E3%83%AB"
-        },
-        {
-          "text": "",
-          "href": "/ec/service/tokutoku-kaitori.html"
-        },
-        {
-          "text": "",
-          "href": "/ec/page/service/houjin-kaitori"
-        },
-        {
-          "text": "",
-          "href": "/static/contents/page/film_purchase.html"
-        },
-        {
-          "text": "キーワードから買取り価格を調べる",
-          "href": "/ec/sell?type=search"
-        },
-        {
-          "text": "キーワードから 買取り価格を調べる",
-          "href": "/ec/sell?type=search"
-        },
-        {
-          "text": "交換レンズ",
-          "href": "/ec/sell/item-list?category_id=C004"
-        },
-        {
-          "text": "デジタル一眼",
-          "href": "/ec/sell/item-list?category_id=C001"
-        },
-        {
-          "text": "ミラーレス一眼",
-          "href": "/ec/sell/item-list?category_id=C002"
-        },
-        {
-          "text": "コンパクトデジタルカメラ",
-          "href": "/ec/sell/item-list?category_id=C003"
-        },
-        {
-          "text": "フィルムカメラ",
-          "href": "/ec/sell/item-list?category_id=C018"
-        },
-        {
-          "text": "ビデオカメラ",
-          "href": "/ec/sell/item-list?category_id=C005"
-        },
-        {
-          "text": "カメラアクセサリー・用品",
-          "href": "/ec/sell/item-list?category_id=C007"
-        }
-      ],
+      "has_buyback_context": false,
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 674294,
-      "buyback_page_text_preview": "トクトク買取なら｢Bランク｣以上で上限価格買取り\n​\n買取り\n​\n全てのカテゴリから\nログイン\n見積一覧\nTOP\n店舗買取\n宅配買取\n出張買取\n新品・中古購入\nキーワードから商品を検索し、買取り価格の目安を調べる事ができます\nキーワードから買取り価格を調べる\n買取り対象商品\n交換レンズ\nデジタル一眼\nミラーレス一眼\nコンパクトデジタルカメラ\nフィルムカメラ\nビデオカメラ\nカメラアクセサリー・用品\n三脚\nスマホ\n腕時計\nブランド品・貴金属買取\nミラーレス一眼の高価買取り\n交換レンズ\nミラーレス一眼\nデジタル一眼レフ\nフィルムカメラ\n\n※表示価格は買取り最高値です\n\nカメラ用品 買取り事例\n一覧を見る \nDJI\nOsmo Action 3 AC2023\nトクトク買取対象\n買取上限価格\n9,270円\n\n状態：AB(良品)\n\n防水テスト未実施、外観小スレ・小キズあり\n\n2026年9月時点\nOM SYSTEM\nOM-1 Mark II ボディ\nトクトク買取対象\n買取上限価格\n181,200円\n\n状態：A(美品)\n\n外観スレ・キズあり（小）\n\n2026年9月時点\nキヤノン\nEOS R3 ボディ【2",
-      "buyback_price_candidates": [
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,151,800円",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ライカ  M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小ス",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,060,000円",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ニコン  NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,002,300円",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ハッセルブラッド  X2D II 100C トクトク買取対象買取上限価格1,002,300円状態：AB(良品)外観小スレ",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格335,400円",
-          "price": 335400,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格270,238円",
-          "price": 270238,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(良品) 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格187,000円",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "フジフイルム  X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格181,200円",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "OM SYSTEM  OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ソニー  FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270",
-          "price": 70200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格34,430円",
-          "price": 34430,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格30,434円",
-          "price": 30434,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        }
-      ],
-      "buyback_extracted_price": 1151800,
-      "confidence": "high",
-      "matched_item": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点",
-      "all_price_candidates": [
-        {
-          "price": 1151800,
-          "item": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 202",
-          "near_buyback": true
-        },
-        {
-          "price": 1151800,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 1060000,
-          "item": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小ス",
-          "near_buyback": true
-        },
-        {
-          "price": 1060000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 335400,
-          "item": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 202",
-          "near_buyback": true
-        },
-        {
-          "price": 270238,
-          "item": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(",
-          "near_buyback": true
-        },
-        {
-          "price": 187000,
-          "item": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年",
-          "near_buyback": true
-        },
-        {
-          "price": 187000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 70200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 34430,
-          "item": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月",
-          "near_buyback": true
-        },
-        {
-          "price": 30434,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        }
-      ],
-      "rejected_candidates": [
-        {
-          "price": 1151800,
-          "item": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 202",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1151800,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1060000,
-          "item": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小ス",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1060000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 335400,
-          "item": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 202",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 270238,
-          "item": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 187000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 70200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 34430,
-          "item": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 30434,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        }
-      ],
-      "used_for_save": true,
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null,
+      "confidence": "medium",
+      "matched_item": "",
+      "all_price_candidates": [],
+      "rejected_candidates": [],
+      "used_for_save": false,
       "requests_raw_price": null,
       "reused_page": false
     },
@@ -1286,7 +765,7 @@
       "price": 474000,
       "reason": "",
       "html_saved": false,
-      "html_size": 345072,
+      "html_size": 345047,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -1294,7 +773,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 345072,
+      "rendered_html_size": 345047,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -1546,7 +1025,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=GFX100RF&search=検索",
-      "buyback_page_html_size": 345072,
+      "buyback_page_html_size": 345047,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -1759,572 +1238,42 @@
       "status": "FAILED",
       "brand": "FUJIFILM",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 675431,
+      "playwright_attempted": false,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "トクトク買取なら｢Bランク｣以上で上限価格買取り\n​\n買取り\n​\n全てのカテゴリから\nログイン\n見積一覧\nTOP\n店舗買取\n宅配買取\n出張買取\n新品・中古購入\nキーワードから商品を検索し、買取り価格の目安を調べる事ができます\nキーワードから買取り価格を調べる\n買取り対象商品\n交換レンズ\nデジタル一眼\nミラーレス一眼\nコンパクトデジタルカメラ\nフィルムカメラ\nビデオカメラ\nカメラアクセサリー・用品\n三脚\nスマホ\n腕時計\nブランド品・貴金属買取\nミラーレス一眼の高価買取り\n交換レンズ\nミラーレス一眼\nデジタル一眼レフ\nフィルムカメラ\n\n※表示価格は買取り最高値です\n\nカメラ用品 買取り事例\n一覧を見る \nDJI\nOsmo Action 3 AC2023\nトクトク買取対象\n買取上限価格\n9,270円\n\n状態：AB(良品)\n\n防水テスト未実施、外観小スレ・小キズあり\n\n2026年9月時点\nOM SYSTEM\nOM-1 Mark II ボディ\nトクトク買取対象\n買取上限価格\n181,200円\n\n状態：A(美品)\n\n外観スレ・キズあり（小）\n\n2026年9月時点\nキヤノン\nEOS R3 ボディ【2",
-      "matched_selectors": [
-        {
-          "selector": "[class*='price']",
-          "hits": 9
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "hits": 6
-        }
-      ],
-      "selector_candidates": [
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,151,800円",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ライカ  M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小ス",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,060,000円",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ニコン  NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,002,300円",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ハッセルブラッド  X2D II 100C トクトク買取対象買取上限価格1,002,300円状態：AB(良品)外観小スレ",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格335,400円",
-          "price": 335400,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格270,238円",
-          "price": 270238,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(良品) 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格187,000円",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "フジフイルム  X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格181,200円",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "OM SYSTEM  OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ソニー  FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270",
-          "price": 70200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格34,430円",
-          "price": 34430,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格30,434円",
-          "price": 30434,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        }
-      ],
-      "iframe_count": 3,
+      "body_text_preview": "",
+      "matched_selectors": [],
+      "selector_candidates": [],
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
-      "has_buyback_context": true,
-      "sales_price_sample": 1151800,
-      "buyback_link_candidates": [
-        {
-          "text": "トクトク買取なら｢Bランク｣以上で上限価格買取り",
-          "href": "/ec/page/service/tokutoku-kaitori"
-        },
-        {
-          "text": "見積一覧",
-          "href": "/ec/sell/item-price"
-        },
-        {
-          "text": "店舗買取",
-          "href": "/#selling-store-link"
-        },
-        {
-          "text": "宅配買取",
-          "href": "/ec/page/service/tyokusou-kaitori"
-        },
-        {
-          "text": "出張買取",
-          "href": "/ec/page/service/syuttyou-kaitori"
-        },
-        {
-          "text": "",
-          "href": "/lp/kaitori_kitamura/?utm_source=netchuko&utm_medium=owned&utm_campaign=kaitoricp"
-        },
-        {
-          "text": "",
-          "href": "/ec/service/syuttyou-kaitori.html"
-        },
-        {
-          "text": "",
-          "href": "/ec/sell/item-list?category_id=E023&maker=%E3%82%A2%E3%83%83%E3%83%97%E3%83%AB"
-        },
-        {
-          "text": "",
-          "href": "/ec/service/tokutoku-kaitori.html"
-        },
-        {
-          "text": "",
-          "href": "/ec/page/service/houjin-kaitori"
-        },
-        {
-          "text": "",
-          "href": "/static/contents/page/film_purchase.html"
-        },
-        {
-          "text": "キーワードから買取り価格を調べる",
-          "href": "/ec/sell?type=search"
-        },
-        {
-          "text": "キーワードから 買取り価格を調べる",
-          "href": "/ec/sell?type=search"
-        },
-        {
-          "text": "交換レンズ",
-          "href": "/ec/sell/item-list?category_id=C004"
-        },
-        {
-          "text": "デジタル一眼",
-          "href": "/ec/sell/item-list?category_id=C001"
-        },
-        {
-          "text": "ミラーレス一眼",
-          "href": "/ec/sell/item-list?category_id=C002"
-        },
-        {
-          "text": "コンパクトデジタルカメラ",
-          "href": "/ec/sell/item-list?category_id=C003"
-        },
-        {
-          "text": "フィルムカメラ",
-          "href": "/ec/sell/item-list?category_id=C018"
-        },
-        {
-          "text": "ビデオカメラ",
-          "href": "/ec/sell/item-list?category_id=C005"
-        },
-        {
-          "text": "カメラアクセサリー・用品",
-          "href": "/ec/sell/item-list?category_id=C007"
-        }
-      ],
+      "has_buyback_context": false,
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 675431,
-      "buyback_page_text_preview": "トクトク買取なら｢Bランク｣以上で上限価格買取り\n​\n買取り\n​\n全てのカテゴリから\nログイン\n見積一覧\nTOP\n店舗買取\n宅配買取\n出張買取\n新品・中古購入\nキーワードから商品を検索し、買取り価格の目安を調べる事ができます\nキーワードから買取り価格を調べる\n買取り対象商品\n交換レンズ\nデジタル一眼\nミラーレス一眼\nコンパクトデジタルカメラ\nフィルムカメラ\nビデオカメラ\nカメラアクセサリー・用品\n三脚\nスマホ\n腕時計\nブランド品・貴金属買取\nミラーレス一眼の高価買取り\n交換レンズ\nミラーレス一眼\nデジタル一眼レフ\nフィルムカメラ\n\n※表示価格は買取り最高値です\n\nカメラ用品 買取り事例\n一覧を見る \nDJI\nOsmo Action 3 AC2023\nトクトク買取対象\n買取上限価格\n9,270円\n\n状態：AB(良品)\n\n防水テスト未実施、外観小スレ・小キズあり\n\n2026年9月時点\nOM SYSTEM\nOM-1 Mark II ボディ\nトクトク買取対象\n買取上限価格\n181,200円\n\n状態：A(美品)\n\n外観スレ・キズあり（小）\n\n2026年9月時点\nキヤノン\nEOS R3 ボディ【2",
-      "buyback_price_candidates": [
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,151,800円",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ライカ  M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小ス",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,060,000円",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ニコン  NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,002,300円",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ハッセルブラッド  X2D II 100C トクトク買取対象買取上限価格1,002,300円状態：AB(良品)外観小スレ",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格335,400円",
-          "price": 335400,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格270,238円",
-          "price": 270238,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(良品) 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格187,000円",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "フジフイルム  X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格181,200円",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "OM SYSTEM  OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ソニー  FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270",
-          "price": 70200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格34,430円",
-          "price": 34430,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格30,434円",
-          "price": 30434,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        }
-      ],
-      "buyback_extracted_price": 1151800,
-      "confidence": "medium",
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null,
+      "confidence": null,
       "matched_item": "",
-      "all_price_candidates": [
-        {
-          "price": 1151800,
-          "item": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 202",
-          "near_buyback": true
-        },
-        {
-          "price": 1151800,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 1060000,
-          "item": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小ス",
-          "near_buyback": true
-        },
-        {
-          "price": 1060000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 335400,
-          "item": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 202",
-          "near_buyback": true
-        },
-        {
-          "price": 270238,
-          "item": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(",
-          "near_buyback": true
-        },
-        {
-          "price": 187000,
-          "item": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年",
-          "near_buyback": true
-        },
-        {
-          "price": 187000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 70200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 34430,
-          "item": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月",
-          "near_buyback": true
-        },
-        {
-          "price": 30434,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        }
-      ],
-      "rejected_candidates": [
-        {
-          "price": 1151800,
-          "item": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 202",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1151800,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1060000,
-          "item": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小ス",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1060000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 335400,
-          "item": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 202",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 270238,
-          "item": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 187000,
-          "item": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 187000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 70200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 34430,
-          "item": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 30434,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        }
-      ],
+      "all_price_candidates": [],
+      "rejected_candidates": [],
       "used_for_save": false,
-      "requests_raw_price": null,
-      "reused_page": false
+      "skipped_by_cutoff": true
     },
     {
       "product_alias": "xt5",
@@ -2377,7 +1326,7 @@
       "price": 168000,
       "reason": "",
       "html_saved": false,
-      "html_size": 373166,
+      "html_size": 373237,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -2385,7 +1334,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 373166,
+      "rendered_html_size": 373237,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -2637,7 +1586,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=X-T5&search=検索",
-      "buyback_page_html_size": 373166,
+      "buyback_page_html_size": 373237,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -2922,572 +1871,42 @@
       "status": "FAILED",
       "brand": "FUJIFILM",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": false,
       "extracted_price": null,
-      "playwright_attempted": true,
-      "playwright_success": true,
-      "screenshot_saved": true,
-      "rendered_html_size": 669881,
+      "playwright_attempted": false,
+      "playwright_success": false,
+      "screenshot_saved": false,
+      "rendered_html_size": 0,
       "selector_waited": false,
       "extraction_strategy": "requests",
-      "body_text_preview": "トクトク買取なら｢Bランク｣以上で上限価格買取り\n​\n買取り\n​\n全てのカテゴリから\nログイン\n見積一覧\nTOP\n店舗買取\n宅配買取\n出張買取\n新品・中古購入\nキーワードから商品を検索し、買取り価格の目安を調べる事ができます\nキーワードから買取り価格を調べる\n買取り対象商品\n交換レンズ\nデジタル一眼\nミラーレス一眼\nコンパクトデジタルカメラ\nフィルムカメラ\nビデオカメラ\nカメラアクセサリー・用品\n三脚\nスマホ\n腕時計\nブランド品・貴金属買取\nミラーレス一眼の高価買取り\n交換レンズ\nミラーレス一眼\nデジタル一眼レフ\nフィルムカメラ\n\n※表示価格は買取り最高値です\n\nカメラ用品 買取り事例\n一覧を見る \nDJI\nOsmo Action 3 AC2023\nトクトク買取対象\n買取上限価格\n9,270円\n\n状態：AB(良品)\n\n防水テスト未実施、外観小スレ・小キズあり\n\n2026年9月時点\nOM SYSTEM\nOM-1 Mark II ボディ\nトクトク買取対象\n買取上限価格\n181,200円\n\n状態：A(美品)\n\n外観スレ・キズあり（小）\n\n2026年9月時点\nキヤノン\nEOS R3 ボディ【2",
-      "matched_selectors": [
-        {
-          "selector": "[class*='price']",
-          "hits": 9
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "hits": 6
-        }
-      ],
-      "selector_candidates": [
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,151,800円",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ライカ  M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小ス",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,060,000円",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ニコン  NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,002,300円",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ハッセルブラッド  X2D II 100C トクトク買取対象買取上限価格1,002,300円状態：AB(良品)外観小スレ",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格335,400円",
-          "price": 335400,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格270,238円",
-          "price": 270238,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(良品) 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格187,000円",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "フジフイルム  X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格181,200円",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "OM SYSTEM  OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ソニー  FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270",
-          "price": 70200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格34,430円",
-          "price": 34430,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格30,434円",
-          "price": 30434,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        }
-      ],
-      "iframe_count": 3,
+      "body_text_preview": "",
+      "matched_selectors": [],
+      "selector_candidates": [],
+      "iframe_count": 0,
       "shadow_dom_detected": false,
-      "dom_ready_state": "complete",
+      "dom_ready_state": "",
       "hit_count": null,
       "keyword_hit_counts": {},
       "best_keyword": null,
-      "has_buyback_context": true,
-      "sales_price_sample": 1151800,
-      "buyback_link_candidates": [
-        {
-          "text": "トクトク買取なら｢Bランク｣以上で上限価格買取り",
-          "href": "/ec/page/service/tokutoku-kaitori"
-        },
-        {
-          "text": "見積一覧",
-          "href": "/ec/sell/item-price"
-        },
-        {
-          "text": "店舗買取",
-          "href": "/#selling-store-link"
-        },
-        {
-          "text": "宅配買取",
-          "href": "/ec/page/service/tyokusou-kaitori"
-        },
-        {
-          "text": "出張買取",
-          "href": "/ec/page/service/syuttyou-kaitori"
-        },
-        {
-          "text": "キーワードから買取り価格を調べる",
-          "href": "/ec/sell?type=search"
-        },
-        {
-          "text": "キーワードから 買取り価格を調べる",
-          "href": "/ec/sell?type=search"
-        },
-        {
-          "text": "交換レンズ",
-          "href": "/ec/sell/item-list?category_id=C004"
-        },
-        {
-          "text": "デジタル一眼",
-          "href": "/ec/sell/item-list?category_id=C001"
-        },
-        {
-          "text": "ミラーレス一眼",
-          "href": "/ec/sell/item-list?category_id=C002"
-        },
-        {
-          "text": "コンパクトデジタルカメラ",
-          "href": "/ec/sell/item-list?category_id=C003"
-        },
-        {
-          "text": "フィルムカメラ",
-          "href": "/ec/sell/item-list?category_id=C018"
-        },
-        {
-          "text": "ビデオカメラ",
-          "href": "/ec/sell/item-list?category_id=C005"
-        },
-        {
-          "text": "カメラアクセサリー・用品",
-          "href": "/ec/sell/item-list?category_id=C007"
-        },
-        {
-          "text": "三脚",
-          "href": "/ec/sell/item-list?category_id=C008"
-        },
-        {
-          "text": "スマホ",
-          "href": "/ec/sell/item-list?query=iPhone&category_id=E023&sort=default&size=40"
-        },
-        {
-          "text": "腕時計",
-          "href": "https://shop.kitamura.jp/watch/sell/"
-        },
-        {
-          "text": "ブランド品・貴金属買取",
-          "href": "https://shop.kitamura.jp/lp/brand-01/"
-        },
-        {
-          "text": "交換レンズ",
-          "href": "/ec/sell/item-list?category_id=C004"
-        },
-        {
-          "text": "デジタル一眼",
-          "href": "/ec/sell/item-list?category_id=C001"
-        }
-      ],
+      "has_buyback_context": false,
+      "sales_price_sample": null,
+      "buyback_link_candidates": [],
       "buyback_page_url": null,
-      "buyback_page_html_size": 669881,
-      "buyback_page_text_preview": "トクトク買取なら｢Bランク｣以上で上限価格買取り\n​\n買取り\n​\n全てのカテゴリから\nログイン\n見積一覧\nTOP\n店舗買取\n宅配買取\n出張買取\n新品・中古購入\nキーワードから商品を検索し、買取り価格の目安を調べる事ができます\nキーワードから買取り価格を調べる\n買取り対象商品\n交換レンズ\nデジタル一眼\nミラーレス一眼\nコンパクトデジタルカメラ\nフィルムカメラ\nビデオカメラ\nカメラアクセサリー・用品\n三脚\nスマホ\n腕時計\nブランド品・貴金属買取\nミラーレス一眼の高価買取り\n交換レンズ\nミラーレス一眼\nデジタル一眼レフ\nフィルムカメラ\n\n※表示価格は買取り最高値です\n\nカメラ用品 買取り事例\n一覧を見る \nDJI\nOsmo Action 3 AC2023\nトクトク買取対象\n買取上限価格\n9,270円\n\n状態：AB(良品)\n\n防水テスト未実施、外観小スレ・小キズあり\n\n2026年9月時点\nOM SYSTEM\nOM-1 Mark II ボディ\nトクトク買取対象\n買取上限価格\n181,200円\n\n状態：A(美品)\n\n外観スレ・キズあり（小）\n\n2026年9月時点\nキヤノン\nEOS R3 ボディ【2",
-      "buyback_price_candidates": [
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,151,800円",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ライカ  M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小ス",
-          "price": 1151800,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,060,000円",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ニコン  NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態",
-          "price": 1060000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格1,002,300円",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ハッセルブラッド  X2D II 100C トクトク買取対象買取上限価格1,002,300円状態：AB(良品)外観小スレ",
-          "price": 1002300,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格335,400円",
-          "price": 335400,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格270,238円",
-          "price": 270238,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(良品) 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格187,000円",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "フジフイルム  X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・",
-          "price": 187000,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格181,200円",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "OM SYSTEM  OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観",
-          "price": 181200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='kaitori']",
-          "text": "ソニー  FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270",
-          "price": 70200,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格34,430円",
-          "price": 34430,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月時点"
-        },
-        {
-          "selector": "[class*='price']",
-          "text": "買取上限価格30,434円",
-          "price": 30434,
-          "near_kw": true,
-          "near_buyback": true,
-          "is_tradein": false,
-          "item_text": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小キズあり 2026年9月時点 OM SYSTEM OM-1 Mark II ボディ トクトク買取対象買取上限価格181,200円状態：A(美品)外観スレ・キズあり（小） 2026年9月時点 キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 2026年9月時"
-        }
-      ],
-      "buyback_extracted_price": 1151800,
-      "confidence": "medium",
+      "buyback_page_html_size": 0,
+      "buyback_page_text_preview": "",
+      "buyback_price_candidates": [],
+      "buyback_extracted_price": null,
+      "confidence": null,
       "matched_item": "",
-      "all_price_candidates": [
-        {
-          "price": 1151800,
-          "item": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 202",
-          "near_buyback": true
-        },
-        {
-          "price": 1151800,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 1060000,
-          "item": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小ス",
-          "near_buyback": true
-        },
-        {
-          "price": 1060000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 335400,
-          "item": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 202",
-          "near_buyback": true
-        },
-        {
-          "price": 270238,
-          "item": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(",
-          "near_buyback": true
-        },
-        {
-          "price": 187000,
-          "item": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年",
-          "near_buyback": true
-        },
-        {
-          "price": 187000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 70200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        },
-        {
-          "price": 34430,
-          "item": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月",
-          "near_buyback": true
-        },
-        {
-          "price": 30434,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true
-        }
-      ],
-      "rejected_candidates": [
-        {
-          "price": 1151800,
-          "item": "ライカ M11 グロッシーブラック ボディ トクトク買取対象買取上限価格1,151,800円状態：AB(良品)外観小スレ・小キズあり 202",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1151800,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1060000,
-          "item": "ニコン NIKKOR Z 400mm f/2.8 TC VR S トクトク買取対象買取上限価格1,060,000円状態：AB(良品)外観小ス",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1060000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 1002300,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 335400,
-          "item": "キヤノン EOS R3 ボディ【2410万画素】 トクトク買取対象買取上限価格335,400円状態：B(並品)外観小スレ・小キズあり 202",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 270238,
-          "item": "ソニー FE 70-200/2.8 GM OSS II [SEL70200GM2] トクトク買取対象買取上限価格270,238円状態：AB(",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 187000,
-          "item": "フジフイルム X100VI JP ブラック トクトク買取対象買取上限価格187,000円状態：AB(良品)外観小スレ・小キズあり 2026年",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 187000,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 181200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 70200,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 34430,
-          "item": "ニコン Z 50 ボディ【2088万画素】 トクトク買取対象買取上限価格34,430円状態：B(並品)外観大スレ・大キズあり 2026年9月",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        },
-        {
-          "price": 30434,
-          "item": "DJI Osmo Action 3 AC2023 トクトク買取対象買取上限価格9,270円状態：AB(良品)防水テスト未実施、外観小スレ・小",
-          "near_buyback": true,
-          "rejection_reason": "model_mismatch"
-        }
-      ],
+      "all_price_candidates": [],
+      "rejected_candidates": [],
       "used_for_save": false,
-      "requests_raw_price": null,
-      "reused_page": false
+      "skipped_by_cutoff": true
     },
     {
       "product_alias": "gr3",
@@ -3548,7 +1967,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 371639,
+      "rendered_html_size": 370468,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -3801,7 +2220,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20III&search=検索",
-      "buyback_page_html_size": 371639,
+      "buyback_page_html_size": 370468,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -4122,7 +2541,7 @@
       "status": "FAILED",
       "brand": "RICOH",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -4210,7 +2629,7 @@
       "price": 138000,
       "reason": "",
       "html_saved": false,
-      "html_size": 347241,
+      "html_size": 347212,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -4218,7 +2637,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 347241,
+      "rendered_html_size": 347212,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -4470,7 +2889,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IIIx&search=検索",
-      "buyback_page_html_size": 347241,
+      "buyback_page_html_size": 347212,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -4746,7 +3165,7 @@
       "status": "FAILED",
       "brand": "RICOH",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -4834,7 +3253,7 @@
       "price": 151000,
       "reason": "",
       "html_saved": false,
-      "html_size": 357656,
+      "html_size": 357674,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -4842,7 +3261,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 357656,
+      "rendered_html_size": 357674,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5094,7 +3513,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 357656,
+      "buyback_page_html_size": 357674,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -5397,7 +3816,7 @@
       "status": "FAILED",
       "brand": "RICOH",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -5485,7 +3904,7 @@
       "price": 194000,
       "reason": "",
       "html_saved": false,
-      "html_size": 357656,
+      "html_size": 357674,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -5493,7 +3912,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 357656,
+      "rendered_html_size": 357674,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -5745,7 +4164,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 357656,
+      "buyback_page_html_size": 357674,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -6048,7 +4467,7 @@
       "status": "FAILED",
       "brand": "RICOH",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -6136,7 +4555,7 @@
       "price": 194000,
       "reason": "",
       "html_saved": false,
-      "html_size": 357656,
+      "html_size": 357674,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -6144,7 +4563,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 357656,
+      "rendered_html_size": 357674,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -6396,7 +4815,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=RICOH%20GR%20IV&search=検索",
-      "buyback_page_html_size": 357656,
+      "buyback_page_html_size": 357674,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -6699,7 +5118,7 @@
       "status": "FAILED",
       "brand": "RICOH",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -6787,7 +5206,7 @@
       "price": 189000,
       "reason": "",
       "html_saved": false,
-      "html_size": 349440,
+      "html_size": 349379,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -6795,7 +5214,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 349440,
+      "rendered_html_size": 349379,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7047,7 +5466,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17R%20V&search=検索",
-      "buyback_page_html_size": 349440,
+      "buyback_page_html_size": 349379,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -7332,7 +5751,7 @@
       "status": "FAILED",
       "brand": "SONY",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -7420,7 +5839,7 @@
       "price": 550000,
       "reason": "",
       "html_saved": false,
-      "html_size": 343031,
+      "html_size": 343023,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -7428,7 +5847,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 343031,
+      "rendered_html_size": 343023,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -7680,7 +6099,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B11%20II&search=検索",
-      "buyback_page_html_size": 343031,
+      "buyback_page_html_size": 343023,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -7887,7 +6306,7 @@
       "status": "FAILED",
       "brand": "SONY",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -7975,7 +6394,7 @@
       "price": 222000,
       "reason": "",
       "html_saved": false,
-      "html_size": 345184,
+      "html_size": 345121,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -7983,7 +6402,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 345184,
+      "rendered_html_size": 345121,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -8235,7 +6654,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20%CE%B17CR&search=検索",
-      "buyback_page_html_size": 345184,
+      "buyback_page_html_size": 345121,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -8451,7 +6870,7 @@
       "status": "FAILED",
       "brand": "SONY",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -8539,7 +6958,7 @@
       "price": 376000,
       "reason": "",
       "html_saved": false,
-      "html_size": 358165,
+      "html_size": 358042,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -8547,7 +6966,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 358165,
+      "rendered_html_size": 358042,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -8799,7 +7218,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=SONY%20FX3&search=検索",
-      "buyback_page_html_size": 358165,
+      "buyback_page_html_size": 358042,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9066,7 +7485,7 @@
       "status": "FAILED",
       "brand": "SONY",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -9154,7 +7573,7 @@
       "price": 374000,
       "reason": "",
       "html_saved": false,
-      "html_size": 347417,
+      "html_size": 347363,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -9162,7 +7581,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 347417,
+      "rendered_html_size": 347363,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -9414,7 +7833,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R5%20Mark%20II&search=検索",
-      "buyback_page_html_size": 347417,
+      "buyback_page_html_size": 347363,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -9690,7 +8109,7 @@
       "status": "FAILED",
       "brand": "CANON",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -9786,7 +8205,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 355995,
+      "rendered_html_size": 355969,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10039,7 +8458,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R6%20Mark%20II&search=検索",
-      "buyback_page_html_size": 355995,
+      "buyback_page_html_size": 355969,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -10360,7 +8779,7 @@
       "status": "FAILED",
       "brand": "CANON",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -10448,7 +8867,7 @@
       "price": 283000,
       "reason": "",
       "html_saved": false,
-      "html_size": 342970,
+      "html_size": 342962,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -10456,7 +8875,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 342970,
+      "rendered_html_size": 342962,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -10708,7 +9127,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Canon%20EOS%20R3&search=検索",
-      "buyback_page_html_size": 342970,
+      "buyback_page_html_size": 342962,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -10915,7 +9334,7 @@
       "status": "FAILED",
       "brand": "CANON",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -11003,7 +9422,7 @@
       "price": 252000,
       "reason": "",
       "html_saved": false,
-      "html_size": 342950,
+      "html_size": 342929,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -11011,7 +9430,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 342950,
+      "rendered_html_size": 342929,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -11263,7 +9682,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z8&search=検索",
-      "buyback_page_html_size": 342950,
+      "buyback_page_html_size": 342929,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -11470,7 +9889,7 @@
       "status": "FAILED",
       "brand": "NIKON",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -11558,7 +9977,7 @@
       "price": 152000,
       "reason": "",
       "html_saved": false,
-      "html_size": 447886,
+      "html_size": 447884,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -11566,7 +9985,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 447886,
+      "rendered_html_size": 447884,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -11818,7 +10237,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Zf&search=検索",
-      "buyback_page_html_size": 447886,
+      "buyback_page_html_size": 447884,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -12121,7 +10540,7 @@
       "status": "FAILED",
       "brand": "NIKON",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -12209,7 +10628,7 @@
       "price": 324000,
       "reason": "",
       "html_saved": false,
-      "html_size": 345224,
+      "html_size": 345190,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -12217,7 +10636,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 345224,
+      "rendered_html_size": 345190,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -12469,7 +10888,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Nikon%20Z9&search=検索",
-      "buyback_page_html_size": 345224,
+      "buyback_page_html_size": 345190,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -12676,7 +11095,7 @@
       "status": "FAILED",
       "brand": "NIKON",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -12764,7 +11183,7 @@
       "price": 572000,
       "reason": "",
       "html_saved": false,
-      "html_size": 366272,
+      "html_size": 366249,
       "cloudflare_detected": false,
       "js_required": false,
       "selector_found": true,
@@ -12772,7 +11191,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 366272,
+      "rendered_html_size": 366249,
       "selector_waited": true,
       "extraction_strategy": "fujiya_buyback",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -13024,7 +11443,7 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20Q3&search=検索",
-      "buyback_page_html_size": 366272,
+      "buyback_page_html_size": 366249,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
@@ -13339,7 +11758,7 @@
       "status": "FAILED",
       "brand": "LEICA",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,
@@ -13435,7 +11854,7 @@
       "playwright_attempted": true,
       "playwright_success": true,
       "screenshot_saved": true,
-      "rendered_html_size": 385803,
+      "rendered_html_size": 385729,
       "selector_waited": true,
       "extraction_strategy": "requests",
       "body_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
@@ -13460,21 +11879,21 @@
       "selector_candidates": [
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,266,000\n\t\t\t\t\t",
-          "price": 1266000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,161,000\n\t\t\t\t\t",
+          "price": 1161000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,266,000 良品 ￥1,199,000 下取は10%UP 新品同様 ￥1,392,600 良品 ￥1,318,900 買取申し込み 買取検討リストへ"
+          "item_text": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%UP 新品同様 ￥1,277,100 良品 ￥1,276,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,266,000\n\t\t\t\t\t",
-          "price": 1266000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,161,000\n\t\t\t\t\t",
+          "price": 1161000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,266,000 良品 ￥1,199,000 下取は10%UP 新品同様 ￥1,392,600 良品 ￥1,318,900 買取申し込み 買取検討リストへ"
+          "item_text": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%UP 新品同様 ￥1,277,100 良品 ￥1,276,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -13496,21 +11915,21 @@
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
-          "price": 986000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,009,000\n\t\t\t\t\t",
+          "price": 1009000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥1,009,000 良品 ￥1,008,000 下取は10%UP 新品同様 ￥1,109,900 良品 ￥1,108,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
-          "price": 986000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,009,000\n\t\t\t\t\t",
+          "price": 1009000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥1,009,000 良品 ￥1,008,000 下取は10%UP 新品同様 ￥1,109,900 良品 ￥1,108,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -13550,21 +11969,21 @@
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥963,000\n\t\t\t\t\t\t\n",
-          "price": 963000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥965,000\n\t\t\t\t\t\t\n",
+          "price": 965000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様 ￥1,059,300 良品 ￥1,058,200 買取申し込み 買取検討リストへ"
+          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥965,000 良品 ￥964,000 下取は10%UP 新品同様 ￥1,061,500 良品 ￥1,060,400 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥963,000\n\t\t\t\t\t\t\n",
-          "price": 963000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥965,000\n\t\t\t\t\t\t\n",
+          "price": 965000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様 ￥1,059,300 良品 ￥1,058,200 買取申し込み 買取検討リストへ"
+          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥965,000 良品 ￥964,000 下取は10%UP 新品同様 ￥1,061,500 良品 ￥1,060,400 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -13603,7 +12022,7 @@
       },
       "best_keyword": "Leica M11",
       "has_buyback_context": true,
-      "sales_price_sample": 1266000,
+      "sales_price_sample": 1161000,
       "buyback_link_candidates": [
         {
           "text": "買取金額を調べる",
@@ -13687,26 +12106,26 @@
         }
       ],
       "buyback_page_url": "https://www.fujiya-camera.co.jp/shop/purchase/list.aspx?keyword=Leica%20M11&search=検索",
-      "buyback_page_html_size": 385803,
+      "buyback_page_html_size": 385729,
       "buyback_page_text_preview": "カテゴリ\nブランド\n中古品\nSALEなど\n買取\n法人\nログイン\nお気に入り\nカート\nトップ > 買取検索\n最新・お得な商品\n新製品・取り扱い開始\n新入荷の中古品\nアウトレットセール\n当店限定プライス 値下げ商品\nスチールカメラから探す\nデジタルカメラ\nフィルムカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラップ\nその他スチール撮影用品\nムービーカメラから探す\nビデオカメラ\n交換レンズ・レンズアクセサリー\n三脚・一脚・雲台\nジンバル・リグ・ケージ\nビデオスイッチャー・モニター・編集機器\nマイク・ミキサー・音声レコーダー\nDAW・DTM\nストロボ・照明・ライティング用品\nメモリーカード・フィルム\nレンズ用フィルター\n防湿庫・クリーニング用品\nクロマキー・プロンプター・スタジオ撮影用品\nビデオケーブル・コネクター\n双眼鏡・フィールドスコープ\nバッテリー・充電器・電源\nカメラバッグ・ケース・ストラッ",
       "buyback_price_candidates": [
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,266,000\n\t\t\t\t\t",
-          "price": 1266000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,161,000\n\t\t\t\t\t",
+          "price": 1161000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,266,000 良品 ￥1,199,000 下取は10%UP 新品同様 ￥1,392,600 良品 ￥1,318,900 買取申し込み 買取検討リストへ"
+          "item_text": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%UP 新品同様 ￥1,277,100 良品 ￥1,276,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,266,000\n\t\t\t\t\t",
-          "price": 1266000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,161,000\n\t\t\t\t\t",
+          "price": 1161000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,266,000 良品 ￥1,199,000 下取は10%UP 新品同様 ￥1,392,600 良品 ￥1,318,900 買取申し込み 買取検討リストへ"
+          "item_text": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%UP 新品同様 ￥1,277,100 良品 ￥1,276,000 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -13728,21 +12147,21 @@
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
-          "price": 986000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,009,000\n\t\t\t\t\t",
+          "price": 1009000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥1,009,000 良品 ￥1,008,000 下取は10%UP 新品同様 ￥1,109,900 良品 ￥1,108,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥986,000\n\t\t\t\t\t\t\n",
-          "price": 986000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥1,009,000\n\t\t\t\t\t",
+          "price": 1009000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP 新品同様 ￥1,084,600 良品 ￥1,083,500 買取申し込み 買取検討リストへ"
+          "item_text": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥1,009,000 良品 ￥1,008,000 下取は10%UP 新品同様 ￥1,109,900 良品 ￥1,108,800 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -13782,21 +12201,21 @@
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥963,000\n\t\t\t\t\t\t\n",
-          "price": 963000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥965,000\n\t\t\t\t\t\t\n",
+          "price": 965000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様 ￥1,059,300 良品 ￥1,058,200 買取申し込み 買取検討リストへ"
+          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥965,000 良品 ￥964,000 下取は10%UP 新品同様 ￥1,061,500 良品 ￥1,060,400 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
-          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥963,000\n\t\t\t\t\t\t\n",
-          "price": 963000,
+          "text": "買取金額\n\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\n\t\t\t\t\t\t\t新品同様\n\t\t\t\t\t\t\t￥965,000\n\t\t\t\t\t\t\n",
+          "price": 965000,
           "near_kw": true,
           "near_buyback": true,
           "is_tradein": true,
-          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様 ￥1,059,300 良品 ￥1,058,200 買取申し込み 買取検討リストへ"
+          "item_text": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥965,000 良品 ￥964,000 下取は10%UP 新品同様 ￥1,061,500 良品 ￥1,060,400 買取申し込み 買取検討リストへ"
         },
         {
           "selector": "[class*='assess']",
@@ -13826,18 +12245,18 @@
           "item_text": "ライカ M11-P ブラック・ペイント 20211 EU/US/CN バージョン Leica 買取金額 新品同様 ￥921,000 良品 ￥920,000 下取は10%UP 新品同様 ￥1,013,100 良品 ￥1,012,000 買取申し込み 買取検討リストへ"
         }
       ],
-      "buyback_extracted_price": 1392600,
+      "buyback_extracted_price": 1277100,
       "confidence": "medium",
       "matched_item": "",
       "all_price_candidates": [
         {
-          "price": 1266000,
-          "item": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,266,000 良品 ￥1,199,000 下取は10%",
+          "price": 1161000,
+          "item": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%",
           "near_buyback": true
         },
         {
-          "price": 1266000,
-          "item": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,266,000 良品 ￥1,199,000 下取は10%",
+          "price": 1161000,
+          "item": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%",
           "near_buyback": true
         },
         {
@@ -13851,13 +12270,13 @@
           "near_buyback": true
         },
         {
-          "price": 986000,
-          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP ",
+          "price": 1009000,
+          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥1,009,000 良品 ￥1,008,000 下取は10",
           "near_buyback": true
         },
         {
-          "price": 986000,
-          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP ",
+          "price": 1009000,
+          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥1,009,000 良品 ￥1,008,000 下取は10",
           "near_buyback": true
         },
         {
@@ -13881,13 +12300,13 @@
           "near_buyback": true
         },
         {
-          "price": 963000,
-          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様",
+          "price": 965000,
+          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥965,000 良品 ￥964,000 下取は10%UP 新品同様",
           "near_buyback": true
         },
         {
-          "price": 963000,
-          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様",
+          "price": 965000,
+          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥965,000 良品 ￥964,000 下取は10%UP 新品同様",
           "near_buyback": true
         },
         {
@@ -13908,14 +12327,14 @@
       ],
       "rejected_candidates": [
         {
-          "price": 1266000,
-          "item": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,266,000 良品 ￥1,199,000 下取は10%",
+          "price": 1161000,
+          "item": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 1266000,
-          "item": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,266,000 良品 ￥1,199,000 下取は10%",
+          "price": 1161000,
+          "item": "ライカM11-P ハンマートーン 20255 Leica 買取金額 新品同様 ￥1,161,000 良品 ￥1,160,000 下取は10%",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
@@ -13932,14 +12351,14 @@
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 986000,
-          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP ",
+          "price": 1009000,
+          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥1,009,000 良品 ￥1,008,000 下取は10",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 986000,
-          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥986,000 良品 ￥985,000 下取は10%UP ",
+          "price": 1009000,
+          "item": "ライカ M11 グロッシーブラック 20231 Leica 買取金額 新品同様 ￥1,009,000 良品 ￥1,008,000 下取は10",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
@@ -13968,14 +12387,14 @@
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 963000,
-          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様",
+          "price": 965000,
+          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥965,000 良品 ￥964,000 下取は10%UP 新品同様",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
         {
-          "price": 963000,
-          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥963,000 良品 ￥962,000 下取は10%UP 新品同様",
+          "price": 965000,
+          "item": "ライカ M11モノクローム 20209 Leica 買取金額 新品同様 ￥965,000 良品 ￥964,000 下取は10%UP 新品同様",
           "near_buyback": true,
           "rejection_reason": "model_mismatch"
         },
@@ -14008,7 +12427,7 @@
       "status": "FAILED",
       "brand": "LEICA",
       "price": 0,
-      "reason": "price_not_found",
+      "reason": "site_blocked",
       "html_saved": false,
       "html_size": 0,
       "cloudflare_detected": false,

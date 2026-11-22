@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T01:46:26+09:00",
+  "generated_at": "2026-11-22T21:54:15+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-16",
-      "iphone-17"
+      "iphone-17e",
+      "iphone-18-pro"
     ],
     "errors": {},
-    "unknown_parts": 10,
-    "matched": 1,
-    "pending": 2,
+    "unknown_parts": 38,
+    "matched": 0,
+    "pending": 10,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -46,9 +46,9 @@
       "configured": 22,
       "implemented": 11,
       "unimplemented": 11,
-      "blocked": 6,
-      "robots_unreachable": 3,
-      "unreachable": 3,
+      "blocked": 5,
+      "robots_unreachable": 4,
+      "unreachable": 4,
       "table": [
         {
           "source_id": "POKEMON_CENTER_ONLINE",
@@ -194,11 +194,11 @@
           "source_id": "YODOBASHI",
           "retailer": "ヨドバシカメラ",
           "adapter": null,
-          "state": "SOURCE_BLOCKED",
-          "health": "BLOCKED",
-          "blocked": true,
-          "robots": null,
-          "unreachable": false
+          "state": "SOURCE_UNREACHABLE",
+          "health": "FAILED",
+          "blocked": false,
+          "robots": "robots_unreachable",
+          "unreachable": true
         },
         {
           "source_id": "AMAZON",
@@ -302,9 +302,9 @@
     "configured": 22,
     "implemented": 11,
     "unimplemented": 11,
-    "blocked": 6,
-    "robots_unreachable": 3,
-    "unreachable": 3,
+    "blocked": 5,
+    "robots_unreachable": 4,
+    "unreachable": 4,
     "table": [
       {
         "source_id": "POKEMON_CENTER_ONLINE",
@@ -450,11 +450,11 @@
         "source_id": "YODOBASHI",
         "retailer": "ヨドバシカメラ",
         "adapter": null,
-        "state": "SOURCE_BLOCKED",
-        "health": "BLOCKED",
-        "blocked": true,
-        "robots": null,
-        "unreachable": false
+        "state": "SOURCE_UNREACHABLE",
+        "health": "FAILED",
+        "blocked": false,
+        "robots": "robots_unreachable",
+        "unreachable": true
       },
       {
         "source_id": "AMAZON",

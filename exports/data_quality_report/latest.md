@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-11-22 02:02 JST）
+# データ取得品質レポート（2026-11-22 22:10 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -7,9 +7,9 @@
 - ジョブ成功率: 28.8%（OK 19 / 失敗 43 / SKIP 4 / 計 66）
 
 ## 前回比較
-- 前回成功率: 30.3%
+- 前回成功率: 28.8%
 - 今回成功率: 28.8%
-- 変化: -1.5pt（悪化）
+- 変化: 0.0pt（横ばい）
 - 7日移動平均: 29.4%
 - 主要失敗理由 TOP5: http_403 12, product_not_listed 8, rate_limited_429 6, robots_unreachable 4, price_not_found 4
 
@@ -47,19 +47,20 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 266回連続
-- bookoff: 266回連続
-- dosupara: 266回連続
-- geo_mobile: 266回連続
-- hardoff: 266回連続
-- janpara: 266回連続
-- pasoko: 266回連続
-- sofmap: 266回連続
-- surugaya: 266回連続
-- tsutaya: 266回連続
-- iosys: 199回連続
-- netoff: 126回連続
-- geo: 58回連続
+- 2ndstreet: 267回連続
+- bookoff: 267回連続
+- dosupara: 267回連続
+- geo_mobile: 267回連続
+- hardoff: 267回連続
+- janpara: 267回連続
+- pasoko: 267回連続
+- sofmap: 267回連続
+- surugaya: 267回連続
+- tsutaya: 267回連続
+- iosys: 200回連続
+- netoff: 127回連続
+- geo: 59回連続
+- mobile_ichiban: 2回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -80,7 +81,6 @@
 
 ## 有効データ量（新品・未使用 / 14日以内 / price>0）
 - 有効買取データを持つ商品数: 15
-  - prod_x100vi: 2店舗
   - prod_iphone17pro_256: 2店舗
   - prod_iphone17pro_512: 2店舗
   - prod_iphone17pm_256: 2店舗
@@ -90,6 +90,7 @@
   - prod_airpods_pro3: 1店舗
   - prod_iphoneair_256: 1店舗
   - prod_iphoneduo_256: 1店舗
+  - prod_x100vi: 1店舗
   - prod_gr4: 1店舗
   - prod_gr4_hdf: 1店舗
   - prod_gr4_mono: 1店舗
@@ -109,7 +110,7 @@
 - eBay取得モード: manual（EBAY_APP_ID設定: 未設定→stale除外）
 
 ## カメラ自動取得の信頼性
-- auto_scraped 取得: 18 件（うち high: 18）
-- manual fallback: 42 件
-- 棄却候補数: 248
-- 棄却理由: {'model_mismatch': 197, 'not_buyback_context': 51}
+- auto_scraped 取得: 17 件（うち high: 17）
+- manual fallback: 43 件
+- 棄却候補数: 204
+- 棄却理由: {'model_mismatch': 153, 'not_buyback_context': 51}

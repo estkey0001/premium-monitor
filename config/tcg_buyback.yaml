@@ -55,6 +55,17 @@ shops:
     pages:
       - https://kaitori-rudeya.com/category/detail/224   # ワンピースカード
       - https://kaitori-rudeya.com/category/detail/114   # ポケモンカード
+  morimori:
+    # 2026-11-23 追加（Source Admission Gate 7 項目: 店舗公式・JAN と型番が一覧に載る・現在価格が数字・「未開封BOX/テープ付」の条件・
+    # ページ見出しの更新日・1 日 1 回で足りる・403/CAPTCHA なし。robots.txt は /category/ を禁止していない）。
+    # 使うのは「現在価格」だけ（預かり・即フリは別条件の価格）。「ASK」の行は価格なしとして行を作らない。
+    # 郵送・店頭の買取の費用の根拠は未確認なので、利益の経路（route_costs）には加えない（複数店の確認・外れ値の判定にだけ使う）
+    name: 森森買取
+    host: www.morimori-kaitori.jp
+    freshness_basis: page_date
+    counter_buyback_evidence: null
+    pages:
+      - https://www.morimori-kaitori.jp/category/2403   # ONE PIECE カードゲーム（BOX）
   kaitorishouten:
     name: 買取商店
     host: www.kaitorishouten-co.jp
@@ -110,4 +121,113 @@ targets:
     name: プレミアムカードコレクション -熊本県スペシャル-
     unit: SET
     jan: "4582770012040"
+    pages: {}
+  # ── 2026-11-23 Coverage Expansion: 公式が「その単位」の価格を明示している商品だけ（exports/tcg/msrp.json の verified）。
+  #    JAN の裏付け: ポケモンは公式ストア（ポケモンセンターオンラインの商品ページ）と買取ルデヤの「JAN:」表記が一致（FUTURISTIC は買取商店も一致）。
+  #    ONE PIECE の ST-29 / ST-30 は買取ルデヤだけが根拠（公式ページに JAN は載らない）ので、型番・名前も照合する（name_contains）。
+  #    name_contains: JAN が合っても、店の商品名にこれらの語がすべて無ければ同一扱いしない。
+  - product_id: pokemon-30th-celebration-futuristic-box
+    tcg: POKEMON
+    name: 30th CELEBRATION FUTURISTIC BOX
+    unit: BOX
+    jan: "4521329463872"
+    name_contains: [FUTURISTIC]
+    pages: {kaitorishouten: https://www.kaitorishouten-co.jp/products/detail/27144}
+  - product_id: pokemon-30th-celebration-カードセット-フシギダネ-ヒトカゲ-ゼニガメ
+    tcg: POKEMON
+    name: 30th CELEBRATION カードセット フシギダネ・ヒトカゲ・ゼニガメ
+    unit: SET
+    jan: "4521329462295"
+    name_contains: [カードセット, フシギダネ, ヒトカゲ, ゼニガメ]
+    pages: {}
+  - product_id: pokemon-30th-celebration-カードセット-チコリータ-ヒノアラシ-ワニノコ
+    tcg: POKEMON
+    name: 30th CELEBRATION カードセット チコリータ・ヒノアラシ・ワニノコ
+    unit: SET
+    jan: "4521329462325"
+    name_contains: [カードセット, チコリータ, ヒノアラシ, ワニノコ]
+    pages: {}
+  - product_id: pokemon-30th-celebration-カードセット-キモリ-アチャモ-ミズゴロウ
+    tcg: POKEMON
+    name: 30th CELEBRATION カードセット キモリ・アチャモ・ミズゴロウ
+    unit: SET
+    jan: "4521329462349"
+    name_contains: [カードセット, キモリ, アチャモ, ミズゴロウ]
+    pages: {}
+  - product_id: pokemon-30th-celebration-カードセット-ナエトル-ヒコザル-ポッチャマ
+    tcg: POKEMON
+    name: 30th CELEBRATION カードセット ナエトル・ヒコザル・ポッチャマ
+    unit: SET
+    jan: "4521329462356"
+    name_contains: [カードセット, ナエトル, ヒコザル, ポッチャマ]
+    pages: {}
+  - product_id: pokemon-30th-celebration-カードセット-ツタージャ-ポカブ-ミジュマル
+    tcg: POKEMON
+    name: 30th CELEBRATION カードセット ツタージャ・ポカブ・ミジュマル
+    unit: SET
+    jan: "4521329462363"
+    name_contains: [カードセット, ツタージャ, ポカブ, ミジュマル]
+    pages: {}
+  - product_id: pokemon-30th-celebration-カードセット-ハリマロン-フォッコ-ケロマツ
+    tcg: POKEMON
+    name: 30th CELEBRATION カードセット ハリマロン・フォッコ・ケロマツ
+    unit: SET
+    jan: "4521329462370"
+    name_contains: [カードセット, ハリマロン, フォッコ, ケロマツ]
+    pages: {}
+  - product_id: pokemon-30th-celebration-カードセット-モクロー-ニャビー-アシマリ
+    tcg: POKEMON
+    name: 30th CELEBRATION カードセット モクロー・ニャビー・アシマリ
+    unit: SET
+    jan: "4521329462387"
+    name_contains: [カードセット, モクロー, ニャビー, アシマリ]
+    pages: {}
+  - product_id: pokemon-30th-celebration-カードセット-サルノリ-ヒバニー-メッソン
+    tcg: POKEMON
+    name: 30th CELEBRATION カードセット サルノリ・ヒバニー・メッソン
+    unit: SET
+    jan: "4521329462394"
+    name_contains: [カードセット, サルノリ, ヒバニー, メッソン]
+    pages: {}
+  - product_id: pokemon-30th-celebration-カードセット-ニャオハ-ホゲータ-クワッス
+    tcg: POKEMON
+    name: 30th CELEBRATION カードセット ニャオハ・ホゲータ・クワッス
+    unit: SET
+    jan: "4521329462400"
+    name_contains: [カードセット, ニャオハ, ホゲータ, クワッス]
+    pages: {}
+  - product_id: pokemon-スターターセットex-イーブイex
+    tcg: POKEMON
+    name: スターターセットex イーブイex
+    unit: SET
+    jan: "4521329462141"
+    name_contains: [スターターセットex, イーブイex]
+    pages: {}
+  - product_id: pokemon-スターターセットex-ゾロア-ゾロアークex
+    tcg: POKEMON
+    name: スターターセットex ゾロア＆ゾロアークex
+    unit: SET
+    jan: "4521329462158"
+    name_contains: [スターターセットex, ゾロア, ゾロアークex]
+    pages: {}
+  - product_id: pokemon-スターターセットex-ニャオハ-マスカーニャex
+    tcg: POKEMON
+    name: スターターセットex ニャオハ＆マスカーニャex
+    unit: SET
+    jan: "4521329462165"
+    name_contains: [スターターセットex, ニャオハ, マスカーニャex]
+    pages: {}
+  - product_id: スタートデッキ-egghead-st-29
+    tcg: ONE_PIECE
+    name: スタートデッキ EGGHEAD【ST-29】
+    unit: DECK
+    jan: "4582769922985"
+    name_contains: [ST-29, EGGHEAD]
+    pages: {}
+  - product_id: スタートデッキex-ルフィ-エース-st-30
+    tcg: ONE_PIECE
+    name: スタートデッキEX ルフィ&エース【ST-30】
+    unit: DECK
+    jan: "4582769982545"
+    name_contains: [ST-30]
     pages: {}

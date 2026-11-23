@@ -135,6 +135,7 @@ def parse_rudeya(html: str, page_url: str, observed_at: datetime) -> dict:
         link = re.search(r'product-card-name-link"\s+href="([^"]+)"', art) or re.search(r'href="([^"]+)"[^>]*class="product-card-name-link"', art)
         memo = re.search(r'product-card-memo">(.*?)</span>', art, re.S)
         badge = re.search(r'product-card-cond-badge[^"]*">([^<]*)<', art)
+        stopped = re.search(r'product-card-stopped">([^<]*)<', art)       # 「お申込一時停止中」: 価格は載っているが今は買い取っていない
         p = _int(price.group(1))
         if p is None:
             continue
@@ -146,8 +147,54 @@ def parse_rudeya(html: str, page_url: str, observed_at: datetime) -> dict:
             "source_url": page_url, "item_url": link.group(1) if link else None,
             "source_updated_at": None, "page_asof": asof.isoformat() if asof else None,
             "observed_at": observed_at.isoformat(),
+            **({"suspended": True, "suspended_text": _text(stopped.group(1))} if stopped else {}),
         })
     return {"asof": asof, "rows": rows}
+
+
+_MM_UPDATED = re.compile(r"(20\d{2})年\s*(\d{1,2})月\s*(\d{1,2})日\s*更新")
+
+
+def parse_morimori(html: str, page_url: str, observed_at: datetime) -> dict:
+    """森森買取のカテゴリ一覧（ONE PIECE）。ページ見出しの「YYYY年M月D日 更新」が更新日。
+    使う価格は「現在価格」（通常の買取価格）だけ。預かり・即フリは別の条件（期間・手数料）の価格なので使わない。
+    価格が数字でない行（ASK = 価格未掲載）は行を作らない。"""
+    html = html or ""
+    first = html.find('mm1551-prow')                      # 更新日は価格表より前（見出し）のものだけ。お知らせ・フッターの日付を価格の更新日にしない
+    m = _MM_UPDATED.search(_text(html[:first] if first >= 0 else html))
+    updated = None
+    if m:
+        try:
+            updated = datetime(*(int(x) for x in m.groups()), tzinfo=JST).strftime("%Y-%m-%d")
+        except ValueError:
+            updated = None
+    rows = []
+    for blk in re.findall(r'<div class="mm1551-prow" .*?(?=<div class="mm1551-prow" |</section>|$)', html, re.S):
+        head = re.match(r'<div class="mm1551-prow" ([^>]*)>', blk)
+        if not head or 'data-price-disp-flg="0"' not in head.group(1):
+            continue
+        name = re.search(r'mm1551-prow__name">\s*<a href="([^"]+)">([^<]*)</a>', blk)
+        cur = re.search(r'mm1551-prow__cur-val">\s*([\d,]+)\s*<', blk)
+        jan = re.search(r"JAN:\s*(\d{8,14})", blk)
+        if not name or not cur:
+            continue
+        p = _int(cur.group(1))
+        if p is None:
+            continue
+        note = re.search(r'class="notetip">(.*?)</span>', blk, re.S)
+        badge = re.search(r'<span class="rk">([^<]*)<', blk)
+        cond_text = _text(note.group(1)).split("※")[0].strip() if note else ""        # 「※不正品が…」以降は注意書きなので条件には使わない
+        raw = _text(name.group(2))
+        href = name.group(1)
+        item_url = href if href.startswith("http") else "https://www.morimori-kaitori.jp" + href
+        rows.append({
+            "shop": "morimori", "raw_product_name": raw, "jan": jan.group(1) if jan else None, "price": p,
+            "condition_text": cond_text,
+            "condition": condition_of(cond_text + " " + raw, badge.group(1) if badge else ""),
+            "source_url": page_url, "item_url": item_url,
+            "source_updated_at": updated, "page_asof": None, "observed_at": observed_at.isoformat(),
+        })
+    return {"updated": updated, "rows": rows}
 
 
 def parse_kaitorishouten(html: str, page_url: str, observed_at: datetime) -> Optional[dict]:
@@ -196,6 +243,12 @@ def identify(row: dict, targets: list) -> dict:
                 out.update({"identity_status": "UNIT_MISMATCH",
                             "identity_reason": f"店の商品名の単位 {sorted(seen)} が対象の単位 {t.get('unit')} と違う（または複数書かれている）"})
                 return out
+            need = [unicodedata.normalize("NFKC", str(x)).lower() for x in (t.get("name_contains") or [])]
+            nm = unicodedata.normalize("NFKC", row.get("raw_product_name", "")).lower()
+            if any(x not in nm for x in need):                     # JAN が合っても、店の商品名に対象の特徴（型番・名前）が無ければ同一扱いしない
+                out.update({"identity_status": "NAME_MISMATCH",
+                            "identity_reason": f"JAN は一致するが、店の商品名に {need} がすべては含まれない"})
+                return out
             out.update({"product_id": t["product_id"], "tcg": t.get("tcg"), "unit": t.get("unit"),
                         "normalized_product_name": t.get("name"), "identity_status": ID_CONFIRMED,
                         "identity_reason": f"JAN {jan} が一致、単位 {t.get('unit')} が矛盾しない"})
@@ -213,7 +266,10 @@ def dedupe(rows: list) -> list:
     out = []
     for k, g in groups.items():
         if len({x["price"] for x in g}) == 1:
-            out.append(g[0])
+            first = g[0]
+            if any(x.get("suspended") for x in g) and not first.get("suspended"):
+                first = {**first, "suspended": True, "suspended_text": next(x.get("suspended_text", "") for x in g if x.get("suspended"))}
+            out.append(first)                              # 同じ価格の行に 1 件でも買取停止中があれば、並び順に関わらず停止中として扱う
     return out
 
 
@@ -284,7 +340,7 @@ def annotate(rows: list, cfg: dict, now: datetime) -> list:
         f, why = classify_freshness(x, cfg, now)
         x["freshness"], x["freshness_reason"] = f, why
         x["executable"] = bool(x["identity_status"] == ID_CONFIRMED and f == FRESH and x.get("condition") in EXECUTABLE_CONDITIONS
-                               and x.get("unit"))
+                               and x.get("unit") and not x.get("suspended"))
         out.append(x)
     return out
 
@@ -368,8 +424,8 @@ def update_history(history: list, rows: list, today: str, keep_days: int = 120) 
     hist = [h for h in (history or []) if isinstance(h, dict)]
     have = {(history_key(h), h.get("date")) for h in hist}
     for r in rows:
-        if r.get("identity_status") != ID_CONFIRMED or r.get("carried_over"):
-            continue                                      # 取得に失敗して引き継いだ行は、今日の観測として履歴に入れない
+        if r.get("identity_status") != ID_CONFIRMED or r.get("carried_over") or r.get("suspended"):
+            continue                                      # 取得に失敗して引き継いだ行・買取停止中の行（今は買い取っていない価格）は、今日の観測として履歴に入れない
         k = (history_key(r), today)
         if k in have:
             continue
@@ -388,8 +444,8 @@ def price_events(history: list, rows: list, today: str, cfg: dict) -> list:
         prev[history_key(h)] = h
     events = []
     for r in rows:
-        if r.get("identity_status") != ID_CONFIRMED or r.get("carried_over") or r.get("freshness") != FRESH:
-            continue                                   # 取得していない日・古い価格から、新しい日付のイベントを作らない
+        if r.get("identity_status") != ID_CONFIRMED or r.get("carried_over") or r.get("suspended") or r.get("freshness") != FRESH:
+            continue                                   # 取得していない日・買取停止中の価格・古い価格から、新しい日付のイベントを作らない
         p = prev.get(history_key(r))
         if not p or p["price"] == r["price"]:
             continue

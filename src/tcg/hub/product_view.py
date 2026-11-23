@@ -149,7 +149,7 @@ def _buyback_for(product_id: str, bb_rows: list, bb_cfg: dict, now: datetime, ms
                                    "price": r["price"], "unit": r.get("unit"), "condition": r.get("condition"),
                                    "freshness": r.get("freshness"), "checked_at": r.get("observed_at"),
                                    "source_updated_at": r.get("source_updated_at"), "source_url": r.get("source_url"),
-                                   "item_url": r.get("item_url")}
+                                   "item_url": r.get("item_url"), "suspended": bool(r.get("suspended"))}
     return {"status": summary["status"], "unit": summary["unit"],
             "highest_listed": slim(summary["highest_listed"]), "highest_executable": slim(summary["highest_executable"]),
             "ranking": [slim(r) for r in summary["ranking"]], "shop_count": summary["shop_count"],

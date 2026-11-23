@@ -92,6 +92,8 @@ def collect(cfg: dict, prev_rows: list, now: datetime, fetcher=fetch) -> tuple[l
             continue
         if key == "rudeya":
             got = bb.parse_rudeya(html, url, observed)["rows"]
+        elif key == "morimori":
+            got = bb.parse_morimori(html, url, observed)["rows"]
         elif key == "kaitorishouten":
             r = bb.parse_kaitorishouten(html, url, observed)
             got = [r] if r else []

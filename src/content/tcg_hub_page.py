@@ -406,7 +406,7 @@ def _product_card(p: dict, i: int, yr: str) -> str:
             unknown.append("最高買取")
         elif lst:
             meta += (f'<div><dt>掲載の買取</dt><dd title="鮮度・条件を確認できていない掲載価格（参考）">{_yen(lst["price"])}'
-                     f'<small>{_e(lst["shop_name"])}・{_e(lst.get("unit") or "")}・条件 {_e(lst.get("condition") or "不明")}・参考</small></dd></div>')
+                     f'<small>{_e(lst["shop_name"])}・{_e(lst.get("unit") or "")}・{"お申込一時停止中（今は買い取っていません）" if lst.get("suspended") else "条件 " + _e(lst.get("condition") or "不明")}・参考</small></dd></div>')
             bb_note = "掲載されている買取価格は、鮮度か条件を確認できていないため参考表示です（利益に使っていません）。"
             unknown.append("最高買取")
     if pr.get("net_profit") is not None:

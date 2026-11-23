@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-22 22:10 JST",
-  "date": "2026-11-22",
+  "generated_at": "2026-11-23 23:24 JST",
+  "date": "2026-11-23",
   "health_score": {
     "data_quality": 14.4,
     "profit_discovery": 15.0,
@@ -337,15 +337,15 @@
   "diff_vs_prev": {
     "available": true,
     "stale_rate": {
-      "prev": 0.6176,
+      "prev": 0.6203,
       "cur": 0.6203
     },
     "zero_rate": {
-      "prev": 0.1597,
+      "prev": 0.1603,
       "cur": 0.1603
     },
     "item_url_rate": {
-      "prev": 0.4748,
+      "prev": 0.4768,
       "cur": 0.4768
     },
     "main_route_count": {

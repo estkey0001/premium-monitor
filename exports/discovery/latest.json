@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-22T21:54:15+09:00",
+  "generated_at": "2026-11-23T23:08:48+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-17e",
-      "iphone-18-pro"
+      "iphone-air",
+      "iphone-duo"
     ],
     "errors": {},
-    "unknown_parts": 38,
-    "matched": 0,
-    "pending": 10,
+    "unknown_parts": 10,
+    "matched": 4,
+    "pending": 3,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -32,10 +32,10 @@
     },
     "inputs_stale": [],
     "review_required": 3,
-    "matched_events": 38,
+    "matched_events": 40,
     "release": 7,
     "by_kind": {
-      "LOTTERY": 40,
+      "LOTTERY": 42,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -114,7 +114,7 @@
           "source_id": "FUKUFUKU_TOREKA",
           "retailer": "福福トレカ",
           "adapter": "fukufuku_lottery",
-          "state": "NO_ACTIVE_LOTTERY",
+          "state": "ACTIVE_LOTTERY",
           "health": "HEALTHY",
           "blocked": false,
           "robots": null,
@@ -291,10 +291,10 @@
     "unknown_official_products": 58,
     "apple_candidates": 15,
     "tcg_products": 50,
-    "event_candidates": 195,
-    "review_required_announcements": 6,
+    "event_candidates": 197,
+    "review_required_announcements": 5,
     "matched_events": 84,
-    "stale_events": 105,
+    "stale_events": 108,
     "approved_events": 0,
     "registered_events": 0
   },
@@ -370,7 +370,7 @@
         "source_id": "FUKUFUKU_TOREKA",
         "retailer": "福福トレカ",
         "adapter": "fukufuku_lottery",
-        "state": "NO_ACTIVE_LOTTERY",
+        "state": "ACTIVE_LOTTERY",
         "health": "HEALTHY",
         "blocked": false,
         "robots": null,

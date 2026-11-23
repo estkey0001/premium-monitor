@@ -1,6 +1,6 @@
 # Profit Health Dashboard
 
-生成: 2026-11-22 22:10 JST
+生成: 2026-11-23 23:24 JST
 
 ## Health Score: **50.6 / 100**
 
@@ -30,7 +30,7 @@
 - reference: 0 → 0
 - stale率: 62% → 62%
 - 0円率: 16% → 16%
-- item_url率: 47% → 48%
+- item_url率: 48% → 48%
 
 ## 異常検知
 

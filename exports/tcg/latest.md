@@ -1,4 +1,4 @@
-# TCG 入荷・抽選・プレミア レポート（2026-11-22 21:50 JST）
+# TCG 入荷・抽選・プレミア レポート（2026-11-23 23:03 JST）
 
 ## Current Active
 
@@ -21,7 +21,7 @@
 
 ## Available / Restock（現在購入可能性があるもの）
 
-- ブースターパック 神の支配【OP-18】（ONEPIECE_CARD_OFFICIAL） 通常販売 / Confirmed
+- 現在「購入可能」と確認できた情報はありません（古い入荷報告は表示しません）
 
 ## Convenience Store（コンビニ販売情報）
 
@@ -35,37 +35,33 @@
 
 | Retailer | Collector | Reachable | Health | Last Check | Active Lotteries | Active Preorders |
 |---|---|---|---|---|---|---|
-| ポケモンセンターオンライン (P0) | pco_lottery | yes | 現在の抽選なし | 2026-11-22 21:25 | 0 | 0 |
-| ポケモンカードゲーム公式（ニュース） (P0) | pokemon_news_lottery | yes | 現在の抽選なし | 2026-11-22 21:25 | 0 | 0 |
-| ゲオ (P1) | geo_lottery | no | アクセス拒否 | 2026-11-22 21:25 | 0 | 0 |
-| カードラボ (P1) | card_labo_lottery | yes | 抽選あり | 2026-11-22 21:25 | 21 | 0 |
-| ホビーステーション (P1) | hobby_station_lottery | yes | 抽選あり | 2026-11-22 21:25 | 2 | 0 |
-| キッズリパブリック（イオン） (P1) | kids_republic_lottery | no | アクセス拒否 | 2026-11-22 21:25 | 0 | 0 |
-| 福福トレカ (P2) | fukufuku_lottery | yes | 現在の抽選なし | 2026-11-22 21:25 | 0 | 0 |
-| ONE PIECE 麦わらストア (P1) | mugiwara_store_lottery | yes | 抽選あり | 2026-11-22 21:25 | 2 | 0 |
-| トイザらス (P1) | 未実装 | no | アクセス拒否 | 2026-11-22 21:25 | 0 | 0 |
-| Joshin (P1) | 未実装 | no | アクセス拒否 | 2026-11-22 21:25 | 0 | 0 |
-| エディオン (P1) | 未実装 | no | アクセス拒否 | 2026-11-22 21:25 | 0 | 0 |
-| ヤマダデンキ (P1) | 未実装 | no | 接続できない | 2026-11-22 21:25 | 0 | 0 |
-| TSUTAYA (P1) | 未実装 | yes | 未監視（未実装） | 2026-11-22 21:25 | 0 | 0 |
-| ビックカメラ (P1) | 未実装 | no | 接続できない | 2026-11-22 21:25 | 0 | 0 |
-| ヨドバシカメラ (P1) | 未実装 | no | 接続できない | 2026-11-22 21:25 | 0 | 0 |
-| Amazon (P2) | 未実装 | yes | 未監視（未実装） | 2026-11-22 21:25 | 0 | 0 |
-| 楽天ブックス (P2) | 未実装 | no | 接続できない | 2026-11-22 21:25 | 0 | 0 |
-| セブンネットショッピング (P2) | 未実装 | yes | 未監視（未実装） | 2026-11-22 21:25 | 0 | 0 |
-| ローソン (P2) | lawson_lottery | yes | 現在の抽選なし | 2026-11-22 21:25 | 0 | 0 |
-| ONE PIECEカードゲーム公式 (P0) | onepiece_news_lottery | yes | 現在の抽選なし | 2026-11-22 21:25 | 0 | 0 |
+| ポケモンセンターオンライン (P0) | pco_lottery | yes | 現在の抽選なし | 2026-11-23 22:38 | 0 | 0 |
+| ポケモンカードゲーム公式（ニュース） (P0) | pokemon_news_lottery | yes | 現在の抽選なし | 2026-11-23 22:38 | 0 | 0 |
+| ゲオ (P1) | geo_lottery | no | アクセス拒否 | 2026-11-23 22:38 | 0 | 0 |
+| カードラボ (P1) | card_labo_lottery | yes | 抽選あり | 2026-11-23 22:38 | 22 | 0 |
+| ホビーステーション (P1) | hobby_station_lottery | yes | 抽選あり | 2026-11-23 22:38 | 2 | 0 |
+| キッズリパブリック（イオン） (P1) | kids_republic_lottery | no | アクセス拒否 | 2026-11-23 22:38 | 0 | 0 |
+| 福福トレカ (P2) | fukufuku_lottery | yes | 抽選あり | 2026-11-23 22:38 | 1 | 0 |
+| ONE PIECE 麦わらストア (P1) | mugiwara_store_lottery | yes | 抽選あり | 2026-11-23 22:38 | 2 | 0 |
+| トイザらス (P1) | 未実装 | no | アクセス拒否 | 2026-11-23 22:38 | 0 | 0 |
+| Joshin (P1) | 未実装 | no | アクセス拒否 | 2026-11-23 22:38 | 0 | 0 |
+| エディオン (P1) | 未実装 | no | アクセス拒否 | 2026-11-23 22:38 | 0 | 0 |
+| ヤマダデンキ (P1) | 未実装 | no | 接続できない | 2026-11-23 22:38 | 0 | 0 |
+| TSUTAYA (P1) | 未実装 | yes | 未監視（未実装） | 2026-11-23 22:38 | 0 | 0 |
+| ビックカメラ (P1) | 未実装 | no | 接続できない | 2026-11-23 22:38 | 0 | 0 |
+| ヨドバシカメラ (P1) | 未実装 | no | 接続できない | 2026-11-23 22:38 | 0 | 0 |
+| Amazon (P2) | 未実装 | yes | 未監視（未実装） | 2026-11-23 22:38 | 0 | 0 |
+| 楽天ブックス (P2) | 未実装 | no | 接続できない | 2026-11-23 22:38 | 0 | 0 |
+| セブンネットショッピング (P2) | 未実装 | yes | 未監視（未実装） | 2026-11-23 22:38 | 0 | 0 |
+| ローソン (P2) | lawson_lottery | yes | 現在の抽選なし | 2026-11-23 22:38 | 0 | 0 |
+| ONE PIECEカードゲーム公式 (P0) | onepiece_news_lottery | yes | 現在の抽選なし | 2026-11-23 22:38 | 0 | 0 |
 | ONE PIECEカードゲーム公式ショップ (P0) | 未実装 | no | 未監視（未実装） | — | 0 | 0 |
-| プレミアムバンダイ (P0) | premium_bandai_lottery | yes | 現在の抽選なし | 2026-11-22 21:25 | 0 | 0 |
+| プレミアムバンダイ (P0) | premium_bandai_lottery | yes | 現在の抽選なし | 2026-11-23 22:38 | 0 | 0 |
 
 ## Active（受付中・締切間近）
 
 | TCG | Product | Retailer | Start | Deadline | Purchase Period | Confidence |
 |---|---|---|---|---|---|---|
-| ONE PIECEカードゲーム | 【ワンピースカードゲーム】再販品 | カードラボ | — | 11/22 23:59 | — | STORE_OFFICIAL / medium |
-| ポケモンカード | 【ポケモンカードゲーム】再販品 | カードラボ | — | 11/22 23:59 | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | 世界最強の戦士 | ONE PIECE 麦わらストア | 11/20 00:00 | 11/22 23:59 | — | RETAILER_OFFICIAL / high |
-| ポケモンカード | ポケモンカードゲーム MEGA 拡張パック ハドウシーカー（BOX） | 駿河屋 | 11/05 12:00 | 11/22 23:59 | 11/23 00:00〜11/26 23:59 | MANUAL_VERIFIED / medium |
 | ポケモンカード | 【ポケモンカードゲーム】再入荷商品 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ONE PIECEカードゲーム | プレミアムカードコレクション -熊本県スペシャル- | ONE PIECE 麦わらストア | 11/21 00:00 | 11/23 23:59 | — | RETAILER_OFFICIAL / high |
 
@@ -73,18 +69,20 @@
 
 | TCG | Product | Retailer | Start | Deadline | Purchase Period | Confidence |
 |---|---|---|---|---|---|---|
-| — | 該当なし | — | — | — | — | — |
+| ポケモンカード | ポケモンカードゲーム MEGA 拡張パック ハドウシーカー(シュリンクなし) | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ポケモンカード | ロケット団の栄光 1BOX 抽選販売 ※同時購入不可 | 福福トレカ | — | 11/29 23:59 | — | RETAILER_OFFICIAL / high |
 
 ## 結果発表待ち・当選者購入期間
 
 | TCG | Product | Retailer | Start | Deadline | Purchase Period | Confidence |
 |---|---|---|---|---|---|---|
 | ONE PIECEカードゲーム | エクストラブースター ONE PIECE Heroines Edition vol.2 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ONE PIECEカードゲーム | ワンピースカードゲーム ONE PIECE Heroines Edition vol.2【EB-05】 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ONE PIECEカードゲーム | ワンピースカードゲーム『エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】』 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ONE PIECEカードゲーム | ワンピースカードゲーム ONE PIECE Heroines Edition vol.2【EB-05】 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ONE PIECEカードゲーム | ワンピースカードゲーム ONE PIECE Heroines Edition vol.2【EB-05】 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | ワンピースカードゲーム ONE PIECE Heroines Edition vol.2【EB-05】 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ポケモンカード | ポケモンカードゲーム MEGA 拡張パック ハドウシーカー（BOX） | 駿河屋 | 11/05 12:00 | 11/22 23:59 | 11/23 00:00〜11/26 23:59 | MANUAL_VERIFIED / medium |
 | ポケモンカード | ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」 | カードラボ | — | — | —〜11/28 20:00 | STORE_OFFICIAL / medium |
 | ONE PIECEカードゲーム | 【ワンピースカードゲーム】「神の支配 | カードラボ | — | — | —〜11/29 21:00 | STORE_OFFICIAL / medium |
 | ポケモンカード | ポケモンカードゲーム MEGA 拡張パック ハドウシーカー(シュリンクなし) | カードラボ | — | — | — | STORE_OFFICIAL / medium |
@@ -92,14 +90,17 @@
 | ONE PIECEカードゲーム | エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ポケモンカード | ポケモンカードゲーム MEGA『拡張パック 30th CELEBRATION』 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ポケモンカード | ポケモンカードゲーム MEGA 拡張パック『30th CELEBRATION』 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ポケモンカード | ポケモンカードゲーム MEGA ・拡張パック 30th CELEBRATION 20パック | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ONE PIECEカードゲーム | 【ワンピースカードゲーム】再入荷商品 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ポケモンカード | ポケモンカードゲーム MEGA ・拡張パック 30th CELEBRATION 20パック | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ポケモンカード | ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION | カードラボ | — | — | — | STORE_OFFICIAL / medium |
 | ONE PIECEカードゲーム | ONE PIECEカードゲーム『エクストラブースター ONE PIECE Heroines Edition vol.2』 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
-| ポケモンカード | ポケモンカードゲーム MEGA 拡張パック「ハドウシーカー」（1BOX） | 三洋堂書店 | 11/04 00:00 | 11/15 23:59 | 11/27 00:00〜11/29 23:59 | MANUAL_VERIFIED / medium |
 | ONE PIECEカードゲーム | ONE PIECE Heroines Edition vol.2【EB-05】 | カードラボ | — | — | — | STORE_OFFICIAL / medium |
+| ポケモンカード | ポケモンカードゲーム MEGA 拡張パック「ハドウシーカー」（1BOX） | 三洋堂書店 | 11/04 00:00 | 11/15 23:59 | 11/27 00:00〜11/29 23:59 | MANUAL_VERIFIED / medium |
+| ONE PIECEカードゲーム | 世界最強の戦士 | ONE PIECE 麦わらストア | 11/20 00:00 | 11/22 23:59 | — | RETAILER_OFFICIAL / high |
 | ポケモンカード | ポケモンカードゲームMEGA 30th CELEBRATION カードセット9種（再販） | ホビーステーション | 11/10 12:00 | 11/12 23:59 | — | STORE_OFFICIAL / medium |
 | ポケモンカード | ポケモンカードゲームMEGA 拡張パック ストームエメラルダ （再販） | ホビーステーション | 11/13 12:00 | 11/15 23:59 | — | STORE_OFFICIAL / medium |
+| ポケモンカード | 【ポケモンカードゲーム】再販品 | カードラボ | — | 11/22 23:59 | — | STORE_OFFICIAL / medium |
+| ONE PIECEカードゲーム | 【ワンピースカードゲーム】再販品 | カードラボ | — | 11/22 23:59 | — | STORE_OFFICIAL / medium |
 
 ## Preorder（予約。受付中・予約開始待ち・受付終了）
 
@@ -121,13 +122,13 @@
 
 ## Coverage
 
-- Configured: 22 / Implemented: 11 / Healthy: 9 / Blocked: 5 / Unreachable: 4 / Not Implemented: 11 / Lottery events: 25
+- Configured: 22 / Implemented: 11 / Healthy: 9 / Blocked: 5 / Unreachable: 4 / Not Implemented: 11 / Lottery events: 27
 
 ### Rejected（抽選・理由別件数）
 
 - tournament_or_event: 86
 - not_lottery_candidate: 73
-- no_lottery_sale_context: 3
+- no_lottery_sale_context: 2
 - announcement_too_old_or_undated: 1
 - schedule_not_in_text: 1
 
@@ -171,13 +172,13 @@
 
 | Source | TCG | Status | Last checked | Last success | Events | Errors | Blocked | robots |
 |---|---|---|---|---|---|---|---|---|
-| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-11-22 21:25 | 2026-11-22 21:29 | 2 | 0 | no | not_found |
-| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-11-22 21:25 | 2026-11-22 21:25 | 0 | 0 | no | not_found |
-| ポケモンセンターオンライン | POKEMON | HEALTHY | 2026-11-22 21:25 | 2026-11-22 21:25 | 2 | 0 | no | allowed |
-| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-11-22 21:25 | 2026-11-22 21:26 | 0 | 0 | no | allowed |
-| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-11-22 21:25 | 2026-11-22 21:25 | 0 | 0 | no | not_found |
-| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-11-22 21:25 | 2026-11-22 21:26 | 6 | 0 | no | not_found |
-| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-11-22 21:25 | 2026-11-22 21:25 | 0 | 0 | no | allowed |
+| ポケモンカードゲーム公式（商品API） | POKEMON | HEALTHY | 2026-11-23 22:38 | 2026-11-23 22:42 | 2 | 0 | no | not_found |
+| ポケモンカードゲーム公式（ニュース） | POKEMON | OK_NO_EVENTS | 2026-11-23 22:38 | 2026-11-23 22:38 | 0 | 0 | no | not_found |
+| ポケモンセンターオンライン | POKEMON | HEALTHY | 2026-11-23 22:38 | 2026-11-23 22:38 | 2 | 0 | no | allowed |
+| ローソン（ポケモンカード告知） | POKEMON | OK_NO_EVENTS | 2026-11-23 22:38 | 2026-11-23 22:39 | 0 | 0 | no | allowed |
+| ONE PIECEカードゲーム公式（ニュース） | ONE_PIECE | OK_NO_EVENTS | 2026-11-23 22:38 | 2026-11-23 22:38 | 0 | 0 | no | not_found |
+| ONE PIECEカードゲーム公式（商品情報） | ONE_PIECE | HEALTHY | 2026-11-23 22:38 | 2026-11-23 22:39 | 6 | 0 | no | not_found |
+| プレミアムバンダイ | ONE_PIECE | OK_NO_EVENTS | 2026-11-23 22:38 | 2026-11-23 22:38 | 0 | 0 | no | allowed |
 
 監視登録 source 数: 27
 

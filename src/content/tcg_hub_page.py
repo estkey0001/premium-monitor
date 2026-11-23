@@ -56,10 +56,10 @@ CSS = """
 :root{--bg:#f6f7f9;--fg:#1c2330;--mut:#566072;--card:#fff;--line:#d9dee6;--acc:#1f5fbf;--warn:#a45a00;
 --t-info-fg:#1d4ed8;--t-info-bg:#eff6ff;--t-info-bd:#bfdbfe;--t-danger-fg:#b91c1c;--t-danger-bg:#fef2f2;--t-danger-bd:#fecaca;
 --t-warn-fg:#b45309;--t-warn-bg:#fffbeb;--t-warn-bd:#fde68a;--t-gray-fg:#475569;--t-gray-bg:#f1f5f9;--t-gray-bd:#e2e8f0;
---tcg-pokemon:#6d28d9;--tcg-onepiece:#155e75;--k-result:#a21caf}
+--t-ok-fg:#166534;--t-ok-bg:#f0fdf4;--t-ok-bd:#bbf7d0;--tcg-pokemon:#6d28d9;--tcg-onepiece:#155e75;--k-result:#a21caf}
 @media(prefers-color-scheme:dark){:root{--bg:#10141b;--fg:#e6e9ef;--mut:#a3adbb;--card:#181e28;--line:#2b3442;--acc:#7fb0ff;--warn:#e0a24a;
 --t-info-fg:#93c5fd;--t-info-bg:#10223f;--t-info-bd:#1e3a8a;--t-danger-fg:#fca5a5;--t-danger-bg:#3b1212;--t-danger-bd:#7f1d1d;
---t-warn-fg:#fcd34d;--t-warn-bg:#3a2a08;--t-warn-bd:#78350f;--t-gray-fg:#cbd5e1;--t-gray-bg:#1e293b;--t-gray-bd:#334155;--k-result:#e879f9}}
+--t-warn-fg:#fcd34d;--t-warn-bg:#3a2a08;--t-warn-bd:#78350f;--t-gray-fg:#cbd5e1;--t-gray-bg:#1e293b;--t-gray-bd:#334155;--t-ok-fg:#86efac;--t-ok-bg:#0f2a1a;--t-ok-bd:#166534;--k-result:#e879f9}}
 *{box-sizing:border-box}body{overflow-wrap:anywhere;margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 -apple-system,"Hiragino Sans",sans-serif}
 main{max-width:1240px;margin:0 auto;padding:16px}h1{font-size:24px;margin:.2em 0}
 h2{font-size:18px;margin:1.6em 0 .5em;padding:0 0 .2em .6em;border-left:4px solid var(--acc);scroll-margin-top:56px}
@@ -79,6 +79,7 @@ nav.jump a{flex:none;display:inline-flex;align-items:center;border:1px solid var
 .sb{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:0 8px;font-size:12px;line-height:1.7;white-space:nowrap;margin:0 4px 2px 0}
 .sb.info{color:var(--t-info-fg);background:var(--t-info-bg);border-color:var(--t-info-bd)}
 .sb.danger{color:var(--t-danger-fg);background:var(--t-danger-bg);border-color:var(--t-danger-bd)}
+.sb.ok{color:var(--t-ok-fg);background:var(--t-ok-bg);border-color:var(--t-ok-bd)}
 .sb.warn{color:var(--t-warn-fg);background:var(--t-warn-bg);border-color:var(--t-warn-bd)}
 .sb.gray{color:var(--t-gray-fg);background:var(--t-gray-bg);border-color:var(--t-gray-bd)}
 .sb.out{color:var(--mut);background:transparent}
@@ -363,6 +364,57 @@ def _img_block(p: dict) -> str:
     return f'<div class="pimg ph {cls}" role="img" aria-label="画像なし（{_e(TCG_LABEL.get(p["tcg"], p["tcg"]))}）">{_e(ini)}</div>'
 
 
+def _susp_label(r: dict) -> str:
+    t = r.get("suspended_text") or "お申込一時停止中"
+    return f"{t}（今は買い取っていません）" if "停止" in t else f"{t}（買取として扱いません）"
+
+
+_OPP_TONE = {pv.O_PROFIT: "ok", pv.O_WATCH: "warn"}
+
+
+def _opp_card(o: dict, i: int, pidx: dict) -> str:
+    """利益候補 1 件。抽選の有無に関係なく出す。金額・状態は表示時に鮮度を判定し直す（FRESH でなければ「確認待ち」）。"""
+    cfg = _CFG()
+    pr, bbv, m = o["profit"], o["buyback"], o["profit"]["msrp"]
+    ex = bbv["highest_executable"]
+    mx = rf.thresholds(cfg)[0]
+    g = f"o{i}"
+    live = f'data-fb-live data-fb-group="{g}" {rf.attrs(pr.get("sell_observed_at"), cfg)} hidden'          # 利益・状態は、利益の基準にした価格の鮮度で判定
+    live_ex = f'data-fb-live data-fb-group="{g}" {rf.attrs(ex["checked_at"], cfg)} hidden'
+    src = "単一ソース（買取は 1 店のみ）" if bbv.get("single_source") else f'{bbv["shop_count"]}店で確認'
+    ptype = PTYPE_LABEL.get(o["product_type"], "") if o["product_type"] else ""
+    unit = str(ex.get("unit") or o.get("unit") or "")
+    neg = pr["net_profit"] <= 0
+    state_badge = (f'<span {live}>{_badge(o["state_label"] + ("（単一ソース）" if bbv.get("single_source") else ""), _OPP_TONE[o["state"]])}</span>'
+                   f'<span data-fb-stale data-fb-group="{g}" data-fb-max="{mx:g}">{_badge("確認待ち", "warn")}</span>')
+    lot = o.get("lottery")
+    lot_badge = (_status_badge(lot["status"], "抽選 " + lot["label"]) if lot else _badge("現在確認できる抽選なし", "out"))
+    meta = f'<div><dt>ブランド</dt><dd>{_e(TCG_LABEL.get(o["tcg"], o["tcg"]))}</dd></div>'
+    meta += f'<div><dt>種別</dt><dd>{_e(ptype + "・" if ptype else "")}{_e(unit)}</dd></div>'
+    meta += f'<div><dt>定価</dt><dd title="確認 {_e(_short(m["checked_at"]))}">{_yen(m["retail_price"])}<small>公式の{_e(unit)}価格</small></dd></div>'
+    meta += (f'<div {live_ex}><dt>最高買取</dt><dd title="{_e(ex["shop_name"])}・{_e(unit)}">{_yen(ex["price"])}'
+             f'<small>{_e(ex["shop_name"])}・{_e(unit)}・{_e(src)}</small></dd></div>')
+    meta += (f'<div {live}><dt>純利益</dt><dd title="{_e(pr.get("route") or "")}">{_e(pr["label"])}'
+             f'<small>{"赤字" if neg else "基準"}: {_e(pr.get("sell_shop_name") or "")} 買取 {_yen(pr["sell_price"])}・定価 {_yen(pr["acquisition_cost"])}</small></dd></div>'
+             f'<div {live}><dt>ROI</dt><dd>{pr["roi_pct"]:.1f}%</dd></div>')
+    meta += f'<div {live_ex}><dt>確認</dt><dd>{_e(_short(ex["checked_at"]))}</dd></div>'
+    meta += (f'<div data-fb-stale data-fb-group="{g}" data-fb-max="{mx:g}"><dt>純利益・ROI</dt><dd>価格再確認待ち'
+             f'<small>取得から{mx:g}時間を超えた買取価格は、利益の根拠にしません（<span data-fb-why>表示時点の鮮度を確認できていません</span>）・取得 {_e(_short(ex["checked_at"]))}</small></dd></div>')
+    notes = [f'根拠: 公式定価・JAN 一致・{unit}・新品未開封（買取店のページの価格）・{src}']
+    if pr.get("sell_shop") != ex.get("shop"):
+        notes.append(f'最高買取の店（{ex["shop_name"]}）と、利益の基準にした店（{pr.get("sell_shop_name")}）は別です')
+    if o["state"] == pv.O_WATCH:
+        notes.append("赤字です" if neg else "黒字でも投資利益率が低く、様子見です（強い購入推奨ではありません）")
+    nt = "".join(f'<span class="pnote">{_e(n)}</span>' for n in notes)
+    nt += f'<span class="pnote" {live}>{_e("前提: " + (pr.get("route") or "") + "（交通費・時間は含みません）。店頭の買取価格が Web 掲載と同じかは未確認で、箱の状態により減額・返送になる場合があります")}</span>'      # 利益の前提も、価格が新しいときだけ出す
+    off = _product_link(o["official_url"] or m.get("official_url")) or '<span class="mut">公式ページ未確認</span>'
+    pk = pidx.get((o["tcg"], o["product_id"]))
+    lot_link = (f'<a href="#lottery" data-pf="{pk}">この商品の抽選を表で見る</a>' if pk and lot and lot["counts"]["live"] else "")
+    return (f'<section class="pcard opp" id="{g}">{_img_block(o)}<div class="phead">'
+            f'<div>{_tcgtag(o["tcg"])}{state_badge}{lot_badge}</div><h3>{_e(o["name"])}</h3></div>'
+            f'<div class="pmeta"><dl>{meta}</dl>{nt}</div><div class="pfoot">{lot_link}{off}</div></section>')
+
+
 def _product_card(p: dict, i: int, yr: str) -> str:
     cfg = _CFG()
     pr = p["profit"]
@@ -406,7 +458,7 @@ def _product_card(p: dict, i: int, yr: str) -> str:
             unknown.append("最高買取")
         elif lst:
             meta += (f'<div><dt>掲載の買取</dt><dd title="鮮度・条件を確認できていない掲載価格（参考）">{_yen(lst["price"])}'
-                     f'<small>{_e(lst["shop_name"])}・{_e(lst.get("unit") or "")}・{"お申込一時停止中（今は買い取っていません）" if lst.get("suspended") else "条件 " + _e(lst.get("condition") or "不明")}・参考</small></dd></div>')
+                     f'<small>{_e(lst["shop_name"])}・{_e(lst.get("unit") or "")}・{_e(_susp_label(lst)) if lst.get("suspended") else "条件 " + _e(lst.get("condition") or "不明")}・参考</small></dd></div>')
             bb_note = "掲載されている買取価格は、鮮度か条件を確認できていないため参考表示です（利益に使っていません）。"
             unknown.append("最高買取")
     if pr.get("net_profit") is not None:
@@ -614,13 +666,32 @@ def render(hub: dict, *, generated_label: Optional[str] = None) -> str:
     prod_html = (f'<div class="pgrid">{cards}</div>' if cards else
                  '<p class="empty">商品に束ねられた抽選はまだありません。公式の商品名と一致した抽選が出ると、ここに商品カードが並びます。</p>')
 
+    pidx_k = {(p["tcg"], p["product_id"]): f"p{i}" for i, p in enumerate(products)}
+    opps = hub.get("opportunities") or []
+    opp_cards = "".join(_opp_card(o, i, pidx_k) for i, o in enumerate(opps))
+    opp_html = (
+        f'<h2 id="opportunities">現在の利益候補（{len(opps)}）</h2>'
+        f'<p class="mut">生成時点の内訳: 黒字 {s["opportunities_profit"]}／様子見 {s["opportunities_watch"]}'
+        f'（うち赤字 {sum(1 for o in opps if o["profit"]["net_profit"] <= 0)}）。表示時に価格が古ければ「確認待ち」になります。</p>'
+        '<p class="mut">抽選の有無に関係なく、<b>いま利益が計算できる商品</b>（赤字のものも含む）です。抽選が無いことは、利益機会が無いことを意味しません。'
+        '買取店のページの価格が新しい（取得から 8 時間以内）ときだけ金額を出します。</p>'
+        '<details class="note"><summary>見方（黒字・様子見・確認待ち）</summary>'
+        '<p class="mut">条件（すべて）: 公式の定価（同じ販売単位）／新品未開封の買取価格が実行可能／JAN で同一商品／価格が新しい。外れ値の疑い・買取が停止中・受付状態が不明な価格は入れません。</p>'
+        '<p class="mut">黒字＝純利益が正で、投資利益率が既存の BUY NOW の基準（30%）以上。様子見＝黒字でも投資利益率がそれ未満、または赤字（少額の黒字を強い推奨にしません）。'
+        '確認待ち＝表示時点で価格の取得から 8 時間を超えている（金額は出しません）。</p>'
+        '<p class="mut">並び: 黒字 → 様子見、同じ状態の中は純利益 → 投資利益率。利益の計算は既存の経路（公式定価 → 店頭買取）のままで、交通費・時間は含みません。'
+        '「今すぐ買える」ことは示しません。購入できる経路は別に確認してください。</p></details>'
+        + (f'<div class="pgrid">{opp_cards}</div>' if opp_cards else
+           '<p class="empty">いま利益を計算できる商品はありません（買取の価格が新しくない・定価が未確認・外れ値の確認待ち・買取停止中など）。</p>')
+    )
+
     body = (
         f'<div class="head"><h1>TCG 抽選ハブ</h1><span class="snap">状態は {gen} の画面生成時点のものです（情報の確認日は下の「確認日」）。応募前に必ず公式ページで確認してください。</span></div>'
         '<p class="mut">ポケモンカード・ONE PIECE カードの公式の抽選・予約をまとめています。自動応募はしません。</p>'
         f'{notes}{stale_banner}<div class="sum">{sum_cards}</div>{count_note}'
-        '<nav class="jump" aria-label="ページ内の移動"><a href="#products">商品</a><a href="#lottery">抽選一覧</a>'
+        '<nav class="jump" aria-label="ページ内の移動"><a href="#opportunities">利益候補</a><a href="#products">商品</a><a href="#lottery">抽選一覧</a>'
         '<a href="#calendar">カレンダー</a><a href="#checked">確認日</a></nav>'
-        f'{low}<h2 id="products">商品（{s["products"]}）</h2>'
+        f'{low}{opp_html}<h2 id="products">商品（{s["products"]}）</h2>'
         '<details class="note"><summary>商品の束ね方</summary><p class="mut">商品に束ねたのは、商品 ID まで一致（exact）した抽選だけです。ポケモンカードは公式の商品一覧と照合しています。'
         'ONE PIECE は公式の商品ページで確認できた商品だけを商品一覧に入れています（確認した発売日・価格だけ。画像は出しません）。商品コード（EB-05 等）が一致するか、商品名の本体が完全一致して候補が 1 件のときだけ束ねます。部分一致だけでは束ねません。</p></details>'
         f'{prod_html}'

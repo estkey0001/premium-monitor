@@ -149,11 +149,54 @@ def _buyback_for(product_id: str, bb_rows: list, bb_cfg: dict, now: datetime, ms
                                    "price": r["price"], "unit": r.get("unit"), "condition": r.get("condition"),
                                    "freshness": r.get("freshness"), "checked_at": r.get("observed_at"),
                                    "source_updated_at": r.get("source_updated_at"), "source_url": r.get("source_url"),
-                                   "item_url": r.get("item_url"), "suspended": bool(r.get("suspended"))}
+                                   "item_url": r.get("item_url"), "suspended": bool(r.get("suspended")), "suspended_text": r.get("suspended_text") or None}
     return {"status": summary["status"], "unit": summary["unit"],
             "highest_listed": slim(summary["highest_listed"]), "highest_executable": slim(summary["highest_executable"]),
             "ranking": [slim(r) for r in summary["ranking"]], "shop_count": summary["shop_count"],
             "single_source": summary["single_source"], "outlier": slim(summary["outlier"])}, pr
+
+
+# 利益候補の判定（新しい閾値は作らない。黒字の線は既存の BUY NOW の基準 scoring.BUY_NOW_MIN_PREMIUM_PERCENT をそのまま使う）
+O_PROFIT, O_WATCH = "PROFIT", "WATCH"
+OPP_LABEL = {O_PROFIT: "黒字", O_WATCH: "様子見"}          # 「確認待ち」は表示時に価格の鮮度が切れたときだけ（JS）。ここでは作らない
+_OPP_ORDER = {O_PROFIT: 0, O_WATCH: 1}
+
+
+def opportunity_state(profit: dict) -> Optional[str]:
+    """黒字 = 純利益が正で ROI が既存の BUY NOW の基準以上。様子見 = 黒字でも ROI がそれ未満、または赤字。算出できていなければ None。"""
+    from src.tcg.scoring import BUY_NOW_MIN_PREMIUM_PERCENT as T
+    if not isinstance(profit, dict) or not isinstance(profit.get("net_profit"), int) or not isinstance(profit.get("roi_pct"), (int, float)):
+        return None
+    return O_PROFIT if (profit["net_profit"] > 0 and profit["roi_pct"] >= T) else O_WATCH
+
+
+def build_opportunities(bb_cfg: dict, bb_rows: list, master: dict, msrp_rows: list, lottery_by_key: dict, now: datetime) -> list:
+    """抽選の有無に関係なく、いま利益が計算できる商品。条件（すべて）: 公式の定価（同じ単位）／実行可能な最高買取／鮮度 FRESH／同一性 CONFIRMED（JAN）／
+    単位・条件の確認（実行可能の条件）／外れ値・確認待ちでない。利益は Route T1（buyback.profit_for）の結果をそのまま使う。
+    並び: 状態（黒字 → 様子見）→ 純利益 → ROI。"""
+    out = []
+    for t in (bb_cfg or {}).get("targets") or []:
+        try:
+            key = (t["tcg"], t["product_id"])
+            m = _d(master.get(key))
+            hit = pl.msrp_for(t["product_id"], t["tcg"], _s(m.get("product_type")) or None, msrp_rows)
+            if not hit:
+                continue
+            bbv, pr = _buyback_for(t["product_id"], bb_rows, bb_cfg, now, hit)
+            state = opportunity_state(pr)
+            if not bbv or bbv["status"] != "EXECUTABLE" or not bbv.get("highest_executable") or state is None:
+                continue                                # 外れ値（OUTLIER_REVIEW）・掲載のみ・買取なしは候補に入れない
+            lot = lottery_by_key.get(key)
+            out.append({"tcg": t["tcg"], "product_id": t["product_id"], "canonical": C_MASTER if m else C_DISCOVERED,
+                        "name": _s(m.get("name")) or _s(t.get("name")) or t["product_id"],
+                        "product_type": _s(m.get("product_type")) or None, "unit": bbv.get("unit") or t.get("unit"),
+                        "image_url": _s(m.get("official_image_url")) or None, "official_url": _s(m.get("official_url")) or None,
+                        "msrp": hit, "profit": pr, "buyback": bbv, "state": state, "state_label": OPP_LABEL[state],
+                        "lottery": lot})                 # lot が None = 現在確認できる抽選なし（利益機会が無いという意味ではない）
+        except Exception:  # noqa: BLE001 — 1 商品の壊れたデータで全体を止めない（出さない側に倒す）
+            continue
+    out.sort(key=lambda o: (_OPP_ORDER[o["state"]], -o["profit"]["net_profit"], -o["profit"]["roi_pct"], o["name"]))
+    return out
 
 
 def profit_map(registry, msrp, buyback, now: Optional[datetime] = None) -> dict:
@@ -253,6 +296,9 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback
                        "today": sum(1 for v in evs if v["applicable_today"])},
             "priority": next((p for p in st.PRIORITY_ORDER if p in prios), None),
         })
+    lottery_by_key = {(p["tcg"], p["product_id"]): {"status": p["status"], "label": st.STATUS_LABEL[p["status"]], "counts": p["counts"]}
+                      for p in products if p["events"]}
+    opportunities = build_opportunities(bb_cfg, bb_rows, master, msrp_rows, lottery_by_key, now) if bb_cfg else []
     order = {s: i for i, s in enumerate(st._AGG_ORDER)}
     products.sort(key=lambda p: (order.get(p["status"], 99) if p["events"] else 98, p["release_date"] or "9999", p["name"]))
 
@@ -296,10 +342,12 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback
         "applying": sum(1 for v in views if v["status"] in st.APPLYING),         # 受付中 + 締切間近（表示用の合計。判定は変えない）
         "today": len(today_list), "deadline_today": len(deadline_today), "ending_soon": len(ending_soon), "upcoming": len(upcoming),
         "new": len(new), "calendar": len(cal), "skipped_malformed": skipped,
+        "opportunities": len(opportunities), "opportunities_profit": sum(1 for o in opportunities if o["state"] == O_PROFIT),
+        "opportunities_watch": sum(1 for o in opportunities if o["state"] == O_WATCH),
         "master": sum(1 for p in products if p["canonical"] == C_MASTER),
         "discovered": sum(1 for p in products if p["canonical"] == C_DISCOVERED),
     }
-    return {"now": now.isoformat(), "today": today, "products": products, "unbound": unbound, "events": views,
+    return {"now": now.isoformat(), "today": today, "products": products, "opportunities": opportunities, "unbound": unbound, "events": views,
             "today_list": today_list, "deadline_today": deadline_today, "ending_soon": ending_soon,
             "upcoming": upcoming, "new": new, "calendar": cal, "stats": stats,
             "checked_at": {"lotteries_generated_at": _s(lot.get("generated_at")) or None,

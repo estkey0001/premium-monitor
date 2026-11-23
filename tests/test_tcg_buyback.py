@@ -18,7 +18,7 @@ CFG = {
     "outlier": {"ratio": 1.5}, "surge": {"yen": 1000, "pct": 15},
     "route_costs": {"store_counter": {"label": "店頭受取 → 店頭持込", "purchase_shipping_yen": 0, "outbound_shipping_yen": 0,
                                        "other_yen": 0, "note": "交通費は含まない", "shops_supporting": ["rudeya"]}},
-    "shops": {"rudeya": {"name": "買取ルデヤ", "freshness_basis": "page_asof"},
+    "shops": {"rudeya": {"name": "買取ルデヤ", "freshness_basis": "page_asof", "requires_active_signal": True},
               "kaitorishouten": {"name": "買取商店", "freshness_basis": "page_date"}},
     "targets": [
         {"product_id": "deck", "tcg": "POKEMON", "name": "デッキセット", "unit": "SET", "jan": "4500000000111"},
@@ -27,13 +27,16 @@ CFG = {
 }
 
 
-def art(name, price, jan, memo="新品未開封のみ買取可", badge="新品"):
+ACTIVE_ACTION = '<div class="product-card-action"><button type="button" class="product-card-btn" onclick="cart_add_input(this, \'1\')">買取リクエスト</button></div>'
+
+
+def art(name, price, jan, memo="新品未開封のみ買取可", badge="新品", action=ACTIVE_ACTION):
     p = f'<span class="product-card-price-value">{price:,}<span class="unit">円</span></span>' if price else ""
     return (f'<article class="pgrid-card"><a href="https://r.example/item/1" class="product-card-thumb"></a>'
             f'<span class="product-card-cond-badge is-new">{badge}</span>'
             f'<a class="product-card-name-link" href="https://r.example/item/1">{name}</a>'
             f'<span class="product-card-jan-text">JAN: {jan}</span><span class="product-card-memo">{memo}</span>'
-            f'<div class="product-card-price-wrap">{p}</div></article>')
+            f'<div class="product-card-price-wrap">{p}</div>{action}</article>')
 
 
 def page(*arts, asof="2026年11月21日 17時55分現在"):
@@ -43,7 +46,8 @@ def page(*arts, asof="2026年11月21日 17時55分現在"):
 def row(shop="rudeya", price=8000, jan="4500000000111", cond=bb.C_UNOPENED, obs=NOW, asof=None, upd=None, name="商品"):
     return {"shop": shop, "raw_product_name": name, "jan": jan, "price": price, "condition": cond,
             "source_url": "https://s.example/", "observed_at": obs.isoformat(),
-            "page_asof": (asof or obs).isoformat() if shop == "rudeya" else None, "source_updated_at": upd}
+            "page_asof": (asof or obs).isoformat() if shop == "rudeya" else None, "source_updated_at": upd,
+            **({"accept_state": "ACTIVE"} if shop == "rudeya" else {})}
 
 
 # ── パース ──

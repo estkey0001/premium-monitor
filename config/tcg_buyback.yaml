@@ -51,6 +51,7 @@ shops:
     name: 買取ルデヤ
     host: kaitori-rudeya.com
     freshness_basis: page_asof
+    requires_active_signal: true          # 受付中の明確な信号（有効な申込ボタン）が無い行は実行不可（停止の検出を 1 つのクラス名に頼らない）
     counter_buyback_evidence: https://kaitori-rudeya.com/
     pages:
       - https://kaitori-rudeya.com/category/detail/224   # ワンピースカード
@@ -63,6 +64,7 @@ shops:
     name: 森森買取
     host: www.morimori-kaitori.jp
     freshness_basis: page_date
+    requires_active_signal: true          # 有効な「追加」ボタンが無い・停止の文言がある行は実行不可
     counter_buyback_evidence: null
     pages:
       - https://www.morimori-kaitori.jp/category/2403   # ONE PIECE カードゲーム（BOX）

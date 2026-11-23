@@ -50,13 +50,16 @@ def test_name_contains_blocks_a_same_jan_row_with_a_different_name():
 
 
 # ── 森森買取 ──
-def _mm(name, jan, price_html, note="", badge="新品", flg="0", pid="351067"):
+MM_ADD = '<button type="button" class="mm1551-add" data-mm1551-quick-add data-product-id="1">追加</button>'
+
+
+def _mm(name, jan, price_html, note="", badge="新品", flg="0", pid="351067", action=MM_ADD):
     nt = f'<span class="note"><span class="notetip">{note}</span></span>' if note else ""
     return (f'<div class="mm1551-prow" data-mm1551-product-id="{pid}" data-price-disp-flg="{flg}">'
             f'<div class="mm1551-prow__name"><a href="/category/2403/product/{pid}">{name}</a></div>'
             f'<div class="mm1551-prow__meta">JAN:{jan}</div><div class="pmeta"><span class="rk">{badge}</span>{nt}</div>'
             f'<div class="mm1551-prow__price"><div class="mm1551-prow__cur"><span class="mm1551-prow__cur-label">現在価格</span>{price_html}</div>'
-            f'<div class="mm1551-prow__keep">預かり(3カ月) <span class="mm1551-prow__keep-val">8,524</span>円</div></div></div>')
+            f'<div class="mm1551-prow__keep">預かり(3カ月) <span class="mm1551-prow__keep-val">8,524</span>円</div></div>{action}</div>')
 
 
 MM_HTML = ('<html><body><h1>ONE PIECE 買取 2026年11月23日 更新</h1>'
@@ -151,3 +154,49 @@ def test_morimori_update_date_comes_from_before_the_price_table_only():
             + "<footer>2026年12月31日 更新</footer></body></html>")
     # 価格表より前の最初の日付を採る（お知らせが先にあれば古い側 = STALE に倒れる。フッターの日付は採らない）
     assert bb.parse_morimori(html, "u", NOW)["updated"] == "2026-11-01"
+
+
+# ── 森森買取の受付状態（fail-closed） ──
+import pytest  # noqa: E402
+
+
+@pytest.mark.parametrize("action", [
+    "",
+    '<button type="button" class="mm1551-add" data-mm1551-quick-add disabled>追加</button>',
+    '<button type="button" class="mm1551-add" data-mm1551-quick-add hidden>追加</button>',
+    '<button type="button" class="x">お気に入り</button>',
+    '<span>現在、買取を休止しております</span>' + MM_ADD,
+])
+def test_morimori_without_an_explicit_active_signal_is_never_executable(action):
+    html = "<html><body><h1>2026年11月23日 更新</h1>" + _mm("【BOX】OP-18 神の支配", "4582770067194", '<span class="mm1551-prow__cur-val">8,400</span>円',
+                                                           note="未開封BOX/テープ付", action=action) + "</section></body></html>"
+    rows = bb.parse_morimori(html, "u", datetime(2026, 11, 23, 12, 0, tzinfo=JST))["rows"]
+    assert rows[0]["accept_state"] in (bb.A_STOPPED, bb.A_UNKNOWN) and rows[0].get("suspended") is True
+    cfg = {**REAL_CFG}
+    ann = bb.annotate(rows, cfg, datetime(2026, 11, 23, 12, 5, tzinfo=JST))
+    assert all(r["executable"] is False for r in ann)
+
+
+def test_condition_note_saying_unbuyable_does_not_stop_an_active_morimori_row():
+    r = bb.parse_morimori(MM_HTML.replace("未開封BOX/テープ付", "未開封BOX/テープ付 買取不可の場合あり"), "u", NOW)["rows"][0]
+    assert r["accept_state"] == bb.A_ACTIVE
+
+
+def test_rudeya_stop_detection_survives_quote_and_wording_changes():
+    from tests.test_tcg_opportunities import _rows
+    for action in ("<span class='product-card-stopped'>x</span>", "<button class='b'>買取リクエスト</button><span>現在受付しておりません</span>",
+                   "<button class='b'>買取リクエスト</button><span>買取休止中</span>", "<button class='b'>買取リクエスト</button><span>取扱終了</span>",
+                   '<button onclick="if(a>b)x()" disabled>買取リクエスト</button>',
+                   '<button style="display:none">買取リクエスト</button>'):
+        assert _rows(action)[0]["accept_state"] != bb.A_ACTIVE, action
+
+
+def test_price_events_skip_non_executable_and_outlier_products():
+    hist = [{"product_id": "a", "shop": "s", "unit": "BOX", "condition": "UNOPENED", "price": 1000, "date": "2026-11-22"},
+            {"product_id": "b", "shop": "s", "unit": "BOX", "condition": "NEW", "price": 1000, "date": "2026-11-22"},
+            {"product_id": "c", "shop": "s", "unit": "BOX", "condition": "UNOPENED", "price": 1000, "date": "2026-11-22"}]
+    mk = lambda pid, cond, ex: {"identity_status": "CONFIRMED", "product_id": pid, "shop": "s", "unit": "BOX", "condition": cond, "price": 5000,
+                                "freshness": "FRESH", "executable": ex}
+    rows = [mk("a", "UNOPENED", True), mk("b", "NEW", False), mk("c", "UNOPENED", True)]
+    ev = bb.price_events(hist, rows, "2026-11-23", {}, skip_products={"c"})
+    assert [e["product_id"] for e in ev] == ["a"]

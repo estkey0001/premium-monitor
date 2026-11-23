@@ -115,6 +115,47 @@ def units_in(name: str) -> set:
     return out
 
 
+A_ACTIVE, A_STOPPED, A_UNKNOWN = "ACTIVE", "STOPPED", "UNKNOWN"      # 買取の受付状態（ACTIVE と確認できたものだけが実行可能。判定できないものは UNKNOWN = 実行不可）
+# 停止を示す語（HTML のコメントを除いた本文から探す。「買取不可」は条件の注意書き（シュリンク切れは買取不可）にも出るので、ここには入れない）
+_STOP_TEXT = re.compile(r"一時停止|停止中|受付停止|受付を停止|受付終了|買取停止|休止|取扱終了|取り扱い終了|準備中|"
+                        r"受付(?:を|は)?(?:して)?(?:い|お)?(?:り)?(?:ま)?せん|受付不可|お申込.{0,6}(?:停止|終了|できません)|品切れ|在庫切れ|SOLD\s*OUT", re.I)
+_STOP_CLASS = re.compile(r"""class\s*=\s*["'][^"']*(?:stopped|suspend|soldout|sold-out|closed|disabled)[^"']*["']""", re.I)
+_BUTTON = re.compile(r"""<button\b((?:[^>"']|"[^"]*"|'[^']*')*)>(.*?)</button>""", re.S | re.I)      # 属性の値の中の > で途切れない
+_WRAP_OFF = re.compile(r"""<(?:fieldset|div|span|form|section|li|p)\b[^>]*(?:(?<![\w-])disabled(?![\w-])|(?<![\w-])hidden(?![\w-])|display\s*:\s*none|visibility\s*:\s*hidden|pointer-events\s*:\s*none)[^>]*>(?:\s*<[^>]+>){0,2}\s*$""", re.I)
+_HIDDEN = re.compile(r"""\bhidden\b|display\s*:\s*none|visibility\s*:\s*hidden|pointer-events\s*:\s*none|data-disabled|aria-hidden\s*=\s*["']?true""", re.I)
+_RUDEYA_ACTIVE_TEXT = re.compile(r"買取リクエスト|お申込|申込|カートに入れる")
+
+
+def accept_state(art: str, active_text: re.Pattern, active_attr: str = "") -> tuple[str, str]:
+    """買取の受付状態 (ACTIVE / STOPPED / UNKNOWN, 理由)。複数の信号で見る。
+    - 停止の信号が 1 つでもあれば STOPPED（クラス名・「一時停止中」等の文言・無効化されたボタン）。クラス名が変わっても文言で止まる。
+    - 停止の信号が無くても、「受付中」の明確な信号（無効化・非表示でない申込ボタン）が無ければ UNKNOWN（＝実行不可）。
+      「停止と確認できなかった」を「受付中」にしない。"""
+    body = re.sub(r"<!--.*?-->", " ", art or "", flags=re.S)
+    if _STOP_CLASS.search(body):
+        return A_STOPPED, "停止を示すクラスがある"
+    text = _text(re.sub(r"<(script|style)\b.*?</\1>", " ", body, flags=re.S))
+    m = _STOP_TEXT.search(text)
+    if m:
+        return A_STOPPED, f"停止を示す文言「{m.group(0)}」がある"
+    buttons = _BUTTON.findall(body)
+    for attrs, _inner in buttons:
+        if re.search(r"""(?<![\w-])disabled(?![\w-])|aria-disabled\s*=\s*["']?true""", attrs, re.I) and (
+                active_text.search(_text(_inner)) or (active_attr and active_attr in attrs)):
+            return A_STOPPED, "申込ボタンが無効化されている"
+    for m in _BUTTON.finditer(body):
+        attrs, inner = m.group(1), m.group(2)
+        if _HIDDEN.search(attrs) or re.search(r"(?<![\w-])disabled(?![\w-])", attrs, re.I) or _WRAP_OFF.search(body[:m.start()][-300:]):
+            continue                                        # 隠れている・無効のボタン（親要素が無効・非表示のものを含む）は「受付中」の信号にしない
+        if active_text.search(_text(inner)) or (active_attr and active_attr in attrs):
+            return A_ACTIVE, "申込ボタンが有効"
+    return A_UNKNOWN, "受付中を示す信号（有効な申込ボタン）が見つからない"
+
+
+def rudeya_accept_state(art: str) -> tuple[str, str]:
+    return accept_state(art, _RUDEYA_ACTIVE_TEXT)
+
+
 def parse_rudeya(html: str, page_url: str, observed_at: datetime) -> dict:
     """買取ルデヤの一覧ページ。{asof, rows}。ページの「○時○分現在」は、ページを作った（=取得した）時刻で、
     価格の更新日ではない。取得した時刻と近いときだけ「その時点の最新」と認める（classify_freshness）。"""
@@ -135,7 +176,11 @@ def parse_rudeya(html: str, page_url: str, observed_at: datetime) -> dict:
         link = re.search(r'product-card-name-link"\s+href="([^"]+)"', art) or re.search(r'href="([^"]+)"[^>]*class="product-card-name-link"', art)
         memo = re.search(r'product-card-memo">(.*?)</span>', art, re.S)
         badge = re.search(r'product-card-cond-badge[^"]*">([^<]*)<', art)
-        stopped = re.search(r'product-card-stopped">([^<]*)<', art)       # 「お申込一時停止中」: 価格は載っているが今は買い取っていない
+        state, state_why = rudeya_accept_state(art)                       # 受付状態は複数の信号で判定（ACTIVE と確認できたものだけ実行可能）
+        stopped = re.search(r'product-card-stopped">([^<]*)<', art)
+        stop_text = _text(stopped.group(1)) if stopped else (_STOP_TEXT.search(_text(re.sub(r"<!--.*?-->", " ", art, flags=re.S))) or [None])[0]
+        if state == A_STOPPED and not stop_text:
+            stop_text = f"買取停止中（{state_why}）"
         p = _int(price.group(1))
         if p is None:
             continue
@@ -147,11 +192,13 @@ def parse_rudeya(html: str, page_url: str, observed_at: datetime) -> dict:
             "source_url": page_url, "item_url": link.group(1) if link else None,
             "source_updated_at": None, "page_asof": asof.isoformat() if asof else None,
             "observed_at": observed_at.isoformat(),
-            **({"suspended": True, "suspended_text": _text(stopped.group(1))} if stopped else {}),
+            "accept_state": state, "accept_reason": state_why,
+            **({"suspended": True, "suspended_text": stop_text or ("お申込一時停止中" if state == A_STOPPED else "受付状態を確認できません")} if state != A_ACTIVE else {}),
         })
     return {"asof": asof, "rows": rows}
 
 
+_MM_ACTIVE_TEXT = re.compile(r"^\s*追加\s*$|買取申込|買取リクエスト")
 _MM_UPDATED = re.compile(r"(20\d{2})年\s*(\d{1,2})月\s*(\d{1,2})日\s*更新")
 
 
@@ -184,6 +231,7 @@ def parse_morimori(html: str, page_url: str, observed_at: datetime) -> dict:
         note = re.search(r'class="notetip">(.*?)</span>', blk, re.S)
         badge = re.search(r'<span class="rk">([^<]*)<', blk)
         cond_text = _text(note.group(1)).split("※")[0].strip() if note else ""        # 「※不正品が…」以降は注意書きなので条件には使わない
+        state, state_why = accept_state(re.sub(r'<span class="notetip">.*?</span>', " ", blk, flags=re.S), _MM_ACTIVE_TEXT, "data-mm1551-quick-add")     # 注意書き（買取不可の説明）は除いて見る
         raw = _text(name.group(2))
         href = name.group(1)
         item_url = href if href.startswith("http") else "https://www.morimori-kaitori.jp" + href
@@ -193,6 +241,8 @@ def parse_morimori(html: str, page_url: str, observed_at: datetime) -> dict:
             "condition": condition_of(cond_text + " " + raw, badge.group(1) if badge else ""),
             "source_url": page_url, "item_url": item_url,
             "source_updated_at": updated, "page_asof": None, "observed_at": observed_at.isoformat(),
+            "accept_state": state, "accept_reason": state_why,
+            **({"suspended": True, "suspended_text": f"受付状態を確認できません（{state_why}）" if state == A_UNKNOWN else f"買取停止中（{state_why}）"} if state != A_ACTIVE else {}),
         })
     return {"updated": updated, "rows": rows}
 
@@ -337,6 +387,9 @@ def annotate(rows: list, cfg: dict, now: datetime) -> list:
     out = []
     for r in dedupe(rows):
         x = identify(r, targets)
+        if ((cfg.get("shops") or {}).get(x.get("shop")) or {}).get("requires_active_signal") and x.get("accept_state") != A_ACTIVE:
+            x["suspended"] = True                          # 受付中の明確な信号が無い（旧データ・判定不能を含む）店の行は、受付中とみなさない（fail-closed）
+            x.setdefault("suspended_text", "受付状態を確認できません")
         f, why = classify_freshness(x, cfg, now)
         x["freshness"], x["freshness_reason"] = f, why
         x["executable"] = bool(x["identity_status"] == ID_CONFIRMED and f == FRESH and x.get("condition") in EXECUTABLE_CONDITIONS
@@ -419,13 +472,15 @@ def history_key(r: dict) -> tuple:
     return (r.get("product_id"), r.get("shop"), r.get("unit"), r.get("condition"))
 
 
-def update_history(history: list, rows: list, today: str, keep_days: int = 120) -> list:
+def update_history(history: list, rows: list, today: str, keep_days: int = 120, skip_products=()) -> list:
     """観測を履歴に足す（同じ日の同じキーは 1 件。実際に取得した行だけ）。"""
     hist = [h for h in (history or []) if isinstance(h, dict)]
     have = {(history_key(h), h.get("date")) for h in hist}
     for r in rows:
         if r.get("identity_status") != ID_CONFIRMED or r.get("carried_over") or r.get("suspended"):
             continue                                      # 取得に失敗して引き継いだ行・買取停止中の行（今は買い取っていない価格）は、今日の観測として履歴に入れない
+        if r.get("product_id") in (skip_products or ()):
+            continue                                      # 外れ値の確認待ちの価格を、翌日以降のイベントの比較元（前回価格）にしない
         k = (history_key(r), today)
         if k in have:
             continue
@@ -436,7 +491,7 @@ def update_history(history: list, rows: list, today: str, keep_days: int = 120) 
     return sorted((h for h in hist if str(h.get("date")) >= cutoff), key=lambda h: (h["date"], str(h["product_id"]), h["shop"]))
 
 
-def price_events(history: list, rows: list, today: str, cfg: dict) -> list:
+def price_events(history: list, rows: list, today: str, cfg: dict, skip_products=()) -> list:
     """同じ商品・店・単位・条件の前回（今日より前の最新）との差。語彙: PRICE_RISE / PRICE_DROP / BUYBACK_SURGE。"""
     sg = cfg.get("surge") or {}
     prev: dict = {}
@@ -446,6 +501,10 @@ def price_events(history: list, rows: list, today: str, cfg: dict) -> list:
     for r in rows:
         if r.get("identity_status") != ID_CONFIRMED or r.get("carried_over") or r.get("suspended") or r.get("freshness") != FRESH:
             continue                                   # 取得していない日・買取停止中の価格・古い価格から、新しい日付のイベントを作らない
+        if "executable" in r and not r["executable"]:
+            continue                                   # 条件が新品未開封と確認できない行の価格変化はイベントにしない（annotate 済みの行だけに適用）
+        if r.get("product_id") in (skip_products or ()):
+            continue                                   # 外れ値の確認待ちの商品の価格変化は、通知につながるイベントにしない
         p = prev.get(history_key(r))
         if not p or p["price"] == r["price"]:
             continue
@@ -461,17 +520,25 @@ def build_export(rows: list, history: list, shops_state: dict, cfg: dict, now: d
     """exports/tcg/buyback.json の中身。"""
     today = now.strftime("%Y-%m-%d")
     ann = annotate(rows, cfg, now)
-    hist = update_history(history, ann, today)
     from src.tcg.hub.profit_link import msrp_for       # 画面と同じ定価の選び方（単一ソースの乖離ゲートを JSON の要約にも効かせる）
 
     def _msrp(t: dict) -> Optional[int]:
         hit = msrp_for(t["product_id"], t.get("tcg"), None, msrp_rows or [])
         return hit["retail_price"] if hit else None
     summaries = {t["product_id"]: summarize_product(t["product_id"], ann, cfg, _msrp(t)) for t in cfg.get("targets") or []}
+    outliers = {pid for pid, sm in summaries.items() if sm["status"] == OUTLIER_REVIEW}
+    hist = update_history(history, ann, today, skip_products=outliers)
+    shops_state = {k: dict(v) for k, v in (shops_state or {}).items()}
+    for k, v in shops_state.items():                                   # 受付中と判定できる行が 0 件 = 停止ではなく判定器の故障の可能性（利益候補が気づかれず空になるのを防ぐ）
+        if ((cfg.get("shops") or {}).get(k) or {}).get("requires_active_signal"):
+            mine = [r for r in ann if r.get("shop") == k and not r.get("carried_over")]
+            v["active_rows"] = sum(1 for r in mine if r.get("accept_state") == A_ACTIVE)
+            if mine and v["active_rows"] == 0 and v.get("state") == "OK":
+                v["state"], v["reason"] = "WARN", "受付中と判定できる行が 0 件（ページの構造が変わった可能性。実行可能な買取は出ません）"
     kept = [r for r in ann if r["identity_status"] != "NO_TARGET"]      # 対象外の商品（店の一覧の他の商品）は公開しない
     return {
         "schema": 1, "generated_at": now.isoformat(), "shops": shops_state, "rows": kept,
-        "summaries": summaries, "events": price_events(history, ann, today, cfg),
+        "summaries": summaries, "events": price_events(history, ann, today, cfg, outliers),
         "counts": {"rows": len(kept), "rows_seen": len(ann), "confirmed": sum(1 for r in ann if r["identity_status"] == ID_CONFIRMED),
                    "executable": sum(1 for r in ann if r["executable"]),
                    "products_with_executable": sum(1 for s in summaries.values() if s["status"] in ("EXECUTABLE", OUTLIER_REVIEW)),

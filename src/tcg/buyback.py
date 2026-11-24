@@ -118,19 +118,30 @@ def units_in(name: str) -> set:
 A_ACTIVE, A_STOPPED, A_UNKNOWN = "ACTIVE", "STOPPED", "UNKNOWN"      # 買取の受付状態（ACTIVE と確認できたものだけが実行可能。判定できないものは UNKNOWN = 実行不可）
 # 停止を示す語（HTML のコメントを除いた本文から探す。「買取不可」は条件の注意書き（シュリンク切れは買取不可）にも出るので、ここには入れない）
 _STOP_TEXT = re.compile(r"一時停止|停止中|受付停止|受付を停止|受付終了|買取停止|休止|取扱終了|取り扱い終了|準備中|"
-                        r"受付(?:を|は)?(?:して)?(?:い|お)?(?:り)?(?:ま)?せん|受付不可|お申込.{0,6}(?:停止|終了|できません)|品切れ|在庫切れ|SOLD\s*OUT", re.I)
+                        r"受付(?:を|は)?(?:して)?(?:い|お)?(?:り)?(?:ま)?せん|受付不可|買取中止|受付中止|買取終了|入荷待ち|"
+                        r"一時的に停止|(?:取扱|取り扱い)(?:を)?(?:中止|停止)|お申込.{0,6}(?:停止|終了|できません)|品切れ|在庫切れ|SOLD\s*OUT", re.I)
 _STOP_CLASS = re.compile(r"""class\s*=\s*["'][^"']*(?:stopped|suspend|soldout|sold-out|closed|disabled)[^"']*["']""", re.I)
 _BUTTON = re.compile(r"""<button\b((?:[^>"']|"[^"]*"|'[^']*')*)>(.*?)</button>""", re.S | re.I)      # 属性の値の中の > で途切れない
 _WRAP_OFF = re.compile(r"""<(?:fieldset|div|span|form|section|li|p)\b[^>]*(?:(?<![\w-])disabled(?![\w-])|(?<![\w-])hidden(?![\w-])|display\s*:\s*none|visibility\s*:\s*hidden|pointer-events\s*:\s*none)[^>]*>(?:\s*<[^>]+>){0,2}\s*$""", re.I)
 _HIDDEN = re.compile(r"""\bhidden\b|display\s*:\s*none|visibility\s*:\s*hidden|pointer-events\s*:\s*none|data-disabled|aria-hidden\s*=\s*["']?true""", re.I)
+_RUDEYA_ACTION = re.compile(r'''<div class=["']product-card-action["']>(.*)''', re.S | re.I)      # 申込欄（ルデヤ）。ここから記事の終わりまでに、ボタン以外の表示文字があれば受付中にしない
+_Q = r"""(?:"[^"]*"|'[^']*')"""
+# 受付中の申込欄の既知の形（コメント除去後）。数量入力 0〜1 個 + 「買取リクエスト」ボタン 1 個だけ。属性は既知のものだけ（title・aria-label・alt・data-* などの停止表示を許さない）
+_RUDEYA_ACTION_SHAPE = re.compile(
+    r"\s*(?:<div\s+class=" + _Q + r"\s*>\s*)?"
+    r"(?:<input\b(?:\s+(?:type|inputmode|pattern|class)\s*=\s*" + _Q + r"|\s+placeholder\s*=\s*(?:\"個数\"|'個数'))*\s*/?>\s*)?"
+    r"<button\b(?:\s+(?:type|class|onclick)\s*=\s*" + _Q + r")*\s*>\s*買取リクエスト\s*</button>\s*"
+    r"(?:</div>\s*)*(?:</article>\s*)?", re.S)
 _RUDEYA_ACTIVE_TEXT = re.compile(r"買取リクエスト|お申込|申込|カートに入れる")
 
 
-def accept_state(art: str, active_text: re.Pattern, active_attr: str = "") -> tuple[str, str]:
+def accept_state(art: str, active_text: re.Pattern, active_attr: str = "", action_block: Optional[re.Pattern] = None, action_shape: Optional[re.Pattern] = None) -> tuple[str, str]:
     """買取の受付状態 (ACTIVE / STOPPED / UNKNOWN, 理由)。複数の信号で見る。
     - 停止の信号が 1 つでもあれば STOPPED（クラス名・「一時停止中」等の文言・無効化されたボタン）。クラス名が変わっても文言で止まる。
     - 停止の信号が無くても、「受付中」の明確な信号（無効化・非表示でない申込ボタン）が無ければ UNKNOWN（＝実行不可）。
-      「停止と確認できなかった」を「受付中」にしない。"""
+      「停止と確認できなかった」を「受付中」にしない。
+    - action_block（申込欄を取り出す正規表現）を渡した店は、申込欄にボタンの文言以外の表示文字がある（未登録の停止文言など）ときも UNKNOWN。
+      停止語の一覧に頼らず、「申込欄がボタンだけである」を受付中の肯定条件にする。"""
     body = re.sub(r"<!--.*?-->", " ", art or "", flags=re.S)
     if _STOP_CLASS.search(body):
         return A_STOPPED, "停止を示すクラスがある"
@@ -148,12 +159,18 @@ def accept_state(art: str, active_text: re.Pattern, active_attr: str = "") -> tu
         if _HIDDEN.search(attrs) or re.search(r"(?<![\w-])disabled(?![\w-])", attrs, re.I) or _WRAP_OFF.search(body[:m.start()][-300:]):
             continue                                        # 隠れている・無効のボタン（親要素が無効・非表示のものを含む）は「受付中」の信号にしない
         if active_text.search(_text(inner)) or (active_attr and active_attr in attrs):
+            if action_block is not None:
+                blk = action_block.search(body)
+                if not blk:
+                    return A_UNKNOWN, "申込欄を特定できない"
+                if action_shape is not None and not action_shape.fullmatch(blk.group(1)):
+                    return A_UNKNOWN, "申込欄が既知の形（数量入力 + 申込ボタン 1 つ）と一致しない"      # 未登録の停止表示・属性だけの表示・ボタンの追加・画像などをまとめて受付中にしない
             return A_ACTIVE, "申込ボタンが有効"
     return A_UNKNOWN, "受付中を示す信号（有効な申込ボタン）が見つからない"
 
 
 def rudeya_accept_state(art: str) -> tuple[str, str]:
-    return accept_state(art, _RUDEYA_ACTIVE_TEXT)
+    return accept_state(art, _RUDEYA_ACTIVE_TEXT, action_block=_RUDEYA_ACTION, action_shape=_RUDEYA_ACTION_SHAPE)
 
 
 def parse_rudeya(html: str, page_url: str, observed_at: datetime) -> dict:
@@ -474,11 +491,12 @@ def history_key(r: dict) -> tuple:
 
 def update_history(history: list, rows: list, today: str, keep_days: int = 120, skip_products=()) -> list:
     """観測を履歴に足す（同じ日の同じキーは 1 件。実際に取得した行だけ）。"""
-    hist = [h for h in (history or []) if isinstance(h, dict)]
+    skip = set(skip_products or ())
+    hist = [h for h in (history or []) if isinstance(h, dict) and h.get("product_id") not in skip]      # 外れ値の確認待ちの商品は、過去の履歴も比較元にしない（外れ値と判定される前の価格が残らない）
     have = {(history_key(h), h.get("date")) for h in hist}
     for r in rows:
-        if r.get("identity_status") != ID_CONFIRMED or r.get("carried_over") or r.get("suspended"):
-            continue                                      # 取得に失敗して引き継いだ行・買取停止中の行（今は買い取っていない価格）は、今日の観測として履歴に入れない
+        if r.get("identity_status") != ID_CONFIRMED or r.get("carried_over") or r.get("suspended") or r.get("freshness") != FRESH:
+            continue                                      # 取得に失敗して引き継いだ行・買取停止中の行・鮮度が FRESH でない行（古いページ・時刻不明）は、今日の観測として履歴に入れない
         if r.get("product_id") in (skip_products or ()):
             continue                                      # 外れ値の確認待ちの価格を、翌日以降のイベントの比較元（前回価格）にしない
         k = (history_key(r), today)

@@ -69,6 +69,7 @@ class FeedCard:
     # 描画の補助（元データではない）
     href: str | None = None
     note: str | None = None            # 「調査から N 日」など
+    until_ms: int | None = None        # 「今すぐ行動できる」と言える期限（生成時に actionability が決めた値。閲覧時に過ぎていれば購入候補を外す）
     unverified: bool = False           # 判定の変化イベント（WAIT→BUY）で、実行可能・FRESH を確認できていないもの（緑にしない）
     lot: tuple | None = field(default=None, repr=False)   # (vm, state, idx): 抽選カードを lottery_card で描くとき
 
@@ -189,7 +190,8 @@ def card_from_view(v, now: datetime) -> FeedCard:
         profit=v.net_profit, roi=v.roi, status=v.stock_label,
         checked_at=v.last_verified_at or None,
         href="?" + urlencode({"page": "opportunities", "q": (v.product_name or "")[:40]}),
-        note=stale_note(v.last_verified_at, now, "確認から"))
+        note=stale_note(v.last_verified_at, now, "確認から"),
+        until_ms=(int(v.action.until_ms) if v.actionable and getattr(v.action, "until_ms", None) else None))
 
 
 def card_from_lottery(vm: dict, state: dict, ev: dict | None, cat_label: str | None, idx: int) -> FeedCard:
@@ -332,6 +334,8 @@ def _camera_event_cards(doc: dict, now: datetime) -> dict[str, list[FeedCard]]:
     note = stale_note(rdate, now)
     for e in doc.get("events") or []:
         if not isinstance(e, dict) or e.get("type") not in out:
+            continue
+        if e.get("cause"):                  # 売値の根拠の切替・確認の失効は市場の値動きではない。「買取上昇」などの値動きカードにしない（HOME に出さない）
             continue
         p = products.get(e.get("product"))
         if not p or not p.get("registered"):
@@ -498,6 +502,10 @@ def build_with_counts(catalog, model, tcg_report: dict | None, data: dict | None
 
     counts = {"buy": sum(1 for c in profit if is_actionable_buy(c)), "ending": len(ending_all), "open": len(open_all),
               "wait": len(watch)}
+    # 購入候補タイルの閲覧時の数え直し用。期限のある在庫ありは期限（ミリ秒）、期限の無いもの（週次の調査の日数で見るもの）は "inf"
+    buy_tokens = [str(c.until_ms) if c.until_ms else "inf" for c in profit if is_actionable_buy(c)]
+    if any(t != "inf" for t in buy_tokens):
+        counts["buy_untils"] = ",".join(buy_tokens)
 
     # ⓪ 今日やるべきこと: 購入候補（利益の大きい順）と締切間近の抽選だけ。「要確認」は上げない。ここへ出した分は下から外す
     buys = [c for c in profit if is_actionable_buy(c)]
@@ -596,7 +604,11 @@ def _card_html(card: FeedCard, fields: tuple, kind: str = "std", *, button: bool
     label = ACTION_LABEL.get(card.action, card.action) if card.action else None
     if card.unverified and is_buy(card):                  # 変化の記録だけ。「購入候補」と断定しない
         label = "購入候補に変化"
-    head_badge = f'<span class="nu-badge nu-tone-{tone}">{esc(label)}</span>' if label else ""
+    # 期限（生成時に決めた在庫ありと言える期限）のある購入候補は、閲覧時に過ぎていれば「更新待ち」にして緑を外す（shell の NuFeedUntil）
+    until = (f' data-nu-pd-until="{int(card.until_ms)}" data-nu-pd-stale-text="更新待ち"'
+             ' data-nu-pd-stale-class="nu-badge nu-tone-neutral"'
+             if card.until_ms and tone == "success" and is_buy(card) else "")
+    head_badge = f'<span class="nu-badge nu-tone-{tone}"{until}>{esc(label)}</span>' if label else ""
     cls = f"nu-card nu-feedcard nu-fc nu-fc--{kind} nu-fc--{tone}" + (" nu-fc--stale" if stale else "")
     return (f'<article class="{cls}" data-nu-feedcard>'
             f'<div class="nu-card__head"><h3 class="nu-card__title">{esc(card.product or DASH)}</h3>{head_badge}</div>'
@@ -682,11 +694,13 @@ def render_today(sections: list[Section], counts: dict[str, int], *, source_issu
     tiles = []
     for key, label, cls in _TILES:
         n = int(counts.get(key, 0) or 0)
+        untils = str(counts.get("buy_untils") or "") if key == "buy" else ""
         target = _tile_target(key, sections) if n > 0 else None
         if n > 0:
             sub = f'<span class="nu-today__sub">{esc(TILE_SUB[key])}</span>' if key in TILE_SUB else ""
             body = (f'<span class="nu-today__label">{esc(label)}</span>'
-                    f'<span class="nu-today__n">{n}<span class="nu-today__u">件</span></span>{sub}')
+                    f'<span class="nu-today__n"' + (f' data-nu-buy-untils="{esc(untils)}"' if untils else "")
+                    + f'>{n}<span class="nu-today__u">件</span></span>{sub}')
         else:
             body = (f'<span class="nu-today__label">{esc(label)}</span>'
                     f'<span class="nu-today__n">該当なし</span>')

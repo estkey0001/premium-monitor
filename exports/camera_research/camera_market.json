@@ -2,7 +2,7 @@
   "schema": 1,
   "type": "CAMERA_MARKET",
   "research_date": "2026-11-25",
-  "generated_at": "2026-11-25T13:13:49+09:00",
+  "generated_at": "2026-11-25T16:31:42+09:00",
   "note": "週次の Web 調査（AI）と自動収集から、確認できた価格だけで利益を計算します。確認できない項目は計算せず（NOT_CALCULATED）、出品の最高値は売値に使いません。成約は件数 3 以上・期間・個別の根拠が揃った中央値だけが売値です。",
   "products": [
     {
@@ -560,7 +560,7 @@
           "reasons": [],
           "carried": false,
           "color": null,
-          "stock": "LOTTERY_DEPENDENT",
+          "stock": "LOTTERY_ENDED",
           "shipping_jpy": null,
           "shop_key": "ricohimagingstore.com",
           "basis": null
@@ -605,7 +605,19 @@
           "stock": null,
           "shipping_jpy": null,
           "shop_key": "kaitori-rudeya.com",
-          "basis": "STAMPED_WARRANTY"
+          "basis": "STAMPED_WARRANTY",
+          "conditions": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "price": 208000,
+              "evidence": "list+item_page"
+            },
+            {
+              "key": "STAMPED_WARRANTY",
+              "price": 178000,
+              "deduction": 30000
+            }
+          ]
         }
       ],
       "secondary": {
@@ -626,7 +638,7 @@
             "price": 211800,
             "price_type": "OFFICIAL_RETAIL",
             "condition": "NEW",
-            "stock": "LOTTERY_DEPENDENT",
+            "stock": "LOTTERY_ENDED",
             "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010",
             "checked_at": "2026-11-25",
             "source_updated_at": null,
@@ -652,6 +664,18 @@
             "color": null,
             "carried": false,
             "basis": "STAMPED_WARRANTY",
+            "conditions": [
+              {
+                "key": "COMPLETE_NO_STAMP",
+                "price": 208000,
+                "evidence": "list+item_page"
+              },
+              {
+                "key": "STAMPED_WARRANTY",
+                "price": 178000,
+                "deduction": 30000
+              }
+            ],
             "evidence": {
               "shops": 1,
               "outlier": false
@@ -673,6 +697,22 @@
             "no_profit"
           ],
           "confidence": "low",
+          "conditional": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "sell_price": 208000,
+              "executable": false,
+              "requires": "購入元の保証書に店舗印が付かない場合のみ",
+              "evidence": "list+item_page",
+              "profit_status": "NO_PROFIT",
+              "net_profit": -5600,
+              "roi_pct": -2.64,
+              "display_only": true,
+              "blocked_reasons": [
+                "BUY_STOCK_LOTTERY_ENDED"
+              ]
+            }
+          ],
           "fee_status": "NOT_APPLICABLE"
         },
         {
@@ -687,7 +727,7 @@
             "price": 211800,
             "price_type": "OFFICIAL_RETAIL",
             "condition": "NEW",
-            "stock": "LOTTERY_DEPENDENT",
+            "stock": "LOTTERY_ENDED",
             "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001551&cat=002010",
             "checked_at": "2026-11-25",
             "source_updated_at": null,
@@ -776,7 +816,7 @@
           "reasons": [],
           "carried": false,
           "color": null,
-          "stock": "LOTTERY_DEPENDENT",
+          "stock": "LOTTERY_ENDED",
           "shipping_jpy": null,
           "shop_key": "ricohimagingstore.com",
           "basis": null
@@ -821,7 +861,19 @@
           "stock": null,
           "shipping_jpy": null,
           "shop_key": "kaitori-rudeya.com",
-          "basis": "STAMPED_WARRANTY"
+          "basis": "STAMPED_WARRANTY",
+          "conditions": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "price": 245000,
+              "evidence": "list+item_page"
+            },
+            {
+              "key": "STAMPED_WARRANTY",
+              "price": 205000,
+              "deduction": 40000
+            }
+          ]
         }
       ],
       "secondary": {
@@ -842,7 +894,7 @@
             "price": 222000,
             "price_type": "OFFICIAL_RETAIL",
             "condition": "NEW",
-            "stock": "LOTTERY_DEPENDENT",
+            "stock": "LOTTERY_ENDED",
             "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010",
             "checked_at": "2026-11-25",
             "source_updated_at": null,
@@ -868,6 +920,18 @@
             "color": null,
             "carried": false,
             "basis": "STAMPED_WARRANTY",
+            "conditions": [
+              {
+                "key": "COMPLETE_NO_STAMP",
+                "price": 245000,
+                "evidence": "list+item_page"
+              },
+              {
+                "key": "STAMPED_WARRANTY",
+                "price": 205000,
+                "deduction": 40000
+              }
+            ],
             "evidence": {
               "shops": 1,
               "outlier": false
@@ -889,6 +953,22 @@
             "no_profit"
           ],
           "confidence": "low",
+          "conditional": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "sell_price": 245000,
+              "executable": false,
+              "requires": "購入元の保証書に店舗印が付かない場合のみ",
+              "evidence": "list+item_page",
+              "profit_status": "PROFITABLE",
+              "net_profit": 21200,
+              "roi_pct": 9.55,
+              "display_only": true,
+              "blocked_reasons": [
+                "BUY_STOCK_LOTTERY_ENDED"
+              ]
+            }
+          ],
           "fee_status": "NOT_APPLICABLE"
         },
         {
@@ -903,7 +983,7 @@
             "price": 222000,
             "price_type": "OFFICIAL_RETAIL",
             "condition": "NEW",
-            "stock": "LOTTERY_DEPENDENT",
+            "stock": "LOTTERY_ENDED",
             "url": "https://ricohimagingstore.com/Form/Product/ProductDetail.aspx?shop=0&pid=S0001566&cat=002010",
             "checked_at": "2026-11-25",
             "source_updated_at": null,
@@ -1041,7 +1121,19 @@
           "stock": null,
           "shipping_jpy": null,
           "shop_key": "kaitori-rudeya.com",
-          "basis": "STAMPED_WARRANTY"
+          "basis": "STAMPED_WARRANTY",
+          "conditions": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "price": 205000,
+              "evidence": "list+item_page"
+            },
+            {
+              "key": "STAMPED_WARRANTY",
+              "price": 185000,
+              "deduction": 20000
+            }
+          ]
         }
       ],
       "secondary": {
@@ -1088,6 +1180,18 @@
             "color": null,
             "carried": false,
             "basis": "STAMPED_WARRANTY",
+            "conditions": [
+              {
+                "key": "COMPLETE_NO_STAMP",
+                "price": 205000,
+                "evidence": "list+item_page"
+              },
+              {
+                "key": "STAMPED_WARRANTY",
+                "price": 185000,
+                "deduction": 20000
+              }
+            ],
             "evidence": {
               "shops": 1,
               "outlier": false
@@ -1109,6 +1213,22 @@
             "no_profit"
           ],
           "confidence": "low",
+          "conditional": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "sell_price": 205000,
+              "executable": false,
+              "requires": "購入元の保証書に店舗印が付かない場合のみ",
+              "evidence": "list+item_page",
+              "profit_status": "NO_PROFIT",
+              "net_profit": -96600,
+              "roi_pct": -32.22,
+              "display_only": true,
+              "blocked_reasons": [
+                "BUY_STOCK_UNKNOWN"
+              ]
+            }
+          ],
           "fee_status": "NOT_APPLICABLE"
         },
         {
@@ -1219,7 +1339,19 @@
           "stock": null,
           "shipping_jpy": null,
           "shop_key": "kaitori-rudeya.com",
-          "basis": "STAMPED_WARRANTY"
+          "basis": "STAMPED_WARRANTY",
+          "conditions": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "price": 187600,
+              "evidence": "list+item_page"
+            },
+            {
+              "key": "STAMPED_WARRANTY",
+              "price": 172600,
+              "deduction": 15000
+            }
+          ]
         }
       ],
       "secondary": {
@@ -1331,7 +1463,19 @@
           "stock": null,
           "shipping_jpy": null,
           "shop_key": "kaitori-rudeya.com",
-          "basis": "STAMPED_WARRANTY"
+          "basis": "STAMPED_WARRANTY",
+          "conditions": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "price": 183200,
+              "evidence": "list+item_page"
+            },
+            {
+              "key": "STAMPED_WARRANTY",
+              "price": 163200,
+              "deduction": 20000
+            }
+          ]
         }
       ],
       "secondary": {
@@ -1737,9 +1881,9 @@
     "buyback_prices_changed": 0,
     "secondary_prices_changed": 0,
     "sold_updated": 0,
-    "profit_routes_changed": 1,
+    "profit_routes_changed": 0,
     "new_profitable_routes": 0,
-    "routes_lost": 1,
+    "routes_lost": 0,
     "found": {
       "official_or_retail_prices": 7,
       "buyback": 5,
@@ -1774,15 +1918,7 @@
     },
     "carried_rows": 0
   },
-  "events": [
-    {
-      "type": "PROFIT_TO_LOSS",
-      "product": "RICOH GR IV HDF",
-      "route": "A",
-      "from": "PROFITABLE",
-      "to": "NO_PROFIT"
-    }
-  ],
+  "events": [],
   "quality": {
     "wrong_identity": 0,
     "wrong_condition": 0,
@@ -1793,6 +1929,7 @@
     "double_count_fee": 0,
     "missing_fee": 0,
     "unknown_fee_used": 0,
+    "conditional_used_as_executable": 0,
     "blocked_treated_as_empty": 0
   },
   "secondary_markets": [
@@ -1905,16 +2042,8 @@
   ],
   "notification_dry_run": {
     "sent": 0,
-    "would_notify": 1,
-    "events": [
-      {
-        "type": "PROFIT_TO_LOSS",
-        "product": "RICOH GR IV HDF",
-        "route": "A",
-        "from": "PROFITABLE",
-        "to": "NO_PROFIT"
-      }
-    ]
+    "would_notify": 0,
+    "events": []
   },
   "source_results": [
     {

@@ -38,6 +38,7 @@ _STAMP_NG = re.compile(r"店舗印あり.*?買取不可")
 _STAMP_DED = re.compile(r"店舗印あり\s*[-−ー－]\s*([\d,]+)\s*円")
 _MODAL_STAMPED = re.compile(r"保証書店舗印あり\s*買取\s*[¥￥]\s*([\d,]+)")
 STAMP_NOT_BUYABLE, STAMP_DEDUCTION, STAMP_UNKNOWN = "NOT_BUYABLE", "DEDUCTION", "UNKNOWN"
+COND_COMPLETE, COND_STAMPED = "COMPLETE_NO_STAMP", "STAMPED_WARRANTY"       # 条件別の価格の種類（完品 = 保証書に店舗印なし / 店舗印あり）
 
 
 def stamp_policy(memo: str, price: int, modal_text: str = "") -> dict:
@@ -170,7 +171,8 @@ def build_rows(cfg: dict, list_rows: list, fetch_item, today: str, lists_complet
             continue
         stamp = row.get("stamp") or {"policy": STAMP_UNKNOWN, "why": "店舗印の扱いを読んでいない"}
         if stamp["policy"] == STAMP_NOT_BUYABLE:
-            notes.append({"product": it["product"], "jan": want, "ok": False, "withdraw": True, "reason": "店舗印ありは買取不可（店で買った新品の売却先にならない。完品の価格は店舗印なしの個体の価格）"})
+            notes.append({"product": it["product"], "jan": want, "ok": False, "withdraw": True, "stamp_policy": STAMP_NOT_BUYABLE, "full_price": row.get("price"),
+                          "reason": ("店舗印ありは買取不可（店で買った新品の売却先にならない。" + (f"完品の価格 {row['price']:,} 円は店舗印なしの個体の価格で、参考であり売値に採用しない）" if isinstance(row.get("price"), int) else "完品の価格は読めていない）"))})
             continue
         if stamp["policy"] != STAMP_DEDUCTION:
             notes.append({"product": it["product"], "jan": want, "ok": False, "withdraw": True, "reason": "店舗印ありの買取条件を確認できない（" + str(stamp.get("why")) + "）"})
@@ -199,6 +201,8 @@ def build_rows(cfg: dict, list_rows: list, fetch_item, today: str, lists_complet
         rec["buyback"].append({
             "shop": SHOP, "item_title": doc["name"], "price_jpy": sell, "condition": "NEW", "price_basis": "STAMPED_WARRANTY", "url": url, "is_product_page": True,
             "checked_at": today, "source_updated_at": doc["asof"], "result": "FOUND",
+            "conditions": [{"key": COND_COMPLETE, "price": doc["price"], "evidence": "list+item_page"},
+                           {"key": COND_STAMPED, "price": sell, "deduction": stamp["deduction"]}],      # 条件別の確認済み価格（別々に保持。売値の採用は安全側の price_jpy だけ）
             "reason": f"一覧（新品・受付中）と商品ページ（ただいま買取受付中・{doc['asof']} 現在）で価格が一致。JAN {doc['jan']}。完品（保証書に店舗印なし）は {doc['price']:,} 円、保証書に店舗印ありは {stamp['deduction']:,} 円減って {sell:,} 円。店で買った新品に店舗印が付くかを確認できないため、安全側に店舗印ありの価格を採用。備考: {memo or 'なし'}"})
         notes.append({"product": it["product"], "jan": want, "ok": True, "price": sell, "full_price": doc["price"], "url": url})
     return list(products.values()), notes

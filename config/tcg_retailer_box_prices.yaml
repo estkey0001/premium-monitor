@@ -1,0 +1,93 @@
+# TCG の BOX 単位「販売店の実販売価格」台帳（手動記録）。
+#
+# 重要（メーカー公式定価とは別物）:
+#   - ここに載せるのは、販売店自身のページに「1BOX ○○円」と書かれている価格だけ。公式定価（exports/tcg/msrp.json の verified）には入れない。
+#   - パック価格×入数で BOX 価格を作らない。「20パック固定 7,200円」のような組の価格は BOX 価格ではないので載せない。
+#   - 受付状態（accept_state）は保存しない。応募期間・当選者の購入期間から、表示・生成時の now で導出する（src/tcg/retailer_box.py）。
+#   - 応募が終わった・当選者のみ・期間外の価格は「過去の参考情報」にとどまり、利益には使わない。
+#   - JAN・BOX の状態（新品/シュリンク）はどのページにも無いので未確認（jan: null / box_condition: UNKNOWN）。
+#   - product_id は pokemon_registry.json（商品マスタ）と buyback の targets に一致するものだけ。一致しない商品は採用しない。
+#   - verified_at は人が確認した日。観測日を書き換えない。human_confirmed は main が決めるので false を既定にする。
+#   - 日付だけの終了日は、その日の終わり（23:59:59）まで有効として扱う。
+#
+# 項目: id / product_id / tcg / retailer / shop / unit / box_condition / price_jpy / price_basis(=retailer_listed_box のみ有効) /
+#       sale_method(LOTTERY のみ条件付きの利益に使う) / apply_start / apply_end / winner_announcement / purchase_start / purchase_end /
+#       shipping / source_url / verified_at / jan / human_confirmed / note
+entries:
+  - id: hbst-hadou-seeker-lottery
+    product_id: pokemon-拡張パック-ハドウシーカー
+    tcg: POKEMON
+    retailer: ホビーステーション
+    shop: ホビーステーション
+    unit: BOX
+    box_condition: UNKNOWN
+    price_jpy: 6000
+    price_basis: retailer_listed_box
+    sale_method: LOTTERY
+    apply_end: "2026-11-26T23:59:00+09:00"
+    winner_announcement: "2026-12-03"
+    purchase_start: "2026-12-07"
+    purchase_end: "2026-12-13"
+    shipping: 店頭受取のみ
+    source_url: https://www.hbst.net/?p=412193
+    verified_at: "2026-11-25"
+    jan: null
+    human_confirmed: false
+    note: 税込 6,000 円。応募期限は 11/26 23:59（ページ記載）。当選しないと購入できない。
+  - id: sanyodo-hadou-seeker-lottery
+    product_id: pokemon-拡張パック-ハドウシーカー
+    tcg: POKEMON
+    retailer: 三洋堂書店
+    shop: 三洋堂書店
+    unit: BOX
+    box_condition: UNKNOWN
+    price_jpy: 6000
+    price_basis: retailer_listed_box
+    sale_method: LOTTERY
+    apply_end: "2026-11-15"
+    purchase_start: "2026-11-27"
+    purchase_end: "2026-11-29"
+    shipping: 店頭受取のみ
+    source_url: https://www.sanyodo.co.jp/news/evt_20261104-20261115
+    verified_at: "2026-11-25"
+    jan: null
+    human_confirmed: false
+    note: 応募期限は 11/15。購入は当選者のみ 11/27〜11/29 に店頭。
+  - id: clabo-ikebukuro-eb05-lottery
+    product_id: エクストラブースター-one-piece-heroines-edition-vol-2-eb-05
+    tcg: ONE_PIECE
+    retailer: カードラボ
+    shop: カードラボ池袋
+    unit: BOX
+    box_condition: UNKNOWN
+    price_jpy: 5760
+    price_basis: retailer_listed_box
+    sale_method: LOTTERY
+    apply_end: "2026-11-21"
+    purchase_start: "2026-11-24"
+    purchase_end: "2026-11-30"
+    shipping: 店頭受取のみ
+    source_url: https://www.c-labo.jp/shop/ikebukuro/blog/624925/
+    verified_at: "2026-11-25"
+    jan: null
+    human_confirmed: false
+    note: 応募期間は 11/20〜11/21（ページ記載）。購入は当選者のみ 11/24〜11/30 に店頭。
+  - id: clabo-namba-op18-lottery
+    product_id: ブースターパック-神の支配-op-18
+    tcg: ONE_PIECE
+    retailer: カードラボ
+    shop: カードラボ難波
+    unit: BOX
+    box_condition: UNKNOWN
+    price_jpy: 5760
+    price_basis: retailer_listed_box
+    sale_method: LOTTERY
+    apply_end: "2026-11-18"
+    purchase_start: "2026-11-21"
+    purchase_end: "2026-11-27"
+    shipping: 店頭受取のみ
+    source_url: https://www.c-labo.jp/shop/namba2nd/blog/624599/
+    verified_at: "2026-11-25"
+    jan: null
+    human_confirmed: false
+    note: 応募期間は 11/16〜11/18（ページ記載）。購入は当選者のみ 11/21〜11/27 に店頭。

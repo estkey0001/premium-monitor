@@ -502,7 +502,7 @@
     },
     {
       "date": "2026-11-25",
-      "generated_at": "2026-11-25T13:13:49+09:00",
+      "generated_at": "2026-11-25T16:31:42+09:00",
       "observations": [
         {
           "product": "Canon EOS R5 Mark II",
@@ -602,7 +602,19 @@
           "checked_at": "2026-11-25",
           "source_updated_at": "2026-11-25",
           "carried": false,
-          "basis": "STAMPED_WARRANTY"
+          "basis": "STAMPED_WARRANTY",
+          "conditions": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "price": 208000,
+              "evidence": "list+item_page"
+            },
+            {
+              "key": "STAMPED_WARRANTY",
+              "price": 178000,
+              "deduction": 30000
+            }
+          ]
         },
         {
           "product": "RICOH GR IV HDF",
@@ -636,7 +648,19 @@
           "checked_at": "2026-11-25",
           "source_updated_at": "2026-11-25",
           "carried": false,
-          "basis": "STAMPED_WARRANTY"
+          "basis": "STAMPED_WARRANTY",
+          "conditions": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "price": 245000,
+              "evidence": "list+item_page"
+            },
+            {
+              "key": "STAMPED_WARRANTY",
+              "price": 205000,
+              "deduction": 40000
+            }
+          ]
         },
         {
           "product": "RICOH GR IV Monochrome",
@@ -670,7 +694,19 @@
           "checked_at": "2026-11-25",
           "source_updated_at": "2026-11-25",
           "carried": false,
-          "basis": "STAMPED_WARRANTY"
+          "basis": "STAMPED_WARRANTY",
+          "conditions": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "price": 205000,
+              "evidence": "list+item_page"
+            },
+            {
+              "key": "STAMPED_WARRANTY",
+              "price": 185000,
+              "deduction": 20000
+            }
+          ]
         },
         {
           "product": "RICOH GR IIIx",
@@ -682,7 +718,19 @@
           "checked_at": "2026-11-25",
           "source_updated_at": "2026-11-25",
           "carried": false,
-          "basis": "STAMPED_WARRANTY"
+          "basis": "STAMPED_WARRANTY",
+          "conditions": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "price": 187600,
+              "evidence": "list+item_page"
+            },
+            {
+              "key": "STAMPED_WARRANTY",
+              "price": 172600,
+              "deduction": 15000
+            }
+          ]
         },
         {
           "product": "RICOH GR III",
@@ -694,7 +742,19 @@
           "checked_at": "2026-11-25",
           "source_updated_at": "2026-11-25",
           "carried": false,
-          "basis": "STAMPED_WARRANTY"
+          "basis": "STAMPED_WARRANTY",
+          "conditions": [
+            {
+              "key": "COMPLETE_NO_STAMP",
+              "price": 183200,
+              "evidence": "list+item_page"
+            },
+            {
+              "key": "STAMPED_WARRANTY",
+              "price": 163200,
+              "deduction": 20000
+            }
+          ]
         },
         {
           "product": "SONY α7R V",
@@ -1073,15 +1133,7 @@
           "roi_pct": null
         }
       ],
-      "events": [
-        {
-          "type": "PROFIT_TO_LOSS",
-          "product": "RICOH GR IV HDF",
-          "route": "A",
-          "from": "PROFITABLE",
-          "to": "NO_PROFIT"
-        }
-      ],
+      "events": [],
       "secondary": [],
       "secondary_markets": [
         {

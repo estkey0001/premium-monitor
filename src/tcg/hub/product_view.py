@@ -199,6 +199,60 @@ def build_opportunities(bb_cfg: dict, bb_rows: list, master: dict, msrp_rows: li
     return out
 
 
+O_CONDITIONAL = "CONDITIONAL"
+CONDITIONAL_LABEL = "条件付き"
+
+
+def build_retailer_opportunities(bb_cfg: dict, bb_rows: list, master: dict, msrp_rows: list, retailer_rows: list, now: datetime) -> tuple:
+    """販売店の BOX 価格（台帳 config/tcg_retailer_box_prices.yaml）による条件付きの利益。(条件付きの利益候補, 参考・不採用の行) を返す。
+
+    - 公式定価（msrp_for）がある商品は対象外（公式定価の候補は build_opportunities が扱う）。定価が無く PACK_PRICE_ONLY の商品だけ。
+    - 条件付きになるのは、LOTTERY で応募期間中（OPEN）・商品マスタに product_id が一致・BOX 単位・販売店ページの BOX 価格の行だけ。
+      利益は buyback.profit_for（FRESH で実行可能な最高買取・既存の経路の費用）をそのまま使う。算出できなければ候補にしない（参考の側に理由を出す）。
+    - 応募終了・当選者のみ・期間外・不明の行は REFERENCE_ONLY。利益は出さない。product_id 不一致などは REJECTED。
+    - executable は常に False。BUY / 購入推奨 / 今すぐ行動 / HOME には入らない（hub["retailer_opportunities"] は別のキー）。
+    """
+    from src.tcg import buyback as bb
+    from src.tcg import retailer_box as rb
+    targets = {(t.get("tcg"), t.get("product_id")): t for t in (bb_cfg or {}).get("targets") or [] if isinstance(t, dict)}
+    out, refs = [], []
+    for e in retailer_rows if isinstance(retailer_rows, list) else []:
+        try:
+            c = rb.classify(e, master, now)
+            key = (c.get("tcg"), c.get("product_id"))
+            m = _d(master.get(key))
+            c["display_name"] = _s(m.get("name")) or None        # 参考欄の表示用（マスタに名前が無ければ None）
+            if c["kind"] != "REJECTED" and pl.msrp_for(c["product_id"], c["tcg"], _s(m.get("product_type")) or None, msrp_rows):
+                continue                                         # 公式定価がある商品は、公式定価の側で扱う（販売店価格で上書きしない）
+            if c["kind"] != rb.K_CONDITIONAL:
+                refs.append(c)
+                continue
+            t = targets.get(key)
+            if not t:
+                refs.append({**c, "kind": "REJECTED", "reason": "買取の調査対象（targets）に無い商品のため、利益を算出しない"})
+                continue
+            summary = bb.summarize_product(c["product_id"], bb_rows, bb_cfg, c["price_jpy"])
+            calc = bb.profit_for(summary, {"retail_price": c["price_jpy"]}, bb_cfg)
+            if summary.get("unit") and summary["unit"] != c["unit"]:
+                calc = {"status": bb.NOT_CALCULATED, "reason": "買取の単位と販売店価格の単位が一致しない"}
+            bbv, pr0 = _buyback_for(c["product_id"], bb_rows, bb_cfg, now, {"retail_price": c["price_jpy"]})
+            pr = pl.profit_view(None, calc)
+            if pr["status"] not in ("PROFITABLE", "NO_PROFIT") or not bbv or bbv["status"] != "EXECUTABLE" or not bbv.get("highest_executable"):
+                refs.append({**c, "kind": "NOT_CALCULATED", "reason": pr.get("reason") or pl.PENDING_REASON})
+                continue
+            if pr.get("sell_shop"):
+                pr["sell_shop_name"] = ((bb_cfg.get("shops") or {}).get(pr["sell_shop"]) or {}).get("name") or pr["sell_shop"]
+            out.append({"tcg": c["tcg"], "product_id": c["product_id"], "canonical": C_MASTER,
+                        "name": _s(m.get("name")) or _s(t.get("name")) or c["product_id"], "product_type": _s(m.get("product_type")) or None,
+                        "unit": c["unit"], "image_url": _s(m.get("official_image_url")) or None, "official_url": _s(m.get("official_url")) or None,
+                        "source_kind": rb.SOURCE_KIND, "conditional": True, "executable": False, "condition": rb.CONDITION_TEXT,
+                        "retailer": c, "profit": pr, "buyback": bbv, "state": O_CONDITIONAL, "state_label": CONDITIONAL_LABEL})
+        except Exception:  # noqa: BLE001 — 1 行の壊れたデータで全体を止めない（出さない側に倒す）
+            continue
+    out.sort(key=lambda o: (-o["profit"]["net_profit"], -o["profit"]["roi_pct"], o["name"]))
+    return out, refs
+
+
 def profit_map(registry, msrp, buyback, now: Optional[datetime] = None) -> dict:
     """{(tcg, product_id): 利益欄}。HOME が「利益根拠あり」を出すための軽い版（build_hub と同じ規則: _buyback_for）。"""
     now = (now or now_jst()).astimezone(JST)
@@ -218,7 +272,7 @@ def profit_map(registry, msrp, buyback, now: Optional[datetime] = None) -> dict:
     return out
 
 
-def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback=None) -> dict:
+def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback=None, retailer_rows=None) -> dict:
     """商品中心のビュー全体。lotteries / registry / msrp / buyback は公開済み JSON を読んだ辞書（壊れていても空として扱う）。"""
     now = (now or now_jst()).astimezone(JST)
     today = now.strftime("%Y-%m-%d")
@@ -299,6 +353,13 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback
     lottery_by_key = {(p["tcg"], p["product_id"]): {"status": p["status"], "label": st.STATUS_LABEL[p["status"]], "counts": p["counts"]}
                       for p in products if p["events"]}
     opportunities = build_opportunities(bb_cfg, bb_rows, master, msrp_rows, lottery_by_key, now) if bb_cfg else []
+    if retailer_rows is None:                                    # 台帳（手動記録）。読めなければ空
+        try:
+            from src.tcg import retailer_box as _rb
+            retailer_rows = _rb.load_ledger()
+        except Exception:  # noqa: BLE001
+            retailer_rows = []
+    retailer_opps, retailer_refs = build_retailer_opportunities(bb_cfg, bb_rows, master, msrp_rows, retailer_rows, now) if bb_cfg else ([], [])
     order = {s: i for i, s in enumerate(st._AGG_ORDER)}
     products.sort(key=lambda p: (order.get(p["status"], 99) if p["events"] else 98, p["release_date"] or "9999", p["name"]))
 
@@ -342,12 +403,14 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback
         "applying": sum(1 for v in views if v["status"] in st.APPLYING),         # 受付中 + 締切間近（表示用の合計。判定は変えない）
         "today": len(today_list), "deadline_today": len(deadline_today), "ending_soon": len(ending_soon), "upcoming": len(upcoming),
         "new": len(new), "calendar": len(cal), "skipped_malformed": skipped,
+        "retailer_conditional": len(retailer_opps), "retailer_reference": len(retailer_refs),
         "opportunities": len(opportunities), "opportunities_profit": sum(1 for o in opportunities if o["state"] == O_PROFIT),
         "opportunities_watch": sum(1 for o in opportunities if o["state"] == O_WATCH),
         "master": sum(1 for p in products if p["canonical"] == C_MASTER),
         "discovered": sum(1 for p in products if p["canonical"] == C_DISCOVERED),
     }
-    return {"now": now.isoformat(), "today": today, "products": products, "opportunities": opportunities, "unbound": unbound, "events": views,
+    return {"now": now.isoformat(), "today": today, "products": products, "opportunities": opportunities,
+            "retailer_opportunities": retailer_opps, "retailer_references": retailer_refs, "unbound": unbound, "events": views,
             "today_list": today_list, "deadline_today": deadline_today, "ending_soon": ending_soon,
             "upcoming": upcoming, "new": new, "calendar": cal, "stats": stats,
             "checked_at": {"lotteries_generated_at": _s(lot.get("generated_at")) or None,

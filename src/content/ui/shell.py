@@ -1025,6 +1025,25 @@ def _router_script() -> str:
     var n = (el.getAttribute('data-nu-act-untils') || '').split(',').filter(function(x){ return x && +x > now; }).length;
     el.textContent = n + '件';
   });
+  // HOME の購入候補カード・タイル: 在庫ありと言える期限（生成時に決めた値）を過ぎたら「更新待ち」にして緑を外す（判定はし直さない）
+  (function(){
+    var now = Date.now();
+    root.querySelectorAll('.nu-fc [data-nu-pd-until]').forEach(function(el){
+      if (now < +el.getAttribute('data-nu-pd-until')) return;
+      el.textContent = el.getAttribute('data-nu-pd-stale-text') || '';
+      el.className = el.getAttribute('data-nu-pd-stale-class') || el.className;
+      el.removeAttribute('data-nu-pd-until');
+      var card = el.closest('.nu-fc');
+      if (card) { card.classList.remove('nu-fc--success'); card.classList.add('nu-fc--neutral', 'nu-fc--stale'); }
+    });
+    root.querySelectorAll('[data-nu-buy-untils]').forEach(function(el){
+      var n = (el.getAttribute('data-nu-buy-untils') || '').split(',').filter(function(x){ return x === 'inf' || (x && +x > now); }).length;
+      if (n > 0) { el.innerHTML = n + '<span class="nu-today__u">件</span>'; return; }
+      el.textContent = '該当なし';
+      var tile = el.closest('.nu-today__tile');
+      if (tile) tile.classList.add('nu-today__tile--zero');
+    });
+  })();
   // 主要な数値から利益の根拠へ（同じページの中。URL は変えない。買う・売るのタブに切り替えてから移る）
   root.addEventListener('click', function(e){
     var j = e.target.closest('[data-nu-pd-jump]');

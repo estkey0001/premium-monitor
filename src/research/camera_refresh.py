@@ -114,6 +114,12 @@ def _foreign_ok(r: dict) -> bool:
             and str(r.get("fx_status") or "") != "CONFIRMED")
 
 
+def _clean_row_conditions(r: dict) -> list:
+    """買取の行の条件別の価格。既知の key・正の整数だけ残し、売値の基準（店舗印あり）の価格が行の価格と合わない・減額が合わないときは、全部捨てる
+    （どの価格がどの条件のものか確認できない値を、条件付き利益に使わない）。"""
+    return cr.valid_conditions(r.get("conditions"), _to_price(r.get("price_jpy")))
+
+
 def clean_records(recs: list) -> list:
     """読めた行（result が FOUND か無し・価格が正の整数）だけ残す。公式の行にも同じ検査をする。入力の carried は受け付けない。"""
     out = []
@@ -130,6 +136,10 @@ def clean_records(recs: list) -> list:
             for r in rows:
                 r.pop("carried", None)
                 r.pop("from_pipeline", None)
+                if "conditions" in r:
+                    r["conditions"] = _clean_row_conditions(r) if k == "buyback" else []
+                    if not r["conditions"]:
+                        r.pop("conditions")
             p[k] = rows
         off = p.get("official")
         if isinstance(off, dict) and (str(off.get("result") or "FOUND").upper() != "FOUND"):
@@ -221,7 +231,8 @@ def _row_of(o: dict) -> dict:
             "currency": o.get("currency"), "price_original": o.get("price_original"), "fx_status": o.get("fx_status"), "fx_rate": o.get("fx_rate"),
             "fx_checked_at": o.get("fx_checked_at"), "region": o.get("region"), "shipping_original": o.get("shipping_original"),
             "shipping_currency": o.get("shipping_currency"), "import_duty_status": o.get("import_duty_status"),
-            "price_basis": o.get("basis")}                  # 売値の基準（店舗印ありの価格など）。引き継いだ行でも開示を落とさない
+            "price_basis": o.get("basis"),                  # 売値の基準（店舗印ありの価格など）。引き継いだ行でも開示を落とさない
+            **({"conditions": o["conditions"]} if o.get("conditions") else {})}      # 条件別の価格も引き継ぐ（日付は元の行のまま。鮮度を偽装しない）
 
 
 _LOT_SHOP = ("じゃんぱら", "セカンドストリート", "RICOH", "リコー", "GR SPACE", "FUJIFILM", "富士フイルム", "ソニー", "SONY", "キヤノン", "CANON", "ニコン", "NIKON",
@@ -258,6 +269,16 @@ def _lottery_covers(product: str, text: str) -> bool:
     return False
 
 
+def _set_window(row: dict, lot: dict, now: datetime) -> None:
+    """行に応募期間（lottery_start / lottery_end）を付ける（stock_of が抽選開始予定を見分ける）。複数の抽選が重なるときは、今日応募できるものを優先する。"""
+    start, end = cr._d(lot.get("application_start")), cr._d(lot.get("application_end"))
+    active = start is None or start.date() <= now.date()
+    if "lottery_end" in row and row.get("_lottery_active") and not active:
+        return
+    row["lottery_start"], row["lottery_end"] = _pub_date(lot.get("application_start")), _pub_date(lot.get("application_end"))
+    row["_lottery_active"] = active
+
+
 def apply_lotteries(recs: list, lots: list, now: datetime) -> list:
     """同じ機種（版を含む）の応募期間内の抽選が、調査の lotteries にあれば、**同じブランドの公式の行**と、販売元（店名・ドメイン）が
     一致する販売店の行を LOTTERY_DEPENDENT にする。行の在庫が AVAILABLE と書かれていても、抽選が必要な機種を購入可能として扱わない。
@@ -275,11 +296,13 @@ def apply_lotteries(recs: list, lots: list, now: datetime) -> list:
             same_brand = str(lot.get("brand") or "").upper() == str(r.get("brand") or "").upper() and bool(r.get("brand"))
             if r.get("official") and (same_brand or not lot.get("brand")):
                 r["official"]["lottery"] = True
+                _set_window(r["official"], lot, now)
             for x in r.get("retail") or []:
                 shop = str(x.get("shop") or "").upper()
                 if (any(k.upper() in who and k.upper() in shop for k in _LOT_SHOP) or not x.get("shop")
                         or (lot_dom and cr.domain_of(x.get("url")) == lot_dom)):
                     x["lottery"] = True
+                    _set_window(x, lot, now)
     return recs
 
 
@@ -594,7 +617,7 @@ def reason_code(text) -> str:
 
 
 _PUBLIC_OBS_KEYS = ("kind", "price_type", "price", "condition", "source", "item_title", "url", "checked_at", "source_updated_at",
-                    "freshness", "age_days", "identity_ok", "reasons", "carried", "color", "stock", "shipping_jpy", "shop_key", "basis")
+                    "freshness", "age_days", "identity_ok", "reasons", "carried", "color", "stock", "shipping_jpy", "shop_key", "basis", "conditions")
 _DOMAIN_LABEL = {"kaitori-rudeya.com": "買取ルデヤ", "kaitorishouten-co.jp": "買取商店", "netoff.co.jp": "ネットオフ", "fujiya-camera.co.jp": "フジヤカメラ", "mapcamera.com": "マップカメラ",
                  "kitamura.jp": "カメラのキタムラ", "kitamura.co.jp": "カメラのキタムラ", "sofmap.com": "ソフマップ", "janpara.co.jp": "じゃんぱら",
                  "2ndstreet.jp": "セカンドストリート", "yodobashi.com": "ヨドバシ", "biccamera.com": "ビックカメラ",
@@ -686,12 +709,21 @@ def _pub_scrub(row: dict) -> dict:
             out[k] = _pub_int(out[k])
     if "url" in out:
         out["url"] = _pub_url(out["url"])
+    if "conditions" in out:
+        out["conditions"] = cr.clean_conditions(out["conditions"])        # 条件別の価格は、既知の key と整数の価格だけ公開する
+        if not out["conditions"]:
+            out.pop("conditions")
     return out
 
 
 def _pub_events(state: dict, pub: list) -> list:
     reg = {x["product"] for x in pub}
     return [e for e in (_public_event(e, reg) for e in state["events"]) if e]
+
+
+def _notifiable_events(state: dict, pub: list) -> list:
+    """通知してよいイベント。cause 付き（売値の基準の切替・根拠の期限切れ）は市場の実際の値動きではないので通知しない。"""
+    return [e for e in _pub_events(state, pub) if not e.get("cause")]
 
 
 def _public_market(state: dict) -> dict:
@@ -705,7 +737,7 @@ def _public_market(state: dict) -> dict:
         "products": pub, "summary": {k: v for k, v in state["report"].items() if k != "carried_rows"} | {"carried_rows": len(state["report"]["carried_rows"])},
         "events": _pub_events(state, pub), "quality": state["quality"],
         "secondary_markets": state.get("secondary_markets", []), "retail_apis": state.get("retail_apis", []),
-        "notification_dry_run": {"sent": 0, "would_notify": len(_pub_events(state, pub)), "events": _pub_events(state, pub)},
+        "notification_dry_run": {"sent": 0, "would_notify": len(_notifiable_events(state, pub)), "events": _notifiable_events(state, pub)},
         "source_results": sorted(({"shop": _public_shop(v["shop"]), "brand": _public_brand(v["brand"]), "role": v["role"], "result": v["result"], "lump": v["lump"],
                                    "reason": reason_code(v.get("reason")) if v["result"] in _BAD else ""} for v in source_matrix(state["sources"]).values()),
                                  key=lambda v: (v["shop"], v["brand"] or "", v["role"])),
@@ -771,7 +803,8 @@ def history_snapshot(state: dict) -> dict:
             snap["observations"].append({"product": p["product"], "source": o["source"], "market_type": o["kind"], "price_type": o["price_type"],
                                          "price": o["price"], "condition": o["condition"], "checked_at": _pub_date(o.get("checked_at")),
                                          "source_updated_at": _pub_date(o.get("source_updated_at")), "carried": o.get("carried", False),
-                                         **({"basis": o["basis"]} if o.get("basis") else {})})
+                                         **({"basis": o["basis"]} if o.get("basis") else {}),
+                                         **({"conditions": o["conditions"]} if o.get("conditions") else {})})
         for r in p["routes"]:
             snap["routes"].append({"product": p["product"], "route": r["route_type"], "profit_status": r["profit_status"],
                                    "decision": r["decision"], "net_profit": r["net_profit"], "roi_pct": r["roi_pct"]})

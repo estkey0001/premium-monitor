@@ -36,6 +36,7 @@ _FAMILY = {NEW: "NEW", UNOPENED: "NEW", LIKE_NEW: "LIKE_NEW", USED: "USED"}   # 
 # 在庫
 AVAILABLE, OUT_OF_STOCK, LOTTERY_DEPENDENT, RESERVATION, STOCK_UNKNOWN = (
     "AVAILABLE", "OUT_OF_STOCK", "LOTTERY_DEPENDENT", "RESERVATION", "UNKNOWN")
+LOTTERY_ENDED, LOTTERY_UPCOMING, SALES_SUSPENDED = "LOTTERY_ENDED", "LOTTERY_UPCOMING", "SALES_SUSPENDED"   # 抽選終了・抽選開始予定・販売休止（LOTTERY_DEPENDENT = 抽選受付中）
 
 # 鮮度
 FRESH, STALE, UNKNOWN_FRESHNESS = "FRESH", "STALE", "UNKNOWN_FRESHNESS"
@@ -317,25 +318,98 @@ _NEGATED = re.compile(r"(在庫切れ|売り?切れ|品切れ|完売|SOLD[ _-]?O
 _DATELESS = re.compile(r"(?:ページ|日付|更新日|更新)[^、。,.]{0,8}(?:なし|無し)")
 
 
-def stock_of(row: dict) -> str:
+_LOT_CTX = re.compile(r"抽選|LOTTERY|応募|エントリー")
+# 過去形・状態の明示終了（応募期間が ACTIVE でも ENDED を優先する。店の早期終了を取りこぼさない）
+_LOT_ENDED_STRONG = re.compile(r"受付(?:は|を)?終了|終了(?:しました|いたしました|致しました|しています|しております|済)|応募終了|受付を終え|終えました|終えております|"
+                               r"[(（\[【]終了[)）\]】]|締め?切(?:り)?(?:ました|済)|受付(?:は)?締|抽選[^。、,.\s]{0,6}〆切(?!\s*[:：]?\s*\d|日|時|まで|予定)|"
+                               r"LOTTERY[ _-]?(?:CLOSED|ENDED)|(?:ENTRY|ENTRIES|APPLICATIONS?)[ _-]?CLOSED|抽選[^。、,.\s]{0,8}完了(?:しました|いたしました|致しました|済)")
+# 状態か未来か曖昧な終了（応募期間が ACTIVE なら ACTIVE を優先）
+_LOT_ENDED_WEAK = re.compile(r"抽選[^。、,.\s]{0,12}終了")
+# これから終わる・過去の回の終了は、いま終わった根拠にしない（「受付終了予定」「終了間近」「今日まで」「前回の抽選は終了」）
+_LOT_NOT_YET = re.compile(r"(?:受付(?:は|を)?)?(?:抽選(?:は|を)?)?終了(?:して|いたして|致して)(?:い|お)(?:ません|りません)|未終了|(?:前回|過去|先月|昨日|以前|次回|今後)[^。.、,，]{0,20}?終了(?:しました|いたしました|しています|済)?|"
+                          r"終了(?:予定|間近|まで|日|時刻|時間|期限|する|します|いたします|致します|となります|となる|直前|後)|間もなく終了|もうすぐ終了|まもなく終了|終了(?:ま|目)|"
+                          r"\d{1,2}[:：]\d{2}[\s　]*(?:まで)?で(?:受付)?終了(?!しました|いたしました|致しました|しています|しております|済)|本日(?:で|限りで)?(?:受付)?終了|今日(?:で|限りで)(?:受付)?終了|で終了予定|で終了します|"
+                          r"に(?:受付)?終了(?!しました|いたしました|致しました|しています|しております|済)")
+# 「11/30 23:59で終了」「（11/30終了）」: 日付が今日以降なら未来の終了、過去なら終了済み
+_LOT_DATED_END = re.compile(r"(\d{1,2})[/月](\d{1,2})日?[\s　]*(?:\d{1,2}[:：]\d{2}[\s　]*)?(?:まで)?[でに]?[\s　]*[(（\[【]?(?:抽選|受付|応募)?終了(?!しました|いたしました|致しました|しています|しております|済)")
+_LOT_UPCOMING = re.compile(r"(?:抽選|受付|応募|エントリー)(?:は)?開始(?:予定|前)|開始予定|近日(?:抽選|受付|開始)|COMING SOON")
+_SOLD_OUT_WORDS = re.compile(r"完売|SOLD[ _-]?OUT")
+_SUSPENDED = re.compile(r"販売を行っておりません|販売(?:を)?休止|販売停止|販売中止|取り扱いを(?:休止|終了)")
+
+
+def _lottery_window(row: dict, now: Optional[datetime]) -> Optional[str]:
+    """行に応募期間（lottery_start / lottery_end）があり、今日と比べて分かるときだけ ENDED / UPCOMING / ACTIVE。分からなければ None。"""
+    if now is None:
+        return None
+    end, start = _d(row.get("lottery_end")), _d(row.get("lottery_start"))
+    if end is not None and end.date() < now.date():
+        return "ENDED"
+    if start is not None and start.date() > now.date():
+        return "UPCOMING"
+    return "ACTIVE" if (start is not None or end is not None) else None
+
+
+def _month_day(now: datetime, month: int, day: int) -> datetime:
+    """月日だけの日付の年を決める。now より 6 か月以上前なら翌年、6 か月以上先なら前年（12/28 の「1/5」は来年、1/3 の「12/31」は昨年）。"""
+    dt = datetime(now.year, month, day)
+    ref = datetime(now.year, now.month, now.day)
+    if dt < ref - timedelta(days=183):
+        return datetime(now.year + 1, month, day)
+    if dt > ref + timedelta(days=183):
+        return datetime(now.year - 1, month, day)
+    return dt
+
+
+def stock_of(row: dict, now: Optional[datetime] = None) -> str:
     """在庫の状態。AVAILABLE は、stock が「AVAILABLE」「在庫あり」と構造的に明示され、**どの記述にも**否定・取り寄せ・店頭のみ・
-    抽選・予約・限定・受付などの語が無いときだけ（「在庫切れ表示なし」のような否定の否定は除いて見る）。"""
+    抽選・予約・限定・受付などの語が無いときだけ（「在庫切れ表示なし」のような否定の否定は除いて見る）。
+    終了・完売の語（『受付は終了』『終了いたしました』『完売』『SOLD OUT』『販売を行っておりません』）は、抽選の語より先に評価する
+    （終了した抽選・完売を「抽選に当選が必要」と表示しない）。抽選受付中（LOTTERY_DEPENDENT）は、終了・開始前の根拠が無いときだけ。"""
     raw = _nfkc(row.get("stock") or "").strip()
-    ctx_raw = _nfkc(" ".join(str(row.get(k) or "") for k in ("stock_evidence", "note", "reason", "item_title", "availability"))).upper()
+    ctx_raw = _nfkc(" ".join(str(row.get(k) or "") for k in ("stock_evidence", "note", "reason", "availability"))).upper()     # item_title は混ぜない（商品名の語を店の状態と読まない）
     ctx = _DATELESS.sub(" ", _NEGATED.sub(" ", ctx_raw.replace("注文受付中", " ")))
     ctx = ctx + " " + re.sub(r"\s+", "", ctx)                # 「在庫 なし」のような空白入りの否定語も拾う
     s = raw.upper()
-    if row.get("lottery") or "LOTTERY" in s or "抽選" in s or "抽選" in ctx or "LOTTERY" in ctx:
+    blob = s + " " + ctx
+    # 商品名（item_title）は「AVAILABLE を否定する語」にだけ使う（終了・完売の断定には使わない = 『抽選販売終了記念モデル』を終了と読まない）
+    t_raw = _nfkc(row.get("item_title") or "").upper()
+    t_ctx = _DATELESS.sub(" ", _NEGATED.sub(" ", t_raw))
+    t_ctx = t_ctx + " " + re.sub(r"\s+", "", t_ctx)
+    lot_ctx = bool(row.get("lottery")) or bool(_LOT_CTX.search(blob)) or s in (LOTTERY_DEPENDENT, LOTTERY_ENDED, LOTTERY_UPCOMING)
+    win = _lottery_window(row, now) if (row.get("lottery") or lot_ctx) else None
+    dated_past = False
+    def _dated(m):
+        nonlocal dated_past
+        try:
+            dt = _month_day(now, int(m.group(1)), int(m.group(2)))
+        except (ValueError, AttributeError):
+            return " "
+        if dt.date() < now.date():
+            dated_past = True
+        return " "
+    blob_e = _LOT_DATED_END.sub(_dated, blob) if now is not None else _LOT_DATED_END.sub(" ", blob)
+    blob_e = _LOT_NOT_YET.sub(" ", blob_e)
+    strong = bool(_LOT_ENDED_STRONG.search(blob_e))
+    weak = bool(_LOT_ENDED_WEAK.search(blob_e)) or dated_past
+    if s == LOTTERY_ENDED or (lot_ctx and (win == "ENDED" or strong or (weak and win != "ACTIVE"))):
+        return LOTTERY_ENDED
+    if _SOLD_OUT_WORDS.search(blob):
+        return OUT_OF_STOCK
+    if s == SALES_SUSPENDED or _SUSPENDED.search(blob):
+        return SALES_SUSPENDED
+    if s == LOTTERY_UPCOMING or (lot_ctx and (_LOT_UPCOMING.search(blob) or win == "UPCOMING")):
+        return LOTTERY_UPCOMING
+    if row.get("lottery") or "LOTTERY" in s or "抽選" in s or "抽選" in ctx or "LOTTERY" in ctx or "抽選" in t_ctx or "LOTTERY" in t_ctx:
         return LOTTERY_DEPENDENT
-    if "RESERV" in s or "予約" in s or "予約" in ctx or "PREORDER" in ctx or "PRE-ORDER" in ctx:
+    if "RESERV" in s or "予約" in s or "予約" in ctx or "PREORDER" in ctx or "PRE-ORDER" in ctx or "予約" in t_ctx or "PREORDER" in t_ctx or "PRE-ORDER" in t_ctx:
         return RESERVATION
     if _STOCK_NEG.search(s) and s not in _STOCK_OK:
         return OUT_OF_STOCK if re.search(r"切れ|ありません|在庫なし|在庫無|在庫0|SOLD[ _-]?OUT|OUT[ _-]?OF[ _-]?STOCK|NOT[ _-]?AVAILABLE|UNAVAILABLE|NO[ _-]?STOCK|完売|売り?切|品切|欠品", s) else STOCK_UNKNOWN
     if s in _STOCK_OK or raw in _STOCK_OK:
         if re.search(r"要約|未検証|未確認|文字化け|SNIPPET|推測|推定", ctx):
             return STOCK_UNKNOWN                          # 要約・文字化け・推測など、自認した不確かな根拠は AVAILABLE の根拠にしない
-        if _STOCK_NEG.search(ctx) or not _STOCK_POS.search(ctx):
-            return STOCK_UNKNOWN                          # 否定語がある・購入できる肯定の根拠が無い
+        if _STOCK_NEG.search(ctx) or _STOCK_NEG.search(t_ctx) or not _STOCK_POS.search(ctx):
+            return STOCK_UNKNOWN                          # 否定語がある（商品名の否定語も含む）・購入できる肯定の根拠が無い
         return AVAILABLE
     return STOCK_UNKNOWN
 
@@ -424,7 +498,8 @@ def observations(rec: dict, now: datetime, cfg: dict) -> list[dict]:
              "freshness": fr, "age_days": age, "identity_ok": ok, "reasons": reasons, "carried": bool(r.get("carried")), "from_pipeline": bool(r.get("from_pipeline")),
              "shop_key": _company(domain_of(r.get("url")), cfg) or _shop_key(market),
              "color": color_of(r.get("item_title")),
-             "basis": r.get("price_basis") if r.get("price_basis") in PRICE_BASES else None}
+             "basis": r.get("price_basis") if r.get("price_basis") in PRICE_BASES else None,
+             "conditions": clean_conditions(r.get("conditions")) if kind == "buyback" else []}
         o.update(extra)
         out.append(o)
 
@@ -434,13 +509,13 @@ def observations(rec: dict, now: datetime, cfg: dict) -> list[dict]:
         price = price if (isinstance(price, int) and not isinstance(price, bool)) else None
         r = dict(off)
         r["item_title"] = off.get("item_title") or product         # 公式の商品名が書かれていれば同一性を検査する（無ければ調査員の申告）
-        base(r, "official", OFFICIAL_RETAIL, price, NEW, off.get("shop") or "メーカー公式", stock=stock_of(off),
+        base(r, "official", OFFICIAL_RETAIL, price, NEW, off.get("shop") or "メーカー公式", stock=stock_of(off, now),
              shipping_jpy=off.get("purchase_shipping_jpy"), shipping_url=off.get("purchase_shipping_url"), price_kind=off.get("price_kind"))
         if not (isinstance(price, int) and price > 0):
             out[-1]["reasons"] = sorted(set(out[-1]["reasons"] + [f"price_kind_{off.get('price_kind') or 'unknown'}"]))
     for r in rec.get("retail") or []:
         base(r, "retail", RETAIL_PRICE, r.get("price_jpy"), NEW if condition_of(r.get("condition")) in (NEW, UNOPENED) else condition_of(r.get("condition")),
-             r.get("shop"), stock=stock_of(r), shipping_jpy=r.get("shipping_jpy"), shipping_url=r.get("shipping_url"))
+             r.get("shop"), stock=stock_of(r, now), shipping_jpy=r.get("shipping_jpy"), shipping_url=r.get("shipping_url"))
     for r in rec.get("buyback") or []:
         o_reasons = []
         if not r.get("is_product_page", False):
@@ -606,7 +681,7 @@ def _fee(market_name, sell_price: int, cfg: dict) -> tuple[Optional[int], Option
 
 # ---------------------------------------------------------------- ルート
 def _rank_stock(s: str) -> int:
-    return {AVAILABLE: 0, RESERVATION: 1, LOTTERY_DEPENDENT: 2, STOCK_UNKNOWN: 3, OUT_OF_STOCK: 4}.get(s, 5)
+    return {AVAILABLE: 0, RESERVATION: 1, LOTTERY_DEPENDENT: 2, LOTTERY_UPCOMING: 2, STOCK_UNKNOWN: 3, OUT_OF_STOCK: 4, LOTTERY_ENDED: 4, SALES_SUSPENDED: 4}.get(s, 5)
 
 
 def _buy_candidates(obs: list[dict], route: str) -> tuple[list, list]:
@@ -715,9 +790,11 @@ def _routes_for_product(rec: dict, obs: list[dict], sec: dict, cfg: dict, now: d
             why.append("purchase_shipping_unknown")
         if fee is None:
             why.append(fee_why)
+        cond_list = _conditional(sell_view, buy["price"], ship, outbound, other, buy, int((cfg.get("freshness") or {}).get("stock_days", STOCK_DAYS_DEFAULT))) if route in "AC" else []
         if why:
             routes.append({**base, "profit_status": NOT_CALCULATED, "decision": WATCH, "buy": _view(buy), "sell": sell_view,
-                           "reasons": why, "costs": None, "net_profit": None, "roi_pct": None, "executable": False, "confidence": "low"})
+                           "reasons": why, "costs": None, "net_profit": None, "roi_pct": None, "executable": False, "confidence": "low",
+                           **({"conditional": cond_list} if cond_list else {})})
             continue
         costs = {"purchase_shipping": ship, "purchase_shipping_source": ship_src, "outbound_shipping": outbound,
                  "selling_fee": fee, "selling_fee_applies": fee_applies,
@@ -731,9 +808,12 @@ def _routes_for_product(rec: dict, obs: list[dict], sec: dict, cfg: dict, now: d
         executable = (stock == AVAILABLE and stock_fresh and buy["freshness"] == FRESH and sell["freshness"] == FRESH
                       and not sell_view.get("carried") and not buy.get("carried"))
         decision, why2 = _decide(status, stock, roi, min_roi, registered, route, sell_view, executable, buy)
+        if status != PROFITABLE and any(c["profit_status"] == PROFITABLE and not c.get("display_only") for c in cond_list):
+            why2 = why2 + ["conditional_profit_only"]                # 安全側では黒字でない。条件付き（店舗印なし）の場合だけ黒字（判断は変えない）
         routes.append({**base, "profit_status": status, "decision": decision, "buy": _view(buy), "sell": sell_view,
                        "costs": costs, "net_profit": net, "roi_pct": roi, "executable": executable, "reasons": why2,
-                       "confidence": _confidence(status, executable, route, sell_view, buy)})
+                       "confidence": _confidence(status, executable, route, sell_view, buy),
+                       **({"conditional": cond_list} if cond_list else {})})
     for r in routes:                                           # 売り先の手数料の状態（買取は手数料なし = NOT_APPLICABLE）
         sl = r.get("sell")
         r["fee_status"] = ("NOT_APPLICABLE" if r["route_type"] in "AC" else
@@ -741,12 +821,114 @@ def _routes_for_product(rec: dict, obs: list[dict], sec: dict, cfg: dict, now: d
     return routes
 
 
+from src.collectors.camera_rudeya import COND_COMPLETE, COND_STAMPED      # 正本は camera_rudeya（二重定義しない）
+CONDITION_KEYS = (COND_COMPLETE, COND_STAMPED)
+CONDITIONAL_REQUIRES = {COND_COMPLETE: "購入元の保証書に店舗印が付かない場合のみ"}
+_COND_EVIDENCE = frozenset({"list+item_page"})
+
+
+def clean_conditions(v) -> list:
+    """条件別の確認済み価格（買取の行の conditions）。既知の key・正の整数の価格だけ残し、key の重複・自由記述は捨てる。"""
+    out, seen = [], set()
+    for c in v if isinstance(v, (list, tuple)) else []:
+        if not isinstance(c, dict) or c.get("key") not in CONDITION_KEYS or c["key"] in seen:
+            continue
+        pr = c.get("price")
+        if not (isinstance(pr, int) and not isinstance(pr, bool) and pr > 0):
+            continue
+        e = {"key": c["key"], "price": pr}
+        ded = c.get("deduction")
+        if isinstance(ded, int) and not isinstance(ded, bool) and ded > 0:
+            e["deduction"] = ded
+        if c.get("evidence") in _COND_EVIDENCE:
+            e["evidence"] = c["evidence"]
+        seen.add(c["key"])
+        out.append(e)
+    return out
+
+
+def valid_conditions(v, safe_price) -> list:
+    """条件別の価格が、安全側の価格（店舗印あり）と減額で整合し、根拠があるときだけ返す。満たさなければ []（条件付き利益を作らない）。
+    完品（COMPLETE_NO_STAMP）だけ・店舗印あり側が無い・減額なし・根拠なし・価格が安全側と合わない・減額が負・完品が安全側の 2 倍超は全部捨てる。"""
+    cs = clean_conditions(v)
+    by = {c["key"]: c for c in cs}
+    st, full = by.get(COND_STAMPED), by.get(COND_COMPLETE)
+    if not st or not full or not (isinstance(safe_price, int) and not isinstance(safe_price, bool) and safe_price > 0):
+        return []
+    ded = st.get("deduction")
+    if not isinstance(ded, int) or ded <= 0 or full.get("evidence") not in _COND_EVIDENCE:
+        return []
+    if st["price"] != safe_price or full["price"] - ded != st["price"] or full["price"] <= st["price"] or full["price"] > 2 * safe_price:
+        return []
+    return cs
+
+
 PRICE_BASES = ("STAMPED_WARRANTY",)       # 価格の基準。STAMPED_WARRANTY = 保証書に店舗印ありの価格（完品より減額。店で買った新品の売却）
 
 
 def _view(o: dict) -> dict:
-    return {k: o.get(k) for k in ("source", "price", "price_type", "condition", "stock", "url", "checked_at", "source_updated_at",
-                                  "freshness", "age_days", "item_title", "color", "carried", "basis")}
+    v = {k: o.get(k) for k in ("source", "price", "price_type", "condition", "stock", "url", "checked_at", "source_updated_at",
+                               "freshness", "age_days", "item_title", "color", "carried", "basis")}
+    if o.get("conditions"):
+        v["conditions"] = o["conditions"]                    # 条件別の確認済み価格（参考。売値・BUY の判定には使わない）
+    return v
+
+
+EXECUTABLE_DAYS_DEFAULT = 7                                   # 売値の確認がこれより古いと、条件付きの利益を金額で見せない
+STOCK_DAYS_DEFAULT = 2                                       # 買値（在庫）の確認がこれより古いと、条件付きの利益を金額で見せない
+
+
+def conditional_blockers(buy: dict, sell: dict, stock_days: int = STOCK_DAYS_DEFAULT, now_age_days: Optional[int] = None,
+                         executable_days: int = EXECUTABLE_DAYS_DEFAULT) -> list:
+    """条件付きの利益を「参考値」にとどめる理由のキー（空なら金額を見せてよい）。ルートの JSON（display_only / blocked_reasons）と
+    ページの隠す条件の両方がこの関数だけを見る（二重管理しない）。age_days のキーが無い手組みの行は、古さを判定しない。
+    now_age_days = 生成時点から（ページ表示時までに）さらに経過した日数。渡すと、買値の在庫は stock_days、売値は executable_days を
+    超えたとき BUY_STOCK_OLD / SELL_STALE にする（生成時に FRESH でも、表示時に古ければ金額を見せない）。"""
+    out = []
+    extra = now_age_days if isinstance(now_age_days, int) else 0
+    st = buy.get("stock")
+    if st in (None, STOCK_UNKNOWN):
+        out.append("BUY_STOCK_UNKNOWN")
+    elif st != AVAILABLE:
+        out.append(f"BUY_STOCK_{st}")
+    if buy.get("carried"):
+        out.append("BUY_CARRIED")
+    if "age_days" in buy and not (isinstance(buy["age_days"], int) and buy["age_days"] + extra <= stock_days):
+        out.append("BUY_STOCK_OLD")
+    elif "age_days" not in buy and extra > stock_days:
+        out.append("BUY_STOCK_OLD")
+    if buy.get("freshness") not in (None, FRESH):
+        out.append("BUY_STALE")
+    if sell:
+        if sell.get("carried"):
+            out.append("SELL_CARRIED")
+        sell_old = isinstance(sell.get("age_days"), int) and sell["age_days"] + extra > executable_days
+        if sell.get("freshness") != FRESH or sell_old or (extra > executable_days and not isinstance(sell.get("age_days"), int)):
+            out.append("SELL_STALE")
+    return out
+
+
+def _conditional(sell: dict, buy_price, ship, outbound: int, other: int, buy: Optional[dict] = None, stock_days: int = STOCK_DAYS_DEFAULT) -> list:
+    """安全側の売値（basis）以外の条件別の価格で、同じ費用のまま計算した参考の利益（CONDITIONAL）。executable は常に False。
+    購入送料が不明なら NOT_CALCULATED（0 円にしない）。decision・best_route・イベント・executable・BUY の入力には使わない。"""
+    basis = sell.get("basis")
+    if not basis or sell.get("price_type") != BUYBACK_PRICE:
+        return []
+    out = []
+    blockers = conditional_blockers(buy, sell, stock_days) if buy is not None else []
+    for c in valid_conditions(sell.get("conditions"), sell.get("price")):
+        if c["key"] == basis or c["key"] not in CONDITIONAL_REQUIRES:
+            continue
+        e = {"key": c["key"], "sell_price": c["price"], "executable": False, "requires": CONDITIONAL_REQUIRES[c["key"]], "evidence": c.get("evidence")}
+        if ship is None or not (isinstance(buy_price, int) and buy_price > 0):
+            e.update(profit_status=NOT_CALCULATED, net_profit=None, roi_pct=None)
+        else:
+            net = c["price"] - buy_price - ship - outbound - other               # 買取に販売手数料は無い（安全側と同じ費用）
+            e.update(profit_status=PROFITABLE if net > 0 else NO_PROFIT, net_profit=net, roi_pct=round(100.0 * net / buy_price, 2))
+        if blockers:
+            e.update(display_only=True, blocked_reasons=list(blockers))    # 買えない・古い・引き継ぎ: 計算値は残すが、PROFITABLE だけを拾って読まない印
+        out.append(e)
+    return out
 
 
 def _company(domain: str, cfg: dict) -> str:
@@ -778,8 +960,8 @@ def _decide(status, stock, roi, min_roi, registered, route, sell_view, executabl
     if roi is not None and roi > 100:
         return WATCH, ["roi_implausible"]                        # ROI 100% 超は誤取得（桁落ち等）の疑い。BUY にしない
     why = []
-    if stock in (LOTTERY_DEPENDENT, RESERVATION):
-        return WAIT, [f"stock_{stock.lower()}"]                 # 抽選・予約が必要な商品を BUY にしない
+    if stock in (LOTTERY_DEPENDENT, RESERVATION, LOTTERY_UPCOMING, LOTTERY_ENDED, SALES_SUSPENDED):
+        return WAIT, [f"stock_{stock.lower()}"]                 # 抽選・予約が必要な商品、抽選の終了・開始前・販売休止を BUY にしない
     if stock == OUT_OF_STOCK:
         return WAIT, ["out_of_stock"]
     if stock != AVAILABLE:
@@ -841,7 +1023,7 @@ def quality_checks(market: dict, now: datetime, research_date: str, cfg: dict, *
     ルートに書かれたラベル・数値を信じず、生の観測・設定から再計算して突き合わせる。"""
     q = {"wrong_identity": 0, "wrong_condition": 0, "listing_high_used_as_sell": 0, "insufficient_sold_used_as_expected_sell": 0,
          "stale_price_used_as_fresh": 0, "fake_checked_at": 0, "double_count_fee": 0, "missing_fee": 0,
-         "unknown_fee_used": 0}
+         "unknown_fee_used": 0, "conditional_used_as_executable": 0}
     rd = _d(research_date)
     other = int((cfg.get("costs") or {}).get("other_jpy", 0))
     sec_out = int((cfg.get("costs") or {}).get("secondary_outbound_shipping_jpy", 0))
@@ -854,6 +1036,12 @@ def quality_checks(market: dict, now: datetime, research_date: str, cfg: dict, *
             if chk is not None and (chk.date() > now.date() or (rd is not None and chk.date() > rd.date())):
                 q["fake_checked_at"] += 1                       # 未来・調査日より新しい日付（引き継いだ行も、元の日付のまま）
         for r in p["routes"]:
+            for c in r.get("conditional") or []:                        # 条件付きの利益は参考だけ（実行可能にしない・売値として使わない）
+                if c.get("executable") is not False:
+                    q["conditional_used_as_executable"] += 1
+                sl_ = r.get("sell") or {}
+                if not sl_.get("basis") or c.get("key") == sl_.get("basis") or c.get("sell_price") == sl_.get("price"):
+                    q["conditional_used_as_executable"] += 1             # 条件付きの価格が、実際の売値（安全側）として使われている
             if r["profit_status"] == cr_NC:
                 if r.get("net_profit") is not None:
                     q["missing_fee"] += 1
@@ -939,9 +1127,28 @@ def obs_key(product: str, o: dict) -> tuple:
     return (product, o["kind"], str(o.get("url") or o.get("shop_key") or ""), o["condition"], o.get("color") or "")
 
 
+CAUSE_BASIS_CHANGED, CAUSE_EVIDENCE_EXPIRED = "SELL_BASIS_CHANGED", "EVIDENCE_EXPIRED"
+
+
+def _seller_key(s) -> Optional[tuple]:
+    """売り手の同一性（価格の種別・価格の基準・店のドメイン。URL が無ければ市場名）。ルートに売り手の情報が無ければ None（判定不能）。"""
+    if not isinstance(s, dict) or not s.get("price_type"):
+        return None
+    return (s["price_type"], s.get("basis") or None, domain_of(s.get("url")) or str(s.get("source") or ""))
+
+
+def _same_fresh_seller(prev: dict, cur: dict) -> bool:
+    """PROFIT_TO_LOSS を出してよいか。前回と今回の売り手（種別・基準・店）が同じで、その行が現在も FRESH のときだけ。
+    売値の根拠が切り替わった・前回の履歴に売り手の情報が無い・鮮度が切れた場合は、本当の損失への転落と区別できないので出さない。"""
+    a, b = _seller_key(prev.get("sell")), _seller_key(cur.get("sell"))
+    return a is not None and a == b and (cur.get("sell") or {}).get("freshness") == FRESH
+
+
 def diff_events(old: Optional[dict], new: dict) -> list[dict]:
     """前回との差。既存の語彙: PRICE_DROP / PRICE_RISE / BUYBACK_SURGE / LOSS_TO_PROFIT / PROFIT_TO_LOSS /
-    WAIT_TO_BUY / BUY_TO_WAIT / BEST_ROUTE_CHANGE。前回が無ければ出さない。"""
+    WAIT_TO_BUY / BUY_TO_WAIT / BEST_ROUTE_CHANGE。前回が無ければ出さない。
+    価格のイベントは、価格の基準が切り替わった（SELL_BASIS_CHANGED）・行の鮮度が切れている（EVIDENCE_EXPIRED）ときは cause を付ける（市場の値動きではない）。
+    PROFIT_TO_LOSS は売り手と基準が同じで現在も FRESH のときだけ（_same_fresh_seller）。"""
     if not old:
         return []
     ev: list[dict] = []
@@ -955,8 +1162,13 @@ def diff_events(old: Optional[dict], new: dict) -> list[dict]:
             if abs(d) < PRICE_STEP:
                 continue
             t = "BUYBACK_SURGE" if (o["kind"] == "buyback" and d > 0) else ("PRICE_RISE" if d > 0 else "PRICE_DROP")
-            ev.append({"type": t, "product": p["product"], "market_type": o["kind"], "source": o.get("shop_key") or "",
-                       "condition": o["condition"], "from": prev["price"], "to": o["price"]})
+            e = {"type": t, "product": p["product"], "market_type": o["kind"], "source": o.get("shop_key") or "",
+                 "condition": o["condition"], "from": prev["price"], "to": o["price"]}
+            if (prev.get("basis") or None) != (o.get("basis") or None):
+                e["cause"] = CAUSE_BASIS_CHANGED
+            elif o.get("freshness") not in (None, FRESH):
+                e["cause"] = CAUSE_EVIDENCE_EXPIRED
+            ev.append(e)
     old_routes = {route_key(r): r for p in old.get("products", []) for r in p.get("routes", [])}
     old_best = {p["product"]: p.get("best_route") for p in old.get("products", [])}
     for p in new["products"]:
@@ -965,9 +1177,9 @@ def diff_events(old: Optional[dict], new: dict) -> list[dict]:
             if not prev:
                 continue
             a, b = prev["profit_status"], r["profit_status"]
-            if a == NO_PROFIT and b == PROFITABLE:
+            if a == NO_PROFIT and b == PROFITABLE and _same_fresh_seller(prev, r):     # 売値の根拠が切り替わった・鮮度切れは市場の値動きではないので出さない
                 ev.append({"type": "LOSS_TO_PROFIT", "product": p["product"], "route": r["route_type"], "from": a, "to": b})
-            elif a == PROFITABLE and b == NO_PROFIT:
+            elif a == PROFITABLE and b == NO_PROFIT and _same_fresh_seller(prev, r):
                 ev.append({"type": "PROFIT_TO_LOSS", "product": p["product"], "route": r["route_type"], "from": a, "to": b})
             if prev["decision"] == WAIT and r["decision"] == BUY:
                 ev.append({"type": "WAIT_TO_BUY", "product": p["product"], "route": r["route_type"], "from": prev["decision"], "to": r["decision"]})

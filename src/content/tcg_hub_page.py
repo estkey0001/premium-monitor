@@ -93,7 +93,7 @@ nav.jump a{flex:none;display:inline-flex;align-items:center;border:1px solid var
 .pcard>.pmeta,.pcard>.chips,.pcard>.pfoot,.pcard>.pnote{grid-column:1/-1}.pnote.nw{white-space:nowrap}
 .pmeta{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 12px;margin:0}.pmeta dl{display:contents;margin:0}.pmeta dl>div{min-width:0;display:flex;gap:4px;align-items:baseline}
 .pmeta dd small{display:block;font-weight:400;color:var(--mut);font-size:12px}.pmeta dt{color:var(--mut);font-size:12px;line-height:1.4}.pmeta dd{margin:0;font-weight:700;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
-[data-fb-live][hidden],[data-fb-stale][hidden]{display:none!important}.pnote,.pcard>p.pnote{margin:0;color:var(--mut);font-size:13px}
+[data-fb-live][hidden],[data-fb-stale][hidden]{display:none!important}.rb-expired [data-fb-live],.rb-expired [data-fb-stale],.rb-expired [data-rb-open]{display:none!important}[data-rb-expired][hidden]{display:none!important}.pnote,.pcard>p.pnote{margin:0;color:var(--mut);font-size:13px}
 .chips{display:flex;flex-wrap:wrap;gap:4px}.chip{border:1px solid var(--line);border-radius:8px;padding:0 8px;font-size:12px;line-height:1.6;color:var(--mut)}
 .chip b{font-size:14px;color:var(--fg);margin-right:3px}
 .chip.info{border-color:var(--t-info-bd);background:var(--t-info-bg)}.chip.danger{border-color:var(--t-danger-bd);background:var(--t-danger-bg)}
@@ -184,6 +184,14 @@ def _short(v) -> str:
     """確認日時の表示（元の値の先頭 16 文字 = 分まで。値そのものは変えない）。"""
     t = str(v or "").strip()
     return t[:16].replace("T", " ") if t else "不明"
+
+
+def _apply_deadline(v) -> str:
+    """応募期限の表示。時刻があればその時刻、日付のみなら 23:59（日付の終わり）まで。"""
+    t = str(v or "").strip()
+    if len(t) > 10 and t[10] in "T ":
+        return _short(t)
+    return f"{t[:10]} 23:59"
 
 
 def _e(v) -> str:
@@ -413,6 +421,81 @@ def _opp_card(o: dict, i: int, pidx: dict) -> str:
     return (f'<section class="pcard opp" id="{g}">{_img_block(o)}<div class="phead">'
             f'<div>{_tcgtag(o["tcg"])}{state_badge}{lot_badge}</div><h3>{_e(o["name"])}</h3></div>'
             f'<div class="pmeta"><dl>{meta}</dl>{nt}</div><div class="pfoot">{lot_link}{off}</div></section>')
+
+
+# 販売店の BOX 価格: 応募期限を過ぎたカードは、表示時にも利益を隠す（生成から時間が経っても、期限後の価格を条件付きの利益として見せない）
+JS_RB = r"""
+(function(){function rb(){try{var now=Date.now();document.querySelectorAll('[data-rb-card]').forEach(function(c){var u=c.getAttribute('data-rb-until');
+var t=u?Date.parse(u.length===10?u+'T23:59:59+09:00':u):NaN;var ex=(isNaN(t)||now>t);c.classList.toggle('rb-expired',ex);
+c.querySelectorAll('[data-rb-expired]').forEach(function(e){e.hidden=!ex});});}catch(e){}}
+rb();setInterval(rb,60000);window.addEventListener('pageshow',rb);document.addEventListener('visibilitychange',rb);})();
+"""
+
+
+def _rb_link(url) -> str:
+    return (f'<a href="{_e(url)}" rel="noopener noreferrer" target="_blank">販売店の告知ページ</a>'
+            if isinstance(url, str) and url.startswith("https://") else '<span class="mut">根拠 URL なし</span>')
+
+
+def _rb_card(o: dict, i: int) -> str:
+    """販売店の BOX 価格による「条件付き」の利益。公式定価とは別ラベル。緑の購入推奨にしない。応募期限は表示時にも判定する。"""
+    cfg = _CFG()
+    pr, bbv, r = o["profit"], o["buyback"], o["retailer"]
+    ex = bbv["highest_executable"]
+    mx = rf.thresholds(cfg)[0]
+    g = f"rb{i}"
+    live = f'data-fb-live data-fb-group="{g}" {rf.attrs(pr.get("sell_observed_at"), cfg)} hidden'
+    live_ex = f'data-fb-live data-fb-group="{g}" {rf.attrs(ex["checked_at"], cfg)} hidden'
+    unit = _e(o["unit"])
+    neg = pr["net_profit"] <= 0
+    until = _e(str(r.get("apply_end") or ""))
+    badge = (f'<span {live}>{_badge("条件付き" + ("（赤字）" if neg else ""), "warn")}</span>'
+             f'<span data-fb-stale data-fb-group="{g}" data-fb-max="{mx:g}">{_badge("確認待ち", "warn")}</span>')
+    meta = f'<div><dt>販売店価格（{unit}）</dt><dd>{_yen(r["price_jpy"])}<small>{_e(r["shop"])}の実販売価格・メーカー定価ではありません</small></dd></div>'
+    apply_end = r.get("apply_end")
+    apply_note = f"（応募期限 {_e(_apply_deadline(apply_end))}・生成時点の判定）" if apply_end else "（生成時点の判定）"
+    if r.get("start_unconfirmed"):
+        apply_note += "・応募開始日は未確認（応募期間内の可能性）"
+    meta += f'<div><dt>応募</dt><dd><span data-rb-open>{_e(r["accept_label"])}{apply_note}</span><span data-rb-expired hidden>応募期限を過ぎました</span><small>締切 {_e(_short(r.get("apply_end")))}・購入 {_e(_short(r.get("purchase_start")))}〜{_e(_short(r.get("purchase_end")))}</small></dd></div>'
+    meta += f'<div><dt>受取</dt><dd>{_e(r.get("shipping") or "未確認")}</dd></div>'
+    meta += (f'<div {live_ex}><dt>最高買取</dt><dd>{_yen(ex["price"])}<small>{_e(ex["shop_name"])}・{unit}</small></dd></div>')
+    meta += (f'<div {live}><dt>条件付きの純利益</dt><dd title="{_e(pr.get("route") or "")}">{_e(pr["label"])}'
+             f'<small>{"赤字" if neg else "当選した場合"}: 買取 {_yen(pr["sell_price"])}・販売店価格 {_yen(pr["acquisition_cost"])}</small></dd></div>'
+             f'<div {live}><dt>ROI</dt><dd>{pr["roi_pct"]:.1f}%</dd></div>')
+    meta += (f'<div data-fb-stale data-fb-group="{g}" data-fb-max="{mx:g}"><dt>純利益・ROI</dt><dd>価格再確認待ち'
+             f'<small>取得から{mx:g}時間を超えた買取価格は、利益の根拠にしません</small></dd></div>')
+    notes = [f'条件: {o["condition"]}', *(["応募開始日未確認（応募期間内の可能性。開始前でないことは確認できていません）"] if r.get("start_unconfirmed") else []), "購入推奨ではありません。購入できる保証はなく、今すぐ行動できる項目ではありません",
+             f'確認 {_short(r.get("verified_at"))}・JAN 未確認・箱の状態（新品・シュリンク）未確認・人の確認 {"済" if r.get("human_confirmed") else "未"}']
+    nt = "".join(f'<span class="pnote">{_e(n)}</span>' for n in notes)
+    nt += (f'<span class="pnote" data-rb-until="{until}">応募の期限を過ぎた場合、この利益は無効です（表示時に判定します）</span>'
+           f'<span class="pnote" data-rb-expired hidden>応募期限を過ぎました。この利益は参考にしないでください</span>')
+    return (f'<section class="pcard opp" id="{g}" data-rb-card data-rb-until="{until}">{_img_block(o)}<div class="phead">'
+            f'<div>{_tcgtag(o["tcg"])}{badge}{_badge("抽選・当選した場合のみ", "out")}</div><h3>{_e(o["name"])}</h3></div>'
+            f'<div class="pmeta"><dl>{meta}</dl>{nt}</div><div class="pfoot">{_rb_link(r.get("source_url"))}</div></section>')
+
+
+def _rb_refs(refs: list) -> str:
+    """参考情報（応募終了・当選者のみ・期間外・不明・算出不可・不採用）。利益は出さない。"""
+    if not refs:
+        return ""
+    def _item(r: dict) -> str:
+        name = r.get("display_name") or (f'商品ID: {r.get("product_id")}' if r.get("product_id") else "商品不明")
+        rejected = r.get("kind") == "REJECTED"
+        price = "" if rejected or not isinstance(r.get("price_jpy"), int) else _yen(r["price_jpy"])        # 不採用の行は価格を出さない
+        is_open = not rejected and r.get("accept_state") == "OPEN"
+        if is_open:       # OPEN は静的に「受付中」と書かない。期限を併記し、期限後は JS（data-rb-until）で「過ぎました」に切り替える
+            end = r.get("apply_end")
+            state = (f'<span data-rb-open>（応募期限 {_e(_apply_deadline(end)) if end else "未確認"}まで・生成時点の判定）</span>'
+                     f'<span data-rb-expired hidden>（応募期限を過ぎました）</span>')
+            attrs = f' data-rb-card data-rb-until="{_e(str(end or ""))}"'
+        else:
+            state = "" if rejected else f'（{_e(r.get("accept_label") or "")}）'
+            attrs = ""
+        return (f'<li{attrs}>{_e(r.get("shop") or "")}・{_e(name)}{"・" + price if price else ""}'
+                f'{state}— {_e(r.get("reason") or "")}・確認 {_e(_short(r.get("verified_at")))}・{_rb_link(r.get("source_url"))}</li>')
+    items = "".join(_item(r) for r in refs)
+    return (f'<details class="note"><summary>過去の参考情報（販売店の BOX 価格・利益は出しません）（{len(refs)}）</summary>'
+            f'<p class="mut">応募が終わった・当選者のみ・期間外・不明の価格です。実行できる価格ではないので、利益には使いません。</p><ul>{items}</ul></details>')
 
 
 def _product_card(p: dict, i: int, yr: str) -> str:
@@ -669,6 +752,14 @@ def render(hub: dict, *, generated_label: Optional[str] = None) -> str:
     pidx_k = {(p["tcg"], p["product_id"]): f"p{i}" for i, p in enumerate(products)}
     opps = hub.get("opportunities") or []
     opp_cards = "".join(_opp_card(o, i, pidx_k) for i, o in enumerate(opps))
+    rbs = hub.get("retailer_opportunities") or []
+    rb_html = (
+        f'<h2 id="retailer-box">販売店の BOX 価格による条件付きの利益（{len(rbs)}）</h2>'
+        '<p class="mut">メーカー公式定価ではなく、<b>販売店のページに載っている BOX 価格</b>です。抽選に当選した場合にだけ購入できるので「条件付き」で、購入推奨・今すぐ行動には入れません。'
+        '応募期間中の価格だけを計算し、応募終了・当選者のみの価格は下の参考情報に留めます。パック価格×入数で BOX 価格を作ることはしません。</p>'
+        + (f'<div class="pgrid">{"".join(_rb_card(o, i) for i, o in enumerate(rbs))}</div>' if rbs else
+           '<p class="empty">いま応募期間中で、利益を計算できる販売店の BOX 価格はありません。</p>')
+        + _rb_refs(hub.get("retailer_references") or []))
     opp_html = (
         f'<h2 id="opportunities">現在の利益候補（{len(opps)}）</h2>'
         f'<p class="mut">生成時点の内訳: 黒字 {s["opportunities_profit"]}／様子見 {s["opportunities_watch"]}'
@@ -691,7 +782,7 @@ def render(hub: dict, *, generated_label: Optional[str] = None) -> str:
         f'{notes}{stale_banner}<div class="sum">{sum_cards}</div>{count_note}'
         '<nav class="jump" aria-label="ページ内の移動"><a href="#opportunities">利益候補</a><a href="#products">商品</a><a href="#lottery">抽選一覧</a>'
         '<a href="#calendar">カレンダー</a><a href="#checked">確認日</a></nav>'
-        f'{low}{opp_html}<h2 id="products">商品（{s["products"]}）</h2>'
+        f'{low}{opp_html}{rb_html}<h2 id="products">商品（{s["products"]}）</h2>'
         '<details class="note"><summary>商品の束ね方</summary><p class="mut">商品に束ねたのは、商品 ID まで一致（exact）した抽選だけです。ポケモンカードは公式の商品一覧と照合しています。'
         'ONE PIECE は公式の商品ページで確認できた商品だけを商品一覧に入れています（確認した発売日・価格だけ。画像は出しません）。商品コード（EB-05 等）が一致するか、商品名の本体が完全一致して候補が 1 件のときだけ束ねます。部分一致だけでは束ねません。</p></details>'
         f'{prod_html}'
@@ -712,7 +803,7 @@ def render(hub: dict, *, generated_label: Optional[str] = None) -> str:
     return ('<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>TCG 抽選ハブ | プレ値速報</title><meta name="robots" content="index,follow">'
             f'<meta name="tcg-source-generated-at" content="{_e(ck["lotteries_generated_at"] or "")}"><style>{legacy}{CSS}</style></head>'
-            f'<body>{nav}<main>{body}</main><script>{JS}{rf.JS_FRESHNESS}</script></body></html>')
+            f'<body>{nav}<main>{body}</main><script>{JS}{rf.JS_FRESHNESS}{JS_RB}</script></body></html>')
 
 
 def render_from_json(lotteries, registry, msrp, now: Optional[datetime] = None, buyback=None) -> str:

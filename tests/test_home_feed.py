@@ -263,6 +263,17 @@ def test_camera_events_only_registered_and_cd_routes():
     assert "data-nu-feed" not in _home(_ctx(home_feed_data={"camera": _camera([], False, evs)}))
 
 
+@pytest.mark.parametrize("cause", ["SELL_BASIS_CHANGED", "EVIDENCE_EXPIRED"])
+def test_camera_event_with_cause_is_not_a_price_move_card(cause):
+    """売値の根拠の切替・確認の失効（cause 付き）は市場の値動きではない。「買取上昇」カードにしない。"""
+    evs = [{"type": "BUYBACK_SURGE", "product": "RICOH GR IV HDF", "market_type": "buyback", "source": "kt",
+            "from": 181000, "to": 211000, "cause": cause}]
+    assert "data-nu-feed" not in _home(_ctx(home_feed_data={"camera": _camera([], True, evs)}))
+    ok = [dict(evs[0])]
+    ok[0].pop("cause")
+    assert _keys(_feed(_ctx(home_feed_data={"camera": _camera([], True, ok)}))) == ["surge"]    # cause が無ければ従来どおり出る
+
+
 # ── iPhone のイベント・TCG のイベントは出ない ───────────────────
 
 def test_iphone_events_sections_and_first_run_and_unregistered():
@@ -630,3 +641,63 @@ def test_home_has_dark_theme_and_header_matches_site_nav():
     assert ".nu-topnav__link[aria-current=page]{background:var(--color-primary)" in css
     # 他ページ向けの共通クラス: 様子見の利益は中立色
     assert ".is-wait .pos" in legacy and ".sbadge--profit-neutral" in legacy
+
+
+# ── 購入候補の閲覧時の期限（actionable は生成時の判定。期限を過ぎたら緑の購入候補を残さない） ──────────
+
+class _Act:
+    def __init__(self, ok=True, until=None):
+        self.actionable, self.until_ms = ok, until
+
+
+class _View:
+    def __init__(self, act):
+        self.product_name, self.category, self.buy_source, self.sell_source = "テスト商品", "tcg", "店A", "店B"
+        self.net_profit, self.roi, self.stock_label = 3000, 0.2, "在庫あり"
+        self.last_verified_at = "2026-11-25T10:00:00+09:00"
+        self.action = act
+
+    @property
+    def actionable(self):
+        return bool(self.action is not None and self.action.actionable)
+
+
+def _now():
+    return datetime(2026, 11, 25, 12, 0, tzinfo=JST)
+
+
+def test_actionable_card_carries_until_and_badge_has_expiry_attributes():
+    card = hf.card_from_view(_View(_Act(True, 1764000000000)), _now())
+    assert card.until_ms == 1764000000000
+    html = hf._card_html(card, hf._PROFIT_FIELDS, "hero")
+    assert 'data-nu-pd-until="1764000000000"' in html and 'data-nu-pd-stale-text="更新待ち"' in html
+    assert 'nu-tone-neutral' in html.split('data-nu-pd-stale-class="')[1].split('"')[0]
+
+
+@pytest.mark.parametrize("act", [_Act(False, None), None])
+def test_non_actionable_view_is_not_a_buy_and_has_no_until(act):
+    card = hf.card_from_view(_View(act), _now())
+    assert card.until_ms is None and not hf.is_buy(card)
+    assert "data-nu-pd-until" not in hf._card_html(card, hf._PROFIT_FIELDS, "std")
+
+
+def test_unverified_or_reference_buy_has_no_expiry_attribute():
+    card = hf.FeedCard(product="W", category="iPhone", action="買い", profit=1000, roi=0.1, unverified=True, until_ms=1)
+    assert "data-nu-pd-until" not in hf._card_html(card, hf._PROFIT_FIELDS, "std")
+
+
+def test_buy_tile_recounts_in_browser_and_runtime_handles_expiry():
+    html = hf.render_today([], {"buy": 2, "buy_untils": "1764000000000,inf"})
+    assert 'data-nu-buy-untils="1764000000000,inf"' in html
+    assert "data-nu-buy-untils" not in hf.render_today([], {"buy": 1})          # 期限が無ければ従来どおり
+    js = shell.SCRIPT if hasattr(shell, "SCRIPT") else open(shell.__file__, encoding="utf-8").read()
+    assert ".nu-fc [data-nu-pd-until]" in js and "data-nu-buy-untils" in js and "nu-fc--success" in js
+
+
+def test_build_counts_expose_until_tokens_only_for_actionable_buys():
+    class _Set:
+        eligible = [_View(_Act(True, 1764000000000)), _View(_Act(False, None))]
+    _Set.eligible[1].product_name = "別商品"
+    cat = type("C", (), {"opportunity_set": _Set})()
+    _s, counts = hf.build_with_counts(cat, None, {}, {}, _now())
+    assert counts["buy"] == 1 and counts["buy_untils"] == "1764000000000"

@@ -443,6 +443,10 @@ def summarize_product(product_id: str, rows: list, cfg: dict, msrp_price: Option
         "shop_count": len(execs), "single_source": len(execs) == 1,
         "outlier": outlier, "listed_count": len(listed),
         "unit": (mine[0].get("unit") if mine else None),
+        # 全店の行（UI の「他の買取店」用）。店ごとに「実行可能な最高値の行」と「実行不可（受付停止・掲載のみ・条件 NEW・鮮度切れ）の最高値の行」を別々に持つ。
+        # 実行可能が先（高い順）、その後に参考の行（高い順）。最高買取の行も含む（表示側が除く）。既存のキーは変えない。
+        "others": sorted(_best_per_shop([r for r in mine if r["executable"]]) + _best_per_shop([r for r in mine if not r["executable"]]),
+                         key=lambda r: (not r["executable"], -r["price"], r["shop"])),
     }
 
 

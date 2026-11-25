@@ -163,7 +163,7 @@ def test_generated_html_starts_fail_closed(monkeypatch):
     els = _elements(html)
     live = [e for e in els if e["kind"] == "live"]
     stale = [e for e in els if e["kind"] == "stale"]
-    assert len(live) >= 4 and all(e["hidden"] for e in live)
+    assert len(live) >= 3 and all(e["hidden"] for e in live)            # 状態バッジ・最高買取・利益（新しいカードの live）
     assert stale and not any(e["hidden"] for e in stale)
     assert all(e["attrs"]["data-fb-max"] == "36" for e in live)                        # fixture の設定（36）から。JS の数値ではない
     assert "価格再確認待ち" in html and "¥8,000" in html
@@ -238,15 +238,32 @@ def test_home_and_tcg_pages_embed_the_same_shared_js():
     assert (ROOT / "src/content/ui/lottery_card.py").read_text(encoding="utf-8").count("data-fb-live") >= 1
 
 
-def test_highest_and_profit_use_separate_groups(monkeypatch):
-    """最高買取の取得時刻と利益の基準の取得時刻が違っても、互いの表示を巻き込まない（片方だけ失効してもグループが別）。"""
+def test_card_groups_are_split_by_observation_time_and_other_shops_use_their_own_groups(monkeypatch):
+    """グループは取得時刻が同じ要素だけで作る: 最高買取＋差額 = {g}-b／利益＋状態バッジ = {g}-p／他店の価格は行ごと {g}-oN。
+    （旧: 1 カード 1 グループ。行ごとに取得時刻が違うと『利益 +N円』と『利益は価格再確認待ち』が同時に出るため分けた）"""
     import tests.test_tcg_buyback as tb
     html = _tcg_html(monkeypatch, tb.NOW)
-    groups = {e["attrs"]["data-fb-group"] for e in _elements(html)}
-    assert any(g.endswith("-pf") for g in groups) and any(not g.endswith("-pf") for g in groups)
-    for g in groups:
-        if g.endswith("-pf"):
-            assert g[:-3] in groups                                                         # 対応する最高買取のグループも別にある
+    groups = [e["attrs"]["data-fb-group"] for e in _elements(html)]
+    assert groups and set(groups) <= {"p0-b", "p0-p"}                                 # fixture は 1 商品 1 店。最高買取・利益・状態バッジだけ
+    assert {"p0-b", "p0-p"} == set(groups)
+    assert not any(g.endswith("-pf") for g in groups)                                 # 旧 UI の利益専用グループは無い
+
+
+@needs_node
+def test_profit_and_stale_never_show_together_when_only_one_side_expires(monkeypatch):
+    """【M2 回帰】ルデヤ（利益の基準）= NOW、買取商店（最高買取）= NOW−1h。しきい値 36h の NOW+35.5h では最高買取だけ期限切れ。
+    『利益 +1,800円』と『利益は価格再確認待ち』が同時に出ない。最高買取は消えて『価格再確認待ち』が出る。"""
+    import tests.test_tcg_buyback as tb
+    from tests.test_tcg_cards import _build, _cards, _walk, _html, DECK_JAN, ROWS  # noqa: F401
+    rows = [tb.row(price=8000, jan=DECK_JAN), tb.row(shop="kaitorishouten", price=9000, jan=DECK_JAN, obs=tb.NOW - timedelta(hours=1), upd="2026-11-21")]
+    card = _cards(_html(_build(rows, monkeypatch=monkeypatch)))["POKEMON:deck"]
+    for hrs, profit_visible, best_visible in ((1, True, True), (35.5, True, False), (36.5, False, False)):
+        res = _apply(card, tb.NOW + timedelta(hours=hrs))
+        vis = " ".join(_walk(card, [e["hidden"] for e in res]).visible)
+        assert ("+1,800円" in vis) is profit_visible, (hrs, vis)
+        assert ("利益は価格再確認待ち" in vis) is (not profit_visible), (hrs, vis)
+        assert ("¥9,000" in vis) is best_visible, (hrs, vis)
+        assert not ("+1,800円" in vis and "利益は価格再確認待ち" in vis), hrs
 
 
 def test_no_buyback_profit_amount_outside_the_freshness_gate(monkeypatch):
@@ -266,3 +283,15 @@ def test_evaluate_with_invalid_threshold_is_unknown_not_exception(bad):
     assert rf.evaluate(obs, NOW, bad, FUT) == rf.UNKNOWN
     assert rf.evaluate(obs, NOW, MAXH, bad) == rf.UNKNOWN
     assert rf.evaluate(obs, NOW, MAXH, FUT) == rf.FRESH
+
+
+def test_no_buyback_amount_outside_live_by_html_parser(monkeypatch):
+    """正規表現（最初の </span> で途切れる）ではなく HTML パーサで、live / stale の外に買取由来の金額が無いことを確かめる（新カードは live の入れ子を避ける）。"""
+    import tests.test_tcg_buyback as tb
+    from tests.test_tcg_cards import _walk
+    html = _tcg_html(monkeypatch, tb.NOW)
+    w = _walk(html[html.index("<main>"):html.index("</main>")])
+    outside = " ".join(w.outside) + " " + " ".join(w.attrs_outside)
+    assert w.nest_bad == []
+    for amt in ("+1,800", "29.0%", "8,000"):
+        assert amt not in outside, amt

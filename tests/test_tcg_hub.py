@@ -261,6 +261,7 @@ def test_product_image_only_from_pokemon_official_https():
     ok = page.render(_hub([_ev()], reg=_reg_with_image("https://www.pokemon-card.com/products/2026/images/x.jpg")))
     assert 'src="https://www.pokemon-card.com/products/2026/images/x.jpg"' in ok
     assert 'referrerpolicy="no-referrer"' in ok and "onerror" not in ok
+    assert 'alt="拡張パック「テスト弾」"' in ok and "画像の権利は各権利者に帰属します" in ok     # alt は商品名・出典表記はページに 1 か所
     for bad in ("https://evil.example.com/x.jpg", "http://www.pokemon-card.com/x.jpg", "javascript:alert(1)"):
         html = page.render(_hub([_ev()], reg=_reg_with_image(bad)))
         assert "<img" not in html and "evil.example.com" not in html and "javascript:" not in html

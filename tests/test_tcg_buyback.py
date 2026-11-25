@@ -258,7 +258,7 @@ def test_hub_page_renders_the_buyback_and_profit_with_assumptions(monkeypatch):
     from src.content import tcg_hub_page as page_mod
     monkeypatch.setattr(bb, "load_config", lambda path=bb.CONFIG_PATH: CFG)
     html = page_mod.render(_hub([row(price=8000, jan="4500000000111")]), generated_label="x")
-    assert "最高買取" in html and "¥8,000" in html and "+1,800円" in html and "ROI" in html
+    assert "最高買取" in html and "¥8,000" in html and "+1,800円" in html and "ROI" in html and "公式定価" in html and "¥6,200" in html
     assert "店頭受取 → 店頭持込" in html and "単一ソース" in html and "交通費" in html
 
 

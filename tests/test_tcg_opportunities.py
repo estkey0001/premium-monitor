@@ -108,13 +108,13 @@ def test_profitable_product_appears_without_any_lottery():
     o = hub["opportunities"][0]
     assert o["lottery"] is None and o["profit"]["net_profit"] == 3000 and o["state"] == pv.O_PROFIT
     html = page_mod.render(hub)
-    assert "現在の利益候補（1）" in html and "現在確認できる抽選なし" in html
+    assert "商品と利益（1）" in html and "現在確認できる抽選なし" in html            # 利益候補は商品カードに統合（1 商品 1 枚）
 
 
 def test_small_profit_is_watch_not_a_strong_recommendation():
     o = _hub(6020)["opportunities"][0]                       # +20 円（ROI 0.3%）: 数学的には黒字だが様子見
     assert o["profit"]["net_profit"] == 20 and o["state"] == pv.O_WATCH and o["state_label"] == "様子見"
-    assert "強い購入推奨ではありません" in page_mod.render(_hub(6020))
+    assert "黒字でも投資利益率が基準に届かないため、様子見です" in page_mod.render(_hub(6020))        # 少額の黒字を強い推奨にしない
 
 
 def test_loss_is_watch_and_says_deficit():
@@ -158,8 +158,8 @@ def test_ordering_is_state_then_profit_then_roi():
 
 def test_card_has_runtime_freshness_and_required_fields():
     html = page_mod.render(_hub(9000))
-    sec = html[html.index('id="opportunities"'):html.index('id="products"')]
-    for w in ("ブランド", "種別", "定価", "最高買取", "純利益", "ROI", "確認", "単一ソース", "買取ルデヤ", "価格再確認待ち"):
+    sec = html[html.index('id="opportunities"'):html.index('id="retailer-box"')]
+    for w in ("ポケモンカード", "公式定価", "最高買取", "利益", "ROI", "確認", "単一ソース", "買取ルデヤ", "価格再確認待ち"):
         assert w in sec
     assert 'data-fb-live' in sec and 'data-fb-stale' in sec
     assert len(re.findall(r'data-fb-live[^>]*\bhidden', sec)) >= 3          # 金額は JS が鮮度を確認するまで出さない

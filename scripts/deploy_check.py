@@ -8705,10 +8705,19 @@ def _check_tcg_lottery(report: dict) -> list[dict]:
              f"{_bad851[:5]}")
         _pg852 = PUBLIC_DIR / "tcg.html"
         if _pg852.exists():
-            _cards852 = _pg852.read_text(encoding="utf-8").split('<section class="pcard"')[1:]
-            _ok852 = all(("<dt>最高買取</dt>" in c) for c in _cards852 if "<dt>純利益</dt>" in c)       # カードごとに、純利益には最高買取の根拠がある
-            _add(852, "tcg_profit_has_buyback_evidence", _ok852,
-                 "tcg.html の純利益が出ている商品カードには、必ず最高買取（実行可能な買取）が出ている", "最高買取の無い商品に純利益が出ている")
+            # 新構造（<article class="tcard">）: 最高買取の live を持つカードには利益または理由があり、利益を出すカードは最高買取と定価が揃っている
+            _exp852 = 0
+            try:        # 元データに商品（summaries か rows）があれば、カードは 1 枚以上ある
+                import json as _j852
+                _bb852 = _j852.loads((PROJECT_ROOT / "exports" / "tcg" / "buyback.json").read_text(encoding="utf-8"))
+                _exp852 = 1 if ((_bb852.get("summaries") or []) or (_bb852.get("rows") or [])) else 0
+            except Exception:  # noqa: BLE001
+                _exp852 = 0
+            _bad852, _i852 = check_tcg_profit_evidence(_pg852.read_text(encoding="utf-8"), _exp852)
+            _add(852, "tcg_profit_has_buyback_evidence", not _bad852,
+                 f"tcg.html の商品カード {_i852['cards']} 枚: 最高買取（{_i852['best']} 枚）には利益または理由があり、利益（{_i852['profit']} 枚）には最高買取と公式定価が揃っている"
+                 + ("（対象なし）" if not _i852["cards"] else ""),
+                 "；".join(_bad852[:4]))
 
     # #853 買取の鮮度は、ページを見る時点でも成立する: tcg.html の「最高買取・純利益・ROI」は data-fb-live（最初は hidden）で、
     # 取得時刻（タイムゾーン付き）と設定のしきい値を持ち、共通の JS（tcgFreshApply）がページに入っている。HOME も同じ JS を入れている。
@@ -8730,13 +8739,17 @@ def _check_tcg_lottery(report: dict) -> list[dict]:
 
         # 取得時刻の属性は、元データ（exports/tcg/buyback.json の各行の observed_at）のどれかと一致する（生成時刻などで偽装しない）
         _obs853: set = set()
+        _obs_pid853: dict = {}
         try:
             for _r in (_j853.loads((PROJECT_ROOT / "exports" / "tcg" / "buyback.json").read_text(encoding="utf-8")).get("rows") or []):
                 _d = _rf853.parse_aware(_r.get("observed_at"))
                 if _d:
                     _obs853.add(_d.replace(microsecond=0).isoformat())
+                    if _r.get("product_id"):
+                        _obs_pid853.setdefault(_r["product_id"], set()).add(_d.replace(microsecond=0).isoformat())
         except Exception:  # noqa: BLE001
             _obs853 = set()
+            _obs_pid853 = {}
 
         def _check_attrs853(_a: str, _where: str) -> None:
             _o = _re853.search(r'data-fb-obs="([^"]*)"', _a)
@@ -8751,23 +8764,8 @@ def _check_tcg_lottery(report: dict) -> list[dict]:
             if " hidden" not in " " + _a:
                 _bad853.append(f"{_where}: 最初から表示されている（JS が鮮度を確認する前に出てしまう）")
 
-        _live = _re853.findall(r"<(?:div|span) ([^>]*data-fb-live[^>]*)>", _h853)
-        for _a in _live:
-            _check_attrs853(_a, "tcg.html")
-        # 鮮度に依存する行（最高買取・確認・純利益・ROI・前提）は、1 つ残らず data-fb-live（属性なしの <div> に戻った退行も検出する）
-        for _g in _re853.findall(r"<div((?: [^>]*)?)><dt>(?:最高買取|確認|純利益|ROI)</dt>", _h853):
-            if "data-fb-live" not in _g:
-                _bad853.append("最高買取・確認・純利益・ROI の行が鮮度の判定なしで出ている")
-        for _g in _re853.findall(r"<span((?: [^>]*)?)>前提:", _h853):
-            if "data-fb-live" not in _g:
-                _bad853.append("利益の前提が鮮度の判定なしで出ている")
-        # 鮮度の判定の外（live / stale 以外）に、買取由来の利益の金額（+1,800円 など）が出ていない（補足・title など、行の見落としを検出する）
-        _rest853 = _re853.sub(r"<div [^>]*data-fb-live[^>]*>.*?</div>|<span [^>]*data-fb-live[^>]*>.*?</span>", "", _h853, flags=_re853.S)
-        if _re853.search(r"利益[ ]*[+\-−][\d,]+円|純利益[^<]{0,12}[+\-−][\d,]+円", _rest853):
-            _bad853.append("利益の金額が、鮮度の判定の外（補足・title など）に出ている")
-        # 共通の JS が、そのまま（改変なしで）ページに入っている（判定式を壊す・別の JS にする退行を検出する）
-        if (_live or "最高買取</dt>" in _h853) and _rf853.JS_FRESHNESS not in _h853:
-            _bad853.append("共通の JS（runtime_freshness.JS_FRESHNESS）が、そのままの形でページに入っていない")
+        # tcg.html（商品カード tcard・販売店の BOX 価格 rb）は HTML パーサで検査する（check_tcg_page_runtime_freshness）
+        _bad853 += check_tcg_page_runtime_freshness(_h853, _mx853, _fut853, _obs853, _obs_pid853, 1 if _obs853 else 0)
         _hp853 = PUBLIC_DIR / "index.html"
         if _hp853.exists():
             _hh853 = _hp853.read_text(encoding="utf-8")
@@ -9063,6 +9061,286 @@ def _fb_common_page_problems(html: str, where: str) -> list:
     if "[data-fb-live][hidden]" not in html:
         bad.append(f"{where}: [data-fb-live][hidden] の CSS が無い")
     return bad
+
+
+# ══════════════════════════════════════════════════════════════════
+# TCG の商品カード（<article class="tcard">）の検査（#852・#853）。検査関数はテストから合成した HTML でも呼べる。
+#   _FbScan（Camera・iPhone と同じ HTML パーサ方式）を継承し、カードごとに「どの行（ストリップ・他店・状態バッジ）の live か」を記録する。
+#   非貪欲な正規表現で live を取り除かない（入れ子で途中で切れて金額を見落とす退行を避けるため）。
+# ══════════════════════════════════════════════════════════════════
+_TCG_STRIP_KINDS = ("msrp", "best", "profit", "diff")
+# 金額の表記: ¥/￥+数字・桁区切りの N,NNN 円・約N万円・N万円・符号つきの金額（+1,800円）・ROI n%。商品カードの live の外には、定価の行以外に置かない（#853）。
+# 日本語の文中の数字+円（『0 円にしない』『1000円以上のみ』）は金額の表記ではないので検出しない
+_TCG_MONEY_RE = re.compile(r"[¥￥]\s*\d|\d[\d,]*,\d+\s*円|約\s*[\d,]+\s*[万千]|\d\s*万\s*円|[+\-−＋]\s*\d[\d,]*\s*円|ROI\s*[\d.]+\s*[%％]")
+# 利益欄の理由の語（算出前・定価なし・外れ値待ち・確認待ち）。#852 の reason はこの語が live の外にあるときだけ真
+_TCG_REASON_RE = re.compile(r"算出前|定価が未確認|確認待ち|外れ値|利益に使っていません")
+_TCG_STATE_BADGE_RE = re.compile(r"^(?:黒字|赤字|様子見)")
+_TCG_SIGNED_RE = re.compile(r"[+\-−＋]\s*\d[\d,]*\s*円")
+_TCG_PROFIT_TEXT_RE = re.compile(r"利益[ ]*[+\-−][\d,]+円|純利益[^<]{0,12}[+\-−][\d,]+円")
+_TCG_VALUE_RE = re.compile(r"[¥￥]\s*\d|[+\-−＋]\s*\d[\d,]*\s*円|ROI|黒字|赤字")
+_TCG_OLD_CARD_RE = re.compile(r'<section class="pcard"[ >]')
+# 買取停止の文面（店のページ由来の suspended_text）の中で許す数字+円（『1,000円以上のみ受付停止』）。それでも、¥/￥+数字・符号つきの金額・ROI n%・約N万円は検出する
+_TCG_SUSP_MONEY_RE = re.compile(r"[¥￥]\s*\d|[+\-−＋]\s*\d[\d,]*\s*円|約\s*[\d,]+\s*[万千]|ROI\s*[\d.]+\s*[%％]")
+_TCG_HEADING_COUNT_RE = re.compile(r'id="opportunities">商品と利益（(\d+)）')
+
+
+def _tcg_card_count_problems(n_cards: int, html: str, expected: int | None, w: str) -> list:
+    """商品カード（<article class="tcard">。CSS の文字列は数えない）が、あるべき数ある。ページの見出し『商品と利益（N）』の N と、呼び出し側が渡す期待値（元データに商品があれば 1 以上）で判定する。
+    商品が 0 件の入力（見出しも期待値も 0 件）だけ『対象なし』で合格。カードが 0 枚・見出しの件数と違うときは不合格。"""
+    m = _TCG_HEADING_COUNT_RE.search(html)
+    declared = int(m.group(1)) if m else None
+    bad: list = []
+    if declared is not None and declared != n_cards:
+        bad.append(f"{w}: 見出しの商品数（{declared}）と、商品カード（<article class=\"tcard\">）の枚数（{n_cards}）が違う（カードの構造・クラス名が変わった可能性）")
+    if n_cards == 0 and (expected or 0) > 0 and declared in (None, 0):
+        bad.append(f"{w}: 元データに商品があるのに、商品カード（<article class=\"tcard\">）が 0 枚（検査が空振りしている）")
+    return bad
+_TCG_OLD_DT_RE = re.compile(r"<div((?: [^>]*)?)><dt>(?:最高買取|確認|純利益|ROI)</dt>")
+
+
+class _TcgScan(_FbScan):
+    """_FbScan に、tcard ごとの live の役割（ストリップの行・他店の行・状態バッジ）と、live の内側の入れ子を足したもの。"""
+
+    def __init__(self, html: str):
+        self.cards: list = []        # {attrs, texts}
+        self.tlives: list = []       # {attrs, card(index|None), role("strip:best" など|"badge"|"other:N"|"?")}
+        self.nested: list = []       # live の内側に出た <div>/<span>
+        self.out_attrs: list = []    # live・stale の外の属性値
+        self.out_attr_pairs: list = []   # live・stale の外の (属性名, 値)
+        self.tstales: list = []      # {attrs, card(index|None)}
+        self.seq: list = []          # live / stale の出現順 [("live"|"stale", group)]
+        self._oseq = 0               # 他店の行の通し番号
+        super().__init__(html)
+
+    def _ctx(self) -> dict:
+        ctx = {"card": None, "strip": None, "other": None, "other_kind": "", "tags": False, "lotitem": False}
+        for f in self.stack:
+            if f.get("tcard") is not None:
+                ctx["card"] = f["tcard"]
+            if f.get("strip"):
+                ctx["strip"] = f["strip"]
+            if f.get("other") is not None:
+                ctx["other"] = f["other"]
+                ctx["other_kind"] = f.get("other_kind") or ""
+            if f.get("tags"):
+                ctx["tags"] = True
+            if f.get("lotitem"):
+                ctx["lotitem"] = True
+        return ctx
+
+    def _start(self, tag: str, a: dict, push: bool) -> None:
+        in_live = any(f["live"] for f in self.stack)
+        in_stale = any(f["stale"] for f in self.stack)
+        live, stale = "data-fb-live" in a, "data-fb-stale" in a
+        cls = _fb_classes(a)
+        if in_live and tag in ("div", "span"):
+            self.nested.append(tag)
+        if not (in_live or in_stale or live or stale):
+            self.out_attrs.extend(str(v) for v in a.values() if v)
+            self.out_attr_pairs.extend((k, str(v)) for k, v in a.items() if v)
+        if live or stale:
+            self.seq.append(("live" if live else "stale", a.get("data-fb-group") or "?"))
+        is_card = tag == "article" and "tcard" in cls
+        if is_card:
+            self.cards.append({"attrs": a, "texts": []})
+        if stale:
+            sc = self._ctx()["card"]
+            self.tstales.append({"attrs": a, "card": sc})
+        if live:
+            ctx = self._ctx()
+            if is_card:
+                ctx["card"] = len(self.cards) - 1
+            role = "?"
+            if ctx["strip"]:
+                role = "strip:" + ctx["strip"]
+            elif ctx["other"] is not None:
+                role = "other:" + str(ctx["other"])
+            elif ctx["tags"]:
+                role = "badge"
+            self.tlives.append({"attrs": a, "card": ctx["card"], "role": role, "other_kind": ctx["other_kind"]})
+        super()._start(tag, a, push)
+        if push and self.stack:
+            fr = self.stack[-1]
+            if is_card:
+                fr["tcard"] = len(self.cards) - 1
+            if tag == "li":
+                for k in _TCG_STRIP_KINDS:
+                    if ("data-strip-" + k) in a:
+                        fr["strip"] = k
+                if "data-other-shop" in a:
+                    self._oseq += 1
+                    fr["other"] = self._oseq
+                    fr["other_kind"] = a.get("data-other-kind") or ""
+            if "tc-tags" in cls:
+                fr["tags"] = True
+            if tag == "li" and "data-lot-item" in a:
+                fr["lotitem"] = True
+
+    def _data(self, data: str) -> None:
+        t = data.strip()
+        super()._data(data)
+        if not t or any(f["tag"] in ("script", "style") for f in self.stack):
+            return
+        ctx = self._ctx()
+        if ctx["card"] is None:
+            return
+        top = self.stack[-1]["tag"] if self.stack else ""
+        self.cards[ctx["card"]]["texts"].append({
+            "text": t, "tag": top, "strip": ctx["strip"], "other": ctx["other"], "other_kind": ctx["other_kind"], "lotitem": ctx["lotitem"],
+            "in_live": any(f["live"] for f in self.stack), "in_stale": any(f["stale"] for f in self.stack)})
+
+
+def check_tcg_profit_evidence(html: str, expected_cards: int | None = None) -> tuple:
+    """#852: 最高買取（data-strip-best の live）を持つ商品カードには、対応する利益または理由がある。
+    利益（data-strip-profit の live に金額）を出すカードには、最高買取と公式定価が揃っている。→ (問題のリスト, {cards, best, profit})"""
+    scan = _TcgScan(html)
+    bad: list = []
+    info = {"cards": len(scan.cards), "best": 0, "profit": 0}
+    if _TCG_OLD_CARD_RE.search(html):
+        bad.append("旧構造の商品カード（<section class=\"pcard\">）が残っている（新しい tcard に戻っていない）")
+    bad += _tcg_card_count_problems(len(scan.cards), html, expected_cards, "tcg.html")
+    if not scan.cards:
+        return bad, info
+    for i, c in enumerate(scan.cards):
+        key = c["attrs"].get("data-card-key") or f"#{i}"
+        lives = [t for t in scan.tlives if t["card"] == i]
+        best_live = any(t["role"] == "strip:best" for t in lives)
+        profit_live = any(t["role"] == "strip:profit" for t in lives)
+        tx = c["texts"]
+        profit_amt = any(t["strip"] == "profit" and t["in_live"] and _TCG_SIGNED_RE.search(t["text"]) for t in tx)
+        best_amt = any(t["strip"] == "best" and t["in_live"] and re.search(r"[¥￥]\s*\d", t["text"]) for t in tx)
+        msrp_amt = any(t["strip"] == "msrp" and re.search(r"[¥￥]\s*\d", t["text"]) for t in tx)
+        reason = any(t["strip"] == "profit" and not t["in_live"] and not t["in_stale"] and t["tag"] != "em" and _TCG_REASON_RE.search(t["text"]) for t in tx)
+        if best_live:
+            info["best"] += 1
+            if not best_amt:
+                bad.append(f"{key}: 最高買取の live に金額が無い")
+            if not (profit_live or reason):
+                bad.append(f"{key}: 最高買取があるのに、対応する利益または理由（算出前・定価なし・外れ値待ち）が無い")
+        if profit_amt:
+            info["profit"] += 1
+            if not best_live or not best_amt:
+                bad.append(f"{key}: 利益が出ているのに、最高買取（実行可能な買取）が無い")
+            if not msrp_amt:
+                bad.append(f"{key}: 利益が出ているのに、公式定価が無い")
+        if c["attrs"].get("data-card-state") in ("profit", "watch") and not profit_amt:
+            bad.append(f"{key}: 状態が利益・様子見なのに、利益の金額が無い")
+    return bad, info
+
+
+def check_tcg_page_runtime_freshness(html: str, mx: float, fut: float, obs_all: set, obs_by_pid: dict | None = None, expected_cards: int | None = None) -> list:
+    """#853: docs/tcg.html の表示時の鮮度。買取由来の金額は、すべて data-fb-live の中だけにある。問題の文字列のリスト（空なら合格）。
+    obs_all = exports/tcg/buyback.json の observed_at（秒までのオフセット付き ISO）の集合。obs_by_pid = 商品ごとの同じ集合（任意）。"""
+    w = "tcg.html"
+    bad = _fb_common_page_problems(html, w)
+    scan = _TcgScan(html)
+    obs_by_pid = obs_by_pid or {}
+    bad += _tcg_card_count_problems(len(scan.cards), html, expected_cards, w)      # カード 0 枚でカード単位の検査が空振りしない
+    bad += _fb_live_problems(scan, {mx}, lambda obs, _m: obs in obs_all, w)
+    for a in scan.lives:
+        if _fb_num(a.get("data-fb-fut")) != fut:
+            bad.append(f"{w}: data-fb-fut が設定と違う（{a.get('data-fb-group')}: {a.get('data-fb-fut')}。期待 {fut:g}）")
+    bad += _fb_pair_problems(scan, w, _TCG_VALUE_RE)
+    lg = {a.get("data-fb-group") for a in scan.lives}
+    sg = {a.get("data-fb-group") for a in scan.stales}
+    if lg - sg:
+        bad.append(f"{w}: 再確認待ち（data-fb-stale）と対になっていない live がある（{sorted(str(x) for x in lg - sg)[:3]}）")
+    if scan.nested:
+        bad.append(f"{w}: live の内側に <div>/<span> の入れ子がある（{sorted(set(scan.nested))}）")
+    # 旧構造（属性なしの <div><dt>…</dt>）に戻った・live の付け忘れ（販売店の BOX 価格 _rb_card の行も同じ）
+    for g in _TCG_OLD_DT_RE.findall(html):
+        if "data-fb-live" not in g:
+            bad.append(f"{w}: 最高買取・確認・純利益・ROI の行が鮮度の判定なしで出ている")
+    if _TCG_OLD_CARD_RE.search(html):
+        bad.append(f"{w}: 旧構造の商品カード（<section class=\"pcard\">）が残っている")
+    # live の外（stale・script・style を除く）に、買取由来の利益の金額が出ていない（補足・title などの見落とし）
+    for t in scan.texts:
+        if not t["in_live"] and not t["in_stale"] and _TCG_PROFIT_TEXT_RE.search(t["text"]):
+            bad.append(f"{w}: 利益の金額が、鮮度の判定の外に出ている")
+            break
+    if any(_TCG_PROFIT_TEXT_RE.search(v) for v in scan.out_attrs):
+        bad.append(f"{w}: 利益の金額が、鮮度の判定の外の属性（title など）に出ている")
+    # グループは取得時刻が同じ要素だけで作る: 最高買取＋差額 = {g}-b／利益＋状態バッジ = {g}-p／他店は行ごと {g}-oN。別の種類は同じ group を共有しない
+    owners: dict = {}
+    for t in scan.tlives:
+        g = t["attrs"].get("data-fb-group") or "?"
+        r = t["role"]
+        k = "b" if r in ("strip:best", "strip:diff") else "p" if (r == "strip:profit" or r == "badge") else r
+        owners.setdefault(g, set()).add((t["card"], k))
+        if t["card"] is not None and r == "?":
+            bad.append(f"{w}: 商品カードの中で、ストリップ・他店・状態バッジのどれでもない live がある（{g}）")
+    for g, ks in owners.items():
+        if len(ks) > 1:
+            bad.append(f"{w}: 複数の行・カード・種類（最高買取と差額／利益と状態バッジ／他店の行）が同じ group を共有している（{g}）")
+    # 各 live の直後に、同じ group の stale がある（最高買取だけ stale を外す等を見逃さない）
+    for i, (kind, g) in enumerate(scan.seq):
+        if kind == "live" and not (i + 1 < len(scan.seq) and scan.seq[i + 1] == ("stale", g)):
+            bad.append(f"{w}: live の直後に、同じ group の再確認待ち（data-fb-stale）が無い（{g}）")
+    # カードごと
+    for i, c in enumerate(scan.cards):
+        key = c["attrs"].get("data-card-key") or f"#{i}"
+        pid = key.split(":", 1)[1] if ":" in key else key
+        lives = [t for t in scan.tlives if t["card"] == i]
+        allowed = obs_by_pid.get(pid)
+        if allowed is not None:
+            for t in lives:
+                if (t["attrs"].get("data-fb-obs") or "") not in allowed:
+                    bad.append(f"{w}: {key} の取得時刻が、この商品の買取の元データと一致しない")
+                    break
+        by_role: dict = {}
+        for t in lives:
+            by_role.setdefault(t["role"], set()).add(t["attrs"].get("data-fb-obs") or "")
+        sell = by_role.get("strip:profit", set()) | by_role.get("badge", set())
+        if len(sell) > 1:
+            bad.append(f"{w}: {key} の利益と状態バッジの取得時刻（sell_observed_at）が食い違う")
+        top = by_role.get("strip:best", set()) | by_role.get("strip:diff", set())
+        if len(top) > 1:
+            bad.append(f"{w}: {key} の最高買取と差額の取得時刻が食い違う")
+        g_top = {t["attrs"].get("data-fb-group") for t in lives if t["role"] in ("strip:best", "strip:diff")}
+        g_sell = {t["attrs"].get("data-fb-group") for t in lives if t["role"] in ("strip:profit", "badge")}
+        if len(g_top) > 1:
+            bad.append(f"{w}: {key} の最高買取と差額が別の group に分かれている")
+        if len(g_sell) > 1:
+            bad.append(f"{w}: {key} の利益と状態バッジが別の group に分かれている")
+        if g_top & g_sell:
+            bad.append(f"{w}: {key} のストリップの group を共有している（最高買取・差額と、利益・状態バッジは別の group にする）")
+        for t in lives:
+            if t["role"] == "strip:msrp":
+                bad.append(f"{w}: {key} の公式定価に live が付いている（定価は鮮度の判定に入れない）")
+            if t["role"].startswith("other:") and t["other_kind"] == "outlier":
+                bad.append(f"{w}: {key} の外れ値の行に live（価格）が出ている")
+        # 金額の表記は、カード内の live の外（stale・script・style を除く）に置かない。許可リスト: 公式定価の行（data-strip-msrp）・商品名（h3）・抽選の店名
+        for t in c["texts"]:
+            if t["in_live"] or t["in_stale"]:
+                continue
+            if t["strip"] == "msrp" or t["tag"] == "h3" or (t["lotitem"] and t["tag"] == "b"):
+                continue
+            if t["tag"] == "small" and t["other_kind"] == "suspended":
+                # 買取停止の文言は店のページ由来（『1,000円以上のみ受付停止』など）なので、日本語の文中の数字+円は許す。
+                # ただし ¥/￥+数字・符号つきの金額・ROI n%・約N万円は、停止行の small でも検出する
+                if _TCG_SUSP_MONEY_RE.search(t["text"]):
+                    bad.append(f"{w}: {key} の買取停止の行に、金額・ROI（¥・符号つきの金額・%・約N万円）が出ている（{t['text'][:24]}）")
+                continue          # 価格の要素（<b class="amt">）は下の規則で検査する
+            if _TCG_MONEY_RE.search(t["text"]):
+                bad.append(f"{w}: {key} の金額（¥・円・%・約N万円）が、live の外に出ている（{t['text'][:24]}）")
+            elif _TCG_STATE_BADGE_RE.match(t["text"]):
+                bad.append(f"{w}: {key} の利益・ROI・黒字・赤字・様子見が、live の外に出ている（{t['text'][:24]}）")
+        # 差額の行があるなら、『最高買取の店は送料・費用が未確認』の注記がある。最高買取にしない行（参考・停止中・外れ値）には、その旨の注記がある
+        li_texts = c["texts"]
+        if any(t["strip"] == "diff" for t in li_texts) and not any(t["strip"] == "diff" and "送料・費用が未確認" in t["text"] for t in li_texts):
+            bad.append(f"{w}: {key} の差額の行に『最高買取の店は送料・費用が未確認』の注記が無い")
+        rows_o: dict = {}
+        for t in li_texts:
+            if t["other"] is not None:
+                rows_o.setdefault((t["other"], t["other_kind"]), []).append(t["text"])
+        for (_n, kind), tl in rows_o.items():
+            if kind in ("reference", "suspended", "outlier") and not any("最高買取にし" in x for x in tl):
+                bad.append(f"{w}: {key} の他店（{kind}）の行に『最高買取にしません』の注記が無い")
+    # 属性（title・aria-label）に金額を置かない
+    for k, v in scan.out_attr_pairs:
+        if k in ("title", "aria-label") and _TCG_MONEY_RE.search(v):
+            bad.append(f"{w}: 金額が、鮮度の判定の外の属性（{k}）に出ている")
+    return sorted(set(bad))
 
 
 def _cfg_days(fr, key: str):

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T22:57:22.381745+09:00",
+  "generated_at": "2026-11-26T00:48:37.539316+09:00",
   "items": [
     {
       "tcg": "POKEMON",
@@ -24,7 +24,7 @@
       "source_url": "https://www.pokemon-card.com/ex/m7/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-25T22:32:20.034724+09:00",
+      "observed_at": "2026-11-26T00:23:34.286816+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -62,7 +62,7 @@
       "notification_kind": null,
       "availability_basis": "release_date_only",
       "verification": "Confirmed",
-      "status": "COMING_SOON",
+      "status": "STARTING_SOON",
       "priority": "MEDIUM",
       "stale": false,
       "ttl_sec": null,
@@ -97,7 +97,7 @@
         "purchase_limit": 2.0
       },
       "buy_now_blocked_reasons": [
-        "現在購入可能な状態ではない（COMING_SOON）",
+        "現在購入可能な状態ではない（STARTING_SOON）",
         "プレミア率が閾値未満、または市場価格のサンプル不足"
       ],
       "buy_now_notes": [
@@ -127,7 +127,7 @@
       "source_url": "https://www.pokemon-card.com/products/index.html",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-25T22:32:20.034724+09:00",
+      "observed_at": "2026-11-26T00:23:34.286816+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -165,7 +165,7 @@
       "notification_kind": null,
       "availability_basis": "release_date_only",
       "verification": "Confirmed",
-      "status": "COMING_SOON",
+      "status": "STARTING_SOON",
       "priority": "MEDIUM",
       "stale": false,
       "ttl_sec": null,
@@ -200,7 +200,7 @@
         "purchase_limit": 2.0
       },
       "buy_now_blocked_reasons": [
-        "現在購入可能な状態ではない（COMING_SOON）",
+        "現在購入可能な状態ではない（STARTING_SOON）",
         "プレミア率が閾値未満、または市場価格のサンプル不足"
       ],
       "buy_now_notes": [
@@ -230,7 +230,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-25T22:33:21.162900+09:00",
+      "observed_at": "2026-11-26T00:24:36.168473+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -330,7 +330,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-25T22:33:21.162900+09:00",
+      "observed_at": "2026-11-26T00:24:36.168473+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -430,7 +430,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-25T22:33:21.162900+09:00",
+      "observed_at": "2026-11-26T00:24:36.168473+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -530,7 +530,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-25T22:33:21.162900+09:00",
+      "observed_at": "2026-11-26T00:24:36.168473+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -630,7 +630,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-25T22:33:21.162900+09:00",
+      "observed_at": "2026-11-26T00:24:36.168473+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -730,7 +730,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-25T22:33:21.162900+09:00",
+      "observed_at": "2026-11-26T00:24:36.168473+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,

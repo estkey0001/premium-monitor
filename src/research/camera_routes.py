@@ -423,7 +423,8 @@ def observations(rec: dict, now: datetime, cfg: dict) -> list[dict]:
              "checked_at": r.get("checked_at"), "source_updated_at": r.get("source_updated_at"),
              "freshness": fr, "age_days": age, "identity_ok": ok, "reasons": reasons, "carried": bool(r.get("carried")), "from_pipeline": bool(r.get("from_pipeline")),
              "shop_key": _company(domain_of(r.get("url")), cfg) or _shop_key(market),
-             "color": color_of(r.get("item_title"))}
+             "color": color_of(r.get("item_title")),
+             "basis": r.get("price_basis") if r.get("price_basis") in PRICE_BASES else None}
         o.update(extra)
         out.append(o)
 
@@ -740,9 +741,12 @@ def _routes_for_product(rec: dict, obs: list[dict], sec: dict, cfg: dict, now: d
     return routes
 
 
+PRICE_BASES = ("STAMPED_WARRANTY",)       # 価格の基準。STAMPED_WARRANTY = 保証書に店舗印ありの価格（完品より減額。店で買った新品の売却）
+
+
 def _view(o: dict) -> dict:
     return {k: o.get(k) for k in ("source", "price", "price_type", "condition", "stock", "url", "checked_at", "source_updated_at",
-                                  "freshness", "age_days", "item_title", "color", "carried")}
+                                  "freshness", "age_days", "item_title", "color", "carried", "basis")}
 
 
 def _company(domain: str, cfg: dict) -> str:

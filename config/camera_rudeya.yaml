@@ -1,0 +1,29 @@
+# カメラの買取ルデヤ（kaitori-rudeya.com）の取得対象。scripts/collect_camera_rudeya.py が読む。
+#
+# 重要:
+#   - 採用の根拠（Source Admission Gate）: 店舗公式／商品名と JAN が一覧・商品ページに載る／現在価格が数字／状態は「新品」バッジ／
+#     ページに「YYYY年M月D日 H時M分現在」「YYYY-MM-DD 現在」／1 週間に 1 回で足りる／robots.txt は /search だけ禁止／CAPTCHA・WAF・ログイン不要。
+#   - 受付状態は TCG と同じ fail-closed（src/tcg/buyback.py の accept_state）。受付中と確認できない行は行を作らない。
+#   - 機種の同一性: 一覧の JAN が下の jan と一致し、商品名に name_contains がすべて含まれ、name_excludes が 1 つも含まれないこと。
+#     JAN 一致だけで確定しない（版・色・キットの違いは名前でも確認する）。
+#   - 価格は一覧と商品ページで一致したものだけ採用する（食い違う行は採用しない）。
+#   - 売値は「保証書に店舗印ありの価格」（完品 - 備考の減額）。店で買った新品は店舗印が付く可能性が高く、購入元の店舗印の有無を確認できないための安全側。
+#     備考が「店舗印あり買取不可」の機種は行を作らない。店が注意事項（「JANコード要確認」等）を付けた行も採用しない。店頭での査定額は未確認。
+shop: 買取ルデヤ
+categories:                   # 一覧ページ（固定のカテゴリ。検索結果ではない）
+  - https://kaitori-rudeya.com/category/detail/10     # デジタル一眼カメラ
+  - https://kaitori-rudeya.com/category/detail/11     # デジタルカメラ
+items:
+  - {product: "RICOH GR IV", jan: "4549212311291", item: 6119, name_contains: ["GR IV"], name_excludes: ["HDF", "Monochrome", "モノクローム", "30th", "Kit", "キット", "GR IVx"]}
+  - {product: "RICOH GR IV HDF", jan: "4549212311871", item: 6509, name_contains: ["GR IV", "HDF"], name_excludes: ["Monochrome", "モノクローム"]}
+  - {product: "RICOH GR IV Monochrome", jan: "4549212311994", item: 6532, name_contains: ["GR IV", "Monochrome"], name_excludes: ["HDF"]}
+  - {product: "RICOH GR IIIx", jan: "4549212303739", item: 3506, name_contains: ["GR IIIx"], name_excludes: ["HDF", "Urban", "Diary"]}
+  - {product: "RICOH GR III", jan: "4549212300202", item: 86, name_contains: ["GR III"], name_excludes: ["GR IIIx", "HDF", "Diary"]}
+  - {product: "FUJIFILM X100VI", jan: "4547410529494", item: 4497, name_contains: ["X100VI", "ブラック"], name_excludes: ["2025", "日本語", "英語", "シルバー", "Limited"]}
+  - {product: "FUJIFILM X100VI", jan: "4547410528282", item: 4498, name_contains: ["X100VI", "シルバー"], name_excludes: ["2025", "日本語", "英語", "ブラック", "Limited"]}
+  - {product: "SONY α7R V", jan: "4548736145573", item: 2027, name_contains: ["ILCE-7RM5"], name_excludes: []}
+  - {product: "SONY α7CR", jan: "4548736153936", item: 4151, name_contains: ["ILCE-7CR"], name_excludes: []}
+  - {product: "SONY α7CR", jan: "4548736153967", item: 4152, name_contains: ["ILCE-7CR"], name_excludes: []}
+  - {product: "Canon EOS R5 Mark II", jan: "4549292229141", item: 4754, name_contains: ["R5 Mark II"], name_excludes: ["レンズキット", "24-105", "RF24"]}
+  - {product: "Nikon Z8", jan: "4960759909947", item: 3501, name_contains: ["Z 8"], name_excludes: ["レンズキット", "Kit"]}
+  - {product: "Nikon Zf", jan: "4960759913784", item: 3818, name_contains: ["Z f"], name_excludes: ["レンズキット", "Kit", "40mm"]}

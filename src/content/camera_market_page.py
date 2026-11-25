@@ -125,6 +125,15 @@ def _reasons(rs) -> str:
     return "、".join(REASON.get(r, r) for r in rs or []) or "—"
 
 
+BASIS = {"STAMPED_WARRANTY": "保証書に店舗印ありの価格（完品より減額）"}
+BASIS_SHORT = {"STAMPED_WARRANTY": "店舗印ありの価格"}
+
+
+def _basis(s) -> str:
+    """売値の基準の注記（店で買った新品を売る前提の価格など）。"""
+    return BASIS.get((s or {}).get("basis"), "")
+
+
 def _why_sell(s: dict) -> str:
     """「なぜこの売値か」。買取か成約中央値か、その根拠。"""
     if not s:
@@ -133,7 +142,8 @@ def _why_sell(s: dict) -> str:
     if s.get("price_type") == "SOLD_MEDIAN":
         return f"成約中央値（{ev.get('sample_count')}件・期間 {ev.get('period')}・{COND.get(s.get('condition'), s.get('condition'))}）"
     upd = s.get("source_updated_at") or "更新日不明"
-    return (f"買取価格（{COND.get(s.get('condition'), '')}・{s.get('source')}・店の更新 {upd}・"
+    note = f"・{_basis(s)}" if _basis(s) else ""
+    return (f"買取価格（{COND.get(s.get('condition'), '')}・{s.get('source')}{note}・店の更新 {upd}・"
             f"比較できた買取 {ev.get('shops', 1)} 店）")
 
 
@@ -215,7 +225,7 @@ def _card(p: dict, r: dict, stale: bool) -> str:
     return (f'<article class="dcard{" dcard--off" if r.get("decision") != "BUY" or stale else ""}">'
             f'<header><h3>{_e(p["product"])}{ref}</h3><div class="badges">{_decision_badge(r, stale, reg)}{_profit_badge(r, reg, stale)}</div></header>'
             f'<div class="hero"><div class="m"><span>買値</span><b>{_yen(b["price"])}</b><em>{_e(b["source"])}</em></div>'
-            f'<div class="m"><span>売値</span><b>{_yen(sl["price"]) if sl else "—"}</b><em>{_e(sl["source"]) if sl else ""}（{_e(PTYPE.get(sl["price_type"], sl["price_type"])) if sl else ""}）</em></div>'
+            f'<div class="m"><span>売値</span><b>{_yen(sl["price"]) if sl else "—"}</b><em>{_e(sl["source"]) if sl else ""}（{_e(PTYPE.get(sl["price_type"], sl["price_type"])) if sl else ""}{("・" + _e(_basis(sl))) if _basis(sl) else ""}）</em></div>'
             f'<div class="m"><span>利益</span><b class="{net_cls}">{_signed(net) if net is not None else "未計算"}</b></div>'
             f'<div class="m"><span>ROI</span><b>{_e(_roi(r.get("roi_pct")))}</b></div>'
             f'<div class="m m--route"><span>買い方→売り方</span><b>{_route_html(r)}</b></div>'
@@ -244,7 +254,7 @@ def _row(p: dict, r: dict, stale: bool) -> str:
             f'<td data-label="買う場所・買値"><div class="v">{_link(b.get("url"), b["source"])} <b>{_yen(b["price"])}</b><br>'
             f'<span class="mut">{_e(PTYPE.get(b["price_type"], b["price_type"]))}・{_e(COND.get(b["condition"], b["condition"]))}・{_e(STOCK.get(b.get("stock"), b.get("stock")))}</span></div></td>'
             f'<td data-label="売る場所・売値"><div class="v">{_link(s.get("url"), s["source"]) if s else "—"} <b>{_yen(s["price"]) if s else "—"}</b><br>'
-            f'<span class="mut">{_e(PTYPE.get(s["price_type"], s["price_type"])) if s else "—"}</span></div></td>'
+            f'<span class="mut">{_e(PTYPE.get(s["price_type"], s["price_type"])) if s else "—"}{("・" + _e(_basis(s))) if _basis(s) else ""}</span></div></td>'
             f'<td class="num" data-label="費用"><div class="v">{cost}</div></td><td class="num" data-label="純利益"><div class="v {net_cls}">{net}</div></td>'
             f'<td class="num" data-label="ROI"><div class="v">{_e(roi)}</div></td>'
             f'<td data-label="ルート"><div class="v">{_route_html(r)}<br><span class="mut" title="Route {_e(r["route_type"])}">ルート {_e(r["route_type"])}</span></div></td>'
@@ -460,7 +470,7 @@ def _buy_summary(p: dict) -> str:
 
 
 def _sell_summary(p: dict) -> str:
-    xs = [f'{o["source"]} {_yen(o["price"])}（{COND.get(o["condition"], "")}）' for o in p["observations"]
+    xs = [f'{o["source"]} {_yen(o["price"])}（{COND.get(o["condition"], "")}{"・" + BASIS_SHORT[o["basis"]] if o.get("basis") in BASIS_SHORT else ""}）' for o in p["observations"]
           if o["kind"] == "buyback" and o.get("price") and not o["reasons"] and o["freshness"] == "FRESH"]
     return "、".join(xs[:3]) + ("…" if len(xs) > 3 else "") or "確認できていない"
 

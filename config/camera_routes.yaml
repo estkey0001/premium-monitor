@@ -67,7 +67,7 @@ allowed_hosts:
   official: [ricohimagingstore.com, ricoh-imaging.co.jp, mall-jp.fujifilm.com, fujifilm.com, fujifilm-x.com, sony.jp, sony.com,
              personal.canon.jp, canon.jp, nikon-image.com, nikon.com, nij.nikon.com]
   retail: [yodobashi.com, biccamera.com, mapcamera.com, fujiya-camera.co.jp, kitamura.jp, kitamura.co.jp, sofmap.com, janpara.co.jp, 2ndstreet.jp]
-  buyback: [kaitorishouten-co.jp, netoff.co.jp, fujiya-camera.co.jp, mapcamera.com, kitamura.jp, kitamura.co.jp, sofmap.com, janpara.co.jp, 2ndstreet.jp]
+  buyback: [kaitori-rudeya.com, kaitorishouten-co.jp, netoff.co.jp, fujiya-camera.co.jp, mapcamera.com, kitamura.jp, kitamura.co.jp, sofmap.com, janpara.co.jp, 2ndstreet.jp]
 
 # 同じ会社の別ドメイン（買取店の数を会社単位で数える）
 shop_company:
@@ -78,6 +78,7 @@ shop_company:
 # 無いドメインは「検索・一覧・トップでない」ことだけを検査する。
 item_url_patterns:
   kaitorishouten-co.jp: '^/products/detail/\d+'
+  kaitori-rudeya.com: '^/product/item/\d+'
   netoff.co.jp: '^/kaden/detail/\d+'
   yodobashi.com: '^/product/\d{8,}'
   biccamera.com: '^/bc/item/\d+'

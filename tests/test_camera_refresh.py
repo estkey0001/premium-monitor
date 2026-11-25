@@ -536,3 +536,111 @@ def test_same_url_with_different_price_is_not_confirmed():
 def test_official_price_string_is_parsed():
     out = cf.clean_records([{"product": "x", "official": {"price_jpy": "211,800", "shop": "s"}, "retail": [], "buyback": [], "listing": [], "sold": []}])
     assert out[0]["official"]["price_jpy"] == 211800
+
+
+def test_same_product_in_two_files_does_not_duplicate_carried_rows(tmp_path):
+    """同じブランドの同じ機種が 2 ファイル（調査員の分と別の取得元の分）にあっても、前回の行を二重に引き継がない。"""
+    st1 = run(tmp_path, research())
+    old = st1["market"]
+    d = tmp_path / "2026-11-18"
+    extra = research(buyback=[{"shop": "買取ルデヤ", "item_title": "RICOH(リコー) GR IV HDF", "price_jpy": 205000, "condition": "NEW",
+                               "url": "https://kaitori-rudeya.com/product/item/6509", "is_product_page": True, "checked_at": "2026-11-18",
+                               "source_updated_at": "2026-11-18", "result": "FOUND"}])
+    extra["products"][0]["official"] = None
+    extra["source_results"] = []
+    (d / "research_camera_RICOH_rudeya.json").write_text(json.dumps(extra, ensure_ascii=False), encoding="utf-8")
+    st2 = cf.refresh(d, "2026-11-18", now=NOW, old_market=old, cfg=CFG, obs_doc={}, names=NAMES, official_shipping_fn=SHIP0, fixed_cost_fn=lambda: 1800)
+    rows = [o for p in st2["market"]["products"] if p["product"] == "RICOH GR IV HDF" for o in p["observations"] if o["kind"] == "buyback"]
+    urls = [o.get("url") for o in rows]
+    assert len(urls) == len(set(urls)), urls
+    assert any("kaitori-rudeya.com" in (u or "") for u in urls)
+    assert st2["carried"] == [], st2["carried"]       # 買取商店の行は今回の調査にあるので「取れなかった」ことにして前回の行を引き継がない（統合を戻すとここで落ちる）
+
+
+def test_withdrawn_rows_are_not_carried_over_but_failed_fetches_are(tmp_path):
+    """取得元が意図して不採用にした (機種・種類・店) は前回の行から復活しない。withdrawn が無ければ、これまでどおり引き継ぐ。"""
+    st1 = run(tmp_path, research())
+    old = st1["market"]
+    d = tmp_path / "2026-11-18"
+    empty = {"brand": "RICOH", "products": [], "discovered": [], "lotteries": [], "source_results": []}
+    (d / "research_camera_RICOH.json").write_text(json.dumps({**research(buyback=[]), "source_results": []}, ensure_ascii=False), encoding="utf-8")
+
+    def shops(withdrawn):
+        doc = {**empty, "withdrawn": withdrawn}
+        (d / "research_camera_RICOH_x.json").write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
+        st = cf.refresh(d, "2026-11-18", now=NOW, old_market=old, cfg=CFG, obs_doc={}, names=NAMES, official_shipping_fn=SHIP0, fixed_cost_fn=lambda: 1800)
+        return {o["source"] for p in st["market"]["products"] if p["product"] == "RICOH GR IV HDF" for o in p["observations"] if o["kind"] == "buyback"}
+
+    kept = shops([])
+    assert "買取商店" in kept
+    gone = shops([{"product": "RICOH GR IV HDF", "shop": "買取商店", "kind": "buyback", "reason": "意図した不採用"}])
+    assert "買取商店" not in gone
+
+
+def test_price_basis_is_public_and_shown_on_the_page(tmp_path):
+    """売値が「保証書に店舗印ありの価格」であることを、公開データとページに出す。"""
+    doc = research()
+    doc["products"][0]["buyback"] = [{"shop": "買取ルデヤ", "item_title": "RICOH(リコー) GR IV HDF", "price_jpy": 205000, "condition": "NEW", "price_basis": "STAMPED_WARRANTY",
+                                      "url": "https://kaitori-rudeya.com/product/item/6509", "is_product_page": True, "checked_at": "2026-11-18",
+                                      "source_updated_at": "2026-11-18", "result": "FOUND"}]
+    st = run(tmp_path, doc)
+    pub = cf._public_market(st)
+    obs = [o for p in pub["products"] if p["product"] == "RICOH GR IV HDF" for o in p["observations"] if o["kind"] == "buyback"]
+    assert obs and obs[0]["basis"] == "STAMPED_WARRANTY"
+    from src.content import camera_market_page as pg
+    assert "店舗印あり" in pg.BASIS["STAMPED_WARRANTY"] and pg._basis({"basis": "STAMPED_WARRANTY"})
+    assert pg._basis({"basis": "x"}) == "" and pg._basis(None) == ""
+
+
+def test_found_counts_only_fresh_rows_and_history_keeps_the_price_basis(tmp_path):
+    """「買取価格を確認」の件数は鮮度を満たす行だけ（今週取り直していない古い行を数えない）。履歴にも売値の基準を残す。"""
+    doc = research()
+    doc["products"][0]["buyback"] = [
+        {"shop": "買取ルデヤ", "item_title": "RICOH(リコー) GR IV HDF", "price_jpy": 205000, "condition": "NEW", "price_basis": "STAMPED_WARRANTY",
+         "url": "https://kaitori-rudeya.com/product/item/6509", "is_product_page": True, "checked_at": "2026-11-18", "source_updated_at": "2026-11-18", "result": "FOUND"},
+        {"shop": "買取商店", "item_title": "コンパクトデジタルカメラ RICOH GR IV HDF", "price_jpy": 240000, "condition": "UNOPENED",
+         "url": "https://www.kaitorishouten-co.jp/products/detail/1", "is_product_page": True, "checked_at": "2026-10-01", "source_updated_at": "2026-10-01", "result": "FOUND"}]
+    st = run(tmp_path, doc)
+    assert st["report"]["found"]["buyback"] == 1                       # 古い買取商店の行（STALE）は数えない
+    snap = cf.history_snapshot(st)
+    assert [o["basis"] for o in snap["observations"] if o["source"] == "買取ルデヤ"] == ["STAMPED_WARRANTY"]
+
+
+def _stamped_doc():
+    doc = research()
+    doc["products"][0]["buyback"] = [{"shop": "買取ルデヤ", "item_title": "RICOH(リコー) GR IV HDF", "price_jpy": 205000, "condition": "NEW", "price_basis": "STAMPED_WARRANTY",
+                                      "url": "https://kaitori-rudeya.com/product/item/6509", "is_product_page": True, "checked_at": "2026-11-18",
+                                      "source_updated_at": "2026-11-18", "result": "FOUND"}]
+    return doc
+
+
+def test_page_html_shows_the_price_basis_note(tmp_path):
+    """売値が店舗印ありの価格であることが、ページの HTML に出る（カード・表・根拠のどれにも）。"""
+    from src.content import camera_market_page as pg
+    st = run(tmp_path, _stamped_doc())
+    html = pg.render(cf._public_market(st), now=NOW)
+    assert html.count("保証書に店舗印ありの価格（完品より減額）") >= 3, html.count("保証書に店舗印ありの価格（完品より減額）")     # カード・表・根拠の 3 か所
+
+
+def test_carried_rows_keep_the_price_basis(tmp_path):
+    """通信の失敗で前回の行を引き継いだときも、売値の基準の開示（basis）を落とさない。"""
+    st1 = run(tmp_path, _stamped_doc())
+    old = cf._public_market(st1)
+    d = tmp_path / "2026-11-18"
+    for f in d.glob("research_camera_*.json"):
+        f.unlink()
+    (d / "research_camera_RICOH.json").write_text(json.dumps({"brand": "RICOH", "products": [], "discovered": [], "lotteries": [], "source_results": []}), encoding="utf-8")
+    st2 = cf.refresh(d, "2026-11-19", now=NOW + timedelta(days=1), old_market=old, cfg=CFG, obs_doc={}, names=NAMES, official_shipping_fn=SHIP0, fixed_cost_fn=lambda: 1800)
+    rows = [o for p in st2["market"]["products"] for o in p["observations"] if o["source"] == "買取ルデヤ"]
+    assert rows and all(o["carried"] and o["basis"] == "STAMPED_WARRANTY" for o in rows)
+
+
+def test_uncalculated_table_also_shows_the_price_basis(tmp_path):
+    """買う側が無くて計算できない機種の表（確認できた売る側）にも、売値の基準の注記を出す。"""
+    from src.content import camera_market_page as pg
+    doc = _stamped_doc()
+    doc["products"][0]["official"] = None
+    st = run(tmp_path, doc)
+    html = pg.render(cf._public_market(st), now=NOW)
+    cell = html[html.index("計算できなかった機種の表を開く"):]
+    assert "買取ルデヤ" in cell and "店舗印ありの価格" in cell.split("</details>")[0]

@@ -74,6 +74,21 @@ def load_research(d: Path) -> tuple[list, list, list, list]:
     return recs, srcs, disc, lots
 
 
+def load_withdrawn(d: Path) -> set:
+    """調査ファイルの withdrawn（取得元が意図して不採用にした (機種・種類・店)）。{(機種のキー, 種類, 店のキー)}。
+    通信の失敗とは違い、価格が「取れなかった」のではなく「使わないと決めた」ので、前回の行を引き継がない。"""
+    out = set()
+    for f in sorted(d.glob("research_camera_*.json")):
+        try:
+            doc = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        for w in doc.get("withdrawn") or []:
+            if isinstance(w, dict) and w.get("product") and w.get("shop"):
+                out.add((cr.name_key(w["product"]), str(w.get("kind") or "buyback"), cr._shop_key(w["shop"])))
+    return out
+
+
 def _row_ok(r: dict) -> bool:
     """読めた行だけ（BLOCKED / FAILED / NOT_LISTED は、取得できなかった記録であって価格ではない）。"""
     return str(r.get("result") or "FOUND").upper() == "FOUND" and isinstance(r.get("price_jpy"), int)
@@ -205,7 +220,8 @@ def _row_of(o: dict) -> dict:
             "shipping_url": o.get("shipping_url"), "result": "FOUND", "carried": True, "sold_at": o.get("sold_at"),
             "currency": o.get("currency"), "price_original": o.get("price_original"), "fx_status": o.get("fx_status"), "fx_rate": o.get("fx_rate"),
             "fx_checked_at": o.get("fx_checked_at"), "region": o.get("region"), "shipping_original": o.get("shipping_original"),
-            "shipping_currency": o.get("shipping_currency"), "import_duty_status": o.get("import_duty_status")}
+            "shipping_currency": o.get("shipping_currency"), "import_duty_status": o.get("import_duty_status"),
+            "price_basis": o.get("basis")}                  # 売値の基準（店舗印ありの価格など）。引き継いだ行でも開示を落とさない
 
 
 _LOT_SHOP = ("じゃんぱら", "セカンドストリート", "RICOH", "リコー", "GR SPACE", "FUJIFILM", "富士フイルム", "ソニー", "SONY", "キヤノン", "CANON", "ニコン", "NIKON",
@@ -338,7 +354,7 @@ def drop_failed_source_rows(recs: list, srcs: list) -> tuple[list, list]:
     return recs, dropped
 
 
-def carry_over(recs: list, old_market: Optional[dict], now: datetime) -> tuple[list, list]:
+def carry_over(recs: list, old_market: Optional[dict], now: datetime, withdrawn: Optional[set] = None) -> tuple[list, list]:
     """今回その (機種・種類・店) の価格が 1 つも取れなかったときだけ、前回の行をそのまま（日付もそのまま）残す。
     CARRY_MAX_DAYS を超えた行は捨てる。戻り値: (レコード, 引き継いだ行の一覧)。"""
     if not old_market:
@@ -354,6 +370,8 @@ def carry_over(recs: list, old_market: Optional[dict], now: datetime) -> tuple[l
             chk = cr._d(o.get("checked_at"))
             if chk is None or (now - chk).days > CARRY_MAX_DAYS:
                 continue
+            if (cr.name_key(p["product"]), o["kind"], cr._shop_key(o["source"])) in (withdrawn or ()):
+                continue                                       # 取得元が意図して不採用にした行は、前回の行を引き継がない
             if rec is None:
                 rec = {"product": p["product"], "product_id": p.get("product_id"), "brand": p.get("brand"), "registered": p.get("registered"),
                        "identity_note": p.get("identity_note"), "retail": [], "buyback": [], "listing": [], "sold": [], "official": None}
@@ -381,6 +399,7 @@ def refresh(src_dir: Path, date: str, *, now: datetime, old_market: Optional[dic
     recs_raw, srcs, disc, lots = load_research(src_dir)
     recs_raw = merge_extra_records(recs_raw, extra_records or [])
     recs, dropped_rows = drop_failed_source_rows(clean_records(recs_raw), srcs)
+    recs = attach_ids(recs, names)           # 同じ機種のレコード（同じブランドの別ファイルを含む）を先に 1 つにまとめる（引き継ぎが最後のレコードだけを見て、前回の行を二重に残さない）
     if obs_doc is None:
         try:
             obs_doc = json.loads(OBS_PATH.read_text(encoding="utf-8"))
@@ -388,7 +407,7 @@ def refresh(src_dir: Path, date: str, *, now: datetime, old_market: Optional[dic
             obs_doc = {}
     recs = apply_lotteries(recs, lots, now)
     recs, pipeline_unused = merge_pipeline(recs, existing_buyback_rows(obs_doc, names), names)
-    recs, carried = carry_over(recs, old_market, now)
+    recs, carried = carry_over(recs, old_market, now, withdrawn=load_withdrawn(src_dir))
     recs = attach_ids(recs, names)
     if official_shipping_fn is None:
         from src.market import official_shipping
@@ -442,9 +461,9 @@ def _changed(new: dict, old: Optional[dict], kinds) -> int:
 
 
 _SHOP_EN = (("yodobashi", "ヨドバシ"), ("biccamera", "ビックカメラ"), ("bic camera", "ビックカメラ"), ("map camera", "マップカメラ"), ("mapcamera", "マップカメラ"),
-            ("fujiya", "フジヤカメラ"), ("kitamura", "カメラのキタムラ"), ("sofmap", "ソフマップ"), ("netoff", "ネットオフ"), ("janpara", "ジャンパラ"))
+            ("fujiya", "フジヤカメラ"), ("kitamura", "カメラのキタムラ"), ("sofmap", "ソフマップ"), ("netoff", "ネットオフ"), ("janpara", "ジャンパラ"), ("rudeya", "買取ルデヤ"))
 _SHOPS = (("メルカリ", "メルカリ"), ("ラクマ", "ラクマ"), ("ヤフオク", "ヤフオク"), ("Yahoo", "Yahoo"), ("ヨドバシ", "ヨドバシ"), ("ビック", "ビックカメラ"), ("マップカメラ", "マップカメラ"), ("フジヤ", "フジヤカメラ"),
-          ("キタムラ", "カメラのキタムラ"), ("ソフマップ", "ソフマップ"), ("ネットオフ", "ネットオフ"), ("買取商店", "買取商店"),
+          ("キタムラ", "カメラのキタムラ"), ("ソフマップ", "ソフマップ"), ("ネットオフ", "ネットオフ"), ("買取商店", "買取商店"), ("ルデヤ", "買取ルデヤ"),
           ("ケーズ", "ケーズデンキ"), ("アムール", "ビックカメラ"), ("みんなのカメラ", "みんなのカメラ"), ("ソニーストア", "ソニーストア"),
           ("キヤノン", "キヤノン公式"), ("ニコン", "ニコン公式"), ("リコー", "リコー公式"), ("富士フイルム", "富士フイルム公式"))
 _OK_RESULTS = ("FOUND", "NO_EVENT_FOUND", "CONFIRMED_NO_CURRENT_EVENT", "NOT_LISTED")
@@ -492,7 +511,8 @@ def source_matrix(srcs: list) -> dict:
 
 def _report(market, srcs, disc, lots, carried, old_market, events) -> dict:
     allobs = [o for p in market["products"] for o in p["observations"]]
-    good = lambda k: [o for o in allobs if o["kind"] == k and o.get("price") and not o["reasons"] and not o.get("carried")]
+    good = lambda k: [o for o in allobs if o["kind"] == k and o.get("price") and not o["reasons"] and not o.get("carried")
+                      and o.get("freshness") == cr.FRESH]       # 「確認できた」は鮮度を満たす行だけ（今週取り直していない古い行を数えない）
     routes = market["routes"]
     calc = [r for r in routes if r["profit_status"] != cr.NOT_CALCULATED]
     mx = source_matrix(srcs)
@@ -574,8 +594,8 @@ def reason_code(text) -> str:
 
 
 _PUBLIC_OBS_KEYS = ("kind", "price_type", "price", "condition", "source", "item_title", "url", "checked_at", "source_updated_at",
-                    "freshness", "age_days", "identity_ok", "reasons", "carried", "color", "stock", "shipping_jpy", "shop_key")
-_DOMAIN_LABEL = {"kaitorishouten-co.jp": "買取商店", "netoff.co.jp": "ネットオフ", "fujiya-camera.co.jp": "フジヤカメラ", "mapcamera.com": "マップカメラ",
+                    "freshness", "age_days", "identity_ok", "reasons", "carried", "color", "stock", "shipping_jpy", "shop_key", "basis")
+_DOMAIN_LABEL = {"kaitori-rudeya.com": "買取ルデヤ", "kaitorishouten-co.jp": "買取商店", "netoff.co.jp": "ネットオフ", "fujiya-camera.co.jp": "フジヤカメラ", "mapcamera.com": "マップカメラ",
                  "kitamura.jp": "カメラのキタムラ", "kitamura.co.jp": "カメラのキタムラ", "sofmap.com": "ソフマップ", "janpara.co.jp": "じゃんぱら",
                  "2ndstreet.jp": "セカンドストリート", "yodobashi.com": "ヨドバシ", "biccamera.com": "ビックカメラ",
                  "ricohimagingstore.com": "リコーイメージングストア", "ricoh-imaging.co.jp": "リコーイメージング", "mall-jp.fujifilm.com": "富士フイルムモール",
@@ -750,7 +770,8 @@ def history_snapshot(state: dict) -> dict:
         for o in p["observations"]:
             snap["observations"].append({"product": p["product"], "source": o["source"], "market_type": o["kind"], "price_type": o["price_type"],
                                          "price": o["price"], "condition": o["condition"], "checked_at": _pub_date(o.get("checked_at")),
-                                         "source_updated_at": _pub_date(o.get("source_updated_at")), "carried": o.get("carried", False)})
+                                         "source_updated_at": _pub_date(o.get("source_updated_at")), "carried": o.get("carried", False),
+                                         **({"basis": o["basis"]} if o.get("basis") else {})})
         for r in p["routes"]:
             snap["routes"].append({"product": p["product"], "route": r["route_type"], "profit_status": r["profit_status"],
                                    "decision": r["decision"], "net_profit": r["net_profit"], "roi_pct": r["roi_pct"]})

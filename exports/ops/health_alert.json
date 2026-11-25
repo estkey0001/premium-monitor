@@ -2,14 +2,23 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-11-24T23:38:39+09:00",
+  "generated_at": "2026-11-25T17:39:52+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
-  "active_count": 7,
+  "active_count": 6,
   "high": 3,
-  "warning": 4,
+  "warning": 3,
   "candidates": [],
-  "suppressed": 7,
-  "recovered": [],
+  "suppressed": 6,
+  "recovered": [
+    {
+      "key": "source_failure:mobile_ichiban",
+      "type": "PRODUCTION_HEALTH_RECOVERED",
+      "event": "RECOVERED",
+      "first_seen": "2026-11-22T01:11:35+09:00",
+      "recovered_at": "2026-11-25T17:39:52+09:00",
+      "last_severity": "WARNING"
+    }
+  ],
   "active": [
     {
       "key": "official_recheck_failing:prod_x100vi",
@@ -17,10 +26,10 @@
       "source": "prod_x100vi",
       "severity": "HIGH",
       "reason": "recheck_failed",
-      "title": "prod_x100vi の公式の再確認が 32 日連続で失敗しています",
+      "title": "prod_x100vi の公式の再確認が 33 日連続で失敗しています",
       "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 32
+        "consecutive_days": 33
       }
     },
     {
@@ -32,7 +41,7 @@
       "title": "prod_x100vi の公式の確認が切れています",
       "details": "確認日 2026-10-08（期限 14 日）",
       "evidence": {
-        "days_left": -33
+        "days_left": -34
       }
     },
     {
@@ -56,10 +65,10 @@
       "source": "prod_a7rv",
       "severity": "WARNING",
       "reason": "recheck_failed",
-      "title": "prod_a7rv の公式の再確認が 4 日連続で失敗しています",
+      "title": "prod_a7rv の公式の再確認が 5 日連続で失敗しています",
       "details": "公式ページの移動・表示の変更・ブロックの可能性。人が公式ページを確認する",
       "evidence": {
-        "consecutive_days": 4
+        "consecutive_days": 5
       }
     },
     {
@@ -69,9 +78,9 @@
       "severity": "WARNING",
       "reason": "above_genre_max",
       "title": "ps5_pro の価格に誤りの可能性が高いものがあります（隔離）",
-      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥216,700。他店の裏付けなし・要確認）",
+      "details": "kaitori_shouten: game_console正常帯¥10,000〜¥200,000の上限超過（¥216,700。他店の裏付けなし・要確認）; mobile_ichiban: game_console正常帯¥10,000〜¥200,000の上限超過（¥218,500。他店の裏付けなし・要確認）",
       "evidence": {
-        "items": 1
+        "items": 2
       }
     },
     {
@@ -86,21 +95,6 @@
         "consecutive_days": 4,
         "reasons": [
           "http_403"
-        ]
-      }
-    },
-    {
-      "key": "source_failure:mobile_ichiban",
-      "category": "source_failure",
-      "source": "mobile_ichiban",
-      "severity": "WARNING",
-      "reason": "product_not_listed",
-      "title": "必須の店 mobile_ichiban が 3 日連続で取得できません",
-      "details": "理由: product_not_listed（既知のブロック・仕様。回避せず人が確認する）",
-      "evidence": {
-        "consecutive_days": 3,
-        "reasons": [
-          "product_not_listed"
         ]
       }
     }

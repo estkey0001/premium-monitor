@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T00:09:28.095960+09:00",
+  "generated_at": "2026-11-25T18:10:40.670166+09:00",
   "sources": [
     {
       "source": "ポケモンカードゲーム公式（商品API）",
@@ -62,12 +62,12 @@
       "product_pages_loaded": 0,
       "news_pages_discovered": 0,
       "news_pages_loaded": 0,
-      "candidate_events": 14,
+      "candidate_events": 12,
       "accepted_sales_events": 2,
-      "rejected_events": 12,
+      "rejected_events": 10,
       "errors": 0,
       "rejection_reasons": {
-        "no_product_context": 5,
+        "no_product_context": 3,
         "no_sale_context": 6,
         "non_sale_announcement": 1
       },
@@ -105,9 +105,9 @@
     "product_pages_loaded": 1,
     "news_pages_discovered": 122,
     "news_pages_loaded": 2,
-    "candidate_events": 156,
+    "candidate_events": 154,
     "accepted_sales_events": 4,
-    "rejected_events": 152,
+    "rejected_events": 150,
     "errors": 0
   },
   "rejection_reasons": {
@@ -117,7 +117,7 @@
     "non_sale_announcement": 15,
     "article_too_old": 18,
     "non_card_product": 1,
-    "no_product_context": 5
+    "no_product_context": 3
   },
   "current_events": 4
 }

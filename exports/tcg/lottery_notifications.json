@@ -34,18 +34,5 @@
     "lot-d951335b1a89:deadline_1h": "2026-11-23T23:03:43.635105+09:00",
     "lot-26b0b34c2845:lottery_open": "2026-11-25T00:09:28.081082+09:00"
   },
-  "candidates": [
-    {
-      "lottery_id": "lot-26b0b34c2845",
-      "milestone": "lottery_open",
-      "label": "抽選開始",
-      "fires_at": "2026-11-24T12:00:00+09:00",
-      "tcg": "POKEMON",
-      "product_name": "ポケモンカードゲームMEGA 拡張パック二種（再販）",
-      "retailer": "ホビーステーション",
-      "entry_url": null,
-      "source_url": "https://www.hbst.net/?p=412193",
-      "message": "ポケモンカードゲームMEGA 拡張パック二種（再販）（ホビーステーション） 抽選開始"
-    }
-  ]
+  "candidates": []
 }

@@ -1,7 +1,7 @@
 
 ============================================================
  Deploy Check (524 items)
- 実行日時: 2026-11-26T03:29:05+09:00
+ 実行日時: 2026-11-26T05:37:20+09:00
 ============================================================
   ✅ [index_exists] docs/index.html 存在
   ✅ [forbidden_phrases] 禁止表現なし
@@ -53,12 +53,12 @@
   ✅ [fetch_failed_no_price_calc] fetch_failed 行の価格欄が「—」（価格計算に使われていない）
   ✅ [game_console_shops] ゲーム機向け店舗が表示されている: ['ゲオ', 'イオシス', 'ブックオフ', '駿河屋', 'ソフマップ', 'TSUTAYA', '買取商店']
   ✅ [switch2_game_shop_links] Switch 2 / ゲーム機向け確認リンク（ゲオ/ブックオフ/駿河屋/ソフマップ）が存在する
-  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-11-26T01:39:12+09:00）
+  ✅ [collector_report_exists] collector_report/latest.json 存在（生成: 2026-11-26T03:47:30+09:00）
   ⚠️ [suspicious_price_format] suspicious_prices 形式OK（suspicious_price 1件あり — 確認推奨）
   ✅ [fetch_failed_has_reason] fetch_failed 47件すべてに reason あり
   ✅ [collector_report_html_exists] docs/collector_report.html 存在
   ✅ [collector_report_link_in_lp] LP内に collector_report.html へのリンクがある
-  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 11件存在する: ['iphone17pro512', 'iphone17pm256', 'iphone17pro256', 'iphoneair_256']
+  ✅ [iphone_auto_scraped_exists] iPhone系 auto_scraped 行が 11件存在する: ['iphone17pro256', 'iphone17_256', 'iphone17pm512', 'iphoneair_256']
   ✅ [beginner_page_auto_scraped_exists] 自動取得 OK 19件 / total 66件
   ✅ [iphone17pro256_price_scraped] iPhone 17 Pro 256GB の価格取得成功: ['kaitori_shouten', 'kaitori_itchome']
   ✅ [fetch_failed_has_reason_field] 全取得失敗エントリーに reason フィールドあり（47件）
@@ -434,7 +434,7 @@
   ✅ [tcg_entry_url_official_only] #763 応募ページへのリンクは公式サイトの URL のみ
   ✅ [tcg_lottery_coverage_report] #764 抽選の監視状況（登録 / 実装 / 正常 / 拒否 / 未実装）が出力されている
   ✅ [tcg_lottery_real_data] #765 抽選を実データで取得している（42件）、または監視元が正常に0件を返している
-  ✅ [tcg_page_matches_source] #850 docs/tcg.html は、いまの exports/tcg/lotteries.json（取得時刻 2026-11-26T03:07）から作られている
+  ✅ [tcg_page_matches_source] #850 docs/tcg.html は、いまの exports/tcg/lotteries.json（取得時刻 2026-11-26T05:15）から作られている
   ✅ [tcg_buyback_quality] #851 TCG の買取: 同一性（JAN）・単位が対象と一致し、実行可能な行は FRESH・新品未開封・重複なし
   ✅ [tcg_profit_has_buyback_evidence] #852 tcg.html の商品カード 30 枚: 最高買取（9 枚）には利益または理由があり、利益（4 枚）には最高買取と公式定価が揃っている
   ✅ [tcg_buyback_runtime_freshness] #853 tcg.html の最高買取・純利益・ROI は、表示時に取得時刻から鮮度を判定し直す（8 時間を超えたら出さない。HOME の利益根拠も同じ）

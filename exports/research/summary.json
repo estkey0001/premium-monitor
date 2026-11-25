@@ -2,7 +2,7 @@
   "schema": 1,
   "type": "RESEARCH_SUMMARY",
   "audience": "public_aggregate",
-  "generated_at": "2026-11-26T01:09:52+09:00",
+  "generated_at": "2026-11-26T03:28:44+09:00",
   "description": "調査候補の集計（件数だけ）。個別の候補（商品・価格・価格差・売却先）は公開しない。確定の利益ではない",
   "research_candidate_count": 4,
   "positive_raw_spread_count": 5,
@@ -71,16 +71,16 @@
     "positive_spread_hint": 0,
     "top_queue": 50,
     "lookup_ready": 56,
-    "lookup_matched": 40,
+    "lookup_matched": 41,
     "research_candidates": 0
   },
   "buyback_triage": {
     "HIGH": 52,
-    "MEDIUM": 283,
+    "MEDIUM": 282,
     "LOW": 209,
-    "REJECTED": 52
+    "REJECTED": 53
   },
-  "retail_lookup_matched": 40,
+  "retail_lookup_matched": 41,
   "retail_adapters": {
     "nikon_direct": {
       "supported": 21,
@@ -100,8 +100,8 @@
       "supported": 36,
       "requested": 4,
       "fetched": 3,
-      "matched": 1,
-      "no_match": 2
+      "matched": 2,
+      "no_match": 1
     },
     "canon_store": {
       "supported": 17,
@@ -127,8 +127,8 @@
     "implemented_collectors": 11,
     "reachable_sources": 12,
     "healthy_sources": 8,
-    "blocked_sources": 6,
-    "unreachable_sources": 4,
+    "blocked_sources": 7,
+    "unreachable_sources": 3,
     "not_implemented_sources": 11,
     "sources_with_active_lottery": 4,
     "lottery_events_found": 23,
@@ -155,7 +155,7 @@
     "skipped_ended": 0,
     "sources_list_ok": 12,
     "sources_detail_ok": 4,
-    "sources_blocked": 6,
+    "sources_blocked": 7,
     "sources_parser_degraded": 0,
     "zero_active_interpretation": null
   },
@@ -180,7 +180,7 @@
   "tcg_fast_lane": {
     "events_measured": 41,
     "median_application_duration_hours": 72.0,
-    "median_age_at_observation_hours": 240.6,
+    "median_age_at_observation_hours": 242.9,
     "windows_under_24h_at_observation": 36,
     "observed_after_half_window": 37,
     "tolerated_age_at_observation_hours_p25": 30.0,
@@ -195,7 +195,7 @@
     "positive_spread_candidates": 0,
     "active_tcg_priority": 2,
     "stock_unknown_not_counted": 0,
-    "momentum_observed": 335,
+    "momentum_observed": 334,
     "momentum_new_observation": 0,
     "momentum_quarantined": 0,
     "momentum_not_comparable": 0
@@ -276,7 +276,7 @@
     "UNKNOWN_CAUSE": 0
   },
   "price_type_counts": {
-    "REGULAR": 40,
+    "REGULAR": 41,
     "SALE": 0,
     "COUPON": 0,
     "MEMBERSHIP": 0,

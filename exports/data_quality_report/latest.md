@@ -1,4 +1,4 @@
-# データ取得品質レポート（2026-11-26 01:09 JST）
+# データ取得品質レポート（2026-11-26 03:28 JST）
 
 ## 取得成功率
 - 全対象店舗数: 16
@@ -47,20 +47,20 @@
 - r5ii: 100.0%
 
 ## 連続失敗店舗（2回以上）
-- 2ndstreet: 272回連続
-- bookoff: 272回連続
-- dosupara: 272回連続
-- geo_mobile: 272回連続
-- hardoff: 272回連続
-- janpara: 272回連続
-- pasoko: 272回連続
-- sofmap: 272回連続
-- surugaya: 272回連続
-- tsutaya: 272回連続
-- iosys: 205回連続
-- netoff: 132回連続
-- geo: 64回連続
-- mobile_ichiban: 2回連続
+- 2ndstreet: 273回連続
+- bookoff: 273回連続
+- dosupara: 273回連続
+- geo_mobile: 273回連続
+- hardoff: 273回連続
+- janpara: 273回連続
+- pasoko: 273回連続
+- sofmap: 273回連続
+- surugaya: 273回連続
+- tsutaya: 273回連続
+- iosys: 206回連続
+- netoff: 133回連続
+- geo: 65回連続
+- mobile_ichiban: 3回連続
 
 ## 改善優先順位（required店舗）
 1. iosys（失敗6 / http_403）
@@ -112,5 +112,5 @@
 ## カメラ自動取得の信頼性
 - auto_scraped 取得: 17 件（うち high: 17）
 - manual fallback: 43 件
-- 棄却候補数: 201
-- 棄却理由: {'model_mismatch': 150, 'not_buyback_context': 51}
+- 棄却候補数: 216
+- 棄却理由: {'model_mismatch': 165, 'not_buyback_context': 51}

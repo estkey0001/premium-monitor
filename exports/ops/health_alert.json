@@ -2,7 +2,7 @@
   "type": "PRODUCTION_HEALTH_ALERT",
   "schema": 1,
   "audience": "operator",
-  "generated_at": "2026-11-26T00:17:47+09:00",
+  "generated_at": "2026-11-26T02:36:43+09:00",
   "note": "運営者向けの劣化アラート候補（商品の通知ではない）。外部へは送らない。CI の注記・Step Summary・管理画面に出す",
   "active_count": 7,
   "high": 4,

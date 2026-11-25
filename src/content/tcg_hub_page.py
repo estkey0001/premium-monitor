@@ -80,7 +80,7 @@ nav.jump a{flex:none;display:inline-flex;align-items:center;border:1px solid var
 .sub{display:flex;flex-wrap:wrap;gap:4px 16px;margin:8px 0;color:var(--mut);font-size:13px}.sub b{color:var(--fg)}
 .box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:8px 0}.box.warn{border-color:var(--warn)}
 .box details{margin-top:4px}
-.sb{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:0 8px;font-size:12px;line-height:1.7;white-space:nowrap;margin:0 4px 2px 0}
+.sb{display:inline-block;max-width:100%;border:1px solid var(--line);border-radius:12px;padding:0 8px;font-size:12px;line-height:1.7;white-space:normal;overflow-wrap:anywhere;margin:0 4px 2px 0}
 .sb.info{color:var(--t-info-fg);background:var(--t-info-bg);border-color:var(--t-info-bd)}
 .sb.danger{color:var(--t-danger-fg);background:var(--t-danger-bg);border-color:var(--t-danger-bd)}
 .sb.ok{color:var(--t-ok-fg);background:var(--t-ok-bg);border-color:var(--t-ok-bd)}
@@ -162,7 +162,7 @@ table.lt{min-width:0}.lt thead{display:none}.lt,.lt tbody{display:block}.lt-wrap
 .lt tr.ev{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 12px;border:1px solid var(--line);border-left:4px solid var(--st,var(--line));border-radius:8px;background:var(--card);margin:8px 0;padding:6px 10px}
 .lt tr.t-danger{background:var(--t-danger-bg)}
 .lt td{display:block;position:relative;padding:2px 0;border:0;min-width:0;grid-column:span 1}.lt tr.ev td:first-child{border-left:0}.lt td.na{display:none}
-.lt td[data-label="店舗"]{order:1}.lt td[data-label="状態"]{order:2;text-align:right}.lt td[data-label="確認"]{order:9;grid-column:1/-1;font-size:12px;color:var(--mut)}
+.lt td{min-width:0}.lt td[data-label="店舗"]{order:1}.lt td[data-label="状態"]{order:2;text-align:right}.lt td[data-label="確認"]{order:9;grid-column:1/-1;font-size:12px;color:var(--mut)}
 .lt td[data-label="商品"]{order:4;grid-column:1/-1}
 .lt td[data-label="締切"]{order:5;grid-column:1/-1}.lt td[data-label="当選日"]{order:6}
 .lt td[data-label="購入期間"]{order:7}.lt td[data-label="店舗"] small,.lt td[data-label="商品"] small span{display:none}.lt td[data-label="応募方法"]{order:8;grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:0 8px}
@@ -452,8 +452,13 @@ def _img_block(p: dict) -> str:
     ini, cls = TCG_INITIAL.get(p["tcg"], ("?", ""))
     src = _image_src(p.get("image_url")) if p["tcg"] == "POKEMON" and p["canonical"] == pv.C_MASTER else None
     if src:
+        # 読み込みに失敗したら（公式側のリンク切れ・ブロック）、壊れた画像の枠ではなくブランド色＋頭文字のプレースホルダに切り替える
+        fb = ("var p=this.parentNode;p.classList.add('ph');p.setAttribute('role','img');"
+              "p.setAttribute('aria-label','商品画像を読み込めませんでした');"
+              "p.querySelectorAll('[data-phb]').forEach(function(e){e.hidden=false});this.remove()")
         return (f'<div class="pimg {cls}"><img src="{_e(src)}" alt="{_e(p.get("name") or "")}" loading="lazy" decoding="async" '
-                f'referrerpolicy="no-referrer" width="{IMG_W}" height="{IMG_H}"></div>')
+                f'referrerpolicy="no-referrer" width="{IMG_W}" height="{IMG_H}" onerror="{fb}">'
+                f'<b data-phb hidden>{_e(ini)}</b><small data-phb hidden>{_e(TCG_SHORT.get(p["tcg"], ""))}</small></div>')
     return (f'<div class="pimg ph {cls}" role="img" aria-label="商品画像なし（{_e(TCG_LABEL.get(p["tcg"], p["tcg"]))}）">'
             f'<b>{_e(ini)}</b><small>{_e(TCG_SHORT.get(p["tcg"], ""))}</small></div>')
 

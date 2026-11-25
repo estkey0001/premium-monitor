@@ -981,3 +981,13 @@ console.log(JSON.stringify({state:attrs['data-state'],changed:changed}));
     assert run("2026-11-26T12:00:00+09:00")["state"] == state                         # 期限内は変えない
     after = run("2026-11-27T00:00:00+09:00")
     assert not ({"open", "ending", "upcoming", "today", "deadline"} & set(after["state"].split())) and after["changed"] == 1      # 期限後は外し、フィルタを再実行させる
+
+
+def test_long_status_badges_wrap_and_do_not_widen_the_mobile_table(monkeypatch):
+    # 本番（375px）で、抽選表の長いバッジ『購入期間中（当選者のみ・新規応募不可）（生成時点）』が折り返されず、
+    # 表のセルを押し広げて横スクロール（スクロール幅 445px）が出た。バッジは折り返せること・スマホ表示のセルは min-width:0 であること
+    html = _html(_build([], monkeypatch=monkeypatch))
+    badge = re.search(r"\.sb\{[^}]*\}", html).group(0)
+    assert "white-space:normal" in badge and "overflow-wrap:anywhere" in badge and "max-width:100%" in badge
+    assert "white-space:nowrap" not in badge
+    assert ".lt td{min-width:0}" in html

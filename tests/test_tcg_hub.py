@@ -260,7 +260,11 @@ def _reg_with_image(url):
 def test_product_image_only_from_pokemon_official_https():
     ok = page.render(_hub([_ev()], reg=_reg_with_image("https://www.pokemon-card.com/products/2026/images/x.jpg")))
     assert 'src="https://www.pokemon-card.com/products/2026/images/x.jpg"' in ok
-    assert 'referrerpolicy="no-referrer"' in ok and "onerror" not in ok
+    assert 'referrerpolicy="no-referrer"' in ok
+    # onerror は『読み込み失敗でプレースホルダに切り替える』定数の文字列だけ（画像 URL・商品名などの外部の値を埋め込まない）
+    oe = re.search(r'onerror="([^"]*)"', ok).group(1)
+    assert "classList.add('ph')" in oe and "this.remove()" in oe
+    assert "pokemon-card.com" not in oe and "http" not in oe and "テスト弾" not in oe
     assert 'alt="拡張パック「テスト弾」"' in ok and "画像の権利は各権利者に帰属します" in ok     # alt は商品名・出典表記はページに 1 か所
     for bad in ("https://evil.example.com/x.jpg", "http://www.pokemon-card.com/x.jpg", "javascript:alert(1)"):
         html = page.render(_hub([_ev()], reg=_reg_with_image(bad)))
@@ -377,3 +381,15 @@ def test_product_card_no_open_lottery_text_is_scoped_to_linked_and_points_to_unl
     assert "この商品に紐付いた、応募受付中の抽選はありません。紐付け前の告知は抽選一覧を参照" in html1
     h2 = _hub([ended, {**unlinked_open, "verified": False}])        # 未検証の未紐付けは「受付中」に数えない
     assert h2["stats"]["unbound_applying"] == 0
+
+
+def test_image_load_failure_falls_back_to_the_placeholder():
+    # 公式の画像が読み込めないとき（リンク切れ・ブロック）、壊れた画像の枠＋alt の文字だけにならず、頭文字のプレースホルダに切り替える
+    html = page.render(_hub([_ev()], reg=_reg_with_image("https://www.pokemon-card.com/products/2026/images/x.jpg")))
+    img_div = re.search(r'<div class="pimg [^"]*"><img .*?</div>', html, flags=re.S).group(0)
+    assert "onerror=" in img_div and "classList.add('ph')" in img_div and "this.remove()" in img_div
+    assert img_div.count("data-phb hidden") == 2                    # 頭文字と種別（最初は隠れている）
+    assert 'alt="拡張パック「テスト弾」"' in img_div                   # alt は商品名のまま
+    # 画像が無い商品（プレースホルダ）には onerror もフォールバック用の要素も付かない
+    ph = page.render(_hub([_ev()], reg=_reg_with_image("https://evil.example.com/x.jpg")))
+    assert "data-phb" not in ph

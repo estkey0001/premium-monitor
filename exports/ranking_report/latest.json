@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25 18:31 JST",
+  "generated_at": "2026-11-25 23:18 JST",
   "route_type_beginner": "primary_to_secondary",
   "top_camera_buyback_opportunities": [
     {
@@ -398,6 +398,10 @@
     },
     {
       "product_id": "prod_iphone17pm_512",
+      "reason": "official_configured_reference"
+    },
+    {
+      "product_id": "prod_iphone17pro_256",
       "reason": "official_configured_reference"
     },
     {

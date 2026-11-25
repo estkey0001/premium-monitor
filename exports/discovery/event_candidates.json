@@ -3118,14 +3118,14 @@
       "product_mapping": "code",
       "application_start": "2026-11-16",
       "application_end": "2026-11-18",
-      "event_status": "WINNER_ANNOUNCED",
+      "event_status": "WINNER_PURCHASE_PERIOD",
       "missing_fields": [],
       "candidate_id": "tcg-event-9d2518ec0eb7",
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-11-16T18:38:48+09:00",
       "last_seen_on": "2026-11-25",
-      "updated_at": "2026-11-20T16:25:48+09:00"
+      "updated_at": "2026-11-25T23:02:26+09:00"
     },
     "tcg-event-cfd1a0eb1de7": {
       "source": "CARD_LABO",
@@ -3398,20 +3398,20 @@
       "source": "CARD_LABO",
       "kind": "LOTTERY",
       "tcg": "ONE_PIECE",
-      "title": "ONE PIECE Heroines Edition vol.2【EB-05】",
+      "title": "エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】",
       "official_url": "https://www.c-labo.jp/shop/ikebukuro/blog/624925/",
       "product_code": "",
       "product_mapping": "unmapped",
       "application_start": "2026-11-20",
       "application_end": "2026-11-21",
-      "event_status": "WINNER_ANNOUNCED",
+      "event_status": "WINNER_PURCHASE_PERIOD",
       "missing_fields": [],
       "candidate_id": "tcg-event-af1f200c834d",
       "status": "MATCHED_EVENT",
       "reasons": [],
       "discovered_at": "2026-11-21T12:43:22+09:00",
       "last_seen_on": "2026-11-25",
-      "updated_at": "2026-11-23T23:08:48+09:00"
+      "updated_at": "2026-11-25T23:02:26+09:00"
     },
     "tcg-event-b54bda74904a": {
       "source": "SURUGAYA",
@@ -3925,6 +3925,25 @@
       "discovered_at": "2026-11-25T00:14:32+09:00",
       "last_seen_on": "2026-11-25",
       "updated_at": "2026-11-25T00:14:32+09:00"
+    },
+    "tcg-event-27de5414a7c4": {
+      "source": "HOBBY_STATION",
+      "kind": "LOTTERY",
+      "tcg": "POKEMON",
+      "title": "拡張パック「ハドウシーカー」",
+      "official_url": "https://www.hbst.net/?p=412193",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-11-24T12:00:00+09:00",
+      "application_end": "2026-11-26T23:59:00+09:00",
+      "event_status": "OPEN",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-27de5414a7c4",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-11-25T23:02:26+09:00",
+      "last_seen_on": "2026-11-25",
+      "updated_at": "2026-11-25T23:02:26+09:00"
     }
   }
 }

@@ -1,6 +1,6 @@
 # Pro 利益ルート（normalized_price_observations 由来・検証済み）
 
-生成: 2026-11-25 18:31 JST
+生成: 2026-11-25 23:18 JST
 
 - **main 利益ルート: 0件**（route_confidence high/medium のみ）
 - 参考ルート(海外sold stale・要fresh化): 0件
@@ -21,15 +21,15 @@
 ## 0件商品の診断
 
 ### iPhone 17 Pro 256GB SIMフリー
-- buy候補 0 / sell候補 1 / stale除外 5 / 海外sold stale 1
-- 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 5), ('duplicate_price_collision', 1)]
+- buy候補 0 / sell候補 2 / stale除外 5 / 海外sold stale 1
+- 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 5)]
 
 ### iPhone 17 Pro 512GB SIMフリー
 - buy候補 0 / sell候補 2 / stale除外 3 / 海外sold stale 0
 - 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 3)]
 
 ### iPhone 17 Pro Max 256GB SIMフリー
-- buy候補 0 / sell候補 3 / stale除外 3 / 海外sold stale 0
+- buy候補 0 / sell候補 2 / stale除外 3 / 海外sold stale 0
 - 除外理由TOP5: [('price_zero', 5), ('stale_over_14d', 3)]
 
 ### iPhone 17 Pro Max 512GB SIMフリー

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25 18:31 JST",
+  "generated_at": "2026-11-25 23:18 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -11,18 +11,18 @@
     "buyback": {
       "observations": 146,
       "with_price": 126,
-      "exact_match": 14,
-      "high_confidence": 14,
+      "exact_match": 15,
+      "high_confidence": 15,
       "fresh": 56,
-      "main_promotable": 14,
+      "main_promotable": 15,
       "zero": 20,
       "stale": 90,
-      "rejected": 118,
+      "rejected": 117,
       "failure_reasons": {
         "stale_over_14d": 90,
         "price_zero": 20,
         "accessory_or_wrong_product": 5,
-        "duplicate_price_collision": 3
+        "duplicate_price_collision": 2
       }
     },
     "resale": {
@@ -184,16 +184,15 @@
     "買取商店": {
       "observations": 22,
       "with_price": 22,
-      "exact_match": 14,
-      "high_confidence": 14,
+      "exact_match": 15,
+      "high_confidence": 15,
       "fresh": 15,
-      "main_promotable": 14,
+      "main_promotable": 15,
       "zero": 0,
       "stale": 7,
-      "rejected": 8,
+      "rejected": 7,
       "failure_reasons": {
-        "stale_over_14d": 7,
-        "duplicate_price_collision": 1
+        "stale_over_14d": 7
       }
     },
     "ゲオ": {
@@ -323,16 +322,15 @@
     "買取商店": {
       "observations": 22,
       "with_price": 22,
-      "exact_match": 14,
-      "high_confidence": 14,
+      "exact_match": 15,
+      "high_confidence": 15,
       "fresh": 15,
-      "main_promotable": 14,
+      "main_promotable": 15,
       "zero": 0,
       "stale": 7,
-      "rejected": 8,
+      "rejected": 7,
       "failure_reasons": {
-        "stale_over_14d": 7,
-        "duplicate_price_collision": 1
+        "stale_over_14d": 7
       }
     },
     "イオシス": {
@@ -478,13 +476,13 @@
     }
   },
   "identity_audit": {
-    "checked": 238,
+    "checked": 237,
     "capacity_mismatch": 0,
     "wrong_model": 0,
     "accessory": 7,
     "not_body_only": 7,
     "condition_dist": {
-      "new": 196,
+      "new": 195,
       "used": 42
     }
   },
@@ -526,7 +524,7 @@
         "new",
         "used"
       ],
-      "first_seen": 95.3,
+      "first_seen": 95.5,
       "last_seen": 0.1,
       "risk_level": "high",
       "possible_reason": [
@@ -557,44 +555,13 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.8,
+      "last_seen": 1.0,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
         "pro_vs_promax_same_price"
       ],
       "is_official": true,
-      "review_status": "pending",
-      "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
-    },
-    {
-      "source_name": "買取商店",
-      "price_role": "sell",
-      "price_type": "buyback_price",
-      "price": 175000,
-      "product_ids": [
-        "prod_iphone16pm_256",
-        "prod_iphone17pro_256"
-      ],
-      "count": 2,
-      "models": [
-        "16 iphone max pro",
-        "17 iphone pro"
-      ],
-      "capacities": [
-        "256"
-      ],
-      "conditions": [
-        "new"
-      ],
-      "first_seen": 107.3,
-      "last_seen": 0.1,
-      "risk_level": "high",
-      "possible_reason": [
-        "different_model_same_price",
-        "pro_vs_promax_same_price"
-      ],
-      "is_official": false,
       "review_status": "pending",
       "note": "同一ソースで複数SKUが同額。特別仕様で実同額の可能性もあるため人が確認（弾かない）"
     },
@@ -619,7 +586,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.8,
+      "last_seen": 1.0,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -649,8 +616,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 107.3,
-      "last_seen": 107.3,
+      "first_seen": 107.5,
+      "last_seen": 107.5,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -679,8 +646,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 107.3,
-      "last_seen": 107.3,
+      "first_seen": 107.5,
+      "last_seen": 107.5,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -709,8 +676,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 107.3,
-      "last_seen": 107.3,
+      "first_seen": 107.5,
+      "last_seen": 107.5,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -739,7 +706,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 48.8,
+      "last_seen": 49.0,
       "risk_level": "low",
       "possible_reason": [
         "same_price_multiple_skus"
@@ -751,11 +718,11 @@
   ],
   "main_promotion": {
     "by_category": {
-      "buyback": 14,
+      "buyback": 15,
       "resale": 0,
       "retail": 0
     },
-    "total": 14
+    "total": 15
   },
   "freshness_compliance": {
     "violations": [],

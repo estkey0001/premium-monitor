@@ -351,3 +351,28 @@ def test_calendar_collapses_empty_weeks():
     h = _hub([_ev(application_end_date="2026-12-24", application_start_date="2026-12-20")])
     html = page.render(h)
     assert "予定のない週は省略しています" in html
+
+
+def test_product_card_without_open_lottery_does_not_read_as_open():
+    """受付中の抽選が 0 件の商品カードに、「受付中」と読める代替文言を出さない。受付中がある商品は従来どおりチップを出す。"""
+    ended = page.render(_hub([_ev(application_start_date="2026-11-10", application_end_date="2026-11-12")]))
+    assert "この商品に紐付いた、応募受付中の抽選はありません" in ended and "受付中・開始前なし" not in ended
+    live = page.render(_hub([_ev()]))
+    assert "この商品に紐付いた、応募受付中の抽選はありません" not in live and "<b>1</b>受付中" in live
+
+
+def test_product_card_no_open_lottery_text_is_scoped_to_linked_and_points_to_unlinked():
+    """商品カードの本文は「この商品に紐付いた」ものだけの話。商品に未紐付けの受付中の抽選があれば、抽選一覧への案内を同じ行に足す（紐付けは推測しない）。"""
+    ended = _ev(application_start_date="2026-11-10", application_end_date="2026-11-12")
+    unlinked_open = _ev(product_match="none", product_id=None, product_name="拡張パック二種（再販）",
+                        application_start_date="2026-11-18", application_end_date="2026-11-30")
+    h0 = _hub([ended])
+    assert h0["stats"]["unbound_applying"] == 0
+    html0 = page.render(h0)
+    assert "この商品に紐付いた、応募受付中の抽選はありません" in html0 and "紐付け前の告知は抽選一覧を参照" not in html0
+    h1 = _hub([ended, unlinked_open])
+    assert h1["stats"]["unbound_applying"] == 1
+    html1 = page.render(h1)
+    assert "この商品に紐付いた、応募受付中の抽選はありません。紐付け前の告知は抽選一覧を参照" in html1
+    h2 = _hub([ended, {**unlinked_open, "verified": False}])        # 未検証の未紐付けは「受付中」に数えない
+    assert h2["stats"]["unbound_applying"] == 0

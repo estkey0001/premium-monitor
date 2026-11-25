@@ -35,12 +35,30 @@ SCHEDULE_FIELDS = ("application_start", "application_end", "application_start_da
                    "purchase_start", "purchase_end", "purchase_start_date", "purchase_end_date")
 FILL_FIELDS = (
     "shipping_period",
-    "release_date", "retail_price", "price_text", "eligibility_text",
+    "release_date", "price_text", "eligibility_text",
     "membership_required", "app_required", "purchase_history_required",
     "identity_verification_required", "store_pickup_required",
     "payment_method_requirement", "entry_url", "result_url", "purchase_url",
     "shrink_status", "product_id",
 )
+# retail_price は price_unit と「組」で補完する（FILL_FIELDS には入れない。下の _fill_price で処理）
+
+
+def _fill_price(base: dict, e: dict) -> None:
+    """価格は単位と組で補完する。補完元が price_unit==BOX で価格を持つときだけ、両方を一緒に入れる。
+    単位を持たない（UNKNOWN 等）価格は、単位を UNKNOWN のまま入れる（個数が 2 以上のイベントに他の価格だけを足して、2 個分の合計を BOX 価格にしない）。
+    基準側が単位つき（BOX）で価格だけ無いときは、BOX の価格だけを入れる。"""
+    if base.get("retail_price") not in (None, "", []) or e.get("retail_price") in (None, "", []):
+        return
+    src_unit = e.get("price_unit")
+    if src_unit == "BOX":
+        base["retail_price"] = e["retail_price"]
+        base["price_unit"] = "BOX"
+        return
+    if base.get("price_unit") == "BOX":
+        return                   # 基準側は BOX 単位。単位の分からない価格では埋めない
+    base["retail_price"] = e["retail_price"]
+    base["price_unit"] = base.get("price_unit") or "UNKNOWN"
 
 
 def _prio(ev: dict) -> int:
@@ -220,6 +238,7 @@ def merge_lotteries(events: Iterable[dict]) -> list[dict]:
                     if twin and base.get(twin):
                         continue
                     base[f] = e[f]
+                _fill_price(base, e)
         base["lottery_id"] = lottery_id_of(base)
         out.append(base)
     return out

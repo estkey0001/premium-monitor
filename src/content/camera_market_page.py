@@ -15,7 +15,8 @@ from datetime import datetime, timedelta, timezone
 
 from src.content.iphone_buyback_page import CSS as _CSS, age_banner, _md, _plain
 from src.content.ui.shared_css import legacy_css, site_nav
-from src.research.camera_routes import conditional_blockers
+from src.research.camera_routes import conditional_blockers, conditional_hide_reasons, conditional_notes
+from src.tcg import runtime_freshness as rf
 from src.tcg.models import parse_dt
 
 JST = timezone(timedelta(hours=9))
@@ -125,49 +126,144 @@ def _link(url, label) -> str:
     return f'<a href="{_e(u)}" target="_blank" rel="noopener nofollow">{_e(label)}</a>' if safe else _e(label)
 
 
-HIDDEN_COND_REASON = "参考値のため条件付き（店舗印なし）の利益は表示しません（買える状態になり確認日が新しくなったら再計算）"
+HIDDEN_COND_REASON = "鮮度切れ・引き継ぎ・外れ値確認待ちのため、店舗印なしの試算は表示しません（確認日が新しくなったら再計算）"
 
 
 def _reasons(rs, hide_conditional: bool = False) -> str:
-    """判断の理由。買えない・古いために条件付きの金額を隠すカードでは、『店舗印なしの場合だけ黒字』も言い換える。"""
+    """判断の理由（文字列）。条件付きの試算を隠すカードでは、『店舗印なしの場合だけ黒字』も言い換える。"""
     return "、".join((HIDDEN_COND_REASON if (hide_conditional and r == "conditional_profit_only") else REASON.get(r, r)) for r in rs or []) or "—"
 
 
 STALE_SENTINEL = 999                      # 調査日を解釈できない／未来のとき。どの経過日数の上限も超える（古い扱い）
 
+# ---------------------------------------------------------------- runtime freshness（ページを開いた時点の鮮度。TCG と同じ data-fb-* と JS_FRESHNESS）
+_FB_CSS = "[data-fb-live][hidden],[data-fb-stale][hidden]{display:none!important}"
+
+
+def _load_cfg() -> dict:
+    from src.research.camera_refresh import load_config      # 設定の唯一の定義は config/camera_routes.yaml（ここに数値を書かない）
+    return load_config()
+
+
+def _days_or_none(v) -> int | None:
+    """設定の日数。正の整数または整数値の float（0 を含む。0 は当日 24:00 まで有効）だけ。無い・不正（負・bool・非整数・数値以外）は None（設定不明 = fail-closed。HOME・iPhone と同じ規則）。"""
+    if isinstance(v, bool):
+        return None
+    if isinstance(v, float) and v.is_integer():
+        v = int(v)
+    return v if isinstance(v, int) and v >= 0 else None
+
+
+def _hours_or_nan(v) -> float:
+    """設定不明（None）は nan（JS は UNKNOWN_FRESHNESS = 出さない）。"""
+    d = _days_or_none(v)
+    return float("nan") if d is None else rf.days_to_hours(d)
+
+
+class _FB:
+    """Camera ページの表示時の鮮度。期間は config/camera_routes.yaml の freshness から（在庫 stock_days → 72 時間、価格 executable_days → 192 時間）。
+    1 要素は 1 組の obs/max しか持てないため、複数の期限に依存する要素は期限ごとに入れ子の data-fb-live で包む。
+    観測時刻は各行の checked_at（日付）の 00:00 JST（rf.date_obs）だけ。生成時刻を使って新しく見せない。"""
+
+    def __init__(self, cfg: dict | None = None):
+        if cfg is None:
+            try:
+                cfg = _load_cfg()
+            except Exception:  # noqa: BLE001 — 設定が読めないときは fail-closed（設定不明 = 購入候補・条件付き試算を出さない側。HOME と同じ）
+                cfg = {}
+        self.cfg = cfg
+        fr = (self.cfg or {}).get("freshness") or {}
+        self.stock_h = _hours_or_nan(fr.get("stock_days"))
+        self.price_h = _hours_or_nan(fr.get("executable_days"))
+
+    def wrap(self, inner: str, group: str, deps: list, tag: str = "span") -> str:
+        for date, kind in reversed(deps):
+            mx = self.stock_h if kind == "stock" else self.price_h
+            inner = f'<{tag} data-fb-live data-fb-group="{_e(group)}" {rf.attrs(rf.date_obs(date), self.cfg, max_hours=mx)} hidden>{inner}</{tag}>'
+        return inner
+
+    @staticmethod
+    def stale(group: str, inner: str, tag: str = "span") -> str:
+        return f'<{tag} data-fb-stale data-fb-group="{_e(group)}">{inner}</{tag}>'
+
+    @staticmethod
+    def act_deps(b: dict, sl: dict) -> list:
+        """購入候補・購入できる: 在庫（72h）・買値の価格（192h）・売値（192h）。"""
+        return [(b.get("checked_at"), "stock"), (b.get("checked_at"), "price"), ((sl or {}).get("checked_at"), "price")]
+
+    @staticmethod
+    def price_deps(b: dict, sl: dict) -> list:
+        """利益・ROI・条件付き試算: 買値の価格（192h）・売値（192h）。"""
+        return [(b.get("checked_at"), "price"), ((sl or {}).get("checked_at"), "price")]
+
+
+STUB_PF = '<span class="mut">価格再確認待ち</span>'
+STUB_EXPIRED = '<span class="mut">（期限切れ・再確認待ち）</span>'
+STUB_ACT = '<span class="mut">在庫・価格の再確認待ち</span>'
+
+
+def _gate(fx, kind: str, b: dict, sl: dict | None, inner: str, stub: str | None = None, tag: str = "span") -> str:
+    """表示時に鮮度を確認できたときだけ見せる包み。fx=None（単体呼び出し・テスト）は包まない。kind: act（購入可否・購入候補）/ pf（利益・ROI）/ cd（条件付き試算）。"""
+    if not fx or not inner:
+        return inner
+    fb, gid = fx
+    g = f"{gid}-{kind}"
+    out = fb.wrap(inner, g, fb.act_deps(b or {}, sl or {}) if kind == "act" else fb.price_deps(b or {}, sl or {}), tag)
+    return out + (fb.stale(g, stub, tag) if stub else "")
+
+
+_NOTE_KEY_PREFIXES = ("BUY_STOCK_", "SINGLE_BUYBACK_SHOP")
+
+
+def _split_json_keys(r: dict | None) -> tuple[list, list]:
+    """ルート JSON の conditional が持つ理由（blocked_reasons = 隠す／not_actionable_reasons = 注記）。
+    古い出力（買えない系も blocked_reasons に入っていた）は、注記の key を注記側に寄せる。"""
+    hide, note = [], []
+    for c in (r or {}).get("conditional") or []:
+        if not isinstance(c, dict):
+            continue
+        for k in (c.get("blocked_reasons") or []):
+            (note if str(k).startswith(_NOTE_KEY_PREFIXES) else hide).append(k)
+        note += list(c.get("not_actionable_reasons") or [])
+    return hide, note
+
+
+def _hide_keys(b: dict, sl: dict | None, r: dict | None = None, now_age: int | None = None) -> list:
+    """試算を隠す理由のキー（鮮度切れ・引き継ぎ・外れ値確認待ち）。判定は camera_routes.conditional_hide_reasons だけ。JSON 側が付けたキーがあれば足す。"""
+    keys = list(conditional_hide_reasons(b, sl or None, now_age_days=now_age))
+    return keys + [k for k in dict.fromkeys(_split_json_keys(r)[0]) if k not in keys]
+
+
+def _note_keys(b: dict, sl: dict | None, r: dict | None = None, now_age: int | None = None) -> list:
+    """試算に併記する理由のキー（買えない・在庫確認が古い・買取 1 店のみ）。判定は camera_routes.conditional_notes だけ。"""
+    keys = list(conditional_notes(b, sl or None, now_age_days=now_age))
+    return keys + [k for k in dict.fromkeys(_split_json_keys(r)[1]) if k not in keys]
+
 
 def _blocked_keys(b: dict, sl: dict | None, r: dict | None = None, now_age: int | None = None) -> list:
-    """隠す理由のキー。判定は camera_routes.conditional_blockers（ルートの JSON の blocked_reasons と同じ関数）だけ。
-    JSON 側が付けたキーがあれば足す（設定の stock_days が既定と違っても、JSON の判定を落とさない）。"""
-    keys = list(conditional_blockers(b, sl or None, now_age_days=now_age))
-    for c in (r or {}).get("conditional") or []:
-        if isinstance(c, dict):
-            keys += [k for k in (c.get("blocked_reasons") or []) if k not in keys]
-    return keys
+    """互換: 隠す理由 + 注記する理由（camera_routes.conditional_blockers と同じ並び）。"""
+    return _hide_keys(b, sl, r, now_age) + _note_keys(b, sl, r, now_age)
+
+
+HIDE_TEXT = {"BUY_STALE": "買値の確認日が古い", "BUY_CARRIED": "買値は前回データの引き継ぎのため参考値",
+             "SELL_STALE": "売値の確認日が古い（引き継ぎ・期限切れ・不明）", "SELL_CARRIED": "売値の確認日が古い（引き継ぎ・期限切れ・不明）",
+             "SELL_OUTLIER_REVIEW": "買取の最高が他店より極端に高く、外れ値の確認待ち"}
+HIDE_CAUSE = {"BUY_STALE": "鮮度切れ", "SELL_STALE": "鮮度切れ", "BUY_CARRIED": "引き継ぎ", "SELL_CARRIED": "引き継ぎ", "SELL_OUTLIER_REVIEW": "外れ値確認待ち"}
+
+
+def _hide_texts(b: dict, sl: dict | None, r: dict | None = None, now_age: int | None = None) -> list:
+    """試算を隠す理由の文。実際の状態で言い分ける（売値・買値が新しいのに『古い』と書かない）。"""
+    return list(dict.fromkeys(HIDE_TEXT[k] for k in _hide_keys(b, sl, r, now_age) if k in HIDE_TEXT))
 
 
 def _blocked_reasons(b: dict, sl: dict | None, r: dict | None = None, now_age: int | None = None) -> list:
-    """条件付きの利益・ROI を隠す理由。実際の状態で言い分ける（在庫不明を『買えない』と断定しない。売値・買値が新しいのに『古い』と書かない）。"""
-    out = []
-    for k in _blocked_keys(b, sl, r, now_age):
-        if k == "BUY_STOCK_UNKNOWN":
-            out.append("在庫を確認できていない")
-        elif k.startswith("BUY_STOCK_") and k != "BUY_STOCK_OLD":
-            st = k[len("BUY_STOCK_"):]
-            out.append("いま買えない状態（" + STOCK.get(st, st) + "）")
-        elif k == "BUY_STOCK_OLD":
-            out.append("在庫の確認が古い")
-        elif k == "BUY_CARRIED":
-            out.append("買値は前回データの引き継ぎのため参考値")
-        elif k == "BUY_STALE":
-            out.append("買値の確認日が古い")
-        elif k in ("SELL_STALE", "SELL_CARRIED"):
-            out.append("売値の確認日が古い（引き継ぎ・期限切れ・不明）")
-    return list(dict.fromkeys(out))
+    """互換: 隠す理由の文。"""
+    return _hide_texts(b, sl, r, now_age)
 
 
 def _hides_conditional(r: dict, b: dict, sl: dict, now_age: int | None = None) -> bool:
-    return bool(sl) and any(isinstance(c, dict) for c in (r.get("conditional") or [])) and bool(_blocked_keys(b, sl, r, now_age))
+    """条件付きの試算（金額・ROI）を隠すか。隠す理由があるときだけ True。買えないだけでは隠さない。"""
+    return bool(sl) and any(isinstance(c, dict) for c in (r.get("conditional") or [])) and bool(_hide_keys(b, sl, r, now_age))
 
 
 BASIS = {"STAMPED_WARRANTY": "保証書に店舗印ありの価格（完品より減額）"}
@@ -202,6 +298,15 @@ def _row_stale(r: dict, now: datetime, buy_days: int = 2, sell_days: int = 7) ->
     return bool(out)
 
 
+def _row_date_bad(r: dict, now: datetime) -> bool:
+    """買値・売値の確認日が読めない／未来のとき True（条件付きの試算を出さない。経過日数では判定できない）。"""
+    for x in (r.get("buy") or {}, r.get("sell") or {}):
+        d = parse_dt(x.get("checked_at")) if x.get("checked_at") else None
+        if d is None or d.astimezone(JST).date() > now.astimezone(JST).date():     # HOME の _is_future と同じ: now（JST の日付）より後は未来 = UNKNOWN
+            return True
+    return False
+
+
 ROUTE_SHORT = {"A": "正規店→買取", "B": "正規店→二次流通", "C": "二次流通→買取", "D": "二次流通→二次流通"}
 
 
@@ -219,6 +324,9 @@ _CAMERA_CSS = (
     "@media (max-width:639px){.dcard .hero .m--route{grid-column:1/-1}.dcard .hero .m--route b{font-size:1rem}"
     ".dcard .why{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}"
     ".dcard .cond{margin:.5rem 0;font-size:.88rem}.dcard .cond div{overflow-wrap:anywhere;word-break:break-word;margin:.15rem 0}"
+    ".dcard .cond .cond-t{min-width:0;margin:.3rem 0}.dcard .cond .cond-t .num{white-space:normal}"
+    ".dcard .cond .cond-ul{margin:.3rem 0 0 1.1rem;padding:0}.dcard .cond .cond-ul li{margin:.1rem 0;overflow-wrap:anywhere}"
+    + _FB_CSS
 )
 
 
@@ -231,13 +339,16 @@ def _badge(label: str, tone: str) -> str:
     return f'<span class="sbadge sbadge--{_e(tone)}">{_e(label)}</span>'
 
 
-def _decision_badge(r: dict, stale: bool, registered: bool = True) -> str:
-    """判断（BUY/WATCH/WAIT/SKIP）の新語バッジ。購入候補=緑（調査が古い・未登録なら緑にしない）。利益の色とは別軸。"""
+def _decision_badge(r: dict, stale: bool, registered: bool = True, fx=None) -> str:
+    """判断（BUY/WATCH/WAIT/SKIP）の新語バッジ。購入候補=緑（調査が古い・未登録なら緑にしない）。利益の色とは別軸。
+    購入候補は、表示時に在庫・価格の鮮度を確認できたときだけ出す（fx あり）。"""
     d = r.get("decision")
     if d == "BUY":
         if stale:
             return _badge("調査が古い（参考）", "off")
-        return _badge("購入候補", "buy") if registered else _badge("参考（未登録）", "wait")
+        if not registered:
+            return _badge("参考（未登録）", "wait")
+        return _gate(fx, "act", r.get("buy") or {}, r.get("sell"), _badge("購入候補", "buy"), _badge("調査が古い（参考）", "off"))
     if d in ("WATCH", "WAIT"):
         return _badge("様子見", "wait")
     return _badge("見送り", "off")
@@ -248,16 +359,20 @@ def _is_go(r: dict, registered: bool = True, stale: bool = False) -> bool:
     return bool(registered) and not stale and r.get("decision") == "BUY"
 
 
-def _profit_badge(r: dict, registered: bool = True, stale: bool = False) -> str:
-    """利益の状態（黒字/赤字）。判断とは別に出す。赤字は net_profit が負のときだけ。黒字は購入候補のときだけ緑、それ以外は中立（灰）。"""
+def _profit_badge(r: dict, registered: bool = True, stale: bool = False, fx=None) -> str:
+    """利益の状態（黒字/赤字）。判断とは別に出す。赤字は net_profit が負のときだけ。黒字は購入候補のときだけ緑、それ以外は中立（灰）。
+    価格に基づく表示なので、表示時に価格の鮮度を確認できたときだけ出す（fx あり）。"""
     net = r.get("net_profit")
     if r.get("profit_status") == "PROFITABLE" and (net or 0) > 0:
         if not registered:
-            return _badge("黒字（参考）", "off")
-        return _badge("黒字", "profit") if _is_go(r, registered, stale) else _badge("黒字", "off")
-    if net is not None and net < 0:
-        return _badge("赤字", "loss")
-    return _badge("利益なし", "off") if net is not None else ""
+            h = _badge("黒字（参考）", "off")
+        else:
+            h = _badge("黒字", "profit") if _is_go(r, registered, stale) else _badge("黒字", "off")
+    elif net is not None and net < 0:
+        h = _badge("赤字", "loss")
+    else:
+        h = _badge("利益なし", "off") if net is not None else ""
+    return _gate(fx, "pf", r.get("buy") or {}, r.get("sell"), h, _badge("価格再確認待ち", "off"))
 
 
 def _stock_html(stock) -> str:
@@ -267,44 +382,141 @@ def _stock_html(stock) -> str:
     return _badge(label, tone) if tone else _e(label)
 
 
-def _buy_state(r: dict, b: dict, sl: dict | None, badge: bool = True, now_age: int | None = None) -> str:
-    """買値の「買える状態」の表示。route が実行できない（executable でない）のに買値 stock=AVAILABLE のときは、
-    conditional_blockers（JSON の blocked_reasons と同じ判定）の理由で『購入可否は判断できません』にする。
-    『購入できる』は blockers が空（FRESH・期限内・引き継ぎでない）のときだけ。判定をページ側に別に持たない。"""
+def _buy_state(r: dict, b: dict, sl: dict | None, badge: bool = True, now_age: int | None = None, fx=None) -> str:
+    """買値の「買える状態」の表示。
+    - 試算を隠す理由（鮮度切れ・引き継ぎ・外れ値確認待ち）があるのに stock=AVAILABLE → 『購入可否は判断できません』（隠す理由の関数と同じ判定）。
+    - 在庫の確認だけが古い → 『購入できる』と言わず、再確認が必要と書く（購入可否の断定を避ける）。
+    - 『購入できる』は、隠す理由も古い在庫確認も無いときだけ。さらに表示時に在庫・価格の鮮度を確認できたときだけ出す（fx あり）。
+    - 抽選終了・在庫なし等の実状態（買えない系の注記だけ）は、従来どおりその状態のバッジを出す。"""
     stock = b.get("stock")
-    reasons = _blocked_reasons(b, sl, r, now_age)
-    if stock == "AVAILABLE" and reasons:                  # executable でも blockers があれば断定しない（条件欄と同じ判定）
-        txt = "・".join(reasons) + "のため購入可否は判断できません"
-        return _badge(txt, "off") if badge else _e(txt)
+    if stock == "AVAILABLE":
+        hide = _hide_texts(b, sl, r, now_age)
+        if hide:
+            txt = "・".join(hide) + "のため購入可否は判断できません"
+            return _badge(txt, "off") if badge else _e(txt)
+        if "BUY_STOCK_OLD" in _note_keys(b, sl, r, now_age):
+            txt = "在庫の確認が古い（購入可否は再確認が必要）"
+            return _badge(txt, "off") if badge else _e(txt)
+        base = _stock_html(stock) if badge else _e(STOCK.get(stock, stock))
+        return _gate(fx, "act", b, sl, base, _badge("再確認待ち", "off") if badge else "再確認待ち")
     return _stock_html(stock) if badge else _e(STOCK.get(stock, stock))
 
 
-def _conditional_html(r: dict, b: dict, sl: dict, now_age: int | None = None) -> str:
-    """安全側（店舗印あり）の買取と、条件付き（店舗印なし）の参考の利益を分けて見せる。条件付きの利益は購入推奨ではなく、緑にしない。"""
+COND_ROW = {"COMPLETE_NO_STAMP": "店舗印なし（条件付き試算）"}
+_DEFINITE_STOCK = ("BUY_STOCK_UNKNOWN", "BUY_STOCK_OLD")
+
+
+def _note_items(notes: list) -> list:
+    """条件付き試算に必ず併記する項目（1 項目 1 行で表示する）。現在購入できない（実状態）／店舗印なしの場合に限る／買取価格は購入前に再確認が必要／購入推奨ではありません／買取 1 店のみ（該当時）。"""
+    parts = []
+    states = []
+    for k in notes:
+        if k == "BUY_STOCK_OLD":
+            states.append("在庫の確認が古い")
+        elif k == "BUY_STOCK_UNKNOWN":
+            states.append("在庫不明")
+        elif k.startswith("BUY_STOCK_"):
+            st = k[len("BUY_STOCK_"):]
+            states.append(STOCK.get(st, st))
+    if states:
+        definite = any(k.startswith("BUY_STOCK_") and k not in _DEFINITE_STOCK for k in notes)
+        parts.append("現在購入できない（実状態: " + "／".join(dict.fromkeys(states)) + "）" if definite
+                     else "現在購入できない、または買えるかどうか未確認（実状態: " + "／".join(dict.fromkeys(states)) + "）")
+    parts += ["店舗印なしの場合に限る", "買取価格は購入前に再確認が必要"]
+    if "SINGLE_BUYBACK_SHOP" in notes:
+        parts.append("買取は 1 店のみ（他店との比較なし）")
+    parts.append("購入推奨ではありません")
+    return parts
+
+
+def _note_line(notes: list) -> str:
+    """条件付き試算に必ず併記する項目を 1 行にしたもの（互換用。画面は _note_items を箇条書きで出す）。"""
+    return "／".join(_note_items(notes))
+
+
+def _money_cls(v) -> str:
+    return "pos" if (v or 0) > 0 else "neg" if (v or 0) < 0 else ""
+
+
+def _cond_cls(v, notes: list) -> str:
+    """条件付き試算の損益の文字色。緑（.pos）は『買える状態（注記に BUY_STOCK_* が無い）』のプラスだけ。購入できない（抽選終了・在庫なし・在庫不明等）は中立色。"""
+    if (v or 0) < 0:
+        return "neg"
+    if (v or 0) > 0 and not any(str(k).startswith("BUY_STOCK_") for k in notes):
+        return "pos"
+    return ""
+
+
+def _conditional_html(r: dict, b: dict, sl: dict, now_age: int | None = None, fx=None) -> str:
+    """安全側（店舗印あり）の買取と、条件付き（店舗印なし）の試算を分けて見せる。
+    根拠のある試算は『現在購入できない』だけでは隠さず、金額・ROI を『条件付き試算』として出し、実状態と注意を同じ欄に併記する。
+    鮮度切れ・引き継ぎ・外れ値確認待ち・費用不明の試算は金額を出さない（隠すときは過去の参考価格を取得日つきで残す）。
+    条件付き試算は表示専用: 購入推奨ではない。プラスの損益は文字色（.pos/.neg）だけで、バッジは中立・注意色（緑にしない）。"""
     cond = [c for c in (r.get("conditional") or []) if isinstance(c, dict)]
     if not cond or not sl:
         return ""
-    blocked = _blocked_reasons(b, sl, r, now_age)
+    hide_keys = _hide_keys(b, sl, r, now_age)
+    hide = _hide_texts(b, sl, r, now_age)
+    notes = _note_keys(b, sl, r, now_age)
+    net, roi = r.get("net_profit"), r.get("roi_pct")
+    safe_cls = "neg" if (net or 0) < 0 else ""
     lines = []
-    if blocked:
-        lines.append(f'<div class="mut">{_badge("参考値", "off")} {_e("・".join(blocked))}。参考値のため条件付きの利益は表示しません。買える状態になり確認日が新しくなったら再計算します</div>')
-    lines += [f'<div><b>安全側（保証書に店舗印あり）</b>: 買取 {_yen(sl.get("price"))} → 利益 {_signed(r.get("net_profit"))}（ROI {_e(_roi(r.get("roi_pct")))}）。この価格で判断しています</div>']
-    for c in cond:
-        if blocked:
-            lines.append(f'<div>{_badge("条件付き・参考", "wait")} 店舗印なしの場合: 買取 {_yen(c.get("sell_price"))}。条件付きの利益・ROI は参考値のため表示しません。'
-                         f'購入推奨ではありません。必要条件: {_e(c.get("requires"))}</div>')
-            continue
-        profit = _signed(c.get("net_profit")) if c.get("net_profit") is not None else "未計算"
-        lines.append(f'<div>{_badge("条件付き・参考", "wait")} 店舗印なしの場合: 買取 {_yen(c.get("sell_price"))} → 利益 {_e(profit)}（ROI {_e(_roi(c.get("roi_pct")))}）。'
-                     f'購入推奨ではありません。必要条件: {_e(c.get("requires"))}</div>')
-    # 「購入できる」は conditional_blockers が空のときだけ（blocked は同じ判定の結果。ここで別の部分判定を持たない）
-    now_stock = _badge("確認が古い／鮮度不明のため購入可否は判断できません", "off") if (blocked and b.get("stock") == "AVAILABLE") else _stock_html(b.get("stock"))
-    lines.append(f'<div class="mut">現在の購入可否: {now_stock}／確認日時: 買値 {_md(b.get("checked_at"))}・買取 {_md(sl.get("checked_at"))}'
-                 f'（店の更新 {_md(sl.get("source_updated_at")) if sl.get("source_updated_at") else "不明"}）</div>')
+    if hide_keys:
+        causes = "・".join(dict.fromkeys(HIDE_CAUSE[k] for k in hide_keys if k in HIDE_CAUSE)) or "確認不足"
+        prices = (f'買取 {_yen(sl.get("price"))}（店舗印あり・{_md(sl.get("checked_at"))} 確認）'
+                  + "".join(f'、店舗印なしの買取 {_yen(c.get("sell_price"))}' for c in cond)
+                  + f'・買値 {_yen(b.get("price"))}（{_md(b.get("checked_at"))} 確認）')
+        lines.append(f'<div class="mut">{_badge("参考値", "off")} {_e("・".join(hide))}。{_e(HIDDEN_COND_REASON)}</div>')
+        lines.append(f'<div>過去の参考: {prices}。試算は{_e(causes)}のため非表示</div>')
+        lines.append(f'<div><b>安全側（保証書に店舗印あり）</b>: 買取 {_yen(sl.get("price"))}（{_md(sl.get("checked_at"))} 確認） → 利益 '
+                     + _gate(fx, "pf", b, sl, f'<span class="{safe_cls}">{_signed(net) if net is not None else "未計算"}</span>（ROI {_e(_roi(roi))}）', STUB_PF)
+                     + '。この価格で判断しています</div>')
+    else:
+        safe_profit = f'<b class="{safe_cls}">{_signed(net) if net is not None else "未計算"}</b>'
+        rows = ['<tr><th scope="row">店舗印あり（判断の基準）</th>'
+                f'<td class="num">{_yen(sl.get("price"))}<div class="mut">（{_md(sl.get("checked_at"))} 確認）</div></td><td class="num">基準</td>'
+                f'<td class="num">{_gate(fx, "pf", b, sl, safe_profit, STUB_PF) if net is not None else safe_profit}</td>'
+                f'<td class="num">{_gate(fx, "pf", b, sl, _e(_roi(roi)), STUB_PF) if roi is not None else "—"}</td></tr>']
+        for c in cond:
+            cn, cr_ = c.get("net_profit"), c.get("roi_pct")
+            diff = (c.get("sell_price") or 0) - (sl.get("price") or 0)
+            mc = _cond_cls(cn, notes)
+            if cn is None:
+                pc, rc = "未計算（購入送料が不明）", "—"
+            else:
+                pc = _gate(fx, "cd", b, sl, f'<b class="{mc}">{_signed(cn)}</b>', STUB_PF)
+                rc = _gate(fx, "cd", b, sl, f'<span class="{mc}">{_e(_roi(cr_))}</span>', STUB_PF)
+            # 買取価格・価格差も条件付き試算の一部。期限（売値 executable_days）を過ぎたら live ごと隠し、取得日つきの過去の参考だけ残す
+            ref = (f'<span class="mut">過去の参考: 店舗印なしの買取 {_yen(c.get("sell_price"))}（{_md(sl.get("checked_at"))} 確認）。'
+                   '期限切れのため試算は非表示</span>')
+            price_td = _gate(fx, "cd", b, sl, _yen(c.get("sell_price")), ref)
+            diff_td = _gate(fx, "cd", b, sl, _signed(diff), "—")
+            rows.append(f'<tr><th scope="row">{_e(COND_ROW.get(c.get("key"), "店舗印なし（条件付き試算）"))} {_badge("条件付き試算", "wait")}</th>'
+                        f'<td class="num">{price_td}</td><td class="num">{diff_td}</td>'
+                        f'<td class="num">{pc}</td><td class="num">{rc}</td></tr>')
+        lines.append('<table class="cond-t"><thead><tr><th>買取条件</th><th>買取価格</th><th>安全側との価格差</th><th>利益</th><th>ROI</th></tr></thead>'
+                     f'<tbody>{"".join(rows)}</tbody></table>')
+    items = "".join(f"<li>{_e(t)}</li>" for t in _note_items(notes))
+    lines.append(f'<div class="mut cond-must"><ul class="cond-ul">{items}<li>必要条件: {_e(cond[0].get("requires"))}</li></ul></div>')
+    now_stock = (_badge("確認が古い／鮮度不明のため購入可否は判断できません", "off") if (hide_keys and b.get("stock") == "AVAILABLE")
+                 else _buy_state(r, b, sl, True, now_age, fx))
+    lines.append(f'<div class="mut">現在の購入可否: {now_stock}／確認日: 買値 {_md(b.get("checked_at"))}・買取 {_md(sl.get("checked_at"))}'
+                 f'（店の更新 {_md(sl.get("source_updated_at")) if sl.get("source_updated_at") else "不明"}）／過去の参考価格: 買値 {_yen(b.get("price"))}・買取 {_yen(sl.get("price"))}（取得日時点）</div>')
     return f'<div class="note cond" aria-label="売値の条件別">{"".join(lines)}</div>'
 
 
-def _card(p: dict, r: dict, stale: bool, now_age: int | None = None) -> str:
+def _reasons_html(rs, hide_conditional: bool, b: dict, sl: dict | None, fx=None) -> str:
+    """判断の理由（HTML）。『店舗印なしの場合だけ黒字』は条件付き試算と同じ鮮度の確認を通ったときだけ出す。"""
+    out = []
+    for k in rs or []:
+        if k == "conditional_profit_only":
+            out.append(_e(HIDDEN_COND_REASON) if hide_conditional else _gate(fx, "cd", b, sl, _e(REASON[k]), STUB_EXPIRED))
+        else:
+            out.append(_e(REASON.get(k, k)))
+    return "、".join(out) or "—"
+
+
+def _card(p: dict, r: dict, stale: bool, now_age: int | None = None, fx=None) -> str:
     """判断カード（商品・買値・売値・利益/ROI・ルート・判断）。表の詳細をたたんで持つ。ルートは A〜D の記号でなく語で出す。"""
     b, sl = r["buy"], r["sell"]
     if stale and now_age is None:
@@ -313,17 +525,19 @@ def _card(p: dict, r: dict, stale: bool, now_age: int | None = None) -> str:
     net = r.get("net_profit")
     net_cls = "pos" if (net or 0) > 0 and _is_go(r, reg, stale) else "neg" if (net or 0) < 0 else ""        # 緑は購入候補だけ。様子見・未登録・古い調査の黒字は中立色
     ref = "" if reg else ' <span class="chip chip--ref">未登録・参考</span>'
-    status = _buy_state(r, b, sl, now_age=now_age)
+    status = _buy_state(r, b, sl, now_age=now_age, fx=fx)
+    profit = _gate(fx, "pf", b, sl, _signed(net), STUB_PF) if net is not None else "未計算"
+    roi = _gate(fx, "pf", b, sl, _e(_roi(r.get("roi_pct"))), STUB_PF) if r.get("roi_pct") is not None else "—"
     return (f'<article class="dcard{" dcard--off" if r.get("decision") != "BUY" or stale else ""}">'
-            f'<header><h3>{_e(p["product"])}{ref}</h3><div class="badges">{_decision_badge(r, stale, reg)}{_profit_badge(r, reg, stale)}</div></header>'
-            f'<div class="hero"><div class="m"><span>買値</span><b>{_yen(b["price"])}</b><em>{_e(b["source"])}</em></div>'
-            f'<div class="m"><span>売値</span><b>{_yen(sl["price"]) if sl else "—"}</b><em>{_e(sl["source"]) if sl else ""}（{_e(PTYPE.get(sl["price_type"], sl["price_type"])) if sl else ""}{("・" + _e(_basis(sl))) if _basis(sl) else ""}）</em></div>'
-            f'<div class="m"><span>利益</span><b class="{net_cls}">{_signed(net) if net is not None else "未計算"}</b></div>'
-            f'<div class="m"><span>ROI</span><b>{_e(_roi(r.get("roi_pct")))}</b></div>'
+            f'<header><h3>{_e(p["product"])}{ref}</h3><div class="badges">{_decision_badge(r, stale, reg, fx)}{_profit_badge(r, reg, stale, fx)}</div></header>'
+            f'<div class="hero"><div class="m"><span>買値</span><b>{_yen(b["price"])}</b><em>{_e(b["source"])}（{_md(b.get("checked_at"))} 確認）</em></div>'
+            f'<div class="m"><span>売値</span><b>{_yen(sl["price"]) if sl else "—"}</b><em>{_e(sl["source"]) if sl else ""}（{_e(PTYPE.get(sl["price_type"], sl["price_type"])) if sl else ""}{("・" + _e(_basis(sl))) if _basis(sl) else ""}・{_md(sl.get("checked_at")) if sl else "—"} 確認）</em></div>'
+            f'<div class="m"><span>利益</span><b class="{net_cls}">{profit}</b></div>'
+            f'<div class="m"><span>ROI</span><b>{roi}</b></div>'
             f'<div class="m m--route"><span>買い方→売り方</span><b>{_route_html(r)}</b></div>'
             f'<div class="m"><span>買える状態</span><b>{status}</b></div></div>'
-            f'{_conditional_html(r, b, sl, now_age)}'
-            f'<div class="mut why">判断の理由: {_e(_reasons(r.get("reasons"), _hides_conditional(r, b, sl, now_age)))}</div>'
+            f'{_conditional_html(r, b, sl, now_age, fx)}'
+            f'<div class="mut why">判断の理由: {_reasons_html(r.get("reasons"), _hides_conditional(r, b, sl, now_age), b, sl, fx)}</div>'
             f'<details><summary>買う場所・売る場所・確認日</summary>'
             f'<div>買う場所: {_link(b.get("url"), b["source"])}（{_e(PTYPE.get(b["price_type"], b["price_type"]))}・{_e(COND.get(b["condition"], b["condition"]))}）</div>'
             f'<div>売る場所: {_link(sl.get("url"), sl["source"]) if sl else "—"}</div>'
@@ -331,15 +545,17 @@ def _card(p: dict, r: dict, stale: bool, now_age: int | None = None) -> str:
             f'／内部参照: ルート {_e(r["route_type"])}</div></details></article>')
 
 
-def _row(p: dict, r: dict, stale: bool, now_age: int | None = None) -> str:
+def _row(p: dict, r: dict, stale: bool, now_age: int | None = None, fx=None) -> str:
     """詳細表の 1 行（8 列。旧表記の判断語はこの表に残す）。"""
     b, s = r["buy"], r["sell"]
     if stale and now_age is None:
         now_age = STALE_SENTINEL
     dec_html = ('調査が古い（参考）' if (stale and r["decision"] == "BUY") else
                 f'<span title="{_e(DECISION.get(r["decision"], r["decision"]))}">{_e(DECISION_JA.get(r["decision"], r["decision"]))}</span>')
-    net = (f'{_signed(r["net_profit"])}' if r["net_profit"] is not None else "未計算")
-    roi = _roi(r["roi_pct"])
+    if r["decision"] == "BUY" and not stale:
+        dec_html = _gate(fx, "act", b, s, dec_html, "調査が古い（参考）")          # BUY の語（title も）は、表示時に鮮度を確認できたときだけ出す
+    net = _gate(fx, "pf", b, s, _signed(r["net_profit"]), STUB_PF) if r["net_profit"] is not None else "未計算"
+    roi = _gate(fx, "pf", b, s, _e(_roi(r["roi_pct"])), STUB_PF) if r["roi_pct"] is not None else "—"
     cls = "ok" if r["decision"] == "BUY" and not stale else ""
     net_cls = "pos" if (r["net_profit"] or 0) > 0 and _is_go(r, bool(p.get("registered")), stale) else "neg" if (r["net_profit"] or 0) < 0 else ""
     c_ = r.get("costs") or {}
@@ -347,25 +563,26 @@ def _row(p: dict, r: dict, stale: bool, now_age: int | None = None) -> str:
     carried = "（買取は引き継ぎ・古い確認）" if (s and s.get("carried")) or b.get("carried") else ""
     return (f'<tr class="{cls}"><th scope="row" data-label="商品"><div class="v">{_e(p["product"])}{"" if p.get("registered") else " <span class=mut>（未登録・参考）</span>"}</div></th>'
             f'<td data-label="買う場所・買値"><div class="v">{_link(b.get("url"), b["source"])} <b>{_yen(b["price"])}</b><br>'
-            f'<span class="mut">{_e(PTYPE.get(b["price_type"], b["price_type"]))}・{_e(COND.get(b["condition"], b["condition"]))}・{_buy_state(r, b, s, badge=False, now_age=now_age)}</span></div></td>'
+            f'<span class="mut">{_e(PTYPE.get(b["price_type"], b["price_type"]))}・{_e(COND.get(b["condition"], b["condition"]))}・{_buy_state(r, b, s, badge=False, now_age=now_age, fx=fx)}</span></div></td>'
             f'<td data-label="売る場所・売値"><div class="v">{_link(s.get("url"), s["source"]) if s else "—"} <b>{_yen(s["price"]) if s else "—"}</b><br>'
             f'<span class="mut">{_e(PTYPE.get(s["price_type"], s["price_type"])) if s else "—"}{("・" + _e(_basis(s))) if _basis(s) else ""}</span></div></td>'
             f'<td class="num" data-label="費用"><div class="v">{cost}</div></td><td class="num" data-label="純利益"><div class="v {net_cls}">{net}</div></td>'
-            f'<td class="num" data-label="ROI"><div class="v">{_e(roi)}</div></td>'
+            f'<td class="num" data-label="ROI"><div class="v">{roi}</div></td>'
             f'<td data-label="ルート"><div class="v">{_route_html(r)}<br><span class="mut" title="Route {_e(r["route_type"])}">ルート {_e(r["route_type"])}</span></div></td>'
-            f'<td data-label="判断"><div class="v"><b>{dec_html}</b><br><span class="mut">{_e(_reasons(r.get("reasons"), _hides_conditional(r, b, s, now_age)))}</span><br>'
+            f'<td data-label="判断"><div class="v"><b>{dec_html}</b><br><span class="mut">{_reasons_html(r.get("reasons"), _hides_conditional(r, b, s, now_age), b, s, fx)}</span><br>'
             f'<span class="mut">確認日 {_md(b.get("checked_at"))}{carried}／信頼度 <span title="confidence: {_e(r.get("confidence"))}">{_e(CONF_JA.get(r.get("confidence"), r.get("confidence")))}</span></span></div></td></tr>')
 
 
-def _detail(p: dict, r: dict, common_why: frozenset = frozenset()) -> str:
+def _detail(p: dict, r: dict, common_why: frozenset = frozenset(), fx=None) -> str:
     c = r["costs"] or {}
     why = _why_sell(r["sell"])
     why_t = "共通の根拠" if why in common_why else why
-    return (f'<li><b>{_e(p["product"])} / {_e(_route_short(r))}</b>: '
-            f'売値 {_yen(r["sell"]["price"])}（{_e(why_t)}）− 仕入れ {_yen(r["buy"]["price"])} − 購入送料 {_yen(c.get("purchase_shipping"))}'
+    calc = (f'売値 {_yen(r["sell"]["price"])}（{_e(why_t)}）− 仕入れ {_yen(r["buy"]["price"])} − 購入送料 {_yen(c.get("purchase_shipping"))}'
             f' − 発送など {_yen(c.get("outbound_shipping"))} − 販売手数料 {_yen(c.get("selling_fee"))}'
             f'{"（" + str(round(100 * c["selling_fee_rate"])) + "%・" + _e(FEE_STATUS.get(r.get("fee_status"), r.get("fee_status"))) + "）" if c.get("selling_fee_rate") else "（買取は手数料なし）"}'
-            f' − その他 {_yen(c.get("other"))} = 純利益 {_signed(r["net_profit"])}</li>')
+            f' − その他 {_yen(c.get("other"))} = 純利益 {_signed(r["net_profit"])}')
+    return (f'<li><b>{_e(p["product"])} / {_e(_route_short(r))}</b>: '
+            f'{_gate(fx, "pf", r["buy"], r["sell"], calc, "価格再確認待ちのため、計算の内訳は非表示です")}</li>')
 
 
 def _secondary(p: dict) -> str:
@@ -398,20 +615,34 @@ def _live(l: dict, now: datetime) -> str:
     return "終了" if end < now else "受付中・予定"
 
 
-def _verdict(picks: list) -> str:
+def _vgate(fb, group: str, routes: list, kinds: tuple, inner: str, stub: str, tag: str = "span") -> str:
+    """結論バー・件数の鮮度の包み。まとめた件数・名前は、対象ルートのうち最も古い確認日で期限を決める（1 つでも期限切れなら出さない）。"""
+    if fb is None or not routes or not inner:
+        return inner
+
+    def oldest(side: str):
+        return min(((r.get(side) or {}).get("checked_at") for r in routes), key=lambda d: rf.date_obs(d))
+    deps = ([(oldest("buy"), "stock")] if "stock" in kinds else []) + [(oldest("buy"), "price"), (oldest("sell"), "price")]
+    return fb.wrap(inner, group, deps, tag) + fb.stale(group, stub, tag)
+
+
+def _verdict(picks: list, fb=None) -> str:
     """最上部の結論バー（2 行に圧縮）。今日買えるもの（購入候補）と黒字の件数・商品名。値は既存のルートの再表示だけ。
     黒字の件数に数えるのは、登録済みで調査が古くないルートだけ。未登録・古い調査は「参考」として別に数える（緑にしない）。
-    緑は購入候補（登録済み・実行可能）だけ。様子見の黒字は中立色。"""
+    緑は購入候補（登録済み・実行可能）だけ。様子見の黒字は中立色。
+    fb あり: 件数・名前は、表示時に在庫・価格の鮮度を確認できたときだけ出す（期限切れ後は「確認待ち」。件数だけ残さない）。"""
     buy = [(p, r) for p, r, st in picks if r["decision"] == "BUY" and not st and p.get("registered")]
     plus = [(p, r) for p, r, st in picks if (r.get("net_profit") or 0) > 0 and p.get("registered") and not st]
     ref_n = sum(1 for p, r, st in picks if (r.get("net_profit") or 0) > 0 and not (p.get("registered") and not st))
+    buy_rs, plus_rs = [r for _p, r in buy], [r for _p, r in plus]
 
     def line(p, r):
         stock = STOCK.get((r.get("buy") or {}).get("stock"), "")
         return f'{_e(p["product"])}（{_signed(r["net_profit"])}・{_e(stock)}）'
     if buy:
-        head = f'<span class="sbadge sbadge--buy">今日買えるもの {len(buy)} 件</span>'
-        who = "、".join(line(p, r) for p, r in buy[:2])
+        head = _vgate(fb, "cam-v-buy", buy_rs, ("stock", "price"), f'<span class="sbadge sbadge--buy">今日買えるもの {len(buy)} 件</span>',
+                      '<span class="sbadge sbadge--off">今日買えるもの: 確認待ち</span>')
+        who = _vgate(fb, "cam-v-buy", buy_rs, ("stock", "price"), "、".join(line(p, r) for p, r in buy[:2]), "再確認待ち")
     else:
         head = '<span class="sbadge sbadge--off">今日すぐ買えるもの 0 件</span>'
         who = "買ってよいと言えるルートはありません。"
@@ -425,6 +656,10 @@ def _verdict(picks: list) -> str:
         pw = "黒字になるルートは確認できません。"
     if ref_n:
         pw += f"（参考 {ref_n} 件は除く）"
+    if plus:
+        ph = _vgate(fb, "cam-v-plus", plus_rs, ("price",), ph, '<span class="sbadge sbadge--off">利益の件数: 確認待ち</span>')
+        # 件数・黒字の判定は価格（192h）だけで足りるが、名前の行は「…・購入できる」（在庫）も書くので、在庫（72h）と価格の入れ子 live で包む
+        pw = _vgate(fb, "cam-v-plus-who", plus_rs, ("stock", "price"), pw, "再確認待ち")
     return (f'<section class="verdict" aria-label="今日の結論"><p class="vline">{head}<span>{who}</span></p>'
             f'<p class="vline">{ph}<span>{pw}</span></p></section>')
 
@@ -467,8 +702,9 @@ def _stack_tables(html: str) -> str:
     return _TABLE_RE.sub(one, html)
 
 
-def render(market: dict, *, now: datetime | None = None) -> str:
+def render(market: dict, *, now: datetime | None = None, cfg: dict | None = None) -> str:
     now = now or datetime.now(JST)
+    fb = _FB(cfg)                                            # 在庫 72h・価格 192h は config/camera_routes.yaml の freshness から
     rd = market.get("research_date")
     try:
         d_ = (now.date() - datetime.strptime(str(rd), "%Y-%m-%d").date()).days
@@ -483,39 +719,42 @@ def render(market: dict, *, now: datetime | None = None) -> str:
         calc = [r for r in p["routes"] if r["profit_status"] != "NOT_CALCULATED"]
         for r in sorted(calc, key=lambda r: -(r["net_profit"] or 0)):
             st_ = stale or _row_stale(r, now)
-            row_age = STALE_SENTINEL if st_ else age_now      # 行の確認日が古いときも、条件欄・購入可否は同じ conditional_blockers で古い扱い
-            calc_rows.append(_row(p, r, st_, row_age))
-            cards.append((0 if (r["net_profit"] or 0) > 0 else 1 if r["decision"] in ("WAIT", "WATCH") else 2, len(cards), _card(p, r, st_, row_age)))
+            row_age = STALE_SENTINEL if _row_date_bad(r, now) else age_now      # 日付を読めない・未来の行だけ最古扱い。それ以外は表示時点の経過日数（買値・売値の価格は executable_days、在庫は stock_days で別々に判定）
+            fx = (fb, f"c{len(calc_rows)}")                   # 行・カードごとの鮮度グループ（-act / -pf / -cd を後ろに付ける）
+            calc_rows.append(_row(p, r, st_, row_age, fx))
+            cards.append((0 if (r["net_profit"] or 0) > 0 else 1 if r["decision"] in ("WAIT", "WATCH") else 2, len(cards), _card(p, r, st_, row_age, fx)))
             picks.append((p, r, st_))
-            details.append((p, r))
+            details.append((p, r, fx))
         if not calc:
             best = next((r for r in p["routes"] if r["route_type"] == "A" and r.get("buy")), None) or next((r for r in p["routes"] if r.get("buy")), None)
             why = sorted({x for r in p["routes"] for x in r.get("reasons") or []})
             if any(o.get("price") and not o.get("reasons") for o in p["observations"]) or best:
                 nocalc.append((p, _reasons(why)))
     why_cnt: dict = {}
-    for _p, _r in details:                                   # 同じ売値の根拠が 2 ルート以上で並ぶなら 1 回にまとめる
+    for _p, _r, _fx in details:                              # 同じ売値の根拠が 2 ルート以上で並ぶなら 1 回にまとめる
         _w = _why_sell(_r["sell"])
         why_cnt[_w] = why_cnt.get(_w, 0) + 1
     common_why = frozenset(w for w, n in why_cnt.items() if n >= 2 and w != "—")
     why_note = ("<p class=\"mut\">共通の根拠: " + "／".join(_e(w) for w in sorted(common_why)) + "</p>") if common_why else ""
-    details = [_detail(p, r, common_why) for p, r in details]
+    details = [_detail(p, r, common_why, fx) for p, r, fx in details]
     rs_cnt: dict = {}
     for _p, _t in nocalc:                                    # 計算できなかった理由も、同じ文が 2 機種以上なら 1 回にまとめる
         rs_cnt[_t] = rs_cnt.get(_t, 0) + 1
     common_rs = frozenset(t for t, n in rs_cnt.items() if n >= 2 and t != "—")
     rs_note = ('<p class="mut">共通の理由: ' + "／".join(_e(t) for t in sorted(common_rs, key=lambda t: -rs_cnt[t])) + "</p>") if common_rs else ""
     nocalc = [f'<tr><th scope="row">{_e(p["product"])}{"" if p.get("registered") else " <span class=mut>（未登録・参考）</span>"}</th>'
-              f'<td>{_e(_buy_summary(p))}</td><td>{_e(_sell_summary(p))}</td><td>{"上記の共通の理由" if t in common_rs else _e(t)}</td></tr>'
-              for p, t in nocalc]
+              f'<td>{_buy_summary(p, fb, f"nc{i}")}</td><td>{_e(_sell_summary(p))}</td><td>{"上記の共通の理由" if t in common_rs else _e(t)}</td></tr>'
+              for i, (p, t) in enumerate(nocalc)]
     summ = market.get("summary") or {}
     rt = summ.get("routes") or {}
     fd = summ.get("found") or {}
-    buy_n = sum(1 for p in prods for r in p["routes"] if r["decision"] == "BUY" and not (stale or _row_stale(r, now)))
+    buy_rs = [r for p in prods for r in p["routes"] if r["decision"] == "BUY" and not (stale or _row_stale(r, now))]
+    buy_n = len(buy_rs)
+    buy_n_html = _vgate(fb, "cam-v-n", buy_rs, ("stock", "price"), f"{buy_n} 件", "確認待ち") if buy_n else f"{buy_n} 件"
     empty = ('<div class="note">計算できる利益ルートは 0 件です。確認できた価格だけで計算し、架空の商品や推測の価格で埋めていません。'
              '下の「計算できなかった機種と理由」を見てください。判断カードは、価格を確認できた商品が出たときに表示されます。</div>') if not calc_rows else ""
     cards = [c for _, _, c in sorted(cards, key=lambda x: (x[0], x[1]))]          # 黒字・様子見を先頭、赤字・見送りを後ろ（同じ商品内の利益順は維持）
-    verdict = _verdict(picks)
+    verdict = _verdict(picks, fb)
     src = _source_rows(market.get("source_results") or [])
     lots = "".join(
         f'<li><b>{_link(l.get("official_url"), l.get("product"))}</b> — {_e(l.get("retailer"))}／応募 {_e((l.get("application_start") or "")[:10])}〜{_e((l.get("application_end") or "")[:10])}'
@@ -538,12 +777,12 @@ def render(market: dict, *, now: datetime | None = None) -> str:
 <div class="grid"><div class="kv"><span>調べた機種</span><b>{_e(summ.get("products_checked"))}</b></div>
 <div class="kv"><span>買取価格を確認</span><b>{_e(fd.get("buyback"))} 件</b></div>
 <div class="kv"><span>利益を計算できたルート</span><b>{_e(rt.get("confirmed"))} / {_e(rt.get("total"))}</b></div>
-<div class="kv"><span>購入候補のルート</span><b>{_e(buy_n)} 件</b></div></div>
+<div class="kv"><span>購入候補のルート</span><b>{buy_n_html}</b></div></div>
 <h2>判断一覧（買う場所 → 売る場所）</h2>
 <details class="spec"><summary>判断一覧の表を開く（カードと同じ内容を表で見る）</summary>
 <div class="tw"><table class="nu-table--stack"><thead><tr><th>商品</th><th>買う場所・買値</th><th>売る場所・売値</th><th>費用</th><th>純利益</th><th>ROI</th><th>ルート</th><th>判断</th></tr></thead>
 <tbody>{"".join(calc_rows) or '<tr><td colspan="8">計算できたルートはありません</td></tr>'}</tbody></table></div></details>
-<div class="mut">黒字でも購入候補とは限りません（抽選・在庫・ROI・比較できる買取の数も条件です）。</div>
+<div class="mut">利益が出ていても、買ってよいとは限りません（抽選・在庫・ROI・比較できる買取の数も条件です）。</div>
 <details class="spec"><summary>買い方→売り方の4種類（正規店→買取など）</summary><div class="mut">A=正規店→買取（正規店・メーカーで買い、買取店へ売る）／B=正規店→二次流通（成約中央値で売る）／C=二次流通→買取（二次流通の最安で買い、買取店へ売る）／D=二次流通→二次流通（成約中央値で売る）。</div></details>
 <h2>なぜこの売値か（計算の内訳）</h2>{why_note}<ul>{"".join(details) or "<li>計算できたルートはありません</li>"}</ul>
 <h2>計算できなかった機種と理由</h2>
@@ -557,18 +796,34 @@ def render(market: dict, *, now: datetime | None = None) -> str:
 <details class="spec"><summary>取得元の表を開く（読めた・読めなかった）</summary><div class="tw"><table><thead><tr><th>取得元</th><th>種類</th><th>読めたブランド</th><th>読めなかったブランドと理由</th></tr></thead><tbody>{src}</tbody></table></div></details>
 <ul><li>未確認の新商品 {_e(hc)} 件は、確認できるまで公開していません</li></ul>
 <p class="mut">週次の調査で、価格・在庫・抽選の状況は変わっている場合があります。購入・売却の前に必ず各公式ページで最新の情報を確認してください。</p>
-</main></body></html>"""
+</main><script>{rf.JS_FRESHNESS}</script></body></html>"""
     return _stack_tables(html)
 
 
-def _buy_summary(p: dict) -> str:
-    xs = [f'{o["source"]} {_yen(o["price"])}（{STOCK.get(o.get("stock"), "在庫不明")}）' for o in p["observations"]
-          if o["kind"] in ("official", "retail") and o.get("price") and not o["reasons"]]
+def _buy_summary(p: dict, fb=None, gid: str = "nc") -> str:
+    """確認できた買う側（HTML。値はエスケープ済み）。『購入できる』は、表示時に在庫・価格の鮮度を確認できたときだけ出す（fb あり）。"""
+    xs = []
+    for j, o in enumerate(p["observations"]):
+        if not (o["kind"] in ("official", "retail") and o.get("price") and not o["reasons"]):
+            continue
+        label = _e(STOCK.get(o.get("stock"), "在庫不明"))
+        if fb is not None and o.get("stock") == "AVAILABLE":
+            g = f"{gid}-{j}"
+            label = (fb.wrap(label, g, [(o.get("checked_at"), "stock"), (o.get("checked_at"), "price")]) + fb.stale(g, "在庫の再確認待ち"))
+        xs.append(f'{_e(o["source"])} {_yen(o["price"])}（{label}）{_confirmed(o.get("checked_at"))}')
     return "、".join(xs) or "確認できていない"
 
 
+def _confirmed(checked_at) -> str:
+    """価格に併記する確認日（タグを含まない文字列。_sell_summary は呼び出し側でエスケープされるため HTML を返さない）。確認日が無い・読めないものは『確認日不明』。"""
+    raw = str(checked_at or "").strip()
+    if not raw or not re.search(r"\d{4}-\d{1,2}-\d{1,2}", raw):
+        return "（確認日不明）"
+    return f"（{re.sub(r'<[^>]+>', '', _md(raw))} 確認）"
+
+
 def _sell_summary(p: dict) -> str:
-    xs = [f'{o["source"]} {_yen(o["price"])}（{COND.get(o["condition"], "")}{"・" + BASIS_SHORT[o["basis"]] if o.get("basis") in BASIS_SHORT else ""}）' for o in p["observations"]
+    xs = [f'{o["source"]} {_yen(o["price"])}（{COND.get(o["condition"], "")}{"・" + BASIS_SHORT[o["basis"]] if o.get("basis") in BASIS_SHORT else ""}）' + _confirmed(o.get("checked_at")) for o in p["observations"]
           if o["kind"] == "buyback" and o.get("price") and not o["reasons"] and o["freshness"] == "FRESH"]
     return "、".join(xs[:3]) + ("…" if len(xs) > 3 else "") or "確認できていない"
 

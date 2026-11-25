@@ -26,7 +26,8 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from pathlib import Path
+from datetime import date, datetime, timedelta
 from urllib.parse import urlencode
 
 from src.content.ui import categories as cats
@@ -35,6 +36,7 @@ from src.content.ui import lottery_card
 from src.content.ui import runtime as rt
 from src.content.ui.components import esc, safe_href
 from src.content.ui.navigation import page_href
+from src.tcg import runtime_freshness as rf
 from src.tcg.models import JST, parse_dt
 
 MAX_PER_SECTION = 5
@@ -70,6 +72,8 @@ class FeedCard:
     href: str | None = None
     note: str | None = None            # 「調査から N 日」など
     until_ms: int | None = None        # 「今すぐ行動できる」と言える期限（生成時に actionability が決めた値。閲覧時に過ぎていれば購入候補を外す）
+    profit_hidden: str | None = None   # 金額・ROI を出さないときの代わりの文言（期限切れの黒字を購入候補のように見せない。並べ替え用の profit 自体は残す）
+    profit_until_ms: int | None = None   # 金額行を閲覧時に伏せる期限（iPhone の様子見の黒字。購入候補の until_ms とは別。過ぎたら JS が『更新待ち』に差し替える）
     unverified: bool = False           # 判定の変化イベント（WAIT→BUY）で、実行可能・FRESH を確認できていないもの（緑にしない）
     lot: tuple | None = field(default=None, repr=False)   # (vm, state, idx): 抽選カードを lottery_card で描くとき
 
@@ -207,6 +211,74 @@ def card_from_lottery(vm: dict, state: dict, ev: dict | None, cat_label: str | N
         href=vm.get("info") or None, lot=(vm, state, idx))
 
 
+# ── Camera・iPhone の購入候補の期限（日付だけの確認日は 00:00 JST 起点。rf.date_obs / rf.days_to_hours と同じ定義） ──
+
+# 設定が読めない・キーが無い・不正なときは None（設定不明。fail-closed: 購入候補・金額を出さない）。0 日は正当な設定値（当日 24:00 まで）。値の定義は config/ の yaml だけ
+_CAMERA_DEFAULT_DAYS = {"executable_days": None, "stock_days": None}
+_IPHONE_DEFAULT_DAYS = {"page_buy_days": None, "apple_availability_days": None}
+_DEADLINE_CATEGORIES = ("iPhone", "カメラ")             # 購入候補に必ず期限（until_ms）がある分類
+_CONFIG_DIR = Path(__file__).resolve().parents[3] / "config"
+
+
+def _read_yaml(name: str) -> dict:
+    """config/<name> を直接読む（調査モジュールは顧客の画面から import しない: deploy-check #871）。読めなければ空。"""
+    import yaml
+    d = yaml.safe_load((_CONFIG_DIR / name).read_text(encoding="utf-8"))
+    return d if isinstance(d, dict) else {}
+
+
+def _freshness_cfg(loader, defaults: dict) -> dict:
+    """設定ローダ（dict を返す関数）の freshness を読む。読めない・キーが無い・不正な項目は None（設定不明）。
+    有効なのは 0 以上の整数、または整数値の float（bool・負数・小数・数値以外は None）。"""
+    out = dict(defaults)
+    try:
+        fr = (loader() or {}).get("freshness") or {}
+        for k in defaults:
+            v = fr.get(k)
+            if isinstance(v, bool):
+                continue
+            if isinstance(v, float) and v.is_integer():
+                v = int(v)
+            if isinstance(v, int) and v >= 0:
+                out[k] = v
+    except Exception:  # noqa: BLE001 — 設定が壊れていても HOME は落とさない（設定不明 None = 購入候補を出さない側）
+        out = dict(defaults)
+    return out
+
+
+def _camera_days() -> dict:
+    return _freshness_cfg(lambda: _read_yaml("camera_routes.yaml"), _CAMERA_DEFAULT_DAYS)
+
+
+def _iphone_days() -> dict:
+    return _freshness_cfg(lambda: _read_yaml("iphone_buyback.yaml"), _IPHONE_DEFAULT_DAYS)
+
+
+def _obs_dt(value) -> datetime | None:
+    """確認日時。オフセット付きの時刻はそのまま、日付だけ（先頭が YYYY-MM-DD）は 00:00 JST。読めなければ None。"""
+    return rf.parse_aware(value) or rf.parse_aware(rf.date_obs(value))
+
+
+def _until_of(obs, days) -> datetime | None:
+    """確認日時 + 「N 日以内は FRESH」の期間（日付だけなら N+1 日目の 00:00 JST まで）。"""
+    d = _obs_dt(obs)
+    if d is None or days is None:                        # 確認日不明・設定不明は期限なし（None）= 呼び出し側が fail-closed にする
+        return None
+    return d + timedelta(hours=rf.days_to_hours(days))
+
+
+def _is_future(value, now: datetime) -> bool:
+    """確認日時が生成時刻より未来か（ページの未来日付 = UNKNOWN と同じ扱い）。日付だけなら now の JST 日付より後。読めなければ False（別の経路で除外される）。"""
+    if rf.parse_aware(value) is not None:
+        return rf.parse_aware(value) > now
+    d = _date_of(value)
+    return d is not None and d > now.astimezone(JST).date()
+
+
+def _ms(d: datetime) -> int:
+    return int(d.timestamp() * 1000)
+
+
 _OPP_ACTION = {"BUY": "買い", "WAIT": "様子見", "WATCH": "様子見"}
 _OUTLIER_OK = (None, "NONE", "REVIEWED")
 
@@ -240,12 +312,40 @@ def card_from_iphone_sku(s: dict, comp: dict, now: datetime) -> FeedCard | None:
     n = age_days(rdate, now)
     if n is None or n > PROFIT_MAX_AGE_DAYS:
         return None
+    # 観測日は iphone_buyback_page の fx.buy_date と同じ: 最高の実行可能買取の行の updated_on（無ければ調査日）。期間は page_buy_days
+    buy_obs = next((r["updated_on"] for r in (s.get("rows") or []) if isinstance(r, dict) and r.get("eligible")
+                    and r.get("shop") == ex.get("shop") and r.get("executable_price") == ex.get("price") and r.get("updated_on")),
+                   None) or rdate
+    av_checked = (s.get("apple_availability") or {}).get("checked_at")
+    if any(_is_future(x, now) for x in (rdate, buy_obs, av_checked, row.get("checked_at"))):
+        return None                                      # 未来の日付は UNKNOWN（購入候補にも黒字の候補にも出さない）
+    action = _OPP_ACTION.get(str(s.get("opportunity_status") or "").upper(), "様子見")
+    days = _iphone_days()
+    buy_until = _until_of(buy_obs, days["page_buy_days"])
+    # 詳細ページが黒字を『再確認待ち』に隠す期限（page_buy_days）を過ぎた黒字は、金額・ROI を出さず取得日つきの参考にする
+    hidden = None
+    if buy_until is None or buy_until <= now:
+        bn = age_days(buy_obs, now)
+        hidden = f"更新待ち（調査から{bn if bn is not None else n}日。取得日つきの参考）"
+    # 購入候補の期限 = min(価格の確認日の翌日起点の page_buy_days 日後, Apple の購入可否の確認から apple_availability_days 日)。
+    # 生成時点で過ぎていれば購入候補にしない（要確認）。Apple の確認日時が無ければ、調査日（同日確認だけが BUYABLE になる）を使う
+    until_ms = None
+    if action == "買い":
+        # iPhone ページと同じ: Apple の確認時刻はオフセット付き ISO のみ有効（無い・読めない・オフセットなしは UNKNOWN → 買いにしない）
+        av_obs = rf.parse_aware(av_checked)
+        apple_days = days["apple_availability_days"]
+        ends = [buy_until, av_obs + timedelta(hours=apple_days * 24) if (av_obs and apple_days is not None) else None]
+        if not all(ends) or min(ends) <= now:
+            action = "要確認"
+        else:
+            until_ms = _ms(min(ends))
     return FeedCard(
-        product=s.get("sku"), category="iPhone",
-        action=_OPP_ACTION.get(str(s.get("opportunity_status") or "").upper(), "様子見"),
+        product=s.get("sku"), category="iPhone", action=action,
         buy_source="Apple 公式", sell_source=ex.get("shop"),
         profit=s.get("net_profit"), roi=roi, status=plain_reason(s.get("opportunity_reason")),
-        checked_at=row.get("checked_at") or rdate, href=IPHONE_PAGE, note=stale_note(rdate, now) or WEEKLY_NOTE)
+        checked_at=row.get("checked_at") or rdate, href=IPHONE_PAGE, note=stale_note(rdate, now) or WEEKLY_NOTE,
+        until_ms=until_ms, profit_hidden=hidden,
+        profit_until_ms=(_ms(buy_until) if (buy_until is not None and hidden is None) else None))
 
 
 def card_from_camera_route(p: dict, r: dict, doc: dict, now: datetime) -> FeedCard | None:
@@ -263,6 +363,18 @@ def card_from_camera_route(p: dict, r: dict, doc: dict, now: datetime) -> FeedCa
     buy, sell = r.get("buy") or {}, r.get("sell") or {}
     if buy.get("freshness") != "FRESH" or sell.get("freshness") != "FRESH":
         return None
+    # 在庫あり（AVAILABLE）の確認が stock_days 以内・買値と売値の確認が executable_days 以内・引き継いだ行（carried）でないこと。
+    # 期限（in 00:00 JST 起点）を過ぎれば緑にしない。生成時点で過ぎていれば出さない（閲覧時は until で「更新待ち」にする）
+    if buy.get("stock") != "AVAILABLE" or buy.get("carried") or sell.get("carried"):
+        return None
+    if any(_is_future(x, now) for x in (buy.get("checked_at"), sell.get("checked_at"), doc.get("research_date"))):
+        return None                                      # 未来の確認日は UNKNOWN（緑にしない・期限を作らない）
+    days = _camera_days()
+    ends = [_until_of(buy.get("checked_at"), days["stock_days"]), _until_of(sell.get("checked_at"), days["executable_days"]),
+            _until_of(buy.get("checked_at"), days["executable_days"])]
+    if not all(ends) or min(ends) <= now:
+        return None
+    until_ms = _ms(min(ends))
     try:
         roi = float(r.get("roi_pct")) / 100.0
     except (TypeError, ValueError):
@@ -279,7 +391,7 @@ def card_from_camera_route(p: dict, r: dict, doc: dict, now: datetime) -> FeedCa
         product=p.get("product"), category="カメラ", action="買い",
         buy_source=buy.get("source"), sell_source=sell.get("source"),
         profit=r.get("net_profit"), roi=roi, status="黒字（確定）", checked_at=checked,
-        href=CAMERA_PAGE, note=stale_note(rdate, now))
+        href=CAMERA_PAGE, note=stale_note(rdate, now), until_ms=until_ms)
 
 
 def _is_decision_change(e: dict) -> bool:
@@ -503,7 +615,10 @@ def build_with_counts(catalog, model, tcg_report: dict | None, data: dict | None
     counts = {"buy": sum(1 for c in profit if is_actionable_buy(c)), "ending": len(ending_all), "open": len(open_all),
               "wait": len(watch)}
     # 購入候補タイルの閲覧時の数え直し用。期限のある在庫ありは期限（ミリ秒）、期限の無いもの（週次の調査の日数で見るもの）は "inf"
-    buy_tokens = [str(c.until_ms) if c.until_ms else "inf" for c in profit if is_actionable_buy(c)]
+    # 期限の無い Camera・iPhone の購入候補は本来存在しない（期限が決まらなければ購入候補にしない）ので、万一あれば "none"
+    # （閲覧時は数えない = fail-closed。deploy-check #895 が検出する）。"inf" は TCG など期限の無い購入可だけ
+    buy_tokens = [str(c.until_ms) if c.until_ms else ("none" if c.category in _DEADLINE_CATEGORIES else "inf")
+                  for c in profit if is_actionable_buy(c)]
     if any(t != "inf" for t in buy_tokens):
         counts["buy_untils"] = ",".join(buy_tokens)
 
@@ -558,6 +673,8 @@ def build(catalog, model, tcg_report: dict | None, data: dict | None, now: datet
 def _val(card: FeedCard, name: str) -> str:
     v = getattr(card, name, None)
     if name == "profit":
+        if card.profit_hidden:
+            return card.profit_hidden
         if not home.price_ok(v):
             return DASH
         roi = f"（{card.roi * 100:.1f}%）" if card.roi is not None and home.roi_ok(card.roi) else ""
@@ -570,7 +687,7 @@ def _val(card: FeedCard, name: str) -> str:
 
 def _rows(card: FeedCard, fields: tuple, kind: str) -> str:
     """項目の行。ヒーロー・標準は利益を大きな 1 行にして <dl> から外し、仕入れ・売却は 最適ルート の 1 行にまとめる。"""
-    big = kind in ("hero", "std") and home.price_ok(card.profit)
+    big = kind in ("hero", "std") and home.price_ok(card.profit) and not card.profit_hidden
     out = []
     names = [n for n, _l in fields]
     route_done = False
@@ -591,11 +708,19 @@ def _rows(card: FeedCard, fields: tuple, kind: str) -> str:
 def _card_html(card: FeedCard, fields: tuple, kind: str = "std", *, button: bool = True) -> str:
     tone = card_tone(card)
     stale = is_stale(card)
-    big = kind in ("hero", "std") and home.price_ok(card.profit)
+    big = kind in ("hero", "std") and home.price_ok(card.profit) and not card.profit_hidden
     # 金額と「黒字」の緑は購入候補だけ（様子見・要確認・古い調査は CSS が tone ごとに中立・橙へ）
-    profit_html = (f'<p class="nu-fc__profit"><span class="nu-fc__tag">黒字</span>{esc(_val(card, "profit"))}</p>'
+    timed = bool(card.until_ms and tone == "success" and is_buy(card))
+    # 購入候補でない黒字（様子見）の金額も、閲覧時に iPhone ページと同じ期限を過ぎていれば JS が伏せる（生成後に日がたったページ対策）
+    p_until = (f' data-nu-pd-profit-until="{int(card.profit_until_ms)}" data-nu-pd-stale-text="更新待ち（取得日つきの参考）"'
+               if (big and card.profit_until_ms and not timed) else "")
+    profit_html = (f'<p class="nu-fc__profit"{p_until}><span class="nu-fc__tag">黒字</span>{esc(_val(card, "profit"))}</p>'
                    if big else "")
     note_text = card.note or ("購入できるかは未確認です（詳細で確認してください）" if card.unverified and is_buy(card) else None)
+    if timed:                                            # JS が動かなくても分かるように、購入候補の確認の期限を書く（生成時に決めた値）。既存の注記は消さず併記する
+        until_txt = datetime.fromtimestamp(int(card.until_ms) / 1000, JST).strftime("%-m/%-d %H:%M")
+        deadline = f"購入候補は {until_txt}（JST）までの確認です。それ以降は更新待ちとして見てください"
+        note_text = f"{note_text} {deadline}" if note_text else deadline
     note = f'<p class="nu-feed__stale" role="note">{esc(note_text)}</p>' if note_text else ""
     link = safe_href(card.href or "") if button else ""
     # ボタンは主 1 つ（ヒーローの購入候補は primary・標準は secondary）。コンパクトは文字のリンクにして重複を減らす
@@ -607,7 +732,7 @@ def _card_html(card: FeedCard, fields: tuple, kind: str = "std", *, button: bool
     # 期限（生成時に決めた在庫ありと言える期限）のある購入候補は、閲覧時に過ぎていれば「更新待ち」にして緑を外す（shell の NuFeedUntil）
     until = (f' data-nu-pd-until="{int(card.until_ms)}" data-nu-pd-stale-text="更新待ち"'
              ' data-nu-pd-stale-class="nu-badge nu-tone-neutral"'
-             if card.until_ms and tone == "success" and is_buy(card) else "")
+             if timed else "")
     head_badge = f'<span class="nu-badge nu-tone-{tone}"{until}>{esc(label)}</span>' if label else ""
     cls = f"nu-card nu-feedcard nu-fc nu-fc--{kind} nu-fc--{tone}" + (" nu-fc--stale" if stale else "")
     return (f'<article class="{cls}" data-nu-feedcard>'

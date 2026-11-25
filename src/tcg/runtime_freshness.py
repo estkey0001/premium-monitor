@@ -10,6 +10,7 @@
 """
 from __future__ import annotations
 
+import math
 import re
 from datetime import datetime, timedelta
 from typing import Optional
@@ -37,6 +38,9 @@ def parse_aware(v) -> Optional[datetime]:
 
 def evaluate(observed_iso, now: datetime, max_hours: float, future_min: float) -> str:
     """FRESH / STALE / UNKNOWN_FRESHNESS。now は tz 付き。"""
+    for v in (max_hours, future_min):
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0:
+            return UNKNOWN               # しきい値が nan・inf・負・非数値なら判定しない（例外にしない。JS の fresh() も nan・inf は UNKNOWN。負は JS では STALE = どちらも FRESH にはしない）
     obs = parse_aware(observed_iso)
     if obs is None or now.tzinfo is None:
         return UNKNOWN
@@ -45,9 +49,32 @@ def evaluate(observed_iso, now: datetime, max_hours: float, future_min: float) -
     return STALE if now - obs > timedelta(hours=max_hours) else FRESH
 
 
-def attrs(observed_iso, cfg: dict) -> str:
-    """ページに出す属性（JS はこれだけを読む。数値は設定から）。秒までに丸める（切り捨て = 古い側。JS の Date が読める形）。"""
+def date_obs(date_str) -> str:
+    """日付だけの確認日（YYYY-MM-DD）を、その日の 00:00 JST の ISO 8601 にする（Camera・iPhone 用）。
+    実際の取得時刻より早い側に倒す（古い側 = 偽装しない）。日付として読めなければ空文字（= UNKNOWN になり、利益は出ない）。"""
+    if not isinstance(date_str, str):
+        return ""
+    m = re.match(r"^(\d{4}-\d{2}-\d{2})", date_str.strip())
+    if not m:
+        return ""
+    try:
+        datetime.fromisoformat(m.group(1))
+    except ValueError:
+        return ""
+    return m.group(1) + "T00:00:00+09:00"
+
+
+def days_to_hours(days) -> float:
+    """「確認日から N 日以内は FRESH」（暦日の差 ≤ N）を、00:00 JST 起点の時間数にする。N 日目の終わり（N+1 日目の 00:00）まで FRESH。"""
+    return (float(days) + 1) * 24
+
+
+def attrs(observed_iso, cfg: dict, max_hours: Optional[float] = None) -> str:
+    """ページに出す属性（JS はこれだけを読む。数値は設定から）。秒までに丸める（切り捨て = 古い側。JS の Date が読める形）。
+    max_hours を渡すと、そのカテゴリ固有の期間（Camera・iPhone の設定値から換算したもの）を使う。省略時は TCG の設定。"""
     mx, fut = thresholds(cfg)
+    if max_hours is not None:
+        mx = float(max_hours)
     d = parse_aware(observed_iso)
     obs = d.replace(microsecond=0).isoformat() if d else ""
     return f'data-fb-obs="{obs}" data-fb-max="{mx:g}" data-fb-fut="{fut:g}"'

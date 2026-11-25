@@ -1106,3 +1106,25 @@ def test_payment_link_text_is_not_a_payment_requirement():
     assert got["payment_method_requirement"] == \
         "当選の場合の支払方法は、クレジットカード決済のみご利用いただけます。"
     assert extract_eligibility("お支払い方法について")["payment_method_requirement"] is None
+
+
+# ── Reviewer L2: 価格は単位と組で補完する ──
+def test_merge_fills_price_only_with_box_unit_pair():
+    a = _lot(price_unit="BOX", retail_price=None)
+    b = _lot(source_url="https://www.toysrus.co.jp/b", price_unit="BOX", retail_price=6000)
+    out = merge_lotteries([a, b])
+    assert len(out) == 1 and out[0]["retail_price"] == 6000 and out[0]["price_unit"] == "BOX"
+
+
+def test_merge_does_not_put_unknown_unit_price_into_box_event():
+    a = _lot(price_unit="BOX", retail_price=None)                     # clabo「お一人様 2BOX」: 単位は BOX だが価格は落としている
+    b = _lot(source_url="https://www.toysrus.co.jp/b", price_unit="UNKNOWN", retail_price=12000)     # 2 個分の合計かもしれない価格
+    out = merge_lotteries([a, b])
+    assert len(out) == 1 and out[0]["retail_price"] in (None, "") and out[0]["price_unit"] == "BOX"
+
+
+def test_merge_unitless_price_keeps_unit_unknown():
+    a = _lot(price_unit="UNKNOWN", retail_price=None)
+    b = _lot(source_url="https://www.toysrus.co.jp/b", price_unit="UNKNOWN", retail_price=6000)
+    out = merge_lotteries([a, b])
+    assert out[0]["retail_price"] == 6000 and out[0]["price_unit"] == "UNKNOWN"

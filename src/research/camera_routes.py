@@ -790,7 +790,8 @@ def _routes_for_product(rec: dict, obs: list[dict], sec: dict, cfg: dict, now: d
             why.append("purchase_shipping_unknown")
         if fee is None:
             why.append(fee_why)
-        cond_list = _conditional(sell_view, buy["price"], ship, outbound, other, buy, int((cfg.get("freshness") or {}).get("stock_days", STOCK_DAYS_DEFAULT))) if route in "AC" else []
+        cond_list = _conditional(sell_view, buy["price"], ship, outbound, other, buy, int((cfg.get("freshness") or {}).get("stock_days", STOCK_DAYS_DEFAULT)),
+                                 int((cfg.get("freshness") or {}).get("executable_days", EXECUTABLE_DAYS_DEFAULT))) if route in "AC" else []
         if why:
             routes.append({**base, "profit_status": NOT_CALCULATED, "decision": WATCH, "buy": _view(buy), "sell": sell_view,
                            "reasons": why, "costs": None, "net_profit": None, "roi_pct": None, "executable": False, "confidence": "low",
@@ -808,7 +809,8 @@ def _routes_for_product(rec: dict, obs: list[dict], sec: dict, cfg: dict, now: d
         executable = (stock == AVAILABLE and stock_fresh and buy["freshness"] == FRESH and sell["freshness"] == FRESH
                       and not sell_view.get("carried") and not buy.get("carried"))
         decision, why2 = _decide(status, stock, roi, min_roi, registered, route, sell_view, executable, buy)
-        if status != PROFITABLE and any(c["profit_status"] == PROFITABLE and not c.get("display_only") for c in cond_list):
+        if status != PROFITABLE and any(c["profit_status"] == PROFITABLE and not c.get("display_only") and not is_unbuyable_note(c.get("not_actionable_reasons"))
+                                        for c in cond_list):
             why2 = why2 + ["conditional_profit_only"]                # 安全側では黒字でない。条件付き（店舗印なし）の場合だけ黒字（判断は変えない）
         routes.append({**base, "profit_status": status, "decision": decision, "buy": _view(buy), "sell": sell_view,
                        "costs": costs, "net_profit": net, "roi_pct": roi, "executable": executable, "reasons": why2,
@@ -878,26 +880,21 @@ EXECUTABLE_DAYS_DEFAULT = 7                                   # 売値の確認�
 STOCK_DAYS_DEFAULT = 2                                       # 買値（在庫）の確認がこれより古いと、条件付きの利益を金額で見せない
 
 
-def conditional_blockers(buy: dict, sell: dict, stock_days: int = STOCK_DAYS_DEFAULT, now_age_days: Optional[int] = None,
-                         executable_days: int = EXECUTABLE_DAYS_DEFAULT) -> list:
-    """条件付きの利益を「参考値」にとどめる理由のキー（空なら金額を見せてよい）。ルートの JSON（display_only / blocked_reasons）と
-    ページの隠す条件の両方がこの関数だけを見る（二重管理しない）。age_days のキーが無い手組みの行は、古さを判定しない。
-    now_age_days = 生成時点から（ページ表示時までに）さらに経過した日数。渡すと、買値の在庫は stock_days、売値は executable_days を
-    超えたとき BUY_STOCK_OLD / SELL_STALE にする（生成時に FRESH でも、表示時に古ければ金額を見せない）。"""
+_BUYABLE_NOTE_PREFIX = "BUY_STOCK_"               # 注記の理由のうち、「いま買えると言えない」系（在庫・抽選の状態、在庫確認が古い）
+
+
+def conditional_hide_reasons(buy: dict, sell: dict, stock_days: int = STOCK_DAYS_DEFAULT, now_age_days: Optional[int] = None,
+                             executable_days: int = EXECUTABLE_DAYS_DEFAULT) -> list:
+    """条件付きの試算を「金額・ROI として見せない」理由のキー（隠す理由）。根拠が鮮度切れ・引き継ぎ・外れ値確認待ちの試算は見せない。
+    仕入れ『価格』の鮮度（executable_days。仕入れ価格は公式の定価）と、在庫の鮮度（stock_days。conditional_notes 側）は別物。
+    age_days のキーが無い手組みの行は、古さを判定しない。now_age_days = 生成時点からさらに経過した日数（ページ表示時の古さ）。"""
     out = []
     extra = now_age_days if isinstance(now_age_days, int) else 0
-    st = buy.get("stock")
-    if st in (None, STOCK_UNKNOWN):
-        out.append("BUY_STOCK_UNKNOWN")
-    elif st != AVAILABLE:
-        out.append(f"BUY_STOCK_{st}")
     if buy.get("carried"):
         out.append("BUY_CARRIED")
-    if "age_days" in buy and not (isinstance(buy["age_days"], int) and buy["age_days"] + extra <= stock_days):
-        out.append("BUY_STOCK_OLD")
-    elif "age_days" not in buy and extra > stock_days:
-        out.append("BUY_STOCK_OLD")
-    if buy.get("freshness") not in (None, FRESH):
+    age = buy.get("age_days")
+    price_old = ("age_days" in buy and not (isinstance(age, int) and age + extra <= executable_days)) or ("age_days" not in buy and extra > executable_days)
+    if buy.get("freshness") not in (None, FRESH) or price_old:
         out.append("BUY_STALE")
     if sell:
         if sell.get("carried"):
@@ -905,17 +902,55 @@ def conditional_blockers(buy: dict, sell: dict, stock_days: int = STOCK_DAYS_DEF
         sell_old = isinstance(sell.get("age_days"), int) and sell["age_days"] + extra > executable_days
         if sell.get("freshness") != FRESH or sell_old or (extra > executable_days and not isinstance(sell.get("age_days"), int)):
             out.append("SELL_STALE")
+        _ev = sell.get("evidence")
+        if isinstance(_ev, dict) and _ev.get("outlier"):
+            out.append("SELL_OUTLIER_REVIEW")                      # 外れ値の確認待ちの売値を、試算の根拠にしない
     return out
 
 
-def _conditional(sell: dict, buy_price, ship, outbound: int, other: int, buy: Optional[dict] = None, stock_days: int = STOCK_DAYS_DEFAULT) -> list:
-    """安全側の売値（basis）以外の条件別の価格で、同じ費用のまま計算した参考の利益（CONDITIONAL）。executable は常に False。
-    購入送料が不明なら NOT_CALCULATED（0 円にしない）。decision・best_route・イベント・executable・BUY の入力には使わない。"""
+def conditional_notes(buy: dict, sell: dict, stock_days: int = STOCK_DAYS_DEFAULT, now_age_days: Optional[int] = None,
+                      executable_days: int = EXECUTABLE_DAYS_DEFAULT) -> list:
+    """条件付きの試算に必ず併記する理由（注記する理由。金額は隠さない）。いま買えない・在庫確認が古い・買取が 1 店だけ。"""
+    out = []
+    extra = now_age_days if isinstance(now_age_days, int) else 0
+    st = buy.get("stock")
+    if st in (None, STOCK_UNKNOWN):
+        out.append("BUY_STOCK_UNKNOWN")
+    elif st != AVAILABLE:
+        out.append(f"BUY_STOCK_{st}")
+    if "age_days" in buy and not (isinstance(buy["age_days"], int) and buy["age_days"] + extra <= stock_days):
+        out.append("BUY_STOCK_OLD")
+    elif "age_days" not in buy and extra > stock_days:
+        out.append("BUY_STOCK_OLD")
+    shops = (sell or {}).get("evidence", {}).get("shops") if isinstance((sell or {}).get("evidence"), dict) else None
+    if isinstance(shops, int) and not isinstance(shops, bool) and shops < 2:
+        out.append("SINGLE_BUYBACK_SHOP")
+    return out
+
+
+def conditional_blockers(buy: dict, sell: dict, stock_days: int = STOCK_DAYS_DEFAULT, now_age_days: Optional[int] = None,
+                         executable_days: int = EXECUTABLE_DAYS_DEFAULT) -> list:
+    """互換のための合計（隠す理由 + 注記する理由）。「隠す」判定には conditional_hide_reasons だけを使う。"""
+    return (conditional_hide_reasons(buy, sell, stock_days, now_age_days, executable_days)
+            + conditional_notes(buy, sell, stock_days, now_age_days, executable_days))
+
+
+def is_unbuyable_note(keys) -> bool:
+    """注記の理由に「いま買えない系」（在庫・抽選の状態、在庫確認が古い）があるか。"""
+    return any(str(k).startswith(_BUYABLE_NOTE_PREFIX) for k in keys or [])
+
+
+def _conditional(sell: dict, buy_price, ship, outbound: int, other: int, buy: Optional[dict] = None, stock_days: int = STOCK_DAYS_DEFAULT,
+                 executable_days: int = EXECUTABLE_DAYS_DEFAULT) -> list:
+    """安全側の売値（basis）以外の条件別の価格で、同じ費用のまま計算した試算の利益（CONDITIONAL。表示専用）。executable は常に False。
+    購入送料が不明なら NOT_CALCULATED（0 円にしない）。decision・best_route・イベント・executable・BUY の入力には使わない。
+    買えない（抽選終了・在庫なし等）だけでは隠さず not_actionable_reasons として併記する。鮮度切れ・引き継ぎ・外れ値確認待ちは display_only（金額を見せない）。"""
     basis = sell.get("basis")
     if not basis or sell.get("price_type") != BUYBACK_PRICE:
         return []
     out = []
-    blockers = conditional_blockers(buy, sell, stock_days) if buy is not None else []
+    hide = conditional_hide_reasons(buy, sell, stock_days, None, executable_days) if buy is not None else []
+    notes = conditional_notes(buy, sell, stock_days, None, executable_days) if buy is not None else []
     for c in valid_conditions(sell.get("conditions"), sell.get("price")):
         if c["key"] == basis or c["key"] not in CONDITIONAL_REQUIRES:
             continue
@@ -925,8 +960,10 @@ def _conditional(sell: dict, buy_price, ship, outbound: int, other: int, buy: Op
         else:
             net = c["price"] - buy_price - ship - outbound - other               # 買取に販売手数料は無い（安全側と同じ費用）
             e.update(profit_status=PROFITABLE if net > 0 else NO_PROFIT, net_profit=net, roi_pct=round(100.0 * net / buy_price, 2))
-        if blockers:
-            e.update(display_only=True, blocked_reasons=list(blockers))    # 買えない・古い・引き継ぎ: 計算値は残すが、PROFITABLE だけを拾って読まない印
+        if notes:
+            e["not_actionable_reasons"] = list(notes)              # 現在購入できない等の実状態（金額は見せるが、必ず併記する）
+        if hide:
+            e.update(display_only=True, blocked_reasons=list(hide))    # 鮮度切れ・引き継ぎ・外れ値確認待ち: 計算値は残すが、金額・ROI を見せない印
         out.append(e)
     return out
 

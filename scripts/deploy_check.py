@@ -12,6 +12,7 @@
 8. data-track属性がある
 """
 
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -4208,6 +4209,7 @@ def check() -> list[dict]:
     # #820-#825: データの正確さ・鮮度の偽装（Phase 0）
     # ══════════════════════════════════════════════════════════════════
     results.extend(_check_data_correctness())
+    results.extend(_check_runtime_freshness_cam_iphone_home())
 
     return results
 
@@ -8906,6 +8908,437 @@ def _check_pokemon_coverage(report: dict) -> list[dict]:
          int(_tot.get("product_pages_discovered") or 0) > 0,
          f"Pokemon 商品ページを発見している（{_tot.get('product_pages_discovered', 0)}件）",
          "商品ページ 0 件（DEGRADED）", level_ng="warning")
+    return out
+
+
+# ══════════════════════════════════════════════════════════════════
+# #893〜#895: Camera・iPhone・HOME の「表示時の鮮度」（TCG の #853 と同じ共通の判定 runtime_freshness を使う）
+#   #893 camera-research.html / #894 iphone-buyback.html / #895 HOME の購入候補カード
+#   検査関数はテスト（tests/test_deploy_check_runtime_freshness.py）から合成した HTML でも呼べる。
+#   期待する属性が丸ごと消える退行（属性なしの要素に戻る）・hidden が外れる・観測時刻が生成時刻になる・live の外に購入候補が出る、を検出する。
+# ══════════════════════════════════════════════════════════════════
+def _fb_classes(attrs: dict) -> list:
+    return str(attrs.get("class") or "").split()
+
+
+class _FbScan:
+    """HTML を 1 回走査して、data-fb-live / data-fb-stale の要素と、その外に出ている文字・バッジを集める（script・style は除く）。"""
+
+    _VOID = {"br", "meta", "link", "img", "input", "hr", "source", "wbr", "col", "area", "base", "embed", "param", "track"}
+
+    def __init__(self, html: str):
+        from html.parser import HTMLParser
+        outer = self
+
+        class _P(HTMLParser):
+            def handle_starttag(self, tag, attrs):
+                outer._start(tag, dict(attrs), push=tag not in outer._VOID)
+
+            def handle_startendtag(self, tag, attrs):
+                outer._start(tag, dict(attrs), push=False)
+
+            def handle_endtag(self, tag):
+                outer._end(tag)
+
+            def handle_data(self, data):
+                outer._data(data)
+
+        self.stack: list = []
+        self.lives: list = []         # data-fb-live 要素の属性
+        self.stales: list = []        # data-fb-stale 要素の属性
+        self.texts: list = []         # {text, chain(祖先 live の属性), in_live, in_stale, tag, attrs}
+        self.badges: list = []        # sbadge--buy / sbadge--profit の要素 {cls, chain, in_live, in_stale}
+        self.tr_blocks: list = []     # <tr> ごとの文字 [(text, in_live, in_stale, 列番号)]
+        self.hero_blocks: list = []   # .hero の .m ごと {label, outside: [text]}
+        p = _P(convert_charrefs=True)
+        p.feed(html)
+        p.close()
+
+    def _start(self, tag: str, a: dict, push: bool) -> None:
+        live = "data-fb-live" in a
+        stale = "data-fb-stale" in a
+        if live:
+            self.lives.append(a)
+        if stale:
+            self.stales.append(a)
+        chain = [f["attrs"] for f in self.stack if f["live"]] + ([a] if live else [])
+        in_stale = any(f["stale"] for f in self.stack) or stale
+        cls = _fb_classes(a)
+        for c in ("sbadge--buy", "sbadge--profit"):
+            if c in cls:
+                self.badges.append({"cls": c, "chain": chain, "in_live": bool(chain), "in_stale": in_stale})
+        if not push:
+            return
+        if tag in ("td", "th"):
+            for f in reversed(self.stack):
+                if f["tag"] == "tr":
+                    f["col"] += 1
+                    break
+        fr = {"tag": tag, "attrs": a, "live": live, "stale": stale, "texts": None, "hero_m": False, "col": 0}
+        if tag == "tr":
+            fr["texts"] = []
+        if tag == "div" and "m" in cls and any("hero" in _fb_classes(f["attrs"]) for f in self.stack):
+            fr["hero_m"] = True
+            fr["texts"] = []
+        self.stack.append(fr)
+
+    def _end(self, tag: str) -> None:
+        for i in range(len(self.stack) - 1, -1, -1):
+            if self.stack[i]["tag"] == tag:
+                for f in self.stack[i:]:
+                    if f["tag"] == "tr":
+                        self.tr_blocks.append(f["texts"] or [])
+                    elif f["hero_m"]:
+                        t = f["texts"] or []
+                        self.hero_blocks.append({"label": t[0][0] if t else "", "outside": [x[0] for x in t[1:] if not x[1] and not x[2]]})
+                del self.stack[i:]
+                return
+
+    def _data(self, data: str) -> None:
+        t = data.strip()
+        if not t or any(f["tag"] in ("script", "style") for f in self.stack):
+            return
+        chain = [f["attrs"] for f in self.stack if f["live"]]
+        in_stale = any(f["stale"] for f in self.stack)
+        top = self.stack[-1] if self.stack else {"tag": "", "attrs": {}}
+        self.texts.append({"text": t, "chain": chain, "in_live": bool(chain), "in_stale": in_stale, "tag": top["tag"], "attrs": top["attrs"]})
+        for f in self.stack:
+            if f["texts"] is not None:
+                f["texts"].append((t, bool(chain), in_stale, f["col"] if f["tag"] == "tr" else 0))
+
+
+def _fb_num(v):
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def _fb_live_problems(scan: "_FbScan", allowed_max: set, obs_ok, where: str) -> list:
+    """すべての data-fb-live: 最初は hidden／観測時刻はオフセット付き ISO で元データ由来／しきい値は設定どおり。"""
+    from src.tcg import runtime_freshness as rf
+    bad: list = []
+    for a in scan.lives:
+        g = a.get("data-fb-group") or "?"
+        if "hidden" not in a:
+            bad.append(f"{where}: 最初から表示されている（hidden が無い: {g}）")
+        obs = a.get("data-fb-obs") or ""
+        if not rf.parse_aware(obs) or not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$", obs):
+            bad.append(f"{where}: 観測時刻（オフセット付き ISO）が読めない（{g}: '{obs}'）")
+        elif not obs_ok(obs, _fb_num(a.get("data-fb-max"))):
+            bad.append(f"{where}: 観測時刻が元データの確認日と一致しない（生成時刻などの偽装の疑い。{g}: {obs}）")
+        if _fb_num(a.get("data-fb-max")) not in allowed_max:
+            bad.append(f"{where}: しきい値が設定と違う（{g}: {a.get('data-fb-max')}。期待 {sorted(allowed_max)}）")
+        if _fb_num(a.get("data-fb-fut")) is None:
+            bad.append(f"{where}: data-fb-fut が読めない（{g}）")
+    return bad
+
+
+def _fb_pair_problems(scan: "_FbScan", where: str, value_re) -> list:
+    """stale は同じ group の live と対で、最初は hidden でない。値（購入候補・金額）を持つ live には stale がある。"""
+    bad: list = []
+    lg = {a.get("data-fb-group") for a in scan.lives}
+    sg = {a.get("data-fb-group") for a in scan.stales}
+    if sg - lg:
+        bad.append(f"{where}: 対になる live が無い stale がある（{sorted(str(x) for x in sg - lg)[:3]}）")
+    if any("hidden" in a for a in scan.stales):
+        bad.append(f"{where}: 再確認待ち（data-fb-stale）が最初から hidden になっている")
+    valued = set()
+    for t in scan.texts:
+        if t["in_live"] and value_re.search(t["text"]):
+            valued.update(c.get("data-fb-group") for c in t["chain"])
+    for b in scan.badges:
+        if b["in_live"]:
+            valued.update(c.get("data-fb-group") for c in b["chain"])
+    if valued - sg:
+        bad.append(f"{where}: 購入候補・金額を持つ live に、対の再確認待ちが無い（{sorted(str(x) for x in valued - sg)[:3]}）")
+    return bad
+
+
+def _fb_common_page_problems(html: str, where: str) -> list:
+    from src.tcg import runtime_freshness as rf
+    bad: list = []
+    if html.count(rf.JS_FRESHNESS) != 1:
+        bad.append(f"{where}: 共通の JS（rf.JS_FRESHNESS）がそのままの形で 1 回入っていない（{html.count(rf.JS_FRESHNESS)} 回）")
+    if "[data-fb-live][hidden]" not in html:
+        bad.append(f"{where}: [data-fb-live][hidden] の CSS が無い")
+    return bad
+
+
+def _cfg_days(fr, key: str):
+    """設定の日数。数値（bool 以外）・有限・0 以上だけ返す。無い・読めないときは None（既定値を持たない。ページ側の fail-closed と別の値を直書きしない）。"""
+    import math
+    v = fr.get(key) if isinstance(fr, dict) else None
+    if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0:
+        return None
+    return float(v)
+
+
+def _cam_hours(cfg: dict):
+    """(在庫の時間数, 価格の時間数)。設定が読めない・不正なら None（検査は不合格にする）。"""
+    from src.tcg import runtime_freshness as rf
+    fr = (cfg or {}).get("freshness") if isinstance(cfg, dict) else None
+    sd, ed = _cfg_days(fr, "stock_days"), _cfg_days(fr, "executable_days")
+    if sd is None or ed is None:
+        return None
+    return rf.days_to_hours(sd), rf.days_to_hours(ed)
+
+
+_CAM_VALUE_RE = re.compile(r"^購入候補$|^購入できる$|購入できる[）)]|利益\s*[+＋]\s*¥|^黒字(\s*[1-9]\d*\s*件)?$")
+
+
+def check_camera_runtime_freshness(html: str, market: dict, cfg: dict) -> list:
+    """#893: docs/camera-research.html の表示時の鮮度。問題の文字列のリスト（空なら合格）。"""
+    from src.tcg import runtime_freshness as rf
+    w = "camera"
+    hrs = _cam_hours(cfg)
+    if hrs is None:
+        return [f"{w}: 設定（config/camera_routes.yaml の freshness.stock_days / executable_days）が読めない（不合格）"]
+    stock_h, price_h = hrs
+    bad = _fb_common_page_problems(html, w)
+    scan = _FbScan(html)
+    dates: set = set()
+    for p in (market or {}).get("products") or []:
+        for o in p.get("observations") or []:
+            dates.add(str(o.get("checked_at") or "")[:10])
+        for r in p.get("routes") or []:
+            for k in ("buy", "sell"):
+                dates.add(str((r.get(k) or {}).get("checked_at") or "")[:10])
+    dates.discard("")
+    if not dates:
+        bad.append(f"{w}: 元データ（camera_market.json）の確認日が読めない")
+    bad += _fb_live_problems(
+        scan, {stock_h, price_h},
+        lambda obs, mx: obs.endswith("T00:00:00+09:00") and obs[:10] in dates, w)
+    bad += _fb_pair_problems(scan, w, _CAM_VALUE_RE)
+    # live の外（stale と script/style を除く）に、購入候補・購入できる・利益の金額・黒字・BUY バッジが出ていない
+    for t in scan.texts:
+        if not t["in_live"] and not t["in_stale"] and _CAM_VALUE_RE.search(t["text"]):
+            bad.append(f"{w}: live の外に購入候補・金額が出ている（'{t['text'][:30]}'）")
+    for b in scan.badges:
+        if not b["in_live"] and not b["in_stale"]:
+            bad.append(f"{w}: live の外に {b['cls']} のバッジが出ている")
+    # 条件付き試算（店舗印なし）の行: 買取価格・価格差・利益・ROI（2〜5 列目。1 列目は見出し）はすべて live の中だけ。
+    # 期限後は stale 側に『過去の参考（取得日つき）』の形で残る（stale の中は許容）
+    for texts in scan.tr_blocks:
+        if any("条件付き試算" in x[0] for x in texts):
+            for x, il, ist, col in texts:
+                if col >= 2 and not il and not ist and re.search(r"[¥￥]\s*\d|\d(\.\d+)?\s*%", x):
+                    bad.append(f"{w}: 条件付き試算の金額・ROI が live の外に出ている（'{x[:24]}'）")
+    # 購入候補・購入できる・BUY バッジの祖先の live に、在庫（stock_h）と買値・売値の価格（price_h）の観測がそろっている
+    markers = [t for t in scan.texts if t["in_live"] and re.search(r"^購入候補$|^購入できる$|購入できる[）)]", t["text"])] + \
+              [b for b in scan.badges if b["in_live"] and b["cls"] == "sbadge--buy"]
+    for m in markers:
+        mx = [_fb_num(c.get("data-fb-max")) for c in m["chain"]]
+        n_price = sum(1 for x in mx if x == price_h)
+        if len(mx) < 3 or stock_h not in mx or n_price < (3 if stock_h == price_h else 2):
+            bad.append(f"{w}: 購入候補の live に、在庫・買値・売値の観測がそろっていない（{mx}）")
+    return sorted(set(bad))
+
+
+def _iphone_hours(cfg: dict):
+    """(買取価格の時間数, Apple 在庫の時間数)。設定が読めない・不正なら None（検査は不合格にする。例外で落とさない）。"""
+    from src.tcg import runtime_freshness as rf
+    fr = (cfg or {}).get("freshness") if isinstance(cfg, dict) else None
+    bd, ad = _cfg_days(fr, "page_buy_days"), _cfg_days(fr, "apple_availability_days")
+    if bd is None or ad is None:
+        return None
+    return rf.days_to_hours(bd), ad * 24
+
+
+_IP_VALUE_RE = re.compile(r"購入候補です|^購入候補$|うち更新が新しい|BUY（週次の判定）|購入できる（Apple|^黒字$")
+
+
+def iphone_page_source_problems(src_text: str) -> list:
+    """#894 (7): ページのコードに 192 や `<= 7` を直書きしない（期間は config/iphone_buyback.yaml）。コメント・docstring は見ない。"""
+    import ast
+    bad: list = []
+    try:
+        tree = ast.parse(src_text)
+    except SyntaxError as e:
+        return [f"ページのコードを構文解析できない: {e}"]
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Constant) and not isinstance(n.value, bool) and n.value == 192:
+            bad.append(f"ページのコードに 192 が直書きされている（{n.lineno} 行）")
+        if isinstance(n, ast.Compare):
+            for op, c in zip(n.ops, n.comparators):
+                if isinstance(op, ast.LtE) and isinstance(c, ast.Constant) and c.value == 7:
+                    bad.append(f"ページのコードに <= 7 が直書きされている（{n.lineno} 行）")
+    return bad
+
+
+def check_iphone_runtime_freshness(html: str, comp: dict, cfg: dict, page_src: str | None = None) -> list:
+    """#894: docs/iphone-buyback.html の表示時の鮮度。問題の文字列のリスト（空なら合格）。"""
+    from src.tcg import runtime_freshness as rf
+    w = "iphone"
+    hrs = _iphone_hours(cfg)
+    if hrs is None:
+        return [f"{w}: 設定（config/iphone_buyback.yaml の freshness.page_buy_days / apple_availability_days）が読めない（不合格）"]
+    buy_h, apple_h = hrs
+    bad = _fb_common_page_problems(html, w)
+    if "tcgFreshApply" not in html:
+        bad.append(f"{w}: window.tcgFreshApply が無い")
+    scan = _FbScan(html)
+    buy_dates = {str((comp or {}).get("research_date") or "")[:10]}
+    apple_obs: set = set()
+    for s in (comp or {}).get("skus") or []:
+        for r in s.get("rows") or []:
+            buy_dates.add(str(r.get("updated_on") or "")[:10])
+        d = rf.parse_aware((s.get("apple_availability") or {}).get("checked_at"))
+        if d:
+            apple_obs.add(d.replace(microsecond=0).isoformat())
+    buy_dates.discard("")
+    if not buy_dates:
+        bad.append(f"{w}: 元データ（iphone_buyback_comparison.json）の確認日が読めない")
+
+    def _obs_ok(obs, mx):
+        is_buy = obs.endswith("T00:00:00+09:00") and obs[:10] in buy_dates
+        is_apple = obs in apple_obs
+        if buy_h != apple_h:
+            return is_buy if mx == buy_h else is_apple if mx == apple_h else False
+        return is_buy or is_apple
+
+    bad += _fb_live_problems(scan, {buy_h, apple_h}, _obs_ok, w)
+    bad += _fb_pair_problems(scan, w, _IP_VALUE_RE)
+    for t in scan.texts:
+        if t["in_live"] or t["in_stale"]:
+            continue
+        s = t["text"]
+        fresh_label = s == "更新が新しい" and (t["attrs"].get("title") == "FRESH")       # 上部タイルの見出し（件数の値ではない）だけ例外
+        if re.fullmatch(r"うち更新が新しい\s*0\s*店", s):
+            continue                                                # 0 店は「更新が新しい店が無い」という事実で、期限切れ後も 0 のまま誤りにならない（N>0 は live の中だけ）
+        if _IP_VALUE_RE.search(s) or (s == "更新が新しい" and not fresh_label):
+            bad.append(f"{w}: live の外に購入候補・更新が新しい・金額が出ている（'{s[:30]}'）")
+    for b in scan.badges:
+        if not b["in_live"] and not b["in_stale"]:
+            bad.append(f"{w}: live の外に {b['cls']} のバッジが出ている")
+    for hb in scan.hero_blocks:
+        if hb["label"] not in ("最高買取", "純利益", "ROI"):
+            continue
+        joined = " ".join(hb["outside"])
+        # 実行可能な最高買取が無い SKU は、プレースホルダ（—・データ無し・比較できる価格なし）か、未確認の最高値を「確認待ち」と明示して出す。
+        # 数字（金額・ROI）を持つ値が、確認待ち・参考の明示なしに live の外にあれば、FRESH・実行可能として読めるので不合格
+        flagged = hb["label"] == "最高買取" and ("確認待ち" in joined or re.search(r"参考.*取得\s*\d+/\d+|取得\s*\d+/\d+.*参考", joined))
+        if re.search(r"\d", joined) and not flagged:
+            bad.append(f"{w}: hero の {hb['label']} が live の外に出ている")
+    # 購入候補系の祖先 live に、買取価格側と Apple 側の両方の観測がある
+    markers = [t for t in scan.texts if t["in_live"] and re.search(r"購入候補です|^購入候補$|BUY（週次の判定）", t["text"])] + \
+              [b for b in scan.badges if b["in_live"] and b["cls"] == "sbadge--buy"]
+    for m in markers:
+        mx = [_fb_num(c.get("data-fb-max")) for c in m["chain"]]
+        if buy_h not in mx or apple_h not in mx:
+            bad.append(f"{w}: 購入候補の live に、買取価格側と Apple 側の両方の観測がそろっていない（{mx}）")
+    if page_src is not None:
+        bad += [f"{w}: {x}" for x in iphone_page_source_problems(page_src)]
+    return sorted(set(bad))
+
+
+def home_generated_ms(html: str):
+    """HOME の HTML に埋まっている生成時刻（data-nu-generated-at。オフセット付き ISO）をミリ秒で返す。無い・読めない・オフセットなしは None。"""
+    from datetime import datetime
+    m = re.search(r'data-nu-generated-at="([^"]*)"', html)
+    if not m:
+        return None
+    try:
+        d = datetime.fromisoformat(m.group(1))
+    except ValueError:
+        return None
+    return None if d.tzinfo is None else d.timestamp() * 1000
+
+
+def check_home_runtime_cards(html: str, now_ms: float) -> tuple:
+    """#895: HOME（docs/index.html）の購入候補カード（Camera・iPhone）の期限。戻り値 (問題のリスト, 緑の Camera/iPhone カードの件数)。
+    緑のカードが 0 件でも、JS ブロックと購入候補タイルの期限の一覧は検査する（0 件を「検査不能で合格」にしない）。"""
+    from datetime import datetime, timedelta, timezone
+    w = "home"
+    bad: list = []
+    jst = timezone(timedelta(hours=9))
+    n_green = 0
+    for blk in html.split("<article")[1:]:
+        head = blk.split(">", 1)[0]
+        if "nu-fc--success" not in head or "data-nu-feedcard" not in head:
+            continue
+        blk = blk.split("</article>", 1)[0]
+        m = re.search(r'<p class="nu-card__sub">([^<]*)</p>', blk)
+        if not m or m.group(1).strip() not in ("カメラ", "iPhone"):
+            continue
+        n_green += 1
+        name = (re.search(r'<h3 class="nu-card__title">([^<]*)</h3>', blk) or [None, "?"])[1][:24]
+        u = re.search(r'data-nu-pd-until="([^"]*)"', blk)
+        if not u or not u.group(1).isdigit():
+            bad.append(f"{w}: 緑の購入候補カードに期限（data-nu-pd-until）が無い・数値でない（{name}）")
+            continue
+        until = int(u.group(1))
+        if until <= now_ms:
+            bad.append(f"{w}: 購入候補カードの期限が生成時刻より過去（{name}）")
+        want = datetime.fromtimestamp(until / 1000, jst).strftime("%-m/%-d %H:%M")
+        if f"購入候補は {want}（JST）までの確認です" not in blk:
+            bad.append(f"{w}: 期限付きの購入候補カードに『購入候補は {want}（JST）までの確認です』の注記が無い（{name}）")
+        if 'data-nu-pd-stale-text=' not in blk:
+            bad.append(f"{w}: 購入候補カードに期限後の差し替え文言（data-nu-pd-stale-text）が無い（{name}）")
+        if 'class="nu-fc__profit"' not in blk:
+            pass                                                    # 金額行が無いカードは差し替えの対象も無い
+    tokens: list = []
+    for m in re.finditer(r'data-nu-buy-untils="([^"]*)"', html):
+        tokens += [x for x in m.group(1).split(",") if x != ""]
+    # "inf" は TCG など期限の無い購入可（許容）。Camera・iPhone の購入候補は必ず期限を持つので、期限が無いものは生成側が "none" にする（不合格）
+    if any(not x.isdigit() and x != "inf" for x in tokens):
+        bad.append(f"{w}: 購入候補タイルの期限の一覧に数値でないもの（none など。Camera・iPhone の期限なし）が混ざっている"
+                   f"（{sorted(set(x for x in tokens if not x.isdigit() and x != 'inf'))[:3]}）")
+    i = html.find(".nu-fc [data-nu-pd-until]")
+    seg = html[i:i + 2500] if i >= 0 else ""
+    if "nu-fc__profit" not in seg or "更新待ち（取得日つきの参考）" not in seg:
+        bad.append(f"{w}: 期限後に黒字の金額行（nu-fc__profit）を差し替える JS が無い")
+    return sorted(set(bad)), n_green
+
+
+def _check_runtime_freshness_cam_iphone_home() -> list[dict]:
+    """#893〜#895。生成済み HTML（docs/）を検査する。HTML が最新の実装で再生成されていなければ落ちうる（再生成してから実行する）。"""
+    import json as _j
+    from datetime import datetime as _dt
+    out: list[dict] = []
+
+    def _add(no, key, ok, msg, ng=""):
+        out.append({"level": "ok" if ok else "error", "check": key, "message": f"#{no} {msg}" + ("" if ok else f" ← {ng}")})
+
+    def _load(p):
+        try:
+            return _j.loads(p.read_text(encoding="utf-8")) or {}
+        except Exception:  # noqa: BLE001
+            return None
+
+    pg = PUBLIC_DIR / "camera-research.html"
+    if pg.exists():
+        from src.research.camera_refresh import load_config as _cc
+        mk = _load(PROJECT_ROOT / "exports" / "camera_research" / "camera_market.json")
+        bad = (["元データ（exports/camera_research/camera_market.json）が読めない"] if mk is None
+               else check_camera_runtime_freshness(pg.read_text(encoding="utf-8"), mk, _cc()))
+        _add(893, "camera_runtime_freshness", not bad,
+             "camera-research.html の購入候補・利益は、表示時に確認日から鮮度を判定し直す（在庫 72h・価格 192h は config 由来。観測時刻は確認日の 00:00 JST）",
+             "；".join(bad[:4]))
+    ip = PUBLIC_DIR / "iphone-buyback.html"
+    if ip.exists():
+        from src.research import weekly_import as _wi
+        comp = _load(PROJECT_ROOT / "exports" / "iphone_buyback" / "iphone_buyback_comparison.json")
+        src_p = PROJECT_ROOT / "src" / "content" / "iphone_buyback_page.py"
+        bad = (["元データ（exports/iphone_buyback/iphone_buyback_comparison.json）が読めない"] if comp is None
+               else check_iphone_runtime_freshness(ip.read_text(encoding="utf-8"), comp, _wi.load_config(),
+                                                   src_p.read_text(encoding="utf-8") if src_p.exists() else ""))
+        _add(894, "iphone_runtime_freshness", not bad,
+             "iphone-buyback.html の最高買取・純利益・購入候補は、表示時に確認日（買取）と Apple の確認時刻から鮮度を判定し直す（期間は config 由来）",
+             "；".join(bad[:4]))
+    hp = PUBLIC_DIR / "index.html"
+    if hp.exists():
+        html_h = hp.read_text(encoding="utf-8")
+        gen_ms = home_generated_ms(html_h)                  # 生成時刻は HTML に埋めた値。ファイルの更新時刻（clone・pull で変わる）は使わない
+        if gen_ms is None:
+            bad, n = ["HTML に生成時刻（data-nu-generated-at）が無い・読めない（再生成が必要）"], 0
+        else:
+            bad, n = check_home_runtime_cards(html_h, gen_ms)
+        _add(895, "home_runtime_cards", not bad,
+             ("HOME の Camera・iPhone の購入候補カードは、期限（data-nu-pd-until）・期限の注記・期限後の差し替え JS を持つ"
+              + (f"（{n} 件）" if n else "（対象なし: 緑の購入候補カード 0 件。JS とタイル期限のスキーマ検査のみ）")),
+             "；".join(bad[:4]))
     return out
 
 

@@ -451,7 +451,7 @@ def _rb_card(o: dict, i: int) -> str:
     until = _e(str(r.get("apply_end") or ""))
     badge = (f'<span {live}>{_badge("条件付き" + ("（赤字）" if neg else ""), "warn")}</span>'
              f'<span data-fb-stale data-fb-group="{g}" data-fb-max="{mx:g}">{_badge("確認待ち", "warn")}</span>')
-    meta = f'<div><dt>販売店価格（{unit}）</dt><dd>{_yen(r["price_jpy"])}<small>{_e(r["shop"])}の実販売価格・メーカー定価ではありません</small></dd></div>'
+    meta = f'<div><dt>販売店価格（{unit}）</dt><dd>{_yen(r["price_jpy"])}<small>{_e(r.get("price_class_label") or "販売店の価格")}・{_e(r["shop"])}の実販売価格・メーカー定価ではありません</small></dd></div>'
     apply_end = r.get("apply_end")
     apply_note = f"（応募期限 {_e(_apply_deadline(apply_end))}・生成時点の判定）" if apply_end else "（生成時点の判定）"
     if r.get("start_unconfirmed"):
@@ -491,14 +491,55 @@ def _rb_refs(refs: list) -> str:
         else:
             state = "" if rejected else f'（{_e(r.get("accept_label") or "")}）'
             attrs = ""
-        return (f'<li{attrs}>{_e(r.get("shop") or "")}・{_e(name)}{"・" + price if price else ""}'
+        pcl = "" if rejected or not r.get("price_class_label") else f'（{_e(r["price_class_label"])}）'
+        return (f'<li{attrs}>{_e(r.get("shop") or "")}・{_e(name)}{"・" + price if price else ""}{pcl}'
                 f'{state}— {_e(r.get("reason") or "")}・確認 {_e(_short(r.get("verified_at")))}・{_rb_link(r.get("source_url"))}</li>')
-    items = "".join(_item(r) for r in refs)
-    return (f'<details class="note"><summary>過去の参考情報（販売店の BOX 価格・利益は出しません）（{len(refs)}）</summary>'
-            f'<p class="mut">応募が終わった・当選者のみ・期間外・不明の価格です。実行できる価格ではないので、利益には使いません。</p><ul>{items}</ul></details>')
+    # OPEN（応募期間中）で利益を計算できない行は、「過去の参考情報」に混ぜず別の小見出しにする
+    open_refs = [r for r in refs if r.get("kind") != "REJECTED" and r.get("accept_state") == "OPEN"]
+    past_refs = [r for r in refs if r not in open_refs]
+    html = ""
+    if open_refs:
+        html += (f'<details class="note" open><summary>応募受付中だが条件付き利益を計算できない（{len(open_refs)}）</summary>'
+                 '<p class="mut">応募期間中の価格ですが、買取価格の不足・価格の食い違いなど（理由は各行）で利益を計算できません。実行できる価格ではありません。</p>'
+                 f'<ul>{"".join(_item(r) for r in open_refs)}</ul></details>')
+    if past_refs:
+        html += (f'<details class="note"><summary>過去の参考情報（販売店の BOX 価格・利益は出しません）（{len(past_refs)}）</summary>'
+                 '<p class="mut">応募が終わった・当選者のみ・期間外・不明の価格です。実行できる価格ではないので、利益には使いません。</p>'
+                 f'<ul>{"".join(_item(r) for r in past_refs)}</ul></details>')
+    return html
 
 
-def _product_card(p: dict, i: int, yr: str) -> str:
+_MISMATCH_KIND = {"PRICE_MISMATCH": "価格", "SCHEDULE_MISMATCH": "日程", "COLLECTOR_NOT_OPEN": "受付状態"}
+
+
+def _rb_mismatch(errors: list) -> str:
+    """台帳（人手の確認値）と自動取得の食い違い。0 件なら出さない。1 件以上で、店・商品・種別・双方の値と扱いを併記する。"""
+    errs = [e for e in errors if isinstance(e, dict) and e.get("kind") in _MISMATCH_KIND]
+    if not errs:
+        return ""
+    def _item(e: dict) -> str:
+        k = e["kind"]
+        name = e.get("display_name") or (f'商品ID: {e.get("product_id")}' if e.get("product_id") else "商品不明")
+        if k == "PRICE_MISMATCH":
+            vals = f'台帳 {_yen(e["manual_price"])}／自動取得 {_yen(e["collector_price"])}' if isinstance(e.get("manual_price"), int) and isinstance(e.get("collector_price"), int) else ""
+            if e.get("resolution") == "ledger_kept_unit_unknown":
+                note = "単位が確認できない自動取得の価格と食い違っています。台帳の値を維持しました。公式ページで確認してください"
+            else:
+                note = "利益計算に使わず参考止まりにしました。公式ページで確認してください"
+        elif k == "SCHEDULE_MISMATCH":
+            vals = f'{_e(e.get("field") or "")}: 台帳 {_e(e.get("manual_value") or "")}／自動取得 {_e(e.get("collector_value") or "")}'
+            note = "自動取得の値を採用しました。公式ページで確認してください"
+        else:
+            vals = ""
+            note = "台帳の値を維持しました。公式ページで確認してください"
+        return (f'<li>{_e(e.get("shop") or "")}・{_e(name)}・{_MISMATCH_KIND[k]}{"・" + vals if vals else ""} — {note}'
+                f'（{_e(e.get("message") or "")}）・{_rb_link(e.get("source_url"))}</li>')
+    return (f'<details class="note" open id="retailer-mismatch"><summary>台帳と自動取得の食い違い（{len(errs)} 件）</summary>'
+            '<p class="mut">人が確認した台帳の値と、自動取得（collector）の値が合わない行です。誤読の可能性があるため、必ず公式ページで確認してください。</p>'
+            f'<ul>{"".join(_item(e) for e in errs)}</ul></details>')
+
+
+def _product_card(p: dict, i: int, yr: str, unbound_applying: int = 0) -> str:
     cfg = _CFG()
     pr = p["profit"]
     m = pr["msrp"]
@@ -563,7 +604,12 @@ def _product_card(p: dict, i: int, yr: str) -> str:
     meta = f'<div class="pmeta">{"<dl>" + meta + "</dl>" if meta else ""}{unk}</div>' if (meta or unk) else ""
     chip = lambda n, lbl, tone: f'<span class="chip {tone}"><b>{n}</b>{lbl}</span>' if n else ""
     chips = chip(c["open"], "受付中", "info") + chip(c["ending_soon"], "締切間近", "danger") + chip(c["upcoming"], "近日開始", "info")
-    chips = f'<div class="chips">{chips}</div>' if chips else '<p class="pnote nw">受付中・開始前なし</p>'
+    if chips:
+        chips = f'<div class="chips">{chips}</div>'
+    else:
+        # 画面に見える本文で「この商品に紐付いた」ものだけの話だと分かるようにする。未紐付けの受付中の抽選があるときは抽選一覧への案内を足す
+        note = "この商品に紐付いた、応募受付中の抽選はありません" + ("。紐付け前の告知は抽選一覧を参照" if unbound_applying > 0 else "")
+        chips = f'<p class="pnote nw">{_e(note)}</p>'
     off = _product_link(p["official_url"]) or '<span class="mut">公式ページ未確認</span>'
     if pr.get("net_profit") is not None:                        # 補足の利益の金額も、表の行と同じく表示時に鮮度を判定する
         profit_note = (f'<span {fp}>利益 {_e(pr["label"])}（{_e(pr["reason"])}）</span>'
@@ -745,7 +791,7 @@ def render(hub: dict, *, generated_label: Optional[str] = None) -> str:
                      '近日の予定は<a href="#calendar">カレンダー</a>、終了した抽選は下の「終了した抽選」を見てください。</p><div id="lt-live"></div>')
     ended_html = (f'<details class="note"><summary>終了した抽選（{len(ended)} 件）</summary>{_table(ended, pidx, yr, flagmap, "lt-ended")}</details>'
                   if ended else "")
-    cards = "".join(_product_card(p, i, yr) for i, p in enumerate(products))
+    cards = "".join(_product_card(p, i, yr, int(((hub.get("stats") or {}).get("unbound_applying")) or 0)) for i, p in enumerate(products))
     prod_html = (f'<div class="pgrid">{cards}</div>' if cards else
                  '<p class="empty">商品に束ねられた抽選はまだありません。公式の商品名と一致した抽選が出ると、ここに商品カードが並びます。</p>')
 
@@ -759,7 +805,8 @@ def render(hub: dict, *, generated_label: Optional[str] = None) -> str:
         '応募期間中の価格だけを計算し、応募終了・当選者のみの価格は下の参考情報に留めます。パック価格×入数で BOX 価格を作ることはしません。</p>'
         + (f'<div class="pgrid">{"".join(_rb_card(o, i) for i, o in enumerate(rbs))}</div>' if rbs else
            '<p class="empty">いま応募期間中で、利益を計算できる販売店の BOX 価格はありません。</p>')
-        + _rb_refs(hub.get("retailer_references") or []))
+        + _rb_refs(hub.get("retailer_references") or [])
+        + _rb_mismatch(hub.get("retailer_validation_errors") or []))
     opp_html = (
         f'<h2 id="opportunities">現在の利益候補（{len(opps)}）</h2>'
         f'<p class="mut">生成時点の内訳: 黒字 {s["opportunities_profit"]}／様子見 {s["opportunities_watch"]}'

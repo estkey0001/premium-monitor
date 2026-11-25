@@ -322,6 +322,9 @@ def test_deploy_check_803_storage_only_in_mypage_store():
     def lv(html):
         return {x["check"]: x["level"] for x in dc._check_new_ui(html)}["new_ui_flag_only"]
     assert lv(page) == "ok"
-    _m = '<main id="nu-main" class="nu-main" tabindex="-1">'               # 新UIの本文（静的な案内の main ではない）
+    # 新UIの本文（静的な案内の main ではない）。main に生成時刻などの属性が付いても、開始タグの直後に script を差し込む
+    _tag = re.search(r'<main id="nu-main" class="nu-main"[^>]*>', page)
+    assert _tag, "新UIの本文の main が見つからない"
+    _m = _tag.group(0)
     assert lv(page.replace(_m, _m + "<script>localStorage.setItem('x','1')</script>", 1)) == "error"
     assert lv(page.replace("var GROUPS = ", "var UIKEY = 'ui'; var GROUPS = ", 1)) == "error"

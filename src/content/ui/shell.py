@@ -1020,21 +1020,34 @@ def _router_script() -> str:
   }
   root.addEventListener('click', guardPdBuy, true);
   // HOME の「今すぐ行動できる利益商品」の件数: 生成時に決めた期限のうち、今より後のものだけを数える（判定はし直さない）
+  function homeUntils(){
+  var now = Date.now();
   root.querySelectorAll('[data-nu-act-untils]').forEach(function(el){
-    var now = Date.now();
     var n = (el.getAttribute('data-nu-act-untils') || '').split(',').filter(function(x){ return x && +x > now; }).length;
     el.textContent = n + '件';
   });
   // HOME の購入候補カード・タイル: 在庫ありと言える期限（生成時に決めた値）を過ぎたら「更新待ち」にして緑を外す（判定はし直さない）
   (function(){
-    var now = Date.now();
     root.querySelectorAll('.nu-fc [data-nu-pd-until]').forEach(function(el){
       if (now < +el.getAttribute('data-nu-pd-until')) return;
       el.textContent = el.getAttribute('data-nu-pd-stale-text') || '';
       el.className = el.getAttribute('data-nu-pd-stale-class') || el.className;
       el.removeAttribute('data-nu-pd-until');
       var card = el.closest('.nu-fc');
-      if (card) { card.classList.remove('nu-fc--success'); card.classList.add('nu-fc--neutral', 'nu-fc--stale'); }
+      if (card) {
+        card.classList.remove('nu-fc--success'); card.classList.add('nu-fc--neutral', 'nu-fc--stale');
+        // 「黒字 +¥…」の金額行も、期限後は取得日つきの参考にする（金額を購入候補のまま残さない）。確認日の行は残る
+        var pr = card.querySelector('.nu-fc__profit');
+        if (pr) pr.textContent = '更新待ち（取得日つきの参考）';
+        var nt = card.querySelector('.nu-feed__stale');
+        if (nt) nt.hidden = true;
+      }
+    });
+    // 購入候補でない黒字（様子見）の金額行: iPhone ページと同じ期限を過ぎたら取得日つきの参考にする（カードの色・注記は触らない）
+    root.querySelectorAll('[data-nu-pd-profit-until]').forEach(function(el){
+      if (now < +el.getAttribute('data-nu-pd-profit-until')) return;
+      el.textContent = el.getAttribute('data-nu-pd-stale-text') || '更新待ち';
+      el.removeAttribute('data-nu-pd-profit-until');
     });
     root.querySelectorAll('[data-nu-buy-untils]').forEach(function(el){
       var n = (el.getAttribute('data-nu-buy-untils') || '').split(',').filter(function(x){ return x === 'inf' || (x && +x > now); }).length;
@@ -1044,6 +1057,12 @@ def _router_script() -> str:
       if (tile) tile.classList.add('nu-today__tile--zero');
     });
   })();
+  }
+  // 読み込み時の 1 回だけでなく、60 秒ごと・タブに戻ったとき・戻る/進むで復元されたときにも評価し直す（Camera・iPhone ページの JS_FRESHNESS と同じ間隔）
+  homeUntils();
+  setInterval(homeUntils, 60000);
+  document.addEventListener('visibilitychange', homeUntils);
+  window.addEventListener('pageshow', homeUntils);
   // 主要な数値から利益の根拠へ（同じページの中。URL は変えない。買う・売るのタブに切り替えてから移る）
   root.addEventListener('click', function(e){
     var j = e.target.closest('[data-nu-pd-jump]');
@@ -1153,7 +1172,8 @@ def render_root(ctx: ShellContext) -> str:
         # ?ui=legacy（旧表示の古いブックマーク）で開いたときだけ出す小さな案内（ルーターが出す）
         '<div id="nu-legacy-ended" class="nu-archive-note" role="note" hidden>'
         '旧表示は終了しました。新しい表示でご覧ください。</div>'
-        f'<main id="nu-main" class="nu-main" tabindex="-1">{body}</main>'
+        # data-nu-generated-at: 生成時刻（ISO・JST）。deploy-check #895 が期限と比べる。ファイルの更新時刻（clone・pull で変わる）には頼らない
+        f'<main id="nu-main" class="nu-main" tabindex="-1" data-nu-generated-at="{esc(model.now.isoformat(timespec="seconds"))}">{body}</main>'
         f'{pages.render_footer(_brand(ctx.site_title), ctx.cta_links)}'
         f'{navigation.bottom_nav()}'
         f'<script type="application/json" id="nu-lot-data">{rt.data_json(model.vms)}</script>'

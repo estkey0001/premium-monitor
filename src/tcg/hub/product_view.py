@@ -353,12 +353,15 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback
     lottery_by_key = {(p["tcg"], p["product_id"]): {"status": p["status"], "label": st.STATUS_LABEL[p["status"]], "counts": p["counts"]}
                       for p in products if p["events"]}
     opportunities = build_opportunities(bb_cfg, bb_rows, master, msrp_rows, lottery_by_key, now) if bb_cfg else []
-    if retailer_rows is None:                                    # 台帳（手動記録）。読めなければ空
+    retailer_errors: list = []
+    if retailer_rows is None:                                    # collector が同じ取得で読んだ販売価格（優先）＋手動台帳（検証・フォールバック）。読めなければ空
         try:
             from src.tcg import retailer_box as _rb
-            retailer_rows = _rb.load_ledger()
+            retailer_rows, retailer_errors = _rb.merge_rows(_rb.rows_from_events(_l(lot.get("items")), now), _rb.load_ledger(), now)
         except Exception:  # noqa: BLE001
-            retailer_rows = []
+            retailer_rows, retailer_errors = [], []
+    names = {pid: _s(p.get("name")) for (_t, pid), p in master.items()}
+    retailer_errors = [{**e, "display_name": names.get(e.get("product_id")) or None} for e in retailer_errors if isinstance(e, dict)]
     retailer_opps, retailer_refs = build_retailer_opportunities(bb_cfg, bb_rows, master, msrp_rows, retailer_rows, now) if bb_cfg else ([], [])
     order = {s: i for i, s in enumerate(st._AGG_ORDER)}
     products.sort(key=lambda p: (order.get(p["status"], 99) if p["events"] else 98, p["release_date"] or "9999", p["name"]))
@@ -397,6 +400,8 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback
     stats = {
         "events_total": len(views), "events_live": len(live),
         "bound_exact": exact_n, "unbound": len(unbound),
+        # 商品に紐付いていない（「二種」等の告知）受付中の抽選。確認済み・日程の食い違いなしのものだけ（商品カードの「抽選なし」の誤読防止用。紐付けは推測しない）
+        "unbound_applying": sum(1 for v in unbound if v["status"] in st.APPLYING and v["verified"] and not v["ev"].get("conflict")),
         "bind_rate": (exact_n / len(views)) if views else None,
         "bind_rate_live": (sum(1 for v in live if v["canonical"] in (C_MASTER, C_DISCOVERED)) / len(live)) if live else None,
         "products": len(products), "products_with_events": sum(1 for p in products if p["events"]),
@@ -410,7 +415,7 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback
         "discovered": sum(1 for p in products if p["canonical"] == C_DISCOVERED),
     }
     return {"now": now.isoformat(), "today": today, "products": products, "opportunities": opportunities,
-            "retailer_opportunities": retailer_opps, "retailer_references": retailer_refs, "unbound": unbound, "events": views,
+            "retailer_opportunities": retailer_opps, "retailer_references": retailer_refs, "retailer_validation_errors": retailer_errors, "unbound": unbound, "events": views,
             "today_list": today_list, "deadline_today": deadline_today, "ending_soon": ending_soon,
             "upcoming": upcoming, "new": new, "calendar": cal, "stats": stats,
             "checked_at": {"lotteries_generated_at": _s(lot.get("generated_at")) or None,

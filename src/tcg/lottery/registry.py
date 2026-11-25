@@ -93,34 +93,33 @@ LOTTERY_SOURCES: list[dict] = [
          verified=True,
          note="店舗ブログに抽選・抽選予約の告知が静的 HTML で載る（応募期間・当選発表・購入期間・商品名・価格が本文のテキスト）。"
               "応募は店舗の X のフォロー＆リポストで、公式ドメインの応募ページは無い（entry_url は空）。店舗ごとの抽選として扱う。"
-              "2026-10-24 の調査: robots.txt は /wordpress/wp-admin/ だけを禁止（PremiumMonitor への禁止なし）。利用規約"
-              "（c-labo.jp の規約ページ）は著作権・防犯・免責・従業員の保護の条項で、自動取得を禁じる記述は読み取れなかった"
-              "（許可の明記でもない。規約の確認は取得日つきの記録で、変更があれば再確認する）"),
+              "robots.txt は /wordpress/wp-admin/ だけを禁止していて、対象ページは禁止していない（確認日 2026-10-24）。"
+              "利用規約の本文は未読で、許可も禁止も未確認（読んだら、この記述と取得可否を見直す）"),
     _src("HOBBY_STATION", "ホビーステーション", _BOTH, "P1", "https://www.hbst.net/", CM_HTML,
          news_url="https://www.hbst.net/result/?category=news", channel="STORE", adapter="hobby_station_lottery",
          verified=True,
          note="公式のお知らせ（WordPress）に抽選販売の告知が静的 HTML で載り、応募期間・当選発表・当選者購入期間が「■応募期間：」の"
               "固定の書式で本文のテキストにある。応募は Livepocket（外部。公式ドメインではないので entry_url は空）。店舗横断の1本の告知。"
-              "2026-10-28 の調査: robots.txt は /wordpress/wp-admin/ だけを禁止（PremiumMonitor への禁止なし）。自動取得を禁じる規約・"
-              "利用規約のページは見当たらない（許可の明記でもない。取得日つきの記録で、変更があれば再確認する）"),
+              "robots.txt は /wordpress/wp-admin/ だけを禁止していて、対象ページは禁止していない（確認日 2026-10-28）。"
+              "利用規約の本文は未読で、許可も禁止も未確認（読んだら、この記述と取得可否を見直す）"),
     _src("KIDS_REPUBLIC", "キッズリパブリック（イオン）", _BOTH, "P1", "https://www.kidsrepublic.jp/", CM_HTML,
          news_url="https://www.kidsrepublic.jp/campaign", channel="APP", adapter="kids_republic_lottery", verified=True,
          note="キャンペーン情報に、アプリ抽選の告知（応募受付期間・当選発表日・購入期間）が静的 HTML のテキストで載る。応募はキッズリパブリックの"
               "アプリ（iAEON ID 連携）で公式ドメインの応募ページは無い（entry_url は空）。本州・四国の直営おもちゃ売場。一覧にはポケカ・ONE PIECE 以外も"
-              "混ざるのでタイトルで絞る。2026-10-29 の調査: robots.txt は 404（制限の記載なし）。利用規約は自動取得を禁じる記述を読み取れなかった"
-              "（許可の明記でもない。取得日つきの記録で、変更があれば再確認する）"),
+              "混ざるのでタイトルで絞る。robots.txt は 404 で制限の記載なし（確認日 2026-10-29）。"
+              "利用規約の本文は読んだ記録（確認日・URL）がなく、許可も禁止も未確認（読んだら、この記述と取得可否を見直す）"),
     _src("FUKUFUKU_TOREKA", "福福トレカ", (POKEMON,), "P2", "https://pokemon.fukufukutoreka.com/", CM_HTML,
          news_url="https://pokemon.fukufukutoreka.com/lottery", channel="ONLINE", adapter="fukufuku_lottery", verified=True,
          note="小規模な通販店。抽選販売の一覧（/lottery）と詳細に、応募期間・抽選日・購入期限が静的 HTML のテキストで載る（応募期間は年が省略されるので、"
-              "一覧の応募締切の年で補う）。応募は会員ログインが必要で、応募そのものは取らない（entry_url は空）。2026-10-29 の調査: robots.txt は"
-              " /*.csv$・/cart・/shopping・/mypage だけを禁止で /lottery は許可。自動取得を禁じる規約の記述は見つからなかった（許可の明記でもない。"
-              "取得日つきの記録で、変更があれば再確認する）"),
+              "一覧の応募締切の年で補う）。応募は会員ログインが必要で、応募そのものは取らない（entry_url は空）。robots.txt は"
+              " /*.csv$・/cart・/shopping・/mypage だけを禁止で /lottery は禁止していない（確認日 2026-10-29）。"
+              "利用規約の本文は読んだ記録（確認日・URL）がなく、許可も禁止も未確認（読んだら、この記述と取得可否を見直す）"),
     _src("MUGIWARA_STORE", "ONE PIECE 麦わらストア", (ONE_PIECE,), "P1", "https://www.mugiwara-store.com/", CM_HTML,
          news_url="https://www.mugiwara-store.com/news/", channel="STORE", adapter="mugiwara_store_lottery", verified=True,
          note="公式のお知らせ（WordPress）に、ONE PIECE カードゲームの抽選販売の告知が静的 HTML のテキストで年つきで載る（抽選受付期間・抽選結果発表・"
               "商品販売期間）。応募は LivePocket（外部。店舗ごとに別のページ・公式ドメインではないので entry_url は空）。複数店舗の1本の告知。"
-              "2026-10-29 の調査: robots.txt は /wp-admin/ だけを禁止。自動取得を禁じる規約の記述は確認できなかった（許可の明記でもない。取得日つきの記録で、"
-              "変更があれば再確認する）。クラウド IP から遮断されたら WORKING に数えない（回避しない）"),
+              "robots.txt は /wp-admin/ だけを禁止していて対象ページは禁止していない（確認日 2026-10-29）。"
+              "利用規約の本文は読んだ記録（確認日・URL）がなく、許可も禁止も未確認（読んだら、この記述と取得可否を見直す）。クラウド IP から遮断されたら WORKING に数えない（回避しない）"),
     _src("TOYSRUS", "トイザらス", _BOTH, "P1", "https://www.toysrus.co.jp/", CM_HTML,
          note="2026-10-01 時点でトップページが HTTP 403（ローカル・CI とも）。解析器は未実装"),
     _src("JOSHIN", "Joshin", _BOTH, "P1", "https://joshinweb.jp/", CM_HTML,

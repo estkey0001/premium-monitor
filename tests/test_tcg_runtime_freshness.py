@@ -258,3 +258,11 @@ def test_no_buyback_profit_amount_outside_the_freshness_gate(monkeypatch):
     rest = re.sub(r"<div [^>]*data-fb-live[^>]*>.*?</div>|<span [^>]*data-fb-live[^>]*>.*?</span>", "", html, flags=re.S)
     assert not re.search(r"[+\-−][\d,]+円", rest), re.findall(r".{20}[+\-−][\d,]+円.{10}", rest)[:3]
     assert "29.0%" not in rest                                                           # ROI も同じ
+
+
+@pytest.mark.parametrize("bad", [float("nan"), float("inf"), float("-inf"), -1, -0.5, "8", None, True])
+def test_evaluate_with_invalid_threshold_is_unknown_not_exception(bad):
+    obs = NOW.isoformat(timespec="seconds")
+    assert rf.evaluate(obs, NOW, bad, FUT) == rf.UNKNOWN
+    assert rf.evaluate(obs, NOW, MAXH, bad) == rf.UNKNOWN
+    assert rf.evaluate(obs, NOW, MAXH, FUT) == rf.FRESH

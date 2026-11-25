@@ -46,6 +46,10 @@ CLOSED_RETENTION = timedelta(days=14)
 # 開始日時だけ分かっていて締切が分からない抽選の、開始後の扱いの上限
 START_ONLY_RETENTION = timedelta(days=7)
 
+# 価格の単位（retail_price が「何の単位の価格か」。BOX と確定できたものだけが販売店の BOX 価格として使える）
+PU_PACK, PU_BOX, PU_SET, PU_UNKNOWN = "PACK", "BOX", "SET", "UNKNOWN"
+PRICE_UNITS: tuple[str, ...] = (PU_PACK, PU_BOX, PU_SET, PU_UNKNOWN)
+
 # 情報源の確度（Task23 の優先順位。数値が小さいほど上位）
 SRC_MANUFACTURER = "MANUFACTURER_OFFICIAL"
 SRC_RETAILER = "RETAILER_OFFICIAL"
@@ -99,6 +103,9 @@ class LotteryEvent:
     release_date: Optional[str] = None
     retail_price: Optional[int] = None
     price_text: Optional[str] = None
+    # retail_price の単位。本文から BOX と確定できないものは UNKNOWN（入数から逆算しない・パック価格×入数で BOX 価格を作らない）
+    price_unit: str = PU_UNKNOWN
+    product_code: Optional[str] = None   # 【EB-05】のような型番（商品名の【】内。無ければ None）
 
     # Task9: 応募条件（明記がある場合だけ True。原文も必ず保持する）
     eligibility_text: Optional[str] = None
@@ -135,6 +142,8 @@ class LotteryEvent:
             raise ValueError(f"unknown lottery event_type: {self.event_type}")
         if self.source_type not in LOTTERY_SOURCE_PRIORITY:
             raise ValueError(f"unknown lottery source_type: {self.source_type}")
+        if self.price_unit not in PRICE_UNITS:
+            self.price_unit = PU_UNKNOWN
         if self.observed_at is None:
             self.observed_at = now_jst().isoformat()
         if self.source_url and self.source_url not in self.source_urls:

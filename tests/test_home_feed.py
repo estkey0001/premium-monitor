@@ -55,7 +55,7 @@ def _iphone(skus=None, events=(), date="2026-11-17", note="前回の週次の調
 def _route(rt="C", **kw):
     r = {"route_type": rt, "profit_status": "PROFITABLE", "decision": "BUY", "executable": True, "confidence": "high",
          "net_profit": 16200, "roi_pct": 7.3,
-         "buy": {"source": "店A", "price": 222000, "freshness": "FRESH", "checked_at": "2026-11-18"},
+         "buy": {"source": "店A", "price": 222000, "freshness": "FRESH", "checked_at": "2026-11-18", "stock": "AVAILABLE"},
          "sell": {"source": "買取B", "price": 240000, "freshness": "FRESH", "checked_at": "2026-11-18"}}
     r.update(kw)
     return r
@@ -401,8 +401,7 @@ def test_load_sources_reads_only_the_two_documents():
 
 # ── 監査の指摘の回帰: BUY でない黒字は「今日の利益商品」に出さない・新着は他の節と重ねない ──
 def test_only_buy_decisions_appear_in_todays_profit_and_watch_is_separate():
-    buy = _sku("iPhone Duo 2TB")
-    buy["opportunity_status"] = "BUY"
+    buy = _buy_sku("iPhone Duo 2TB")
     feed = _feed(_ctx(home_feed_data={"iphone": _iphone([buy, _sku()])}))
     assert _keys(feed) == ["hero", "profit_watch"]                                    # 購入候補 1 件はヒーローへ
     top = feed[feed.index('data-nu-feed-sec="hero"'):feed.index('data-nu-feed-sec="profit_watch"')]
@@ -427,6 +426,9 @@ def _today(ctx) -> str:
 def _buy_sku(name, **kw):
     s = _sku(name, **kw)
     s["opportunity_status"] = "BUY"
+    # 購入候補の期限は Apple の購入可否の確認から 2 日（HOME は生成時点で期限切れなら緑にしない）。NOW の前日に確認した固定値
+    s.setdefault("apple_availability", {"status": "BUYABLE"})
+    s["apple_availability"] = {**s["apple_availability"], "checked_at": "2026-11-19T18:00:00+09:00"}
     return s
 
 
@@ -483,7 +485,7 @@ def test_today_summary_counts_and_jump_targets():
     report = {"lotteries": [_lot(1, application_end=_iso(timedelta(hours=3))), _lot(2), _lot(3)], "events": []}
     ctx = _ctx(tcg_report=report, home_feed_data={"iphone": _iphone([_buy_sku("iPhone Duo 2TB"), _sku()])})
     t = _today(ctx)
-    tiles = re.findall(r'nu-today__tile nu-today__tile--(\w+)[^"]*" href="([^"]+)"[^>]*>.*?nu-today__n">(\d+)', t)
+    tiles = re.findall(r'nu-today__tile nu-today__tile--(\w+)[^"]*" href="([^"]+)"[^>]*>.*?nu-today__n"[^>]*>(\d+)', t)
     got = {k: (href, n) for k, href, n in tiles}
     assert got["buy"] == ("./#nu-sec-hero", "1")                     # ヒーローへ移した購入候補も数える
     assert got["end"] == ("./#nu-sec-hero", "1")                     # 締切間近の抽選もヒーロー（購入候補 1 + 締切間近 1）

@@ -73,6 +73,14 @@ def anchors(html: str, base_url: str) -> list[tuple[str, str]]:
     return out
 
 
+
+def product_code_of(name: str) -> Optional[str]:
+    """商品名の【】内の型番（【EB-05】→ EB-05）。ちょうど 1 つに定まるときだけ返す（本文中の英数字は型番にしない）。"""
+    from src.tcg.lottery.products import _codes
+    codes = _codes(name or "")
+    return next(iter(codes)) if len(codes) == 1 else None
+
+
 class LotteryAdapter(BaseTcgCollector):
     """抽選告知コレクターの基底。サブクラスは collect() で発見と取得を行う。"""
 
@@ -222,6 +230,8 @@ class LotteryAdapter(BaseTcgCollector):
                 retailer_name=self.retailer_name, event_type=event_type,
                 channel=self.channel, store_specific=bool(store_name), store_name=store_name, store_id=store_id,
                 retail_price=tgt.get("retail_price"),
+                price_unit=tgt.get("price_unit") or "UNKNOWN", product_code=tgt.get("product_code"),
+                price_text=tgt.get("price_text"),
                 shrink_status=shrink if shrink != "UNKNOWN" else None,
                 entry_url=entry, result_url=result, source_url=url, source_type=source_type,
                 confidence=confidence_for_source(source_type), verified=True,

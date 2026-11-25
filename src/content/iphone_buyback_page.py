@@ -14,6 +14,7 @@ from datetime import date, datetime, timedelta, timezone
 
 from src.content import iphone_hub_model as H
 from src.content.ui.shared_css import legacy_css, site_nav
+from src.tcg import runtime_freshness as rf
 
 _JST = timezone(timedelta(hours=9))
 
@@ -26,13 +27,137 @@ STATUS_LABEL = {"ACTIVE": "取得できた", "NO_PRICE": "価格が見つから�
 COND_LABEL = {"UNOPENED": "新品未開封", "OPENED_NEW": "開封済み新品・未使用品", "USED": "中古"}
 
 
+# ── ページ表示時の鮮度（TCG と同じ共通の JS_FRESHNESS / data-fb-*）──
+# 期間の唯一の定義は config/iphone_buyback.yaml の freshness.page_buy_days / apple_availability_days。ここに数値を書かない。
+# 読めない・無い・不正（負・bool・数値以外・小数）は None（設定不明 = 常に「再確認待ち」にする側 = fail-closed）。0 は正当な設定値（当日 24:00 まで）。
+_FRESH_CFG: dict = {}
+
+
+def _load_cfg() -> dict:
+    if not _FRESH_CFG:
+        from src.research import weekly_import as _wi
+        _FRESH_CFG.update(_wi.load_config())
+    return _FRESH_CFG
+
+
+def _norm_days(v) -> int | None:
+    """正の整数または整数値の float（0 を含む）だけ受け付ける。bool・負数・非整数・数値以外は None（設定不明）。HOME・Camera と同じ規則。"""
+    if isinstance(v, bool):
+        return None
+    if isinstance(v, float) and v.is_integer():
+        v = int(v)
+    return v if isinstance(v, int) and v >= 0 else None
+
+
+def _days(key: str) -> int | None:
+    try:
+        return _norm_days((_load_cfg().get("freshness") or {}).get(key))
+    except Exception:  # noqa: BLE001 — 設定が読めない = 設定不明（fail-closed）
+        return None
+
+
+def _is_stale_days(days, key: str = "page_buy_days") -> bool:
+    """経過日数 days が設定の上限を超えた（または日数・設定が不明）か。設定不明は常に古い扱い。"""
+    lim = _days(key)
+    return days is None or lim is None or days > lim
+
+
+def _buy_hours() -> float:
+    """買取価格: 確認日は日付だけ（00:00 JST 起点）なので、暦日の差 N 日以内 = N 日目の終わりまで（days_to_hours。age_banner の「N 日以内」と同じ数え方）。"""
+    d = _days("page_buy_days")
+    return float("nan") if d is None else rf.days_to_hours(d)       # 設定不明は nan（JS は UNKNOWN_FRESHNESS = 出さない）
+
+
+def _apple_hours() -> float:
+    """Apple の購入可否: checked_at は時刻つきの ISO（実際の確認時刻）なので、日付の丸めをせず 日数 × 24 時間（days_to_hours は使わない）。"""
+    d = _days("apple_availability_days")
+    return float("nan") if d is None else float(d * 24)
+
+
+def _safe_cfg() -> dict:
+    """設定が読めない・不正なときは空設定（属性の max は nan = JS が UNKNOWN にして出さない側）。ページ生成は落とさない（Camera・HOME と同じ）。"""
+    try:
+        c = _load_cfg()
+        return c if isinstance(c, dict) else {}
+    except Exception:  # noqa: BLE001 — 設定不明 = fail-closed
+        return {}
+
+
+def _buy_attrs(date_str) -> str:
+    return rf.attrs(rf.date_obs(date_str), _safe_cfg(), max_hours=_buy_hours())
+
+
+def _apple_attrs(checked_at) -> str:
+    return rf.attrs(checked_at, _safe_cfg(), max_hours=_apple_hours())
+
+
+def _mmdd(d) -> str:
+    m = _DATE_RE.search(str(d or ""))
+    return f"{int(m.group(2)):02d}/{int(m.group(3)):02d}" if m else "不明"
+
+
+def _lv(tag: str, inner: str, g: str, attrs: str, cls: str = "") -> str:
+    """鮮度が FRESH のときだけ見せる要素。最初は hidden（JS が確認できたときだけ出す = JS が動かなければ出さない）。"""
+    c = f' class="{cls}"' if cls else ""
+    return f'<{tag}{c} data-fb-live data-fb-group="{g}" {attrs} hidden>{inner}</{tag}>'
+
+
+def _st(tag: str, inner: str, g: str, cls: str = "") -> str:
+    """同じ group の live が FRESH でないときに見せる「再確認待ち」（最初は表示）。"""
+    c = f' class="{cls}"' if cls else ""
+    return f'<{tag}{c} data-fb-stale data-fb-group="{g}">{inner}</{tag}>'
+
+
+def _lvn(tag: str, inner: str, g: str, attr_list: list, cls: str = "") -> str:
+    """複数の観測（買取価格 + Apple 購入可否）に依存する要素は、観測ごとに入れ子の live で包む。"""
+    out = _lv(tag, inner, g, attr_list[-1], cls)
+    for a in reversed(attr_list[:-1]):
+        out = _lv(tag, out, g, a)
+    return out
+
+
+class _Fx:
+    """1 回の描画で使う鮮度の文脈（調査日と group id の採番）。"""
+
+    def __init__(self, research_date=None):
+        self.rd = research_date
+        self._ids: dict = {}
+        self._n = 0
+
+    def sid(self, s: dict) -> str:
+        return "s%d" % self._ids.setdefault(s.get("sku"), len(self._ids) + 1)
+
+    def nid(self, prefix: str) -> str:
+        self._n += 1
+        return f"{prefix}{self._n}"
+
+    def buy_date(self, s: dict):
+        """最高の実行可能買取の価格の確認日（その行の updated_on）。行が見つからなければ調査日。どちらも無ければ None（UNKNOWN = 出さない）。"""
+        hx = s.get("highest_executable") or {}
+        for r in s.get("rows") or []:
+            if r.get("eligible") and r.get("shop") == hx.get("shop") and r.get("executable_price") == hx.get("price") and r.get("updated_on"):
+                return r["updated_on"]
+        return self.rd
+
+    def buy(self, s: dict) -> tuple:
+        d = self.buy_date(s)
+        return _buy_attrs(d), d
+
+    def apple(self, s: dict) -> str:
+        return _apple_attrs((s.get("apple_availability") or {}).get("checked_at"))
+
+
+def _hide_when_stale_css() -> str:
+    return "[data-fb-live][hidden],[data-fb-stale][hidden]{display:none!important}"
+
+
 def age_banner(research_date, now) -> str:
     """調査日から日数がたったら警告する（週次の調査。古い調査を現在の価格のように見せない）。"""
     try:
         days = (now.date() - datetime.strptime(str(research_date), "%Y-%m-%d").date()).days
     except (TypeError, ValueError):
         return '<div class="note">調査日を確認できません。</div>'
-    if days <= 7:
+    if not _is_stale_days(days):
         return ""
     return (f'<div class="note"><b>調査から {days} 日たっています。</b>価格・在庫・抽選の状況は変わっている可能性が高いです。'
             f'次の週次の調査まで、公式ページで必ず最新の情報を確認してください。</div>')
@@ -154,7 +279,11 @@ def _cell(label: str, inner: str, cls: str = "") -> str:
     return f'<td data-label="{_e(label)}"{f" class={chr(34)}{cls}{chr(34)}" if cls else ""}><div class="v">{inner}</div></td>'
 
 
-def _row_html(r: dict, rank: int | None = None, top_price: int | None = None) -> str:
+def _row_html(r: dict, rank: int | None = None, top_price: int | None = None, fx: "_Fx | None" = None) -> str:
+    fx = fx or _Fx()
+    g = fx.nid("r")
+    ra = _buy_attrs(r.get("updated_on"))                       # 行の観測時刻 = その行のページ更新日（生成時刻ではない）
+    ref_d = _mmdd(r.get("updated_on"))
     notes = []
     if r.get("shop_status") != "ACTIVE":
         notes.append(STATUS_LABEL.get(r.get("shop_status"), ""))
@@ -172,30 +301,50 @@ def _row_html(r: dict, rank: int | None = None, top_price: int | None = None) ->
     extra = f'<div class="mut">{_e(r["campaign"])}（期間限定・通常価格に含めない）</div>' if r.get("campaign") else ""
     weak = (not r.get("eligible")) or r.get("freshness") in ("STALE", "UNKNOWN_FRESHNESS")
     cls = ("ng is-stale" if weak else "ok") + (" top" if rank == 1 else "")
-    age = f"（{r['age_days']}日前）" if r.get("age_days") is not None else ""
+    age = ""                                               # 日数は調査日基準で固定され、今日の経過と食い違う（誤読）ため出さない。取得日だけ表示する
     diff = "—"
     if rank == 1:
         diff = "基準（1 位）"
     elif rank and isinstance(price, int) and isinstance(top_price, int):
         diff = _signed(price - top_price)                      # 表示だけの引き算（1 位との差）
     fl, ft = FRESH_SHORT.get(r.get("freshness"), ("", "off"))
-    fresh = (_badge(fl, ft) if fl else "") + f'<div class="mut">{_md(r.get("updated_on")) if r.get("updated_on") else "更新日の記載なし"}{_e(age)}</div>'
+    if r.get("freshness") == "FRESH" and fl:                    # 「更新が新しい」は、ページを開いた時点でも新しいときだけ（生成時の FRESH を鵜呑みにしない）
+        badge = _lv("span", _badge(fl, ft), g, ra) + _st("span", _badge(f"価格の再確認待ち（取得 {ref_d}）", "off"), g)
+    else:
+        badge = _badge(fl, ft) if fl else ""
+    fresh = badge + f'<div class="mut">{_md(r.get("updated_on")) if r.get("updated_on") else "更新日の記載なし"}{_e(age)}</div>'
     treat = _e("、".join(n for n in notes if n)) or ("利益計算の候補" if r.get("eligible") else "利益計算に使わない（同じ店の他の行・キャンペーンなど）")
+    if r.get("eligible") and not any(notes):
+        treat = (_lv("span", "利益計算の候補", g + "t", ra) + _st("span", f"価格の再確認待ち（取得 {ref_d} の参考価格・利益計算に使わない）", g + "t"))
+    fresh_lab = _e(FRESH_LABEL.get(r.get("freshness"), ""))
+    if r.get("freshness") == "FRESH":
+        fresh_lab = _lv("span", fresh_lab, g + "f", ra) + _st("span", "再確認待ち", g + "f")
+    rk = "—"
+    if rank:
+        rk = (_lv("span", f"{rank} 位", g + "k", ra, "rk1" if rank == 1 else "") + _st("span", "参考", g + "k"))
     detail = (f'<details><summary>条件・色減額・扱い</summary><div class="mut">条件: {_e(COND_LABEL.get(r.get("condition"), r.get("condition")))}'
-              f'／色減額: {_colors(r)}</div><div class="mut">鮮度: {_e(FRESH_LABEL.get(r.get("freshness"), ""))}</div>'
+              f'／色減額: {_colors(r)}</div><div class="mut">鮮度: {fresh_lab}</div>'
               f'<div>{treat}</div>{extra}</details>')
-    return (f'<tr class="{cls}">{_cell("順位", f"{rank} 位" if rank else "—", "num")}'
+    return (f'<tr class="{cls}">{_cell("順位", rk, "num")}'
             f'<th scope="row" data-label="買取店"><div class="v">{_link(r.get("price_page_url"), r.get("shop"), True)}</div></th>'
             f'{_cell("買取価格", shown, "num")}{_cell("差額（1位比）", diff, "num")}{_cell("鮮度", fresh)}'
             f'{_cell("確認日時", _md(str(r.get("checked_at"))[:60]) if r.get("checked_at") else "記載なし")}{_cell("詳細", detail)}</tr>')
 
 
-def _hero_html(s: dict, ref: bool) -> str:
-    """SKU 先頭の指標（Apple 価格／最高買取／純利益／ROI／判定）。既存値の再表示だけ。"""
+def _hero_html(s: dict, ref: bool, fx: "_Fx | None" = None, loc: str = "h") -> str:
+    """SKU 先頭の指標（Apple 価格／最高買取／純利益／ROI／判定）。既存値の再表示だけ。
+    最高買取・純利益・ROI・黒字バッジ・購入候補は、価格の確認日から page_buy_days を超えたら（購入候補は Apple 購入可否が apple_availability_days を超えても）
+    ページ表示時に隠し、取得日つきの参考表示に切り替える（data-fb-live / data-fb-stale）。"""
+    fx = fx or _Fx()
+    g = f"{fx.sid(s)}-{loc}"
     hx, unc = s.get("highest_executable"), s.get("highest_unconfirmed")
     net = s.get("net_profit") if hx else None
+    ba, bd = fx.buy(s) if hx else ("", None)
+    md = _mmdd(bd)
     if hx:
-        best = f'<b>{_yen(hx["price"])}</b><em>{_e(hx["shop"])}</em>'
+        best = (f'<b data-fb-live data-fb-group="{g}b" {ba} hidden>{_yen(hx["price"])}</b><em data-fb-live data-fb-group="{g}b" {ba} hidden>{_e(hx["shop"])}</em>'
+                f'<b data-fb-stale data-fb-group="{g}b" class="warn">再確認待ち</b>'
+                f'<em data-fb-stale data-fb-group="{g}b">取得 {md} の参考価格 {_e(hx["shop"])} {_yen(hx["price"])}</em>')
     elif unc:
         best = f'<b class="warn">確認待ち</b><em>最高値 {_e(unc["shop"])} {_yen(unc["price"])}（<span title="{_e(unc["status"])}">{_e(UNC_PLAIN.get(unc["status"], "確認待ち"))}</span>）</em>'
     else:
@@ -207,46 +356,89 @@ def _hero_html(s: dict, ref: bool) -> str:
         pt = "off"
     roi = ("%.1f%%" % s["roi_pct"]).replace("-", "−") if hx and s.get("roi_pct") is not None else "—"
     ref_chip = ""                                                  # 「参考」はカード見出しの 1 回だけ（hero では繰り返さない）
+    if hx:
+        net_h = (f'<b data-fb-live data-fb-group="{g}n" {ba} hidden class="{net_cls}">{_signed(net)}</b>'
+                 f'<b data-fb-stale data-fb-group="{g}n" class="warn">再確認待ち</b>')
+        pl_h = (_lv("span", _badge(pl, pt), g + "n", ba, "") + "") if pl else ""
+        roi_h = (f'<b data-fb-live data-fb-group="{g}r" {ba} hidden>{_e(roi)}</b><b data-fb-stale data-fb-group="{g}r">—</b>')
+    else:
+        net_h, pl_h, roi_h = f'<b class="{net_cls}">{_signed(net)}</b>', (_badge(pl, pt) if pl else ""), f'<b>{_e(roi)}</b>'
+    opp = opp_badge(s.get("opportunity_status"), ref)
+    if str(s.get("opportunity_status") or "").upper() == "BUY":      # 購入候補は、買取価格と Apple 購入可否の両方が新しいときだけ
+        opp = _lvn("span", opp, g + "d", [fx.buy(s)[0], fx.apple(s)]) + _st("span", _badge(f"価格の再確認待ち（取得 {md if hx else _mmdd(fx.rd)}）", "wait"), g + "d")
     return ('<div class="hero">'
             f'<div class="m"><span>Apple 価格</span><b>{_yen(s["apple_price"])}</b></div>'
             f'<div class="m"><span title="最高の実行可能買取">最高買取</span>{best}</div>'
-            f'<div class="m"><span>純利益{"（参考）" if ref else ""}</span><b class="{net_cls}">{_signed(net)}</b>{_badge(pl, pt) if pl else ""}</div>'
-            f'<div class="m"><span>ROI</span><b>{_e(roi)}</b></div>'
-            f'<div class="m"><span>判定（週次）</span>{opp_badge(s.get("opportunity_status"), ref)}{ref_chip}</div></div>')
+            f'<div class="m"><span>純利益{"（参考）" if ref else ""}</span>{net_h}{pl_h}</div>'
+            f'<div class="m"><span>ROI</span>{roi_h}</div>'
+            f'<div class="m"><span>判定（週次）</span>{opp}{ref_chip}</div></div>')
 
 
-def _sku_html(s: dict, extra_html: str = "", prev_html: str = "") -> str:
+def _sku_html(s: dict, extra_html: str = "", prev_html: str = "", fx: "_Fx | None" = None) -> str:
+    fx = fx or _Fx()
+    sid = fx.sid(s)
     ref = s.get("identity") != "REGISTERED"
     badge = (f'<span class="chip chip--ref" title="参考・正本に未登録">{REF_LONG_TEXT}</span>' if ref
              else '<span class="chip chip--ok" title="正本に登録済み">監視対象に登録済み</span>')
     hl, hx, unc = s.get("highest_listed"), s.get("highest_executable"), s.get("highest_unconfirmed")
     sec, thi = s.get("second"), s.get("third")
 
-    def one(label, x, extra=""):
+    hxs = s.get("highest_executable")
+    ba, bd = fx.buy(s) if hxs else (_buy_attrs(fx.rd), fx.rd)
+    md = _mmdd(bd)
+
+    def one(label, x, extra="", gate=False, k=""):
+        if x and gate:                                         # 実行可能な 2・3 位の売り先と価格は、最高買取と同じ鮮度で表示する
+            g = f"{sid}-{k}"
+            return (f'<div class="kv" data-fb-live data-fb-group="{g}" {ba} hidden><span>{label}</span><b>{_e(x["shop"])}</b><em>{_yen(x["price"])}{extra}</em></div>'
+                    f'<div class="kv" data-fb-stale data-fb-group="{g}"><span>{label}</span><b>再確認待ち</b><em>取得 {md} の参考価格 {_e(x["shop"])} {_yen(x["price"])}</em></div>')
         return f'<div class="kv"><span>{label}</span><b>{_e(x["shop"]) if x else "—"}</b><em>{_yen(x["price"]) if x else ""}{extra}</em></div>'
     out = s.get("outlier_status") or "NO_DATA"
     av = s.get("apple_availability") or {}
     listed_note = ""
     if hl:
         listed_note = f' ／ {_e(FRESH_LABEL.get(hl.get("freshness"), ""))}／{"利益計算に使う価格" if hl.get("executable") else "利益計算に使わない"}'
+        if hl.get("freshness") == "FRESH" or hl.get("executable"):     # 「FRESH」「利益計算に使う価格」は、表示時点でも新しいときだけ
+            listed_note = (_lv("span", listed_note, sid + "-hl", ba) + _st("span", f' ／ 取得 {md} の掲載価格（再確認待ち・利益計算に使わない）', sid + "-hl"))
     ref_net = s.get("reference_net_at_second")
-    ref_html = (f'<div class="mut">参考: 次点（{_e(ref_net["shop"])} {_yen(ref_net["price"])}）で計算すると純利益 {_signed(ref_net["net_profit"])}。'
-                f'次点は最高の実行可能価格ではありません。</div>' if ref_net else "")
-    route = (f'<div class="route">最大利益ルート: {_e(s["best_route"])}</div>' if s.get("best_route")
-             else f'<div class="route">参考の最大ルート（監視対象に未登録のため確定ではない）: {_e(s["reference_route"])}</div>' if s.get("reference_route")
+    ref_html = (_lv("div", f'参考: 次点（{_e(ref_net["shop"])} {_yen(ref_net["price"])}）で計算すると純利益 {_signed(ref_net["net_profit"])}。'
+                    f'次点は最高の実行可能価格ではありません。', sid + "-rn", ba, "mut")
+                + _st("div", "次点で計算した参考の純利益は、価格の再確認待ちのため出していません。", sid + "-rn", "mut") if ref_net else "")
+    route = (_lv("div", f'最大利益ルート: {_e(s["best_route"])}', sid + "-rt", ba, "route") + _st("div", f"最大利益ルート: 価格の再確認待ち（取得 {md}）", sid + "-rt", "route") if s.get("best_route")
+             else _lv("div", f'参考の最大ルート（監視対象に未登録のため確定ではない）: {_e(s["reference_route"])}', sid + "-rt", ba, "route")
+             + _st("div", f"参考の最大ルート: 価格の再確認待ち（取得 {md}）", sid + "-rt", "route") if s.get("reference_route")
              else '<div class="route mut">利益が出るルートは確認できません</div>')
     ranks = H.rank_rows(s)
     top = max((r["executable_price"] for r in s.get("rows") or [] if ranks.get(id(r)) == 1), default=None)
-    rows = "".join(_row_html(r, ranks.get(id(r)), top) for r in s.get("rows") or [])
-    return (f'<section class="sku"><h3>{_e(s["sku"])} {badge}</h3>{_hero_html(s, ref)}'
+    rows = "".join(_row_html(r, ranks.get(id(r)), top, fx) for r in s.get("rows") or [])
+    fresh_rows = [r.get("updated_on") for r in s.get("rows") or [] if r.get("freshness") == "FRESH"]
+    n_fresh = s.get("fresh_source_count", 0)
+    if isinstance(n_fresh, int) and n_fresh > 0:               # 件数は、いちばん古い FRESH の行が期限を超えたら成り立たない（数値を隠して確認待ちにする）
+        old = min((d for d in fresh_rows if d), default=None) if all(fresh_rows) else None
+        fresh_em = (_lv("em", f"うち更新が新しい {_e(n_fresh)} 店", sid + "-fc", _buy_attrs(old or (fx.rd if not fresh_rows else None)))
+                    + _st("em", "更新が新しい店の数: 価格の再確認待ち", sid + "-fc"))
+    else:
+        fresh_em = f'<em>うち更新が新しい {_e(n_fresh)} 店</em>'
+    av_b = _e(AV_LABEL.get(av.get("status"), AV_LABEL["UNKNOWN"]))
+    if av.get("status") == "BUYABLE":                          # 「購入できる」は、Apple 購入可否の確認が新しいときだけ
+        av_b = _lv("span", av_b, sid + "-av", _apple_attrs(av.get("checked_at"))) + _st("span", "購入可否 再確認待ち", sid + "-av")
+    pst = _e(PROFIT_LABEL.get(s.get("profit_status"), "—"))
+    if hxs:
+        pst = _lv("span", pst, sid + "-ps", ba) + _st("span", "再確認待ち", sid + "-ps")
+    ost = _e(OPP_LABEL.get(s.get("opportunity_status"), "—"))
+    orn = _e(s.get("opportunity_reason") or "")
+    if str(s.get("opportunity_status") or "").upper() == "BUY":
+        ost = _lvn("span", ost, sid + "-os", [ba, fx.apple(s)]) + _st("span", "再確認待ち", sid + "-os")
+        orn = _lvn("span", orn, sid + "-or", [ba, fx.apple(s)])
+    return (f'<section class="sku"><h3>{_e(s["sku"])} {badge}</h3>{_hero_html(s, ref, fx)}'
             f'<details class="spec"><summary>詳細（店数・購入可否・外れ値・諸経費）</summary>'
-            f'<div class="grid">{one("掲載の最高値", hl, listed_note)}{one("実行可能 2位", sec)}{one("実行可能 3位", thi)}'
-            f'<div class="kv"><span>買取店の数</span><b>{_e(s.get("source_count", 0))} 店</b><em>うち更新が新しい {_e(s.get("fresh_source_count", 0))} 店</em></div>'
-            f'<div class="kv"><span>Apple の購入可否</span><b>{_e(AV_LABEL.get(av.get("status"), AV_LABEL["UNKNOWN"]))}</b>'
+            f'<div class="grid">{one("掲載の最高値", hl, listed_note)}{one("実行可能 2位", sec, gate=True, k="2")}{one("実行可能 3位", thi, gate=True, k="3")}'
+            f'<div class="kv"><span>買取店の数</span><b>{_e(s.get("source_count", 0))} 店</b>{fresh_em}</div>'
+            f'<div class="kv"><span>Apple の購入可否</span><b>{av_b}</b>'
             f'<em>確認: {_e(av.get("checked_at") or "なし")}</em></div>'
-            f'<div class="kv kv--s"><span>利益の状態</span><b>{_e(PROFIT_LABEL.get(s.get("profit_status"), "—"))}</b></div>'
-            f'<div class="kv kv--s"><span>判定（週次・BUY とは別）</span><b>{_e(OPP_LABEL.get(s.get("opportunity_status"), "—"))}</b>'
-            f'<em>{_e(s.get("opportunity_reason") or "")}</em></div>'
+            f'<div class="kv kv--s"><span>利益の状態</span><b>{pst}</b></div>'
+            f'<div class="kv kv--s"><span>判定（週次・BUY とは別）</span><b>{ost}</b>'
+            f'<em>{orn}</em></div>'
             f'<div class="kv"><span>外れ値の判定</span><b>{_e(OUTLIER_LABEL.get(out, out))}</b></div>'
             f'{prev_html}'
             f'<div class="kv kv--s"><span>諸経費（純利益・ROI は上の数値）</span><b>{_yen(s.get("costs"))}</b></div></div></details>'
@@ -274,7 +466,7 @@ ul{padding-left:1.1rem}
 .hero .m>span{color:var(--mut);font-size:.75rem}.hero .m>b{font-size:1.3rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;line-height:1.3}
 .hero .m>em{font-style:normal;color:var(--mut);font-size:.78rem;overflow-wrap:anywhere}.hero .m>.sbadge{align-self:flex-start;margin-top:2px}
 .badges{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.warn{color:var(--ref);font-weight:600}
-tr.is-stale td,tr.is-stale th{color:var(--mut);background:var(--card)}tr.is-stale .num{opacity:.65}tr.top td,tr.top th{background:var(--tone-success-bg)}
+tr.is-stale td,tr.is-stale th{color:var(--mut);background:var(--card)}tr.is-stale .num{opacity:.65}.rk1{background:var(--tone-success-bg);border-radius:6px;padding:0 6px}
 .dcard{border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0;background:var(--bg)}
 .dcard header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 10px;align-items:center;margin-bottom:.4rem}.dcard h3{margin:0}
 .dcard--off{background:var(--card)}
@@ -316,20 +508,27 @@ def _fmt_age_date(v) -> str:
     return _e(v) if v else "データ無し"
 
 
-def _answer_cells(a: dict, cmp_: dict, common: frozenset = frozenset()) -> str:
+def _answer_cells(a: dict, cmp_: dict, common: frozenset = frozenset(), s: "dict | None" = None, fx: "_Fx | None" = None) -> str:
     """5 つの問いのうち、容量ごとに答えられる 4 つ（どの店・利益・前回比・判断）。出せないものは理由つきで「確認待ち」「データ無し」。
     common に入る理由の文は、見出し側に 1 回だけ出すので行には書かない。"""
     def why(t) -> str:
         return f'<div class="mut">{_plain(t)}</div>' if t and t not in common else ""
     go = (not _PAGE_STALE) and (not a["reference"]) and bool(a["sell_shop"]) and str(a["decision"] or "").upper() == "BUY"
+    fx = fx or _Fx()
+    g = f"{fx.sid(s)}-c" if s else fx.nid("c")
+    ba, bd = fx.buy(s) if s else ("", None)
+    md = _mmdd(bd)
     if a["sell_shop"]:
         sell = f'<b>{_e(a["sell_shop"])}</b> {_yen(a["sell_price"])}'
+        sell = (_lv("span", sell, g + "s", ba) + _st("span", f'<span class="wait">再確認待ち</span><div class="mut">取得 {md} の参考価格 {_e(a["sell_shop"])} {_yen(a["sell_price"])}</div>', g + "s"))
     else:
         sell = f'<span class="wait">確認待ち</span>{why(a["sell_reason"])}'
     if a["net"] is not None:
         cls = "pos" if a["net"] > 0 and go else "neg" if a["net"] < 0 else ""
         roi = f'（ROI {a["roi"]:.1f}%）' if a.get("roi") is not None else ""
         net = f'<b class="{cls}">{_signed(a["net"])}</b>{_e(roi)}'
+        if a["sell_shop"]:
+            net = _lv("span", net, g + "n", ba) + _st("span", '<span class="wait">再確認待ち</span>', g + "n")
     else:
         net = f'<span class="nodata">データ無し</span>{why(a["net_reason"])}'
     if cmp_["status"] == "OK":
@@ -339,12 +538,18 @@ def _answer_cells(a: dict, cmp_: dict, common: frozenset = frozenset()) -> str:
         prev = f'<span class="nodata">データ無し</span>{why(cmp_["reason"])}'
     dec_note = f'<div class="mut">{_plain(a["decision_reason"])}</div>' if a.get("decision_reason") and a["decision_reason"] not in common else ""
     ref = a["reference"]
+    dec = opp_badge(a["decision"], ref)
+    if str(a["decision"] or "").upper() == "BUY":              # 購入候補は買取価格と Apple 購入可否の両方が新しいときだけ（理由の文も同じ）
+        ap = fx.apple(s) if s else ""
+        dec = _lvn("span", dec + dec_note, g + "d", [ba, ap]) + _st("span", _badge("価格の再確認待ち", "wait"), g + "d")
+        dec_note = ""
     return (f'<td data-label="どの店へ売る"><div class="v">{sell}</div></td><td class="num" data-label="利益"><div class="v">{net}</div></td>'
             f'<td data-label="前回比"><div class="v">{prev}</div></td>'
-            f'<td data-label="判定（週次）"><div class="v">{opp_badge(a["decision"], ref)}{dec_note}</div></td>')
+            f'<td data-label="判定（週次）"><div class="v">{dec}{dec_note}</div></td>')
 
 
-def _conclusion_html(group: dict, tl) -> str:
+def _conclusion_html(group: dict, tl, fx: "_Fx | None" = None) -> str:
+    fx = fx or _Fx()
     skus = group["skus"]
     c = H.model_conclusion(skus)
     if c["status"] in ("PROFIT", "NO_PROFIT", "PROFIT_WATCH"):
@@ -354,6 +559,11 @@ def _conclusion_html(group: dict, tl) -> str:
                     f'週次の判定は {_plain(OPP_BADGE.get(str(a["decision"] or "").upper(), ("—",))[0])} のため「買い」とは案内しません')
         elif c["status"] == "PROFIT":
             head = f'<b>{_e(a["capacity"])}</b> を買い、<b>{_e(a["sell_shop"])}</b> へ売る'     # 金額・利益は下の表の 1 行だけ
+            bs = next((x for x in skus if x.get("sku") == a["sku"]), None)
+            if bs is not None:                                  # 「買い」は、買取価格と Apple 購入可否の両方が新しいときだけ
+                g_h = fx.sid(bs) + "-ch"
+                head = (_lvn("span", head, g_h, [fx.buy(bs)[0], fx.apple(bs)])
+                        + _st("span", f'<span class="wait">価格の再確認待ち（取得 {_mmdd(fx.buy(bs)[1])}）</span> — 取得時点は <b>{_e(a["capacity"])}</b> → <b>{_e(a["sell_shop"])}</b>。いまの価格とは限りません', g_h))
             if _PAGE_STALE:                                     # 調査が古いときは断定しない（上部「今日のおすすめ」と表記を揃える）
                 head = (f'<span class="wait">調査が古い</span> — 調査時点は <b>{_e(a["capacity"])}</b> → <b>{_e(a["sell_shop"])}</b>'
                         f'。いまの価格とは限りません')
@@ -380,7 +590,7 @@ def _conclusion_html(group: dict, tl) -> str:
                  + "、".join(_e(a["capacity"] or s.get("sku")) for s, a, _cm in pend) + '</p>')
     rows = "".join(
         f'<tr class="{"ng" if a["reference"] else "ok"}"><th scope="row" data-label="容量"><div class="v">{_e(a["capacity"] or a["sku"])}'
-        f'{REF_CHIP if a["reference"] else ""}<div class="mut">Apple {_yen(s.get("apple_price"))}</div></div></th>{_answer_cells(a, cm, common)}</tr>'
+        f'{REF_CHIP if a["reference"] else ""}<div class="mut">Apple {_yen(s.get("apple_price"))}</div></div></th>{_answer_cells(a, cm, common, s, fx)}</tr>'
         for s, a, cm in triples)
     if not rows:
         return f'<div class="ans"><div class="head"><span class="q">どの容量を買うか:</span> {head}</div>{note}</div>'
@@ -501,7 +711,7 @@ def _candidates_html(candidates) -> str:
             'Apple 公式ページで確認した候補の表示だけです。監視対象の商品には、ここからは登録しません。</p>')
 
 
-def _today_html(comp: dict, now: datetime | None = None) -> str:
+def _today_html(comp: dict, now: datetime | None = None, fx: "_Fx | None" = None) -> str:
     """h1 直下の「今日のおすすめ」。正本に登録済みで、実行可能な買取価格と純利益がある SKU から 1 件。
     購入候補（BUY・購入可）が 1 件でもあればそれを優先し、無ければ純利益が最大の 1 件。
     判定が購入候補でなければ「様子見」と正直に書く（買うとは案内しない）。調査が古いときは、先に鮮度の注意を出す。値は既存データの再表示だけ。"""
@@ -511,6 +721,7 @@ def _today_html(comp: dict, now: datetime | None = None) -> str:
         return ('<section class="today" aria-labelledby="today-h"><h2 id="today-h">今日のおすすめ</h2>'
                 '<p class="lead"><span class="wait">確認待ち</span> — 確定できる買取価格と利益がそろった容量が、今回はありません。'
                 '推測の価格・利益は出していません。</p></section>')
+    fx = fx or _Fx(comp.get("research_date"))
     best = H.pick_best(cand)
     a = H.sku_answer(best)
     net, roi = best["net_profit"], best.get("roi_pct")
@@ -519,18 +730,22 @@ def _today_html(comp: dict, now: datetime | None = None) -> str:
         days = ((now or datetime.now(_JST)).date() - datetime.strptime(str(comp.get("research_date")), "%Y-%m-%d").date()).days
     except (TypeError, ValueError):
         days = None
-    stale = days is None or days > 7
+    stale = _is_stale_days(days)
     stale_t = (f'<span class="wait">調査が古い（{days} 日前）</span> — ' if days is not None else '<span class="wait">調査日を確認できません</span> — ')
     if net > 0 and buy_ok and stale:
         lead = (f'{stale_t}調査時点では <b>{_e(best["sku"])}</b> が購入候補でしたが（売り先 <b>{_e(a["sell_shop"])}</b>）、価格は変わっている可能性が高いため、公式・各店で再確認するまで買うとは案内しません。')
     elif net > 0 and buy_ok:
         lead = (f'<b>{_e(best["sku"])}</b> が購入候補です。<b>{_e(a["sell_shop"])}</b> へ売る想定です（金額は下の数値）。')
+        g_l = fx.sid(best) + "-tl"                              # 「購入候補です」は、買取価格と Apple 購入可否の両方が新しいときだけ
+        lead = (_lvn("span", lead, g_l, [fx.buy(best)[0], fx.apple(best)])
+                + _st("span", f'<span class="wait">価格の再確認待ち（取得 {_mmdd(fx.buy(best)[1])}）</span> — 取得時点では <b>{_e(best["sku"])}</b> が購入候補でしたが（売り先 <b>{_e(a["sell_shop"])}</b>）、'
+                      f'価格は変わっている可能性が高いため、公式・各店で再確認するまで買うとは案内しません。', g_l))
     elif net > 0:
         lead = ((stale_t if stale else "") + f'<span class="wait">様子見</span> — いま買ってよいと言える容量はありません。計算上いちばん利益が大きいのは <b>{_e(best["sku"])}</b>'
                 f'ですが、買う条件にはまだ届いていません。')
     else:
         lead = ((stale_t if stale else "") + f'<span class="wait">様子見</span> — 黒字になる容量は確認できません。いちばん近いのは <b>{_e(best["sku"])}</b> です。')
-    hero = _hero_html(best, False)
+    hero = _hero_html(best, False, fx, "t")
     if stale:                                                   # 調査が古いときは、緑にしない（購入候補の見た目を出さない）
         hero = hero.replace("sbadge--buy", "sbadge--wait").replace('class="pos"', 'class=""').replace("sbadge--profit", "sbadge--off")
     return (f'<section class="today" aria-labelledby="today-h"><h2 id="today-h">今日のおすすめ</h2><p class="lead">{lead}</p>'
@@ -553,17 +768,18 @@ def _render(comp: dict, *, now: datetime | None = None, history=None, candidates
         _d = ((now or datetime.now(_JST)).date() - datetime.strptime(str(comp.get("research_date")), "%Y-%m-%d").date()).days
     except (TypeError, ValueError):
         _d = None
-    _PAGE_STALE = _d is None or _d > 7
+    _PAGE_STALE = _is_stale_days(_d)
     now = now or datetime.now(_JST)
+    fx = _Fx(comp.get("research_date"))
     counts = comp.get("counts") or {}
     tl = H.build_timeline(comp, history)
     groups = H.group_models(comp.get("skus") or [])
     concl, models, nodata_all = [], [], []
     for g in groups:
         concl.append(f'<h3>{_e(g["model"])}{"" if g["primary"] else REF_CHIP_LONG}</h3>'
-                     + _conclusion_html(g, tl))
+                     + _conclusion_html(g, tl, fx))
         def _card_of(s):
-            return _sku_html(s, extra_html=_hist_html(history, tl, s, comp), prev_html=_prev_kv(H.prev_compare(tl, s.get("sku"))))
+            return _sku_html(s, extra_html=_hist_html(history, tl, s, comp), prev_html=_prev_kv(H.prev_compare(tl, s.get("sku"))), fx=fx)
         has = [s for s in g["skus"] if s.get("highest_executable") or isinstance(s.get("net_profit"), int)]
         nod = [s for s in g["skus"] if s not in has]
         cards = "".join(_card_of(s) for s in has)
@@ -588,13 +804,19 @@ def _render(comp: dict, *, now: datetime | None = None, history=None, candidates
     miss_html = "".join(
         f'<li><b>{_link(s.get("price_page_url") or s.get("official_url"), s.get("shop"))}</b> — {_e(STATUS_LABEL.get(s.get("status"), s.get("status")))}'
         f'{("（新規に発見した店）" if s.get("discovered") else "")}<span class="mut"> {_plain(s.get("reason"))}</span></li>' for s in missing)
+    fr_dates = [r.get("updated_on") for s_ in comp.get("skus") or [] for r in s_.get("rows") or [] if r.get("freshness") == "FRESH"]
+    if counts.get("FRESH", 0):                                  # 「更新が新しい N 店」は、最も古い FRESH の行が期限を超えたら成り立たない
+        fresh_tile = (_lv("b", _e(counts.get("FRESH", 0)), "sum-fresh", _buy_attrs(min((d for d in fr_dates if d), default=None) if fr_dates and all(fr_dates) else (comp.get("research_date") if not fr_dates else None)))
+                      + _st("b", "確認待ち", "sum-fresh"))
+    else:
+        fresh_tile = f'<b>{_e(counts.get("FRESH", 0))}</b>'
     return f"""<!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>iPhone 買取比較 | プレ値速報</title><meta name="robots" content="index,follow"><style>{legacy_css()}{CSS}{HUB_CSS}</style></head>
+<title>iPhone 買取比較 | プレ値速報</title><meta name="robots" content="index,follow"><style>{legacy_css()}{CSS}{HUB_CSS}{_hide_when_stale_css()}</style></head>
 <body>{site_nav("iphone")}<main>
 <p><a class="back" href="./">← プレ値速報へ戻る</a></p>
 <h1>iPhone 買取比較（新品未開封）</h1>
-{_today_html(comp, now)}
+{_today_html(comp, now, fx)}
 <p class="mut">調査日 {_md(comp.get("research_date"), now)}（週1回の Web 調査）／このページの作成 {_e(now.strftime("%Y-%m-%d %H:%M"))}</p>
 {age_banner(comp.get("research_date"), now)}
 <details class="note hub-note"><summary><b>週次の調査です。確定ではありません。</b>（この調査について）</summary>
@@ -602,7 +824,7 @@ def _render(comp: dict, *, now: datetime | None = None, history=None, candidates
 <p class="mut">調査データの生成 {_e(comp.get("generated_at"))}</p><div>{_e(comp.get("note"))}</div></details>
 <div class="sum"><div><span class="mut">調べた買取店</span><b>{_e(comp.get("shops_researched"))}</b></div>
 <div><span class="mut">価格を取れた店</span><b>{_e(counts.get("ACTIVE", 0))}</b></div>
-<div><span class="mut" title="FRESH">更新が新しい</span><b>{_e(counts.get("FRESH", 0))}</b></div>
+<div><span class="mut" title="FRESH">更新が新しい</span>{fresh_tile}</div>
 <div><span class="mut" title="STALE">更新が古い</span><b>{_e(counts.get("STALE", 0))}</b></div>
 <div><span class="mut" title="UNKNOWN_FRESHNESS">更新日の記載なし</span><b>{_e(counts.get("UNKNOWN_FRESHNESS", 0))}</b></div>
 <div><span class="mut">価格なし</span><b>{_e(counts.get("NO_PRICE", 0))}</b></div>
@@ -619,7 +841,7 @@ def _render(comp: dict, *, now: datetime | None = None, history=None, candidates
 {_candidates_html(candidates)}
 <h2>価格を取れなかった店・価格が部分的な店</h2><details class="nu-more"><summary>店ごとの調査メモ（{len(missing)} 件・押すと開く）</summary><ul>{miss_html}</ul></details>
 <p class="mut">この表は週次の調査で、価格が変わっている場合があります。売る前に各店の公式の価格ページで最新の価格・条件（事前申込・検品・減額）を必ず確認してください。取得できない店の回避（認証の突破・過剰なアクセス）は行っていません。</p>
-</main></body></html>"""
+</main><script>{rf.JS_FRESHNESS}</script></body></html>"""
 
 
 def _prev_kv(cmp_: dict) -> str:

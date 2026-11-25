@@ -215,8 +215,9 @@ def test_blocked_candidates_are_policy_excluded_not_implementation_candidates():
 def test_parse_targets_reads_only_known_phrasings():
     # 「20pack：7,200円」はパックの組の合計なので定価にしない。BOX の価格はそのまま
     assert clabo.parse_targets("対象商品 テスト商品A お一人様 20pack：7,200円（税込） ※抽選") == [
-        {"product_name": "テスト商品A", "retail_price": None}]
-    assert clabo.parse_targets("〈対象商品〉 テストBOX お一人様 1BOX：6,000円（税込）") == [{"product_name": "テストBOX", "retail_price": 6000}]
+        {"product_name": "テスト商品A", "retail_price": None, "price_unit": "PACK"}]          # 単位は PACK（価格なし）
+    assert clabo.parse_targets("〈対象商品〉 テストBOX お一人様 1BOX：6,000円（税込）") == [
+        {"product_name": "テストBOX", "retail_price": 6000, "price_unit": "BOX", "price_text": "お一人様 1BOX：6,000円"}]
     assert clabo.parse_targets("商品名：エクストラブースター テスト Edition vol.2【TB-05】 ※お一人様 1BOXまで") == [
         {"product_name": "エクストラブースター テスト Edition vol.2【TB-05】", "retail_price": None}]
     assert clabo.parse_targets("詳細は画像をご確認ください") == [] and clabo.parse_targets("") == []         # 推測しない

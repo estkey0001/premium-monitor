@@ -221,9 +221,20 @@ def _refs_html(entries, **kw):
     return sec[:sec.index("</details>")]
 
 
+OPEN_HEAD = "応募受付中だが条件付き利益を計算できない"
+
+
+def _open_refs_html(h):
+    """L3: OPEN で利益を計算できない行の小見出しの中（見出し語そのものは含めない）。"""
+    html = page_mod.render(h)
+    sec = html[html.index(OPEN_HEAD):]
+    sec = sec[:sec.index("</details>")]
+    return sec[sec.index("<ul>"):]
+
+
 def test_review3_open_reference_row_has_no_static_accepting_label_and_carries_deadline():
     old = (NOW - timedelta(days=15)).strftime("%Y-%m-%d")       # 14 日超の stale な OPEN 行（REFERENCE_ONLY）
-    sec = _refs_html([ent(verified_at=old)])
+    sec = _open_refs_html(hub([ent(verified_at=old)]))
     assert "受付中" not in sec and "応募期限" in sec and "生成時点の判定" in sec
     assert "data-rb-card" in sec and "data-rb-until=" in sec and "data-rb-expired hidden" in sec and "応募期限を過ぎました" in sec
 
@@ -231,10 +242,22 @@ def test_review3_open_reference_row_has_no_static_accepting_label_and_carries_de
 def test_review3_not_calculated_open_row_has_no_static_accepting_label():
     h = hub([ent()], action="NO_BUYBACK")
     assert h["retailer_references"] and h["retailer_references"][0]["kind"] == "NOT_CALCULATED" and h["retailer_references"][0]["accept_state"] == "OPEN"
-    html = page_mod.render(h)
-    sec = html[html.index("過去の参考情報（販売店"):]
-    sec = sec[:sec.index("</details>")]
+    sec = _open_refs_html(h)
     assert "受付中" not in sec and "応募期限" in sec and "data-rb-until=" in sec
+
+
+def test_l3_open_not_calculated_row_is_not_under_the_past_reference_heading():
+    """L3: 応募期間中で利益を計算できない行は、『過去の参考情報』（終了・当選者のみ・期間外・不明）に入れない。"""
+    html = page_mod.render(hub([ent()], action="NO_BUYBACK"))
+    assert OPEN_HEAD in html and "過去の参考情報（販売店" not in html            # OPEN の行だけ → 過去の参考情報の見出しごと出ない
+    html2 = page_mod.render(hub([ent(), ent(id="t2", apply_end="2026-01-01", purchase_end=None, purchase_start=None, shop="終了店",
+                                            source_url="https://shop.example/y")], action="NO_BUYBACK"))
+    past = html2[html2.index("過去の参考情報（販売店"):]
+    past = past[:past.index("</details>")]
+    assert "終了店" in past and "テスト店" not in past
+    opn = html2[html2.index(OPEN_HEAD):]
+    opn = opn[:opn.index("</details>")]
+    assert "テスト店" in opn and "終了店" not in opn
 
 
 def test_review3_non_open_reference_row_keeps_its_state_label():

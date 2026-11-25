@@ -16,6 +16,14 @@ outlier:
 freshness:
   default:
     fresh_days: 1
+  # ページ表示時（runtime）の期限。生成時の FRESH が、ページを開いた時点でも成立するかを src/content/iphone_buyback_page.py が判定し直す。
+  # page_buy_days: 買取価格の確認日（updated_on / 調査日）から何日目の終わりまで「更新が新しい・最高買取・利益・購入候補」を出すか。
+  #   週次の調査の周期（7 日）に合わせた値。超えたら、取得日つきの過去の参考価格に切り替える（週次の古さ警告 age_banner も同じ値）。
+  #   ページの 7 日の唯一の定義はここ（コードに直書きしない）。HOME の 14 日（別の用途）とは独立。
+  page_buy_days: 7
+  # apple_availability_days: Apple の購入可否（apple_availability.checked_at。時刻つきの ISO）の期限（日数 × 24 時間。日付の丸めなし）。
+  #   在庫は買取価格より動きが速い。Camera の在庫確認（stock_days=2）と同じ考え方で 2 日。超えたら「購入できる」「購入候補」を隠す。
+  apple_availability_days: 2
   sources: {}
   #  akimoba: {fresh_days: 2, note: "休業日がある（2026-11-13 は店頭・郵送とも休業の記載）"}
   # 実行可能価格に使うのは FRESH だけ。STALE と UNKNOWN_FRESHNESS は設定で許せない（誤価格を利益にしないため）。

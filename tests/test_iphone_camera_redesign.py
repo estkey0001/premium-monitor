@@ -130,6 +130,7 @@ def _visible(html: str) -> str:
     b = html.split("</style>")[-1]
     b = re.sub(r"<details.*?</details>", "", b, flags=re.S)
     b = re.sub(r"<svg.*?</svg>", "", b, flags=re.S)
+    b = re.sub(r"<script.*?</script>", "", b, flags=re.S)             # 鮮度判定の JS（共通）は画面の文字ではない
     return re.sub(r"<[^>]+>", " ", b)
 
 
@@ -358,7 +359,7 @@ def test_conclusion_rows_put_informative_rows_first_and_dedupe_same_reason():
 
 def test_css_tap_targets_for_links_and_tokenized_top_row():
     css = P.CSS
-    assert "rgba(6,118,71" not in css and "tr.top td,tr.top th{background:var(--tone-success-bg)}" in css
+    assert "rgba(6,118,71" not in css and ".rk1{background:var(--tone-success-bg)" in css            # 1 位の緑は、鮮度が FRESH のときだけ出る live 要素の中（行全体には付けない）
     assert ".tw a,.v a" in css.split("@media (max-width:639px)")[0] and "min-height:44px" in css.split("@media (max-width:639px)")[0]
     assert "table.mini.concl" in P.HUB_CSS and "min-width:640px" in P.HUB_CSS
 

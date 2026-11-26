@@ -331,6 +331,12 @@ def _merge_opp(card: dict, o: dict) -> dict:
     return merged
 
 
+def _pack_price(m: dict) -> Optional[int]:
+    """1 パックの公式価格（BOX の定価ではない。表示用。登録簿の pack_price が正の整数で basis が pack のときだけ）。"""
+    v = (m or {}).get("pack_price")
+    return v if isinstance(v, int) and not isinstance(v, bool) and v > 0 and _s((m or {}).get("retail_price_basis")) == "pack" else None
+
+
 def _card_from_target(t: dict, m: dict, bbv: dict, pr: dict) -> dict:
     """買取のデータがあるのに商品ブロックも利益候補にもならない商品（定価なし・発売済み・抽選なし等）。利益は出さない（pr に net_profit が無ければ『算出前』）。"""
     zero = {"total": 0, "live": 0, "open": 0, "ending_soon": 0, "upcoming": 0, "today": 0, "result_pending": 0, "purchase_period": 0, "unknown": 0}
@@ -341,7 +347,7 @@ def _card_from_target(t: dict, m: dict, bbv: dict, pr: dict) -> dict:
             "product_type": _s(m.get("product_type")) or None, "unit": (bbv or {}).get("unit") or t.get("unit"),
             "release_date": _first_date(m.get("release_date")) if m else None,
             "official_url": _s(m.get("official_url")) or (pr.get("msrp") or {}).get("official_url"),
-            "image_url": _s(m.get("official_image_url")) or None, "msrp": pr.get("msrp"), "pack_price": None,
+            "image_url": _s(m.get("official_image_url")) or None, "msrp": pr.get("msrp"), "pack_price": _pack_price(m),
             "profit": pr, "buyback": bbv, "state": st_, "state_label": OPP_LABEL.get(st_), "lottery_items": [], "counts": zero,
             "lottery_status": None, "has_events": False, "in_products": False}
 

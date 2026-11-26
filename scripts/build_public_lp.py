@@ -63,7 +63,9 @@ def build():
     site_url = settings.get("site_url", "").rstrip("/")
     now = datetime.now().strftime("%Y-%m-%d")
 
-    urls = [("", now, "daily", "1.0")]
+    # TCG の 2 ページは、この実行で 2 ページとも生成できたときだけ載せる（片方だけ・前回の古いページは載せない）
+    _tcg_pages = _build_tcg_hub_html(PUBLIC_DIR)
+    urls = [("", now, "daily", "1.0")] + [(n, now, "daily", "0.8") for n in _tcg_pages]
     for html_file in sorted(ARCHIVE_DIR.glob("2*.html"), reverse=True)[:30]:          # 日付のファイルだけ（index.html は除く）
         urls.append((f"archive/{html_file.name}", html_file.stem, "never", "0.5"))
 
@@ -95,7 +97,6 @@ def build():
     # iphone-buyback.html（週次の調査の買取比較。調査結果が無ければ作らない）
     _build_iphone_buyback_html(PUBLIC_DIR)
     _build_camera_research_html(PUBLIC_DIR)
-    _build_tcg_hub_html(PUBLIC_DIR)
 
     # ファイル数カウント
     total = sum(1 for _ in PUBLIC_DIR.rglob("*") if _.is_file())
@@ -176,14 +177,15 @@ def _build_camera_research_html(public_dir: Path) -> None:
     print(f"  ✅ {dst}")
 
 
-def _build_tcg_hub_html(public_dir: Path) -> None:
-    """TCG 抽選ハブ docs/tcg.html を生成する（exports/tcg/ の公開済み JSON だけを読む。lotteries.json が無ければ作らない）。
-    サイトマップには載せない（camera-research.html・iphone-buyback.html と同じ扱い）。"""
+def _build_tcg_hub_html(public_dir: Path) -> list:
+    """TCG のページ docs/tcg.html（商品と利益）と docs/tcg-lottery.html（抽選）を生成する（exports/tcg/ の公開済み JSON だけを読む。lotteries.json が無ければ作らない）。
+    2 ページは同じ入力から一度に作り、どちらかが作れない日は両方とも書かない（前回のページを残す）。
+    戻り値 = この実行で書いたファイル名のリスト（サイトマップには、この実行で書いたページだけを載せる）。"""
     exp = PROJECT_ROOT / "exports" / "tcg"
     lot = exp / "lotteries.json"
     if not lot.exists():
         print("  ⚠️  exports/tcg/lotteries.json not found — skipping tcg.html")
-        return
+        return []
 
     def _load(name: str):
         try:
@@ -194,18 +196,20 @@ def _build_tcg_hub_html(public_dir: Path) -> None:
     main = _load("lotteries.json")
     if not (isinstance(main, dict) and isinstance(main.get("items"), list)):      # 主の入力が壊れている: 空ページを正常として公開せず、前回のページを残す
         print("  ⚠️  exports/tcg/lotteries.json が壊れている（items が無い）— tcg.html は更新しない")
-        return
+        return []
 
     try:
         sys.path.insert(0, str(PROJECT_ROOT))
-        from src.content.tcg_hub_page import render_from_json
-        html_text = render_from_json(main, _load("pokemon_registry.json"), _load("msrp.json"), buyback=_load("buyback.json"))
+        from src.content.tcg_hub_page import render_pages_from_json
+        pages = render_pages_from_json(main, _load("pokemon_registry.json"), _load("msrp.json"), buyback=_load("buyback.json"))
     except Exception as e:  # noqa: BLE001 — 壊れた入力でサイト全体のビルドを止めない
         print(f"  ⚠️  tcg.html を作れなかった: {e}")
-        return
-    dst = public_dir / "tcg.html"
-    dst.write_text(html_text, encoding="utf-8")
-    print(f"  ✅ {dst}")
+        return []
+    for name, html_text in pages.items():      # tcg.html（商品と利益）・tcg-lottery.html（抽選カレンダー＋抽選一覧）。2 ページとも作れたときだけ書く
+        dst = public_dir / name
+        dst.write_text(html_text, encoding="utf-8")
+        print(f"  ✅ {dst}")
+    return list(pages)
 
 
 def _build_collector_report_html(public_dir: Path) -> None:

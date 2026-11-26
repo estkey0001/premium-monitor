@@ -41,6 +41,16 @@ def _hub(events, now=NOW, reg=REG, msrp=MSRP):
     return build_hub({"items": events, "generated_at": "2026-11-19T22:00:00+09:00"}, reg, msrp, now)
 
 
+def _lot(h):
+    """抽選のページ（docs/tcg-lottery.html: 抽選カレンダー＋抽選一覧）。"""
+    return page.render_lottery(h)
+
+
+def _both(h):
+    """2 ページ（商品と利益・抽選）を続けた文字列（サイト全体での検査用）。"""
+    return page.render(h) + page.render_lottery(h)
+
+
 def test_only_exact_is_bound_to_a_product():
     h = _hub([_ev(), _ev(product_match="partial", product_id=None), _ev(product_match="none", product_id=None),
               _ev(product_match="ambiguous", product_id=None), _ev(product_match="exact", product_id=None)])
@@ -76,7 +86,7 @@ def test_today_applicable_only_while_applying_and_without_conflict():
 def test_date_only_never_gets_a_time():
     v = _hub([_ev()])["events"][0]
     assert v["end"] == {"date": "2026-11-22", "time": None, "precision": "date"}
-    html = page.render(_hub([_ev()]))
+    html = _lot(_hub([_ev()]))
     assert '<td data-label="締切" class="w2"><span title="2026-11-22（日付のみ・時刻未公表）">11/22</span>' in html     # 日付のみは `11/22` だけ（原値は title・注記は表の上）。時刻は作らない
     assert "日付のみ" in html
     assert "11/22 00:00" not in html and "2026-11-22 00:00" not in html
@@ -88,8 +98,10 @@ def test_profit_is_none_without_evidence():
     p = _hub([_ev()])["products"][0]["profit"]
     assert p["net_profit"] is None and p["roi_pct"] is None and p["label"] == "算出前"
     assert p["msrp"]["retail_price"] == 5400
-    html = page.render(_hub([_ev()]))
-    assert "算出前" in html and "ROI" not in html and "高利益" not in html
+    html = _both(_hub([_ev()]))
+    assert "ROI" not in html and "高利益" not in html and "+" not in re.sub(r"<[^>]+>", "", re.sub(r"<script.*?</script>|<style.*?</style>", "", html, flags=re.S)).replace("+09:00", "")
+    card = re.search(r'<article class="tcard".*?</article>', html, re.S).group(0)
+    assert "¥5,400" in card and "data-strip-profit><em>純利益</em><span class=\"tc-val\"><b class=\"amt na\">—</b>" in card    # 買取の根拠が無い: 利益は「—」
 
 
 def test_msrp_requires_exact_id_and_matching_type():
@@ -126,8 +138,8 @@ def test_broken_inputs_do_not_raise():
                 {"items": [{"product_match": "exact", "product_id": 5, "retailer": None}]}):
         for reg in (None, [], {"products": "x"}, {"products": [None, 1, {"product_id": 3}]}):
             h = build_hub(bad, reg, "junk", NOW)
-            assert isinstance(page.render(h), str)
-    assert page.render(None).startswith("<!doctype html>")
+            assert isinstance(page.render(h), str) and isinstance(page.render_lottery(h), str)
+    assert page.render(None).startswith("<!doctype html>") and page.render_lottery(None).startswith("<!doctype html>")
     assert st.live_status(None) == "UNKNOWN" and st.priority_of_event(5) is None and not st.is_applicable_today("x")
     assert pl.msrp_for(None, None, None, "x") is None
 
@@ -135,39 +147,41 @@ def test_broken_inputs_do_not_raise():
 def test_html_has_no_path_private_or_injected_script():
     evil = "<script>alert(1)</script>"
     h = _hub([_ev(product_name=evil, store_name=evil, eligibility_text=evil, product_id=None, product_match="none")])
-    html = page.render(h)
-    assert evil not in html and "&lt;script&gt;" in html
-    assert html.count("<script") == 1                                   # 絞り込み用の自前の JS だけ
-    for bad in ("/Users/", ".private", "file://"):
-        assert bad not in html
+    for html in (page.render(h), page.render_lottery(h)):
+        assert evil not in html
+        assert html.count("<script") == 1                               # 自前の JS（鮮度・期限・絞り込み）の 1 か所だけ
+        for bad in ("/Users/", ".private", "file://"):
+            assert bad not in html
+    assert "&lt;script&gt;" in page.render_lottery(h)
 
 
 def test_links_only_official_https_and_none_without_entry_url():
     ev = _ev(source_url="https://evil.example.com/x", entry_url=None)
     v = _hub([ev])["events"][0]
     assert v["announcement_url"] is None and v["application_url"] is None
-    html = page.render(_hub([ev]))
-    assert "evil.example.com" not in html and "応募ページの URL は未確認" in html
+    html = _both(_hub([ev]))
+    assert "evil.example.com" not in html and "公式ページで応募する" not in html     # 応募 URL が無い: 応募ボタンを出さない
     ok = _hub([_ev()])["events"][0]
     assert ok["announcement_url"] == "https://www.c-labo.jp/shop/x/blog/1/" and ok["application_url"] is None
     # 外部ドメインの entry_url は応募の URL にしない
     bad = _hub([_ev(entry_url="https://evil.example.com/e/abc123")])["events"][0]
     assert bad["application_url"] is None
-    assert all(u.startswith("https://") for u in re.findall(r'href="(http[^"]+)"', page.render(_hub([_ev(), bad["ev"]]))))
+    assert all(u.startswith("https://") for u in re.findall(r'href="(http[^"]+)"', _both(_hub([_ev(), bad["ev"]]))))
     # 商品の公式ページは公式ドメインだけ
     reg = {"products": [dict(REG["products"][0], official_url="https://evil.example.com/p")]}
-    assert "evil.example.com" not in page.render(_hub([_ev()], reg=reg))
+    assert "evil.example.com" not in _both(_hub([_ev()], reg=reg))
 
 
 def test_checked_at_is_source_value_not_generation_time():
     html = page.render_from_json({"items": [_ev()], "generated_at": "2026-01-02T03:04:05+09:00",
                                   "evaluated_at": "2026-01-02T03:05:00+09:00"}, REG, MSRP, NOW)
-    assert "2026-01-02T03:04:05+09:00" in html and "確認時刻ではありません" in html
+    assert '<meta name="tcg-source-generated-at" content="2026-01-02T03:04:05+09:00">' in html
+    assert "抽選データ 2026-01-02 03:04" in html and "画面生成 2026-11-20 12:00 JST" in html     # 確認日（元データ）と画面生成を分けて出す
 
 
 def test_unverified_is_shown_as_unconfirmed():
-    html = page.render(_hub([_ev(verified=False)]))
-    assert "未確認（公式での再確認待ち）" in html
+    html = _lot(_hub([_ev(verified=False)]))
+    assert "未確認（公式での再確認待ち）" in html and ">未確認</span>" in html
 
 
 def test_real_data_renders_and_filters_present():
@@ -176,9 +190,10 @@ def test_real_data_renders_and_filters_present():
         return
     L = lambda f: json.loads((exp / f).read_text(encoding="utf-8"))
     h = build_hub(L("lotteries.json"), L("pokemon_registry.json"), L("msrp.json"), NOW)
-    html = page.render(h)
+    html, lot = page.render(h), page.render_lottery(h)
     assert h["stats"]["events_total"] == len(L("lotteries.json")["items"])
-    assert 'id="flt"' in html and "算出前" in html and html.count("<h1>") == 1
+    assert 'id="flt"' in lot and 'id="calendar"' in lot and html.count("<h1>") == 1 and lot.count("<h1>") == 1
+    assert 'href="tcg-lottery.html"' in html and 'href="tcg.html"' in lot                          # TCG 内のタブで相互に行き来できる
 
 
 # ── 監査の指摘の回帰 ──
@@ -199,13 +214,13 @@ def test_new_section_only_has_not_yet_finished_applying_statuses():
 
 def test_page_states_the_snapshot_time_and_warns_when_source_is_old():
     hub = build_hub({"items": [_ev()], "generated_at": "2026-11-15T22:00:00+09:00"}, REG, MSRP, NOW)
-    html = page.render(hub)
-    assert "時点のものです" in html and "開いている間は進みません" in html
-    assert "抽選データの取得が 5 日前です" in html
-    fresh = page.render(_hub([_ev()]))
+    for html in (page.render(hub), page.render_lottery(hub)):
+        assert "11/20 12:00 更新" in html and "確認時点のものです" in html            # 生成時点（更新時刻）と最下部の 1 行
+        assert "抽選データの取得が 5 日前です" in html
+    fresh = _both(_hub([_ev()]))
     assert "抽選データの取得が" not in fresh
-    nodate = page.render(build_hub({"items": [_ev()]}, REG, MSRP, NOW))
-    assert "取得日時が確認できません" in nodate
+    nodate = _both(build_hub({"items": [_ev()]}, REG, MSRP, NOW))
+    assert nodate.count("取得日時が確認できません") == 2
 
 
 def test_broken_main_json_does_not_overwrite_the_public_page(tmp_path, monkeypatch, capsys):
@@ -232,7 +247,7 @@ def test_malformed_event_types_skip_only_that_event_and_page_still_renders():
     bad = [_ev(retailer=["x"]), _ev(tcg={"a": 1}), _ev(prefecture=5), _ev(product_name=True)]
     h = _hub([_ev()] + bad)
     assert h["stats"]["skipped_malformed"] == 4 and h["stats"]["events_total"] == 1
-    assert "TCG 抽選ハブ" in page.render(h)
+    assert "TCG 抽選ハブ" in page.render(h) and "TCG 抽選ハブ" in page.render_lottery(h)
 
 
 def test_real_exports_pass_the_build_guard_and_dict_without_items_does_not_overwrite(tmp_path, monkeypatch):
@@ -265,29 +280,39 @@ def test_product_image_only_from_pokemon_official_https():
     oe = re.search(r'onerror="([^"]*)"', ok).group(1)
     assert "classList.add('ph')" in oe and "this.remove()" in oe
     assert "pokemon-card.com" not in oe and "http" not in oe and "テスト弾" not in oe
-    assert 'alt="拡張パック「テスト弾」"' in ok and "画像の権利は各権利者に帰属します" in ok     # alt は商品名・出典表記はページに 1 か所
+    assert 'alt="拡張パック「テスト弾」"' in ok and ok.count(page.IMG_CREDIT) == 1     # alt は商品名・出典表記はページに 1 か所
     for bad in ("https://evil.example.com/x.jpg", "http://www.pokemon-card.com/x.jpg", "javascript:alert(1)"):
         html = page.render(_hub([_ev()], reg=_reg_with_image(bad)))
         assert "<img" not in html and "evil.example.com" not in html and "javascript:" not in html
 
 
-def test_one_piece_never_gets_an_image():
-    h = _hub([_ev(tcg="ONE_PIECE", product_id="op-18", product_name="ブースター OP-18")])
-    h["products"][0]["image_url"] = "https://www.pokemon-card.com/x.jpg"
-    assert "<img" not in page.render(h)
+def test_one_piece_image_only_from_onepiece_official_https():
+    """ONE PIECE は onepiece-cardgame.com の https だけ画像にする。ポケカのホスト・外部ホスト・http・noimage はプレースホルダ。"""
+    def html_with(url, canonical="MASTER"):
+        h = _hub([_ev(tcg="ONE_PIECE", product_id="op-18", product_name="ブースター OP-18")])
+        for p in (h["products"][0], h["cards"][0]):
+            p["image_url"], p["canonical"] = url, canonical
+        return page.render(h)
+    ok = html_with("https://www.onepiece-cardgame.com/images/products/boosters/op18/img_thumbnail.png")
+    assert 'src="https://www.onepiece-cardgame.com/images/products/boosters/op18/img_thumbnail.png"' in ok and 'referrerpolicy="no-referrer"' in ok
+    for bad in ("https://www.pokemon-card.com/x.jpg", "https://evil.example.com/x.png", "http://www.onepiece-cardgame.com/x.png",
+                "https://www.onepiece-cardgame.com/images/noimage.png", "javascript:alert(1)"):
+        html = html_with(bad)
+        assert "<img" not in html and "evil.example.com" not in html and "javascript:" not in html, bad
+    assert "<img" not in html_with("https://www.onepiece-cardgame.com/x.png", canonical="DISCOVERED")      # 商品マスタに無い商品は画像を出さない
 
 
 def test_each_lottery_appears_once_in_the_table():
     evs = [_ev(lottery_id=f"L{i}", source_url=f"https://www.c-labo.jp/shop/x/blog/{i}/",
                application_end_date="2026-11-20") for i in range(3)]
-    html = page.render(_hub(evs))
+    html = _both(_hub(evs))
     n = html.count('class="ev ') + html.count('class="ev"')
     assert n == len(evs), n
 
 
 def test_empty_state_has_meaningful_text():
-    html = page.render(_hub([]))
-    assert "<h1>" in html and "受付中" in html
+    html = page.render_lottery(_hub([]))
+    assert "<h1>" in html and "受付中" in html and "<h1>" in page.render(_hub([]))
 
 
 # ── 00:00 規則（時刻が無い・未確認の行に 00:00 を出さない）──
@@ -311,7 +336,7 @@ def _midnight_ev(**kw):
 
 def test_unverified_row_never_shows_midnight_or_any_time():
     h = _hub([_midnight_ev(verified=False, lottery_id="U1")])
-    html = page.render(h)
+    html = _both(h)
     assert not _midnight(_visible(html))                        # 表・カード・カレンダー・今後 7 日のどこにも出ない
     assert "11/23" in _visible(html) and "時刻は未確認のため日付のみ" in html
     assert "原値 2026-11-23 00:00" in html                      # 原値は title に残す
@@ -320,50 +345,56 @@ def test_unverified_row_never_shows_midnight_or_any_time():
 
 
 def test_verified_date_only_and_midnight_get_no_time_but_real_times_stay():
-    only = page.render(_hub([_ev()]))
+    only = _both(_hub([_ev()]))
     assert not _midnight(_visible(only)) and "11/22" in _visible(only)
-    mid = page.render(_hub([_midnight_ev(verified=True, lottery_id="V1")]))
-    assert not _midnight(_visible(mid))                         # 00:00 は明示か補完か区別できないので日付のみ
-    real = page.render(_hub([_ev(application_end="2026-11-22T23:59:00+09:00", application_end_date=None)]))
+    mid = _both(_hub([_midnight_ev(verified=True, lottery_id="V1")]))
+    assert not _midnight(_visible(mid))                         # 「00:00」とは出さない
+    assert "11/23 0:00" in _visible(mid)                        # 時刻付きの 0 時は「0:00」（失効時刻 00:00 と表示を一致させる。Reviewer Low-11）
+    assert "11/23 0:00" not in _visible(_both(_hub([_midnight_ev(verified=False, lottery_id="U2")])))   # 未確認の行は日付のみ
+    real = _both(_hub([_ev(application_end="2026-11-22T23:59:00+09:00", application_end_date=None)]))
     assert "11/22 23:59" in _visible(real)                      # 確認済みの 00:00 以外の時刻は残す
 
 
 def test_midnight_rule_applies_in_calendar_and_agenda_without_duplicates():
     h = _hub([_midnight_ev(verified=False, lottery_id="U1", application_end="2026-11-21T00:00:00+09:00")])
-    html = page.render(h)
+    html = _both(h)
     assert page.show_time("00:00", True) is None and page.show_time("00:00", False) is None
     assert page.show_time("12:30", False) is None and page.show_time("12:30", True) == "12:30"
     assert html.count('class="ev ') == 1                        # 同じ抽選を重ねて出さない
-    agenda = html[html.index('class="agenda"'):]
-    assert not _midnight(_visible(agenda.split("</details>")[0]))
+    callist = html[html.index('callist"'):]
+    assert not _midnight(_visible(callist.split("</details>")[0])) and "今後 7 日" not in html      # カレンダーの折りたたみは「日付順の一覧」1 つ
 
 
 def test_count_labels_and_timestamp_labels_are_distinguished():
-    html = page.render(_hub([_ev(verified=False)]))
-    assert "未確認を含む" in html and "id=\"count-def\"" in html and "HOME" in html
-    assert "画面生成" in html and "情報の確認時刻ではありません" in html
+    """未確認の抽選は「受付中」のタブに数えず「未確認」のタブに分ける。確認日（元データ）と画面生成は別の項目で出す。"""
+    html = _lot(_hub([_ev(verified=False)]))
+    assert 'data-tab="open"' not in html and 'data-tab="unknown"' not in html                   # タブは件数のある 締切間近・受付中 だけ（未確認はタブにしない）
+    assert re.search(r"抽選一覧（受付中・締切間近 <span data-cnt-untils=\"\">0</span>件）", html)                                                # 見出しの件数は表示中の段だけ
+    assert re.search(r'<details class="note lt-more" data-lt-group="unknown" id="lt-unknown"><summary>未確認（1件）</summary>', html)   # 未確認は閉じた折りたたみ
+    assert "画面生成" in html and "抽選データ 2026-11-19 22:00" in html
 
 
 def test_priority_badge_is_not_hidden_by_new_or_deadline_flag():
     ev = _ev(application_end_date="2026-11-20", published_at="2026-11-19T10:00:00+09:00",
              application_url="https://www.c-labo.jp/x", entry_url="https://www.c-labo.jp/x")
-    html = page.render(_hub([ev]))
+    html = _lot(_hub([ev]))
     row = html[html.index('<tr class="ev'):html.index("</tr>", html.index('<tr class="ev'))]
-    assert "今日締切" in row and re.search(r"[SAB] (今すぐ|応募したい|余裕あり)", _visible(row))
+    assert "今日締切" in row and "締切間近" not in row and not re.search(r"[SAB] (今すぐ|応募したい|余裕あり)", _visible(row))   # バッジは 1 つ・内部の優先度は出さない
+    assert 'data-left-until="2026-11-20"' in row and "あと" not in _visible(row)                 # 残り時間は表示時に JS が計算する（HTML には書かない）
 
 
 def test_calendar_collapses_empty_weeks():
     h = _hub([_ev(application_end_date="2026-12-24", application_start_date="2026-12-20")])
-    html = page.render(h)
+    html = _lot(h)
     assert "予定のない週は省略しています" in html
 
 
 def test_product_card_without_open_lottery_does_not_read_as_open():
     """受付中の抽選が 0 件の商品カードに、「受付中」と読める代替文言を出さない。受付中がある商品は従来どおりチップを出す。"""
     ended = page.render(_hub([_ev(application_start_date="2026-11-10", application_end_date="2026-11-12")]))
-    assert "この商品に紐付いた、応募受付中の抽選はありません" in ended and "受付中・開始前なし" not in ended
+    assert "受付中・開始前なし" not in ended and "受付中<b>1</b>件" not in ended and "受付中の抽選なし" not in ended   # 受付中が無ければ何も書かない
     live = page.render(_hub([_ev()]))
-    assert "この商品に紐付いた、応募受付中の抽選はありません" not in live and "<b>1</b>受付中" in live
+    assert "受付中の抽選なし" not in live and "受付中<b>1</b>件" in live
 
 
 def test_product_card_no_open_lottery_text_is_scoped_to_linked_and_points_to_unlinked():
@@ -374,11 +405,11 @@ def test_product_card_no_open_lottery_text_is_scoped_to_linked_and_points_to_unl
     h0 = _hub([ended])
     assert h0["stats"]["unbound_applying"] == 0
     html0 = page.render(h0)
-    assert "この商品に紐付いた、応募受付中の抽選はありません" in html0 and "紐付け前の告知は抽選一覧を参照" not in html0
+    assert "このほかの受付中の抽選" not in html0
     h1 = _hub([ended, unlinked_open])
     assert h1["stats"]["unbound_applying"] == 1
     html1 = page.render(h1)
-    assert "この商品に紐付いた、応募受付中の抽選はありません。紐付け前の告知は抽選一覧を参照" in html1
+    assert re.search(r'<a href="tcg-lottery.html#lt-open">このほかの受付中の抽選 <span[^>]*>1</span>件</a>', html1)
     h2 = _hub([ended, {**unlinked_open, "verified": False}])        # 未検証の未紐付けは「受付中」に数えない
     assert h2["stats"]["unbound_applying"] == 0
 
@@ -393,3 +424,22 @@ def test_image_load_failure_falls_back_to_the_placeholder():
     # 画像が無い商品（プレースホルダ）には onerror もフォールバック用の要素も付かない
     ph = page.render(_hub([_ev()], reg=_reg_with_image("https://evil.example.com/x.jpg")))
     assert "data-phb" not in ph
+
+
+def test_build_writes_both_tcg_pages_or_neither_and_reports_them_for_the_sitemap(tmp_path, monkeypatch):
+    """2 ページは同じ入力から一度に作る。lotteries.json が無い・壊れている日は、どちらも書かない（前回のページを残す）。
+    戻り値（サイトマップに載せるページ）は、この実行で書いたページだけ。deploy-check は、tcg.html が抽選のページへリンクするときだけ抽選のページを要求する。"""
+    import scripts.build_public_lp as bp
+    monkeypatch.setattr(bp, "PROJECT_ROOT", tmp_path)
+    pub = tmp_path / "docs"
+    pub.mkdir()
+    assert bp._build_tcg_hub_html(pub) == [] and not (pub / "tcg.html").exists() and not (pub / "tcg-lottery.html").exists()
+    exp = tmp_path / "exports" / "tcg"
+    exp.mkdir(parents=True)
+    (exp / "lotteries.json").write_text(json.dumps({"items": [], "generated_at": "2026-11-19T22:00:00+09:00"}), encoding="utf-8")
+    assert bp._build_tcg_hub_html(pub) == ["tcg.html", "tcg-lottery.html"]
+    assert (pub / "tcg.html").exists() and (pub / "tcg-lottery.html").exists()
+    src = (ROOT / "scripts" / "build_public_lp.py").read_text(encoding="utf-8")
+    assert "_tcg_pages = _build_tcg_hub_html(PUBLIC_DIR)" in src and "for n in _tcg_pages" in src
+    dc = (ROOT / "scripts" / "deploy_check.py").read_text(encoding="utf-8")
+    assert 'if "tcg-lottery.html" in _h853:' in dc

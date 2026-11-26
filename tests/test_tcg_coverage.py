@@ -200,3 +200,49 @@ def test_price_events_skip_non_executable_and_outlier_products():
     rows = [mk("a", "UNOPENED", True), mk("b", "NEW", False), mk("c", "UNOPENED", True)]
     ev = bb.price_events(hist, rows, "2026-11-23", {}, skip_products={"c"})
     assert [e["product_id"] for e in ev] == ["a"]
+
+
+# ── 森森買取のポケモン MEGA 一覧（2026-11-26 追加） ──
+MM_POKE = (ROOT / "tests" / "fixtures" / "morimori" / "pokemon_mega_2401010.html").read_text(encoding="utf-8")
+MM_POKE_URL = "https://www.morimori-kaitori.jp/category/2401010"
+
+
+def test_morimori_pokemon_mega_page_parses_rows_with_jan_and_current_price():
+    r = bb.parse_morimori(MM_POKE, MM_POKE_URL, NOW)
+    assert r["updated"] == "2026-11-26"
+    got = {x["jan"]: x for x in r["rows"]}
+    assert got["4521329431529"]["price"] == 15300 and got["4521329431161"]["price"] == 6800      # 預かり・即フリの価格は使わない
+    assert all(x["accept_state"] == bb.A_ACTIVE for x in r["rows"])
+    assert got["4521329431529"]["item_url"].startswith("https://www.morimori-kaitori.jp/category/2401010/product/")
+
+
+def test_morimori_pokemon_shrink_rejection_note_is_new_not_opened_and_never_executable():
+    # 「シュリンクの破れ…はお断り」は買取を断る基準の説明で、その商品が開封済みという意味ではない。「新品」だけ = NEW（表示のみ）
+    rows = bb.parse_morimori(MM_POKE, MM_POKE_URL, datetime(2026, 11, 26, 12, 0, tzinfo=JST))["rows"]
+    assert {x["condition"] for x in rows} == {bb.C_NEW}
+    ann = bb.annotate(rows, REAL_CFG_LOADED, datetime(2026, 11, 26, 12, 5, tzinfo=JST))
+    mine = [x for x in ann if x["product_id"] in ("pokemon-拡張パック-インフェルノx", "pokemon-拡張パック-メガブレイブ")]
+    assert len(mine) == 2 and all(x["identity_status"] == "CONFIRMED" and x["freshness"] == bb.FRESH for x in mine)
+    assert all(x["executable"] is False for x in mine)                       # 未開封の根拠が無いので最高買取（実行可能）・利益に数えない
+    s = bb.summarize_product("pokemon-拡張パック-インフェルノx", ann, REAL_CFG_LOADED)
+    assert s["status"] == "LISTED_ONLY" and s["highest_executable"] is None and s["highest_listed"]["price"] == 15300
+
+
+def test_morimori_policy_note_never_turns_a_row_into_executable():
+    # 否定の語を含む行は、お断りの文を除いても実行可能な条件には上げない（緩める方向に使わない）
+    note = "未開封BOX/テープ付。シュリンク無し商品の買取はお問い合わせください"
+    assert bb._morimori_condition(note, "【BOX】OP-18", "新品") == bb.C_OPENED
+    assert bb._morimori_condition("未開封BOX/テープ付", "【BOX】OP-18", "新品") == bb.C_UNOPENED
+    assert bb._morimori_condition("開封済みの商品です", "BOX", "新品") == bb.C_OPENED
+
+
+def test_morimori_pokemon_mega_page_is_one_page_and_new_targets_have_name_guard():
+    pages = REAL_CFG["shops"]["morimori"]["pages"]
+    assert "https://www.morimori-kaitori.jp/category/2401010" in pages
+    assert not any("page=" in p for p in pages)                                # ページ送りの全件は取らない
+    t = {x["product_id"]: x for x in REAL_CFG["targets"]}
+    assert t["pokemon-拡張パック-インフェルノx"]["jan"] == "4521329431529" and t["pokemon-拡張パック-インフェルノx"]["name_contains"] == ["インフェルノX"]
+    assert t["pokemon-拡張パック-メガブレイブ"]["jan"] == "4521329431161" and t["pokemon-拡張パック-メガブレイブ"]["name_contains"] == ["メガブレイブ"]
+
+
+REAL_CFG_LOADED = bb.load_config()

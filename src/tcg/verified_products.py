@@ -41,6 +41,26 @@ def _valid(rec: Any) -> bool:
     return True
 
 
+# 商品画像を置いてよい公式のホスト（TCG ごと）。画像だけの検査なので、外れても行は捨てず画像を None にする
+IMAGE_HOSTS = {"POKEMON": "pokemon-card.com", "ONE_PIECE": "onepiece-cardgame.com"}
+
+
+def image_ok(tcg: Any, url: Any) -> bool:
+    """公式サイトの https の画像か（TCG とホストが一致し、未発売の仮画像 noimage でない）。"""
+    from urllib.parse import urlparse
+    base = IMAGE_HOSTS.get(tcg) if isinstance(tcg, str) else None
+    if not base or not isinstance(url, str):
+        return False
+    try:
+        u = urlparse(url)
+    except ValueError:
+        return False
+    host = (u.hostname or "").lower()
+    if u.scheme != "https" or not (host == base or host.endswith("." + base)):
+        return False
+    return "noimage" not in u.path.lower()
+
+
 def load(path: Path | None = None) -> list[dict]:
     """台帳の行（検証を通ったものだけ）。無い・壊れているときは空。"""
     try:
@@ -52,7 +72,9 @@ def load(path: Path | None = None) -> list[dict]:
     for rec in rows if isinstance(rows, list) else []:
         if _valid(rec) and rec["product_id"] not in seen:
             seen.add(rec["product_id"])
-            out.append({**rec, "manual_verified": True})
+            img = rec.get("official_image_url")
+            out.append({**rec, "manual_verified": True,
+                        "official_image_url": img if image_ok(rec.get("tcg"), img) else None})
     return out
 
 

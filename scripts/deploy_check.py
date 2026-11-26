@@ -8766,6 +8766,14 @@ def _check_tcg_lottery(report: dict) -> list[dict]:
 
         # tcg.html（商品カード tcard・販売店の BOX 価格 rb）は HTML パーサで検査する（check_tcg_page_runtime_freshness）
         _bad853 += check_tcg_page_runtime_freshness(_h853, _mx853, _fut853, _obs853, _obs_pid853, 1 if _obs853 else 0)
+        # 商品ページの応募ボタン（締切が近い抽選の帯・商品カードの抽選）と、抽選のページ（tcg-lottery.html。無ければ不合格）
+        _bad853 += check_tcg_apply_buttons(_h853, "tcg.html")
+        _lp853 = PUBLIC_DIR / "tcg-lottery.html"
+        if not _lp853.exists():
+            if "tcg-lottery.html" in _h853:
+                _bad853.append("tcg-lottery.html が無い（商品ページの抽選のリンク先が無い）")
+        else:
+            _bad853 += check_tcg_lottery_page(_h853, _lp853.read_text(encoding="utf-8"))
         _hp853 = PUBLIC_DIR / "index.html"
         if _hp853.exists():
             _hh853 = _hp853.read_text(encoding="utf-8")
@@ -8777,7 +8785,8 @@ def _check_tcg_lottery(report: dict) -> list[dict]:
             if "利益根拠あり" in _hh853 and _rf853.JS_FRESHNESS not in _hh853:
                 _bad853.append("HOME に共通の JS がそのままの形で入っていない")
         _add(853, "tcg_buyback_runtime_freshness", not _bad853,
-             f"tcg.html の最高買取・純利益・ROI は、表示時に取得時刻から鮮度を判定し直す（{_mx853:g} 時間を超えたら出さない。HOME の利益根拠も同じ）",
+             f"tcg.html の最高買取・純利益・ROI は、表示時に取得時刻から鮮度を判定し直す（{_mx853:g} 時間を超えたら出さない。HOME の利益根拠も同じ）。"
+             "応募ボタンは受付中・確認済みの抽選だけ。tcg-lottery.html は金額を持たず、商品ページと相互にリンクする",
              "；".join(sorted(set(_bad853))[:4]))
 
     # #841 UI Phase 10: 公式の発売予定（公式のページ・発売日が読める・今日以降）は、新UIの抽選・予約に全部出ている
@@ -9109,6 +9118,7 @@ class _TcgScan(_FbScan):
         self.out_attr_pairs: list = []   # live・stale の外の (属性名, 値)
         self.tstales: list = []      # {attrs, card(index|None)}
         self.seq: list = []          # live / stale の出現順 [("live"|"stale", group)]
+        self.region_bad: list = []   # カードの外の領域（rk・thumbs・soon・stale-note）で、live / stale の外に出た金額・状態 [(領域, 文字)]
         self._oseq = 0               # 他店の行の通し番号
         super().__init__(html)
 
@@ -9175,12 +9185,24 @@ class _TcgScan(_FbScan):
                 fr["tags"] = True
             if tag == "li" and "data-lot-item" in a:
                 fr["lotitem"] = True
+            if (tag == "table" and "rk" in cls) or (tag == "nav" and "thumbs" in cls) or (tag == "section" and "soon" in cls) or "data-stale-note" in a:
+                fr["region"] = "利益ランキング" if "rk" in cls else "画像で選ぶ" if "thumbs" in cls else "締切が近い抽選" if "soon" in cls else "鮮度切れの注記"
+            if tag == "td" and "n" in cls and a.get("data-label") == "定価":
+                fr["allow"] = True               # 利益ランキングの公式定価（設定値。買取由来ではない）
+            if tag == "td" and "nm" in cls:
+                fr["tdnm"] = True
+            if tag == "a" and any(f.get("tdnm") for f in self.stack[:-1]):
+                fr["allow"] = True               # 商品名のリンクの文字だけ（td.nm の中のほかの要素は許可しない）
 
     def _data(self, data: str) -> None:
         t = data.strip()
         super()._data(data)
         if not t or any(f["tag"] in ("script", "style") for f in self.stack):
             return
+        reg = next((f.get("region") for f in reversed(self.stack) if f.get("region")), None)
+        if reg and not any(f["live"] or f["stale"] for f in self.stack) and not any(f.get("allow") for f in self.stack):
+            if _TCG_MONEY_RE.search(t) or _TCG_STATE_BADGE_RE.match(t) or _TCG_PROFIT_TEXT_RE.search(t):
+                self.region_bad.append((reg, t))
         ctx = self._ctx()
         if ctx["card"] is None:
             return
@@ -9204,19 +9226,29 @@ def check_tcg_profit_evidence(html: str, expected_cards: int | None = None) -> t
     for i, c in enumerate(scan.cards):
         key = c["attrs"].get("data-card-key") or f"#{i}"
         lives = [t for t in scan.tlives if t["card"] == i]
-        best_live = any(t["role"] == "strip:best" for t in lives)
+        best_txt = "".join(x["text"] for x in c["texts"] if x["strip"] == "best")
+        # 最高買取の欄の live が理由のラベル（単位違い・確認待ち・受付停止中・受付状態不明）だけなら、最高買取とは数えない
+        best_label_only = not any(x["strip"] == "best" and x["in_live"] and re.search(r"[¥￥]\s*\d", x["text"]) for x in c["texts"]) \
+            and bool(re.search(r"単位違い|確認待ち|受付停止|受付状態不明", best_txt))
+        best_live = any(t["role"] == "strip:best" for t in lives) and not best_label_only
         profit_live = any(t["role"] == "strip:profit" for t in lives)
         tx = c["texts"]
         profit_amt = any(t["strip"] == "profit" and t["in_live"] and _TCG_SIGNED_RE.search(t["text"]) for t in tx)
         best_amt = any(t["strip"] == "best" and t["in_live"] and re.search(r"[¥￥]\s*\d", t["text"]) for t in tx)
-        msrp_amt = any(t["strip"] == "msrp" and re.search(r"[¥￥]\s*\d", t["text"]) for t in tx)
+        # 公式定価（商品の単位）。1 パック価格（『1パック ¥240』）は BOX の定価ではないので数えない
+        msrp_amt = any(t["strip"] == "msrp" and re.search(r"[¥￥]\s*\d", t["text"]) and "パック" not in t["text"] for t in tx)
         reason = any(t["strip"] == "profit" and not t["in_live"] and not t["in_stale"] and t["tag"] != "em" and _TCG_REASON_RE.search(t["text"]) for t in tx)
         if best_live:
             info["best"] += 1
             if not best_amt:
                 bad.append(f"{key}: 最高買取の live に金額が無い")
-            if not (profit_live or reason):
-                bad.append(f"{key}: 最高買取があるのに、対応する利益または理由（算出前・定価なし・外れ値待ち）が無い")
+            # 定価（商品の単位）が無い商品は、利益の欄が「—」だけで足りる（定価の欄が「—」か 1 パック価格で、算出できない理由が見える）
+            if not (profit_live or reason or not msrp_amt):
+                bad.append(f"{key}: 最高買取と定価があるのに、対応する利益または理由（算出前・外れ値待ち）が無い")
+        if re.search(r"受付停止|受付状態不明|単位違い", best_txt) and re.search(r"[¥￥]\s*\d", best_txt):
+            bad.append(f"{key}: 最高買取（受付確認済み）の欄に、受付停止・単位違いの金額が出ている（金額は『その他の売却先』の中だけ）")
+        if any(x["strip"] == "best" and not x["in_live"] and not x["in_stale"] and x["text"] == "—" for x in tx) and best_amt:
+            bad.append(f"{key}: 最高買取の欄に「—」と金額（live）の両方がある（偽の最高買取の疑い）")
         if profit_amt:
             info["profit"] += 1
             if not best_live or not best_amt:
@@ -9247,6 +9279,9 @@ def check_tcg_page_runtime_freshness(html: str, mx: float, fut: float, obs_all: 
         bad.append(f"{w}: 再確認待ち（data-fb-stale）と対になっていない live がある（{sorted(str(x) for x in lg - sg)[:3]}）")
     if scan.nested:
         bad.append(f"{w}: live の内側に <div>/<span> の入れ子がある（{sorted(set(scan.nested))}）")
+    for reg, t in scan.region_bad:
+        bad.append(f"{w}: {reg} の金額・状態（{t[:24]}）が、鮮度の判定（live / stale）の外に出ている")
+    bad += check_tcg_images(html, w)
     # 旧構造（属性なしの <div><dt>…</dt>）に戻った・live の付け忘れ（販売店の BOX 価格 _rb_card の行も同じ）
     for g in _TCG_OLD_DT_RE.findall(html):
         if "data-fb-live" not in g:
@@ -9282,6 +9317,8 @@ def check_tcg_page_runtime_freshness(html: str, mx: float, fut: float, obs_all: 
         pid = key.split(":", 1)[1] if ":" in key else key
         lives = [t for t in scan.tlives if t["card"] == i]
         allowed = obs_by_pid.get(pid)
+        if allowed is None and obs_by_pid and lives:
+            bad.append(f"{w}: {key} には元データ（buyback.json）の買取の行が無いのに、買取由来の表示（live）がある")
         if allowed is not None:
             for t in lives:
                 if (t["attrs"].get("data-fb-obs") or "") not in allowed:
@@ -9327,19 +9364,175 @@ def check_tcg_page_runtime_freshness(html: str, mx: float, fut: float, obs_all: 
                 bad.append(f"{w}: {key} の利益・ROI・黒字・赤字・様子見が、live の外に出ている（{t['text'][:24]}）")
         # 差額の行があるなら、『最高買取の店は送料・費用が未確認』の注記がある。最高買取にしない行（参考・停止中・外れ値）には、その旨の注記がある
         li_texts = c["texts"]
-        if any(t["strip"] == "diff" for t in li_texts) and not any(t["strip"] == "diff" and "送料・費用が未確認" in t["text"] for t in li_texts):
-            bad.append(f"{w}: {key} の差額の行に『最高買取の店は送料・費用が未確認』の注記が無い")
+        if any(t["strip"] == "diff" for t in li_texts) and not any(t["strip"] == "diff" and re.search(r"送料・費用が未確認|費用未確認", t["text"]) for t in li_texts):
+            bad.append(f"{w}: {key} の差額の行に『費用未確認』のラベルが無い（差額を利益と誤読される）")
         rows_o: dict = {}
         for t in li_texts:
             if t["other"] is not None:
                 rows_o.setdefault((t["other"], t["other_kind"]), []).append(t["text"])
         for (_n, kind), tl in rows_o.items():
-            if kind in ("reference", "suspended", "outlier") and not any("最高買取にし" in x for x in tl):
-                bad.append(f"{w}: {key} の他店（{kind}）の行に『最高買取にしません』の注記が無い")
+            # 最高買取にしない行（参考・停止中・外れ値）には、その種別の短いラベルがある（旧: 『最高買取にしません』の注記）
+            lab = {"reference": r"^参考$|最高買取にし", "suspended": r"^受付停止$|^受付状態不明$|最高買取にし", "outlier": r"^確認待ち$|最高買取にし"}.get(kind)
+            if lab and not any(re.search(lab, x) for x in tl):
+                bad.append(f"{w}: {key} の他店（{kind}）の行に、最高買取にしない旨のラベル（参考・受付停止・確認待ち）が無い")
     # 属性（title・aria-label）に金額を置かない
     for k, v in scan.out_attr_pairs:
         if k in ("title", "aria-label") and _TCG_MONEY_RE.search(v):
             bad.append(f"{w}: 金額が、鮮度の判定の外の属性（{k}）に出ている")
+    return sorted(set(bad))
+
+
+_TCG_APPLY_LABEL = "公式ページで応募する"
+
+
+class _TcgLinkScan:
+    """TCG の 2 ページ共通: 応募ボタン（a.btn.cta）の祖先の抽選の状態・確認済み・期限の切り替え、見えている文字、id・リンクを集める。"""
+
+    def __init__(self, html: str):
+        from html.parser import HTMLParser
+        outer = self
+        self.stack: list = []
+        self.ctas: list = []          # {lot: 祖先の抽選の属性 or None, in_open: data-rb-open の中か, rb: 祖先が data-rb-card か, text}
+        self.ids: set = set()
+        self.hrefs: list = []
+        self.texts: list = []         # script・style・live/stale を除く文字
+        self.lives = 0
+        self._cur = None
+        VOID = {"br", "meta", "link", "img", "input", "hr", "source", "wbr"}
+
+        class _P(HTMLParser):
+            def handle_starttag(self, tag, attrs):
+                a = dict(attrs)
+                if a.get("id"):
+                    outer.ids.add(a["id"])
+                if tag == "a" and a.get("href"):
+                    outer.hrefs.append(a["href"])
+                if "data-fb-live" in a:
+                    outer.lives += 1
+                if tag == "a" and "cta" in (a.get("class") or "").split():
+                    lot = next((f[1] for f in reversed(outer.stack) if ("data-lot-state" in f[1] or "data-lot-status" in f[1])), None)
+                    outer._cur = {"lot": lot, "in_open": any("data-rb-open" in f[1] for f in outer.stack),
+                                  "rb": bool(lot) and "data-rb-card" in lot, "text": "", "href": a.get("href") or "",
+                                  "js_only": "data-js-only" in a and "hidden" in a}
+                    outer.ctas.append(outer._cur)
+                if tag not in VOID:
+                    outer.stack.append((tag, a))
+
+            def handle_endtag(self, tag):
+                for i in range(len(outer.stack) - 1, -1, -1):
+                    if outer.stack[i][0] == tag:
+                        del outer.stack[i:]
+                        break
+                if tag == "a":
+                    outer._cur = None
+
+            def handle_data(self, data):
+                t = data.strip()
+                if not t or any(f[0] in ("script", "style") for f in outer.stack):
+                    return
+                if outer._cur is not None:
+                    outer._cur["text"] += t
+                if not any(("data-fb-live" in f[1] or "data-fb-stale" in f[1]) for f in outer.stack):
+                    outer.texts.append(t)
+        p = _P(convert_charrefs=True)
+        p.feed(html)
+        p.close()
+
+
+def check_tcg_images(html: str, where: str) -> list:
+    """商品画像: src はその TCG の公式サイトの https（verified_products.image_ok）、onerror は定数と完全一致（外部の値を埋め込まない）。"""
+    from html.parser import HTMLParser
+    from src.tcg import verified_products as _vp
+    from src.content import tcg_hub_page as _tp
+    bad: list = []
+    stack: list = []
+
+    class _P(HTMLParser):
+        def handle_starttag(self, tag, attrs):
+            a = dict(attrs)
+            if tag == "img":
+                par = next((x for x in reversed(stack) if "pimg" in (x.get("class") or "").split()), None)
+                cls = (par or {}).get("class") or ""
+                tcg = "POKEMON" if "pokemon" in cls.split() else "ONE_PIECE" if "onepiece" in cls.split() else ""
+                if not par or not _vp.image_ok(tcg, a.get("src")):
+                    bad.append(f"{where}: 商品画像の src が、その TCG の公式サイトの https ではない（{str(a.get('src'))[:40]}）")
+                if a.get("onerror") != _tp.IMG_ONERROR:
+                    bad.append(f"{where}: 商品画像の onerror が定数と違う（外部の値・別の処理を埋め込んでいる）")
+                return
+            if tag not in ("br", "meta", "link", "input", "hr", "source", "wbr"):
+                stack.append(a)
+
+        def handle_endtag(self, tag):
+            if stack:
+                stack.pop()
+    _P().feed(html)
+    return sorted(set(bad))
+
+
+def check_tcg_apply_buttons(html: str, where: str) -> list:
+    """「公式ページで応募する」は、受付中・締切間近・確認済み・日程の食い違いなしの抽選の中だけ。締切のある抽選では期限後に隠れる（data-rb-open の中）。"""
+    bad: list = []
+    sc = _TcgLinkScan(html)
+    from src.content import tcg_hub_page as _tp
+    from src.tcg import action_url as _au
+    for lab in (_TCG_APPLY_LABEL, _tp.APPLY_HOWTO):
+        if html.count(lab) != len([c for c in sc.ctas if lab in c["text"]]):
+            bad.append(f"{where}: 「{lab}」が応募ボタン（a.btn.cta）以外に出ている")
+    for c in sc.ctas:
+        lot = c["lot"]
+        if lot is None:
+            bad.append(f"{where}: 応募ボタンが抽選の行の外にある")
+            continue
+        state = lot.get("data-lot-state") or lot.get("data-lot-status") or ""
+        verified = lot.get("data-verified", "1" if "data-lot-status" in lot else "0") == "1"
+        if state not in ("OPEN", "ENDING_SOON") or not verified or "data-conflict" in lot:
+            bad.append(f"{where}: 受付中・締切間近・確認済み以外の抽選に応募ボタンがある（{state}・確認 {verified}）")
+        if c["rb"] and not c["in_open"]:
+            bad.append(f"{where}: 締切のある抽選の応募ボタンが、期限後に隠れる位置（data-rb-open）に無い")
+        if not c["js_only"]:
+            bad.append(f"{where}: 応募ボタンが JS の無いときにも出ている（締切後も押せるボタンが残る）")
+        r = _au.safe_https(c["href"])
+        ret = (lot.get("data-retailer") or "").upper()
+        if not r or not ret or not _au._host_in(r[0], _au.official_hosts(ret)):
+            bad.append(f"{where}: 応募ボタンの行き先が、その小売の公式ドメインの https ではない（{c['href'][:40]}）")
+    if re.search(r"<[^>]*\bdata-rb-expired\b(?![^>]*\bhidden\b)[^>]*>", html):
+        bad.append(f"{where}: 期限後の表示（data-rb-expired）が最初から見えている（締切前に『期限を過ぎました』と出る）")
+    if "data-rb-card" in html and "querySelectorAll('[data-rb-card]')" not in html:
+        bad.append(f"{where}: 締切の切り替え（JS_RB）が入っていない")
+    return bad
+
+
+def check_tcg_lottery_page(products_html: str, lottery_html: str) -> list:
+    """docs/tcg-lottery.html（抽選カレンダー＋抽選一覧）: 金額・鮮度の判定を持たない／応募ボタンの規則／商品ページとの相互リンク・TCG 内のタブ／元データの取得時刻が商品ページと同じ。"""
+    w = "tcg-lottery.html"
+    bad = check_tcg_apply_buttons(lottery_html, w) + check_tcg_images(lottery_html, w)
+    lot = _TcgLinkScan(lottery_html)
+    prod = _TcgLinkScan(products_html)
+    if lot.lives:
+        bad.append(f"{w}: 抽選のページに買取由来の金額（data-fb-live）がある（金額は商品ページの鮮度の判定の中だけ）")
+    for t in lot.texts:
+        if _TCG_MONEY_RE.search(t) or _TCG_PROFIT_TEXT_RE.search(t):
+            bad.append(f"{w}: 抽選のページに金額・利益の表記がある（{t[:24]}）")
+            break
+    for need in ('id="calendar"', 'id="lottery"', 'id="lt-live"'):
+        if need not in lottery_html:
+            bad.append(f"{w}: {need} が無い")
+    if 'id="calendar"' in lottery_html and 'id="lottery"' in lottery_html and lottery_html.index('id="calendar"') > lottery_html.index('id="lottery"'):
+        bad.append(f"{w}: カレンダーが抽選一覧より下にある")
+    if "tcg-lottery.html" not in prod.hrefs or "tcg.html" not in lot.hrefs:
+        bad.append("tcg.html / tcg-lottery.html: TCG 内のタブ（商品と利益 / 抽選）の相互リンクが無い")
+    for h in prod.hrefs:
+        if h.startswith("tcg-lottery.html#L-") and h.split("#", 1)[1] not in lot.ids:
+            bad.append(f"tcg.html: 抽選のページに無い行へのリンク（{h}）")
+            break
+    for h in lot.hrefs:
+        if h.startswith("tcg.html#") and h.split("#", 1)[1] not in prod.ids:
+            bad.append(f"{w}: 商品ページに無いカードへのリンク（{h}）")
+            break
+    g1 = re.search(r'<meta name="tcg-source-generated-at" content="([^"]*)"', products_html)
+    g2 = re.search(r'<meta name="tcg-source-generated-at" content="([^"]*)"', lottery_html)
+    if not g1 or not g2 or g1.group(1) != g2.group(1):
+        bad.append("tcg.html / tcg-lottery.html: 元データの取得時刻（tcg-source-generated-at）が 2 ページで違う（片方だけ古い）")
     return sorted(set(bad))
 
 

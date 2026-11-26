@@ -217,10 +217,24 @@ def parse_rudeya(html: str, page_url: str, observed_at: datetime) -> dict:
 
 _MM_ACTIVE_TEXT = re.compile(r"^\s*追加\s*$|買取申込|買取リクエスト")
 _MM_UPDATED = re.compile(r"(20\d{2})年\s*(\d{1,2})月\s*(\d{1,2})日\s*更新")
+# 店の共通の注意書き（お断りの基準・問い合わせ・返送の案内）。その商品の状態ではなく、買取を断る条件の説明
+_MM_POLICY_SENTENCE = re.compile(r"お断り|お問い合わせください|買取不可となった商品|ご返送")
+
+
+def _morimori_condition(cond_text: str, raw: str, badge: str) -> str:
+    """森森の条件。ポケモンの BOX の注意書き（「シュリンクの破れ…の商品は買取をお断りする場合がございます」）は
+    否定の語を含むので、そのままだと「開封済み（OPENED）」になる。お断りの基準の文を除くと「新品」だけになる行は NEW にする。
+    緩める方向には使わない: 文を除いた結果が新品未開封（実行可能）になるときは元の判定のまま（OPENED）。"""
+    orig = condition_of(cond_text + " " + raw, badge)
+    if orig != C_OPENED:
+        return orig
+    kept = " ".join(s for s in re.split(r"[。\n]", cond_text) if s.strip() and not _MM_POLICY_SENTENCE.search(s))
+    alt = condition_of(kept + " " + raw, badge)
+    return alt if alt in (C_NEW, C_UNKNOWN) else orig
 
 
 def parse_morimori(html: str, page_url: str, observed_at: datetime) -> dict:
-    """森森買取のカテゴリ一覧（ONE PIECE）。ページ見出しの「YYYY年M月D日 更新」が更新日。
+    """森森買取のカテゴリ一覧（ONE PIECE /2403・ポケモン MEGA /2401010）。ページ見出しの「YYYY年M月D日 更新」が更新日。
     使う価格は「現在価格」（通常の買取価格）だけ。預かり・即フリは別の条件（期間・手数料）の価格なので使わない。
     価格が数字でない行（ASK = 価格未掲載）は行を作らない。"""
     html = html or ""
@@ -255,7 +269,7 @@ def parse_morimori(html: str, page_url: str, observed_at: datetime) -> dict:
         rows.append({
             "shop": "morimori", "raw_product_name": raw, "jan": jan.group(1) if jan else None, "price": p,
             "condition_text": cond_text,
-            "condition": condition_of(cond_text + " " + raw, badge.group(1) if badge else ""),
+            "condition": _morimori_condition(cond_text, raw, badge.group(1) if badge else ""),
             "source_url": page_url, "item_url": item_url,
             "source_updated_at": updated, "page_asof": None, "observed_at": observed_at.isoformat(),
             "accept_state": state, "accept_reason": state_why,

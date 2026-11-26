@@ -258,8 +258,8 @@ def test_hub_page_renders_the_buyback_and_profit_with_assumptions(monkeypatch):
     from src.content import tcg_hub_page as page_mod
     monkeypatch.setattr(bb, "load_config", lambda path=bb.CONFIG_PATH: CFG)
     html = page_mod.render(_hub([row(price=8000, jan="4500000000111")]), generated_label="x")
-    assert "最高買取" in html and "¥8,000" in html and "+1,800円" in html and "ROI" in html and "公式定価" in html and "¥6,200" in html
-    assert "店頭受取 → 店頭持込" in html and "単一ソース" in html and "交通費" in html
+    assert "最高買取" in html and "¥8,000" in html and "+1,800円" in html and "ROI 29%" in html and "公式定価" in html and "¥6,200" in html
+    assert "1店のみ" in html and "買取ルデヤ" in html
 
 
 def test_home_profit_badge_only_when_a_profit_exists():
@@ -323,12 +323,15 @@ def test_rudeya_item_name_with_no_shrink_is_not_executable():
 
 
 def test_profit_shows_which_shop_price_it_is_based_on(monkeypatch):
+    import re
     from src.content import tcg_hub_page as page_mod
     monkeypatch.setattr(bb, "load_config", lambda path=bb.CONFIG_PATH: CFG)
     rows = [row(price=8000, jan="4500000000111"), row(shop="kaitorishouten", price=9000, cond=bb.C_UNOPENED, upd="2026-11-20", jan="4500000000111")]
     html = page_mod.render(_hub(rows), generated_label="x")
-    assert "¥9,000" in html and "基準: 買取ルデヤ 買取 ¥8,000・定価 ¥6,200" in html        # 最高買取と利益の基準の店が違うことを画面に出す
-    assert "算出前です。出せるのは公式の定価だけ" not in html and "そろった商品だけ" in html     # 古い注意書きを残さない
+    profit = re.search(r"<li data-strip-profit>.*?</li>", html, re.S).group(0)
+    best = re.search(r"<li data-strip-best>.*?</li>", html, re.S).group(0)
+    assert "¥9,000" in best and "買取商店" in best and "買取ルデヤ" in profit and "買取商店" not in profit     # 最高買取の店と、利益の売却先（基準店）が違うことを画面に出す
+    assert "算出前です。出せるのは公式の定価だけ" not in html
 
 
 def test_home_profit_badge_is_for_store_pickup_lotteries_only():
@@ -398,7 +401,7 @@ def test_dedupe_drops_conflicting_prices_even_when_the_raw_name_differs():
 def test_push_conflict_allowlist_includes_generated_pages():
     """衝突時に生成物として扱うページに、tcg.html などを含める（Reviewer M-1）。人が書く CSV と発見の台帳は含めない。"""
     t = (ROOT / ".github" / "workflows" / "daily_lp.yml").read_text(encoding="utf-8")
-    assert "docs/(tcg|iphone-buyback|camera-research)\\.html$" in t
+    assert "docs/(tcg|tcg-lottery|iphone-buyback|camera-research)\\.html$" in t
     assert "data/" not in t[t.index("OTHERS=$(echo"):t.index("OTHERS=$(echo") + 400]
 
 

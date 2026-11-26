@@ -78,8 +78,8 @@ def test_unknown_state_is_excluded_from_history_and_events():
 
 
 def test_unknown_state_is_not_called_stopped_in_the_label():
-    assert "買取として扱いません" in page_mod._susp_label({"suspended_text": "受付状態を確認できません"})
-    assert "今は買い取っていません" in page_mod._susp_label({"suspended_text": "お申込一時停止中"})
+    assert page_mod._susp_label({"suspended_text": "受付状態を確認できません"}) == "受付状態不明"       # 停止と断定しない
+    assert page_mod._susp_label({"suspended_text": "お申込一時停止中"}) == "受付停止"
 
 
 # ── 利益候補 ──
@@ -108,19 +108,21 @@ def test_profitable_product_appears_without_any_lottery():
     o = hub["opportunities"][0]
     assert o["lottery"] is None and o["profit"]["net_profit"] == 3000 and o["state"] == pv.O_PROFIT
     html = page_mod.render(hub)
-    assert "商品と利益（1）" in html and "現在確認できる抽選なし" in html            # 利益候補は商品カードに統合（1 商品 1 枚）
+    assert "商品と利益（1）" in html and "data-lot-item" not in html and "+3,000円" in html            # 利益候補は商品カードに統合（1 商品 1 枚）
 
 
 def test_small_profit_is_watch_not_a_strong_recommendation():
     o = _hub(6020)["opportunities"][0]                       # +20 円（ROI 0.3%）: 数学的には黒字だが様子見
     assert o["profit"]["net_profit"] == 20 and o["state"] == pv.O_WATCH and o["state_label"] == "様子見"
-    assert "黒字でも投資利益率が基準に届かないため、様子見です" in page_mod.render(_hub(6020))        # 少額の黒字を強い推奨にしない
+    html = page_mod.render(_hub(6020))
+    assert '<b class="sb warn">様子見</b>' in html and 'class="tc-strip is-wait"' in html and 'class="sb pf"' not in html   # 少額の黒字を強い推奨（緑）にしない
 
 
 def test_loss_is_watch_and_says_deficit():
     o = _hub(5800)["opportunities"][0]
     assert o["profit"]["status"] == bb.NO_PROFIT and o["state"] == pv.O_WATCH
-    assert "赤字です" in page_mod.render(_hub(5800))
+    html = page_mod.render(_hub(5800))
+    assert '<b class="sb ls">赤字</b>' in html and '<b class="amt neg">-200円</b>' in html
 
 
 def test_roi_threshold_is_the_existing_buy_now_threshold():
@@ -158,8 +160,8 @@ def test_ordering_is_state_then_profit_then_roi():
 
 def test_card_has_runtime_freshness_and_required_fields():
     html = page_mod.render(_hub(9000))
-    sec = html[html.index('id="opportunities"'):html.index('id="retailer-box"')]
-    for w in ("ポケモンカード", "公式定価", "最高買取", "利益", "ROI", "確認", "単一ソース", "買取ルデヤ", "価格再確認待ち"):
+    sec = html[html.index('id="opportunities"'):html.index('id="page-foot"')]
+    for w in ("ポケカ", "公式定価", "最高買取", "純利益", "ROI", "1店のみ", "買取ルデヤ", "再確認待ち", "data-stale-note"):
         assert w in sec
     assert 'data-fb-live' in sec and 'data-fb-stale' in sec
     assert len(re.findall(r'data-fb-live[^>]*\bhidden', sec)) >= 3          # 金額は JS が鮮度を確認するまで出さない
@@ -209,7 +211,9 @@ def test_outlier_price_is_not_saved_as_the_next_days_baseline():
 
 
 def test_single_source_is_visible_in_the_state_badge():
-    assert "黒字（単一ソース）" in page_mod.render(_hub(9000))
+    html = page_mod.render(_hub(9000))
+    best = re.search(r"<li data-strip-best>.*?</li>", html, re.S).group(0)
+    assert "1店のみ" in best and best.index("data-fb-live") < best.index("1店のみ")          # 買取が 1 店だけであることを、最高買取の欄（鮮度の判定の中）に出す
 
 
 # ── 最終監査での指摘の回帰（2026-11-24） ──

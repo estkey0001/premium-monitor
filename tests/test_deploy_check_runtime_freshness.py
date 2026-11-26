@@ -495,9 +495,9 @@ def test_tcg_853_mutation_strip_amount_outside_live(tcg_html, kind):
 
 def test_tcg_853_mutation_best_price_leaks_next_to_live(tcg_html):
     # strip の外（カードの別の場所）への漏れは、利益・黒字・符号付きの金額で検出する
-    h2 = _sub_card(tcg_html, "POKEMON:deck", lambda c: c.replace('<div class="tc-foot">', '<div class="tc-foot"><p>純利益 +1,800円</p>', 1))
+    h2 = _sub_card(tcg_html, "POKEMON:deck", lambda c: c.replace('<div class="tc-img">', '<div class="tc-img"><p>純利益 +1,800円</p>', 1))
     assert any("live の外" in x for x in _t853(h2))
-    h3 = _sub_card(tcg_html, "POKEMON:deck", lambda c: c.replace('<div class="tc-foot">', '<div class="tc-foot" title="利益 +1,800円">', 1))
+    h3 = _sub_card(tcg_html, "POKEMON:deck", lambda c: c.replace('<div class="tc-img">', '<div class="tc-top" title="利益 +1,800円">', 1))
     assert any("属性" in x for x in _t853(h3))
 
 
@@ -531,9 +531,9 @@ def test_tcg_853_mutation_other_rows_share_a_group(tcg_html):
 
 
 def test_tcg_853_mutation_nested_div_or_span_inside_live(tcg_html):
-    h = tcg_html.replace('<b class="amt">¥9,500</b>', '<span class="x"><b class="amt">¥9,500</b></span>', 1)
-    assert any("入れ子" in x for x in _t853(h))
-    h2 = tcg_html.replace('<b class="amt">¥9,500</b>', '<div><b class="amt">¥9,500</b></div>', 1)
+    h = re.sub(r'(<b class="amt[^"]*">¥9,500</b>)', r'<span class="x">\1</span>', tcg_html, count=1)
+    assert h != tcg_html and any("入れ子" in x for x in _t853(h))
+    h2 = re.sub(r'(<b class="amt[^"]*">¥9,500</b>)', r'<div>\1</div>', tcg_html, count=1)
     assert any("入れ子" in x for x in _t853(h2))
 
 
@@ -571,8 +571,8 @@ def test_tcg_853_profit_and_badge_obs_must_agree(tcg_html):
 def test_tcg_853_outlier_row_must_not_show_a_price(monkeypatch):
     h = TC._html(TC._build([TC.row(price=30000, jan=TC.DECK_JAN)], monkeypatch=monkeypatch))
     assert _t853(h) == []
-    assert "外れ値の疑い" in h or "確認待ち（利益に使っていません）" in h
-    h2 = h.replace("確認待ち（利益に使っていません）", "確認待ち ¥30,000 ROI 5%", 1)
+    assert re.search(r"<li data-strip-best>.*?<small>確認待ち</small>", h, re.S)          # 外れ値: 最高買取は「確認待ち」だけ（価格を出さない）
+    h2 = _sub_card(h, "POKEMON:deck", lambda c: c.replace(_li(c, "best"), _li(c, "best").replace('<b class="amt na">—</b>', '<b class="amt na">— ¥30,000 ROI 5%</b>', 1)))
     assert h2 != h and any("live の外" in x for x in _t853(h2))
 
 
@@ -662,7 +662,7 @@ def test_tcg_852_best_with_reason_and_no_profit_passes(monkeypatch):
     master = [TC._master("deck", "デッキセット"), TC._master("box", "拡張パック BOX", "BOOSTER_BOX", "2026-12-05", pack_price=180, retail_price_basis="pack")]
     h = TC._html(TC._build([TC.row(price=14000, jan=TC.BOX_JAN, name="拡張パック BOX [M6]")], master=master, msrp=[], monkeypatch=monkeypatch))
     bad, info = dc.check_tcg_profit_evidence(h)
-    assert bad == [] and info["best"] == 1 and info["profit"] == 0     # 定価なし: 最高買取は出るが利益は出さない（理由あり）
+    assert bad == [] and info["best"] == 0 and info["profit"] == 0     # 定価が 1 パックだけ: 単位違いで最高買取の欄に金額を出さない・利益も出さない
     assert _t853(h) == []
 
 
@@ -674,7 +674,7 @@ def test_tcg_852_853_wired_into_check_and_old_inline_regexes_are_gone():
 
 # ---- #853 独立レビュー L1（検査の穴）と M2（group の新規則）
 @pytest.mark.parametrize("where,anchor", [
-    ("tc-foot", '<div class="tc-foot">'),
+    ("tc-img", '<div class="tc-img">'),
     ("抽選欄", '<div class="tc-lot" data-lot>'),
     ("他店の行", '<li data-other-shop="rudeya"'),
 ])
@@ -708,12 +708,12 @@ def test_tcg_853_best_only_stale_removed_is_caught_even_if_other_stale_remains(t
 
 
 def test_tcg_853_diff_note_and_not_the_highest_note_are_required(tcg_html):
-    h = _sub_card(tcg_html, "POKEMON:deck", lambda c: c.replace("最高買取の店は送料・費用が未確認のため、利益ではなく差額です", "差額です"))
-    assert any("送料・費用が未確認" in x for x in _t853(h))
-    h2 = _sub_card(tcg_html, "POKEMON:deck", lambda c: c.replace("最高買取にしません", "参考です"))
-    assert any("最高買取にしません" in x for x in _t853(h2))
+    h = _sub_card(tcg_html, "POKEMON:deck", lambda c: c.replace(_li(c, "diff"), _li(c, "diff").replace("・費用未確認", "")))
+    assert h != tcg_html and any("費用未確認" in x for x in _t853(h))
+    h2 = _sub_card(tcg_html, "POKEMON:deck", lambda c: c.replace("<small>参考</small>", "<small>参考です</small>"))
+    assert h2 != tcg_html and any("最高買取にしない" in x for x in _t853(h2))
     h3 = _sub_card(tcg_html, "POKEMON:deck", lambda c: re.sub(r'<li data-strip-diff>.*?</li>', "", c, count=1, flags=re.S))
-    assert not any("送料・費用が未確認" in x for x in _t853(h3))               # 差額の行が無ければ（基準店が最高買取の店）注記は要らない
+    assert not any("費用未確認" in x for x in _t853(h3))                        # 差額の行が無ければ（基準店が最高買取の店）ラベルは要らない
 
 
 def test_tcg_853_group_rules_best_diff_vs_profit_badge_vs_other(tcg_html):
@@ -747,7 +747,7 @@ def _watch_html(monkeypatch):
 
 @pytest.mark.parametrize("label", ["赤字", "様子見", "黒字"])
 def test_tcg_853_l1_state_badge_outside_live_is_caught(tcg_html, label):
-    h = _sub_card(tcg_html, "POKEMON:deck", lambda c: c.replace("<div class=\"tc-foot\">", f'<div class="tc-foot"><b class="sb warn">{label}</b>', 1))
+    h = _sub_card(tcg_html, "POKEMON:deck", lambda c: c.replace("<div class=\"tc-img\">", f'<div class="tc-img"><b class="sb warn">{label}</b>', 1))
     assert h != tcg_html and any("live の外" in x and label in x for x in _t853(h)), label
 
 
@@ -758,19 +758,21 @@ def test_tcg_853_l1_real_negative_and_watch_cards_with_unwrapped_badge_are_caugh
         card_key = "POKEMON:deck"
         m = _sub_card(h, card_key, _unlive_badge)
         if word == "赤字":
-            assert 'class="sb out">赤字<' in m or 'class="sb warn">赤字<' in m, "赤字バッジが無い（前提が崩れた）"
+            assert 'class="sb ls">赤字<' in h, "赤字バッジが無い（前提が崩れた）"
         assert m != h
         bad = _t853(m)
         assert any("live の外" in x and word in x for x in bad), (word, bad)
 
 
 def test_tcg_852_l2_reason_must_be_a_reason_word_outside_live(monkeypatch):
-    master = [TC._master("deck", "デッキセット"), TC._master("box", "拡張パック BOX", "BOOSTER_BOX", "2026-12-05", pack_price=180, retail_price_basis="pack")]
-    h = TC._html(TC._build([TC.row(price=14000, jan=TC.BOX_JAN, name="拡張パック BOX [M6]")], master=master, msrp=[], monkeypatch=monkeypatch))
-    assert _t852(h) == []                                                 # 定価なし: 算出前の理由がある
+    # 最高買取（買取商店）と定価はあるが、費用の分かる基準店（ルデヤ）が受付停止 → 利益は「算出前」（理由の語）
+    stopped = {**TC.row(price=12000, jan=TC.DECK_JAN), "accept_state": "STOPPED", "suspended_text": "お申込一時停止中"}
+    h = TC._html(TC._build([stopped, TC.row(shop="kaitorishouten", price=9000, jan=TC.DECK_JAN, upd="2026-11-21")], monkeypatch=monkeypatch))
+    deck = re.search(r'<article class="tcard"[^>]*data-card-key="POKEMON:deck".*?</article>', h, re.S).group(0)
+    assert _t852(h) == [] and "算出前" in _li(deck, "profit")
     def drop_reason(card):
         return card.replace(_li(card, "profit"), '<li data-strip-profit><em>利益</em><span class="tc-val"><b class="amt">-</b><small>ご確認ください</small></span></li>')
-    h2 = _sub_card(h, "POKEMON:box", drop_reason)
+    h2 = _sub_card(h, "POKEMON:deck", drop_reason)
     assert h2 != h and any("対応する利益または理由" in x for x in _t852(h2))   # 利益欄に文字はあるが、理由の語がない
 
 
@@ -783,7 +785,7 @@ def test_tcg_852_l2_reason_word_inside_live_or_stale_does_not_count(tcg_html):
 
 def test_tcg_853_l3_japanese_prose_with_numbers_and_yen_is_not_money(tcg_html):
     for txt in ("費用が不明（不明を 0 円にしない）", "1000円以上のみ受付停止"):
-        h = _sub_card(tcg_html, "POKEMON:deck", lambda c, t=txt: c.replace('<div class="tc-foot">', f'<div class="tc-foot"><p>{t}</p>', 1))
+        h = _sub_card(tcg_html, "POKEMON:deck", lambda c, t=txt: c.replace('<div class="tc-img">', f'<div class="tc-img"><p>{t}</p>', 1))
         assert h != tcg_html and _t853(h) == [], txt
 
 
@@ -802,3 +804,149 @@ def test_tcg_853_l3_money_regex_still_detects_real_amounts():
         assert dc._TCG_MONEY_RE.search(t), t
     for t in ("費用が不明（不明を 0 円にしない）", "1000円以上のみ受付停止", "ROI の基準", "0 円にしない", "￥"):
         assert not dc._TCG_MONEY_RE.search(t), t
+
+
+# ---- 2 ページ化（tcg.html / tcg-lottery.html）: 応募ボタン・抽選のページ・相互リンク（#853 に追加した検査）
+@pytest.fixture
+def tcg_pages(monkeypatch):
+    hub = TC._build(TC.ROWS, [TC._ev("deck", "デッキセット", 1), TC._ev("deck", "デッキセット", 2, verified=False)], monkeypatch=monkeypatch)
+    return TC._html(hub), TC._lhtml(hub)
+
+
+def test_tcg_two_pages_pass_the_new_checks(tcg_pages):
+    prod, lot = tcg_pages
+    assert dc.check_tcg_apply_buttons(prod, "tcg.html") == [] and dc.check_tcg_lottery_page(prod, lot) == []
+    assert "公式ページで応募する" in prod and "公式ページで応募する" in lot
+
+
+def test_tcg_apply_button_on_unverified_or_not_open_row_is_caught(tcg_pages):
+    prod, lot = tcg_pages
+    btn = '<a class="btn cta" href="https://draw.geo-online.co.jp/lottery/200" target="_blank" rel="noopener nofollow">公式ページで応募する</a>'
+    # 未確認の行（data-verified="0"）に応募ボタンを足す
+    bad = re.sub(r'(<tr class="ev[^>]*data-verified="0"[^>]*>.*?<span class="btns">)', lambda m: m.group(1) + btn, lot, count=1, flags=re.S)
+    assert bad != lot and any("確認済み以外" in x for x in dc.check_tcg_lottery_page(prod, bad))
+    # 期限の切り替え（data-rb-open）の外に出す
+    out = lot.replace('<span data-rb-open><a class="btn cta"', '<span><a class="btn cta"', 1)
+    assert out != lot and any("data-rb-open" in x for x in dc.check_tcg_lottery_page(prod, out))
+    # 行の外・ボタン以外の文字として出す
+    assert any("行の外" in x for x in dc.check_tcg_apply_buttons(prod.replace("</main>", btn + "</main>"), "tcg.html"))
+    assert any("以外に出ている" in x for x in dc.check_tcg_apply_buttons(prod.replace("</main>", "<p>公式ページで応募する</p></main>"), "tcg.html"))
+
+
+def test_tcg_lottery_page_must_not_carry_money_and_must_link_back(tcg_pages):
+    prod, lot = tcg_pages
+    assert any("金額" in x for x in dc.check_tcg_lottery_page(prod, lot.replace("</main>", "<p>買取 ¥9,000</p></main>")))
+    live = '<span data-fb-live data-fb-group="x" data-fb-obs="2026-11-21T18:00:00+09:00" data-fb-max="36" data-fb-fut="5" hidden>¥1</span>'
+    assert any("data-fb-live" in x for x in dc.check_tcg_lottery_page(prod, lot.replace("</main>", live + "</main>")))
+    assert any("相互リンク" in x for x in dc.check_tcg_lottery_page(prod, lot.replace('href="tcg.html"', 'href="x.html"')))
+    broken = re.sub(r'href="tcg-lottery\.html#L-[^"]+"', 'href="tcg-lottery.html#L-nothing"', prod, count=1)
+    assert broken != prod and any("無い行へのリンク" in x for x in dc.check_tcg_lottery_page(broken, lot))
+    old = re.sub(r'(<meta name="tcg-source-generated-at" content=")[^"]*', r"\g<1>2020-01-01T00:00:00+09:00", lot, count=1)
+    assert any("2 ページで違う" in x for x in dc.check_tcg_lottery_page(prod, old))
+    moved = lot.replace('id="calendar"', 'id="cal-x"').replace("</main>", '<h2 id="calendar">x</h2></main>')
+    assert any("カレンダー" in x for x in dc.check_tcg_lottery_page(prod, moved))
+
+
+def test_tcg_852_suspended_only_price_is_not_counted_as_best_and_needs_its_label(monkeypatch):
+    stopped = {**TC.row(price=12000, jan=TC.DECK_JAN), "accept_state": "STOPPED", "suspended_text": "お申込一時停止中"}
+    h = TC._html(TC._build([stopped], monkeypatch=monkeypatch))
+    bad, info = dc.check_tcg_profit_evidence(h)
+    assert bad == [] and _t853(h) == []
+    deck = re.search(r'<article class="tcard"[^>]*data-card-key="POKEMON:deck".*?</article>', h, re.S).group(0)
+    assert "受付停止中" in _li(deck, "best") and "¥" not in _li(deck, "best")
+    h2 = h.replace('hidden><small>受付停止中</small>', 'hidden><b class="amt off">¥12,000</b><small>受付停止中</small>', 1)   # 変異: 最高買取の欄に停止中の金額
+    assert h2 != h and any("受付停止・単位違いの金額" in x for x in dc.check_tcg_profit_evidence(h2)[0])
+
+
+def test_tcg_853_new_checks_are_wired_into_check():
+    src = (ROOT / "scripts" / "deploy_check.py").read_text(encoding="utf-8")
+    assert "check_tcg_apply_buttons(_h853" in src and "check_tcg_lottery_page(_h853" in src and 'PUBLIC_DIR / "tcg-lottery.html"' in src
+
+
+# ---- 独立レビュー（第 3 回）: 新しい領域の金額漏れ・応募ボタンの行き先・画像の src と onerror（mut.py・mut2.py の変異）
+@pytest.mark.parametrize("name,fn", [
+    ("rk_profit_text_outside", lambda p: p.replace('<td class="n" data-label="純利益">', '<td class="n" data-label="純利益"><b>+1,000円</b>', 1)),
+    ("rk_badge_outside", lambda p: p.replace('<td class="st">', '<td class="st"><b class="sb pf">黒字</b>', 1)),
+    ("rk_sell_yen_outside", lambda p: p.replace('<td class="n" data-label="純利益">', '<td class="n" data-label="純利益"><small>買取商店 ¥9,000</small>', 1)),
+    ("thumb_money", lambda p: re.sub(r'(<a class="th"[^>]*>.*?<span>)', r"\1¥9,000 ", p, count=1, flags=re.S)),
+    ("soon_money", lambda p: p.replace('<section class="soon"', '<section class="soon"><p>利益 +3,000円</p>', 1)),
+    ("stale_note_money", lambda p: p.replace("data-stale-note hidden>", "data-stale-note hidden>最高買取 ¥9,000 ", 1)),
+    ("rk_state_word_outside", lambda p: p.replace('<td class="st">', '<td class="st">様子見', 1)),
+])
+def test_tcg_853_money_outside_live_in_new_regions_is_caught(monkeypatch, name, fn):
+    """利益ランキング・画像で選ぶ・締切が近い抽選の帯・鮮度切れの注記: live / stale の外の金額・状態バッジを検出する（許可はランキングの定価と商品名だけ）。"""
+    hub = TC._build(TC.ROWS, [TC._ev("deck", "デッキセット", 1)], monkeypatch=monkeypatch)
+    hub["cards"][0]["image_url"] = None
+    html = TC._html(hub)
+    assert _t853(html) == []
+    bad = fn(html)
+    assert bad != html, name
+    assert _t853(bad) or dc.check_tcg_profit_evidence(bad)[0], name
+
+
+def test_tcg_853_allowed_cells_in_the_ranking_pass(monkeypatch):
+    html = TC._html(TC._build(TC.ROWS, monkeypatch=monkeypatch))
+    assert '<td class="n" data-label="定価">' in html and _t853(html) == []                    # 定価セル（設定値）の金額は許可
+
+
+def test_tcg_apply_button_href_js_only_and_images_are_checked(tcg_pages):
+    prod, lot = tcg_pages
+    assert dc.check_tcg_apply_buttons(prod, "tcg.html") == [] and dc.check_tcg_images(prod, "tcg.html") == []
+    m = re.search(r'(<a class="btn cta" href=")([^"]+)(")', prod)
+    ext = prod.replace(m.group(0), m.group(1) + "http://evil.example.com/x" + m.group(3), 1)
+    assert any("公式ドメイン" in x for x in dc.check_tcg_apply_buttons(ext, "tcg.html"))
+    other = prod.replace(m.group(0), m.group(1) + "https://evil.example.com/x" + m.group(3), 1)
+    assert any("公式ドメイン" in x for x in dc.check_tcg_apply_buttons(other, "tcg.html"))       # https でも小売の公式ドメインでなければ不合格
+    nojs = prod.replace(" data-js-only hidden>公式ページで応募する", ">公式ページで応募する", 1)
+    assert nojs != prod and any("JS の無いとき" in x for x in dc.check_tcg_apply_buttons(nojs, "tcg.html"))
+    howto = prod.replace("</main>", f"<p>{page_mod.APPLY_HOWTO}</p></main>")
+    assert any(page_mod.APPLY_HOWTO in x for x in dc.check_tcg_apply_buttons(howto, "tcg.html"))
+    early = prod.replace("<span data-rb-expired hidden>", "<span data-rb-expired>", 1)
+    assert early != prod and any("data-rb-expired" in x for x in dc.check_tcg_apply_buttons(early, "tcg.html"))
+
+
+def test_tcg_images_src_and_onerror_are_checked():
+    ok = ('<div class="pimg pokemon"><img src="https://www.pokemon-card.com/x.jpg" alt="x" onerror="' + _html_attr(page_mod.IMG_ONERROR) + '"></div>'
+          '<div class="pimg onepiece"><img src="https://www.onepiece-cardgame.com/x.png" alt="y" onerror="' + _html_attr(page_mod.IMG_ONERROR) + '"></div>')
+    assert dc.check_tcg_images(ok, "x") == []
+    assert any("src" in x for x in dc.check_tcg_images(ok.replace("www.pokemon-card.com", "evil.example.com", 1), "x"))
+    assert any("src" in x for x in dc.check_tcg_images(ok.replace("www.onepiece-cardgame.com", "www.pokemon-card.com", 1), "x"))   # TCG とホストの食い違い
+    assert any("src" in x for x in dc.check_tcg_images(ok.replace("x.png", "noimage.png", 1), "x"))
+    assert any("onerror" in x for x in dc.check_tcg_images(ok.replace('onerror="var p', 'onerror="fetch(1);var p', 1), "x"))
+
+
+def _html_attr(s: str) -> str:
+    import html as _h
+    return _h.escape(s, quote=True)
+
+
+from src.content import tcg_hub_page as page_mod  # noqa: E402
+
+
+
+def test_tcg_853_fake_best_in_a_card_without_buyback_rows_is_caught_with_obs_by_pid(monkeypatch):
+    """【Reviewer Low-4】元データに買取の行が無い商品のカードに、偽の最高買取（live）を差し込むと検出する（obs_by_pid 付き）。
+    「—」と金額の両方が最高買取の欄にある形も、obs_by_pid が無くても検出する。"""
+    stopped = {**TC.row(price=12000, jan=TC.DECK_JAN), "accept_state": "STOPPED", "suspended_text": "お申込一時停止中"}
+    h = TC._html(TC._build([stopped], monkeypatch=monkeypatch))
+    by_pid = {"deck": _TCG_OBS}
+    assert _t853(h, by_pid) == []
+    box = re.search(r'<article class="tcard"[^>]*data-card-key="POKEMON:box".*?</article>', h, re.S).group(0)
+    gid = re.search(r'id="([^"]+)"', box).group(1)
+    obs = next(iter(_TCG_OBS))
+    fake = (f'<span data-fb-live data-fb-group="{gid}-b" data-fb-obs="{obs}" data-fb-max="{_TCG_MX:g}" data-fb-fut="{_TCG_FUT:g}" hidden>'
+            f'<b class="amt">¥12,000</b></span><span data-fb-stale data-fb-group="{gid}-b" data-fb-max="{_TCG_MX:g}">再確認待ち</span>')
+    h2 = _sub_card(h, "POKEMON:box", lambda c: c.replace(_li(c, "best"), _li(c, "best").replace("</span></li>", fake + "</span></li>", 1)))
+    assert h2 != h
+    assert any("元データ（buyback.json）の買取の行が無い" in x for x in _t853(h2, by_pid))
+    assert any("「—」と金額" in x for x in dc.check_tcg_profit_evidence(h2)[0])
+
+
+def test_tcg_853_ranking_allows_only_the_product_name_link(monkeypatch):
+    """【Reviewer Low-1】利益ランキングで許すのは商品名のリンクの文字と公式定価のセルだけ（td.nm の中のほかの要素は許さない）。"""
+    html = TC._html(TC._build(TC.ROWS, monkeypatch=monkeypatch))
+    assert _t853(html) == []
+    roi = html.replace('<td class="nm">', '<td class="nm"><small>ROI 30%</small>', 1)
+    assert roi != html and any("利益ランキング" in x for x in _t853(roi))
+    named = re.sub(r'(<td class="nm"><a [^>]*>)', r"\1500円記念 ", html, count=1)
+    assert named != html and _t853(named) == []                                            # 商品名のリンクの中の数字+円は許可

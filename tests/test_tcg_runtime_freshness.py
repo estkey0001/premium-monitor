@@ -166,7 +166,7 @@ def test_generated_html_starts_fail_closed(monkeypatch):
     assert len(live) >= 3 and all(e["hidden"] for e in live)            # 状態バッジ・最高買取・利益（新しいカードの live）
     assert stale and not any(e["hidden"] for e in stale)
     assert all(e["attrs"]["data-fb-max"] == "36" for e in live)                        # fixture の設定（36）から。JS の数値ではない
-    assert "価格再確認待ち" in html and "¥8,000" in html
+    assert "再確認待ち" in html and "¥8,000" in html
 
 
 @needs_node
@@ -203,11 +203,16 @@ def test_boundary_and_future_and_missing_in_the_page(monkeypatch):
     assert not all(not e["hidden"] for e in _apply(missing, obs) if e["kind"] == "live")
 
 
-def test_pnote_premise_is_also_gated(monkeypatch):
+def test_roi_and_sell_shop_note_is_also_gated(monkeypatch):
+    import re
+    """利益の横の ROI・売却先（旧: 前提の注記）も鮮度の判定（live）の中。商品カード・利益ランキングの両方。"""
     import tests.test_tcg_buyback as tb
     html = _tcg_html(monkeypatch, tb.NOW)
-    i = html.index("前提:")
-    assert "data-fb-live" in html[html.rfind("<span", 0, i):i]
+    assert "前提:" not in html
+    hits = [m.start() for m in re.finditer("ROI 29%", html)]
+    assert len(hits) >= 2                                                                     # 商品カードと利益ランキング
+    for i in hits:
+        assert "data-fb-live" in html[html.rfind("<span", 0, i):i]
 
 
 @needs_node
@@ -243,9 +248,13 @@ def test_card_groups_are_split_by_observation_time_and_other_shops_use_their_own
     （旧: 1 カード 1 グループ。行ごとに取得時刻が違うと『利益 +N円』と『利益は価格再確認待ち』が同時に出るため分けた）"""
     import tests.test_tcg_buyback as tb
     html = _tcg_html(monkeypatch, tb.NOW)
-    groups = [e["attrs"]["data-fb-group"] for e in _elements(html)]
-    assert groups and set(groups) <= {"p0-b", "p0-p"}                                 # fixture は 1 商品 1 店。最高買取・利益・状態バッジだけ
-    assert {"p0-b", "p0-p"} == set(groups)
+    card = html[html.index('<article class="tcard"'):html.index("</article>")]
+    groups = [e["attrs"]["data-fb-group"] for e in _elements(card)]
+    assert groups and {"p0-b", "p0-p"} == set(groups)                                 # fixture は 1 商品 1 店。カードは最高買取・利益・状態バッジだけ
+    page_groups = {e["attrs"]["data-fb-group"] for e in _elements(html)}
+    assert page_groups == {"p0-b", "p0-p", "rk-p0"}                                   # カードの外: 利益ランキングだけ（別の group）
+    for g in page_groups:                                                             # どの group にも再確認待ち（stale）がある
+        assert any(e["kind"] == "stale" and e["attrs"]["data-fb-group"] == g for e in _elements(html)), g
     assert not any(g.endswith("-pf") for g in groups)                                 # 旧 UI の利益専用グループは無い
 
 
@@ -261,9 +270,10 @@ def test_profit_and_stale_never_show_together_when_only_one_side_expires(monkeyp
         res = _apply(card, tb.NOW + timedelta(hours=hrs))
         vis = " ".join(_walk(card, [e["hidden"] for e in res]).visible)
         assert ("+1,800円" in vis) is profit_visible, (hrs, vis)
-        assert ("利益は価格再確認待ち" in vis) is (not profit_visible), (hrs, vis)
+        prof = [e for e in res if e["group"] == "p0-p"]                                     # 利益と状態バッジ（同じ group）
+        assert all(e["hidden"] for e in prof if e["kind"] == "stale") is profit_visible, (hrs, prof)   # 利益の「再確認待ち」は利益が出ていないときだけ
         assert ("¥9,000" in vis) is best_visible, (hrs, vis)
-        assert not ("+1,800円" in vis and "利益は価格再確認待ち" in vis), hrs
+        assert all((e["kind"] == "live") is (not e["hidden"]) for e in prof) is profit_visible, hrs     # 金額と「再確認待ち」が同時に出ない
 
 
 def test_no_buyback_profit_amount_outside_the_freshness_gate(monkeypatch):
@@ -274,7 +284,7 @@ def test_no_buyback_profit_amount_outside_the_freshness_gate(monkeypatch):
     assert "+1,800円" in html                                                            # 利益が出ているカードがある fixture
     rest = re.sub(r"<div [^>]*data-fb-live[^>]*>.*?</div>|<span [^>]*data-fb-live[^>]*>.*?</span>", "", html, flags=re.S)
     assert not re.search(r"[+\-−][\d,]+円", rest), re.findall(r".{20}[+\-−][\d,]+円.{10}", rest)[:3]
-    assert "29.0%" not in rest                                                           # ROI も同じ
+    assert "29%" not in rest                                                             # ROI も同じ
 
 
 @pytest.mark.parametrize("bad", [float("nan"), float("inf"), float("-inf"), -1, -0.5, "8", None, True])
@@ -293,5 +303,5 @@ def test_no_buyback_amount_outside_live_by_html_parser(monkeypatch):
     w = _walk(html[html.index("<main>"):html.index("</main>")])
     outside = " ".join(w.outside) + " " + " ".join(w.attrs_outside)
     assert w.nest_bad == []
-    for amt in ("+1,800", "29.0%", "8,000"):
+    for amt in ("+1,800", "29%", "8,000"):
         assert amt not in outside, amt

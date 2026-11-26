@@ -45,8 +45,8 @@ def test_open_lottery_price_gives_conditional_profit_with_separate_label():
     assert o["state"] == pv.O_CONDITIONAL and o["profit"]["net_profit"] == 3000 and o["profit"]["msrp"] is None
     assert "当選した場合のみ" in o["condition"] and o["retailer"]["accept_state"] == "OPEN" and o["retailer"]["verified_at"] == "2026-11-21"
     html = page_mod.render(h)
-    sec = html[html.index('id="retailer-box"'):html.index('id="products"')]
-    assert "メーカー定価ではありません" in sec and "条件付き" in sec and "購入推奨ではありません" in sec
+    sec = html[html.index('id="retailer-box"'):html.index('id="page-foot"')]
+    assert "販売店価格" in sec and "条件付き" in sec and "当選時のみ" in sec and "公式定価" not in sec       # メーカー定価と混ぜない・当選した場合だけの条件付き
     assert 'class="sb ok"' not in sec                                    # 緑の購入推奨バッジにしない
     assert "data-fb-live" in sec and "data-fb-stale" in sec and "data-rb-until" in sec
 
@@ -56,7 +56,7 @@ def test_conditional_is_never_actionable_or_home():
     o = hub([ent()])["retailer_opportunities"][0]
     assert o["executable"] is False and o["state"] not in (pv.O_PROFIT, pv.O_WATCH)
     assert "retailer" not in inspect.getsource(pv.profit_map)
-    assert "BUY" not in page_mod.render(hub([ent()])).split('id="retailer-box"')[1].split('id="products"')[0]
+    assert "BUY" not in page_mod.render(hub([ent()])).split('id="retailer-box"')[1].split('id="page-foot"')[0]
 
 
 @pytest.mark.parametrize("kw,state", [
@@ -72,7 +72,8 @@ def test_ended_or_unknown_is_reference_only_without_profit(kw, state):
     assert h["retailer_opportunities"] == []
     r = h["retailer_references"][0]
     assert r["accept_state"] == state and r["kind"] == "REFERENCE_ONLY" and r["executable"] is False
-    assert "net_profit" not in r and "過去の参考情報" in page_mod.render(h)
+    assert "net_profit" not in r and "過去の参考情報" in page_mod._rb_refs(h["retailer_references"])
+    assert "過去の参考情報" not in page_mod.render(h)                     # 運用者向けの参考情報は公開ページに出さない
 
 
 def test_state_is_derived_from_now_not_stored():
@@ -149,8 +150,8 @@ def test_msrp_json_does_not_contain_retailer_prices():
 
 def test_review_m2_static_label_carries_the_deadline_and_is_replaced_when_expired():
     html = page_mod.render(hub([ent()]))
-    sec = html[html.index('id="retailer-box"'):html.index('id="products"')]
-    assert "data-rb-open" in sec and "応募期限" in sec and "生成時点の判定" in sec        # JS 無効でも期限が読める
+    sec = html[html.index('id="retailer-box"'):html.index('id="page-foot"')]
+    assert "data-rb-open" in sec and "締切 " in sec                                       # JS 無効でも期限が読める
     assert "data-rb-expired hidden>応募期限を過ぎました</span>" in sec                     # 期限後は JS で表示が置き換わる
     assert ".rb-expired [data-rb-open]{display:none!important}" in html
 
@@ -194,11 +195,16 @@ def test_review_l5_old_price_check_is_reference_even_if_open():
     assert h["retailer_opportunities"] == [] and h["retailer_references"][0]["kind"] == rb.K_REFERENCE
 
 
+def _ops(h) -> str:
+    """運用者向けの描画（参考情報・台帳との食い違い）。公開ページ（render）には出さない（test_tcg_cards.test_public_page_has_no_operator_diagnostics）。"""
+    return page_mod._rb_refs(h.get("retailer_references") or []) + page_mod._rb_mismatch(h.get("retailer_validation_errors") or [])
+
+
 def test_review_l6_rejected_reference_hides_price_and_shows_names():
     rej = ent(id="r1", price_basis="pack_x", price_jpy=7200, derived_from_pack=True)
     unknown = ent(id="r2", product_id="zzz-unknown", price_jpy=8800)
     h = hub([rej, unknown, ent(id="r3", apply_end="2026-01-01", purchase_end=None, purchase_start=None)])
-    html = page_mod.render(h)
+    html = _ops(h)
     sec = html[html.index("過去の参考情報（販売店"):]
     sec = sec[:sec.index("</details>")]
     assert "¥7,200" not in sec and "¥8,800" not in sec and "パック価格から作った価格は採用しない" in sec     # 不採用の行は価格を出さない
@@ -216,7 +222,7 @@ def test_review_auditor_l4_ledger_notes_have_no_time_limited_state():
 
 # ---------------------------------------------------------------- 第 3 回レビュー（参考一覧の OPEN 行・開始日未確認）
 def _refs_html(entries, **kw):
-    html = page_mod.render(hub(entries, **kw))
+    html = _ops(hub(entries, **kw))
     sec = html[html.index("過去の参考情報（販売店"):]
     return sec[:sec.index("</details>")]
 
@@ -226,7 +232,7 @@ OPEN_HEAD = "応募受付中だが条件付き利益を計算できない"
 
 def _open_refs_html(h):
     """L3: OPEN で利益を計算できない行の小見出しの中（見出し語そのものは含めない）。"""
-    html = page_mod.render(h)
+    html = _ops(h)
     sec = html[html.index(OPEN_HEAD):]
     sec = sec[:sec.index("</details>")]
     return sec[sec.index("<ul>"):]
@@ -235,7 +241,7 @@ def _open_refs_html(h):
 def test_review3_open_reference_row_has_no_static_accepting_label_and_carries_deadline():
     old = (NOW - timedelta(days=15)).strftime("%Y-%m-%d")       # 14 日超の stale な OPEN 行（REFERENCE_ONLY）
     sec = _open_refs_html(hub([ent(verified_at=old)]))
-    assert "受付中" not in sec and "応募期限" in sec and "生成時点の判定" in sec
+    assert "受付中" not in sec and "応募期限" in sec
     assert "data-rb-card" in sec and "data-rb-until=" in sec and "data-rb-expired hidden" in sec and "応募期限を過ぎました" in sec
 
 
@@ -248,9 +254,9 @@ def test_review3_not_calculated_open_row_has_no_static_accepting_label():
 
 def test_l3_open_not_calculated_row_is_not_under_the_past_reference_heading():
     """L3: 応募期間中で利益を計算できない行は、『過去の参考情報』（終了・当選者のみ・期間外・不明）に入れない。"""
-    html = page_mod.render(hub([ent()], action="NO_BUYBACK"))
+    html = _ops(hub([ent()], action="NO_BUYBACK"))
     assert OPEN_HEAD in html and "過去の参考情報（販売店" not in html            # OPEN の行だけ → 過去の参考情報の見出しごと出ない
-    html2 = page_mod.render(hub([ent(), ent(id="t2", apply_end="2026-01-01", purchase_end=None, purchase_start=None, shop="終了店",
+    html2 = _ops(hub([ent(), ent(id="t2", apply_end="2026-01-01", purchase_end=None, purchase_start=None, shop="終了店",
                                             source_url="https://shop.example/y")], action="NO_BUYBACK"))
     past = html2[html2.index("過去の参考情報（販売店"):]
     past = past[:past.index("</details>")]
@@ -271,8 +277,8 @@ def test_review3_missing_apply_start_stays_open_but_is_marked_unconfirmed():
     assert _kind(ent(apply_start="2026-11-01"))["start_unconfirmed"] is False
     assert _kind(ent(apply_start="2026-11-01", apply_start_known=False))["start_unconfirmed"] is True
     html = page_mod.render(hub([ent()]))
-    sec = html[html.index('id="retailer-box"'):html.index('id="products"')]
-    assert "開始日未確認" in sec and "応募開始日は未確認" in sec
+    sec = html[html.index('id="retailer-box"'):html.index('id="page-foot"')]
+    assert "開始日未確認" in sec
 
 
 def test_review_l3_future_apply_start_reason_says_before_start():

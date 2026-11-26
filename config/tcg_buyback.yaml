@@ -68,6 +68,11 @@ shops:
     counter_buyback_evidence: null
     pages:
       - https://www.morimori-kaitori.jp/category/2403   # ONE PIECE カードゲーム（BOX）
+      # 2026-11-26 追加: ポケモンカードの「MEGA」サブカテゴリ（MEGA の BOX 7 件だけ・ページ送りなし）。
+      # 親の /category/2401 は 465 件・10 ページで大半が PSA の単品なので取らない（必要最小限の 1 ページ）。
+      # 条件の表記は「新品」と、シュリンクの破れ等をお断りする注意書きだけで、「未開封」の語は無い。
+      # → 条件は NEW（表示のみ・参考）。利益の経路・実行可能な最高買取には数えない（EXECUTABLE_CONDITIONS は変えない）
+      - https://www.morimori-kaitori.jp/category/2401010   # ポケモンカード MEGA（BOX）
   kaitorishouten:
     name: 買取商店
     host: www.kaitorishouten-co.jp
@@ -232,4 +237,23 @@ targets:
     unit: DECK
     jan: "4582769982545"
     name_contains: [ST-30]
+    pages: {}
+  # ── 2026-11-26: TCG ハブに出ている MEGA の BOX。JAN は 2 店の一覧で一致を確認（公式ページに JAN は載らない）:
+  #    森森買取 /category/2401010（2026-11-26 取得）と 買取ルデヤ /category/detail/114（2026-11-24 取得）。
+  #    店の表記だけが根拠なので、名前も照合する（name_contains）。
+  #    ONE PIECE の OP-19・EB-06・PEB-01・ST-37・ST-38 は、公式ページにも既存の店（ルデヤ /224・森森 /2403）にも JAN が無いので足さない
+  #    （推測の JAN を入れない。店が掲載したら 2 つの出典で確かめてから足す）
+  - product_id: pokemon-拡張パック-インフェルノx
+    tcg: POKEMON
+    name: 拡張パック「インフェルノX」
+    unit: BOX
+    jan: "4521329431529"
+    name_contains: [インフェルノX]
+    pages: {}
+  - product_id: pokemon-拡張パック-メガブレイブ
+    tcg: POKEMON
+    name: 拡張パック「メガブレイブ」
+    unit: BOX
+    jan: "4521329431161"
+    name_contains: [メガブレイブ]
     pages: {}

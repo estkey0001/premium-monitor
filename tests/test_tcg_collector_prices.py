@@ -538,13 +538,14 @@ def test_m3_mismatch_shows_on_the_page_and_price_conflict_row_has_no_profit(monk
     assert "PRICE_MISMATCH" in [e["kind"] for e in h["retailer_validation_errors"]]
     assert h["retailer_opportunities"] == []                                       # 利益に使わない
     assert any("食い違" in (r.get("reason") or "") for r in h["retailer_references"])
-    html = page_mod.render(h)
+    assert "台帳と自動取得の食い違い" not in page_mod.render(h)                    # 運用者向けの診断なので公開ページには出さない
+    html = page_mod._rb_mismatch(h["retailer_validation_errors"])
     sec = html[html.index("台帳と自動取得の食い違い（"):]
     sec = sec[:sec.index("</details>")]
     assert "テスト店" in sec and "拡張パック BOX" in sec and "価格" in sec and "6,000" in sec and "6,500" in sec and "公式ページで確認してください" in sec
     monkeypatch.setattr(rb, "load_ledger", lambda *a, **k: [])
     h0 = pv.build_hub({"items": []}, REG, {"verified": []}, NOW, {"rows": rows})
-    assert "台帳と自動取得の食い違い" not in page_mod.render(h0)                       # 0 件なら出さない
+    assert page_mod._rb_mismatch(h0["retailer_validation_errors"]) == ""                # 0 件なら出さない
 
 
 @pytest.mark.parametrize("label", [

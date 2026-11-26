@@ -639,6 +639,24 @@
   "date": "2026-11-26"
  },
  {
+  "product_id": "pokemon-拡張パック-インフェルノx",
+  "shop": "morimori",
+  "unit": "BOX",
+  "condition": "NEW",
+  "price": 15300,
+  "checked_at": "2026-11-26T15:22:36.028439+09:00",
+  "date": "2026-11-26"
+ },
+ {
+  "product_id": "pokemon-拡張パック-インフェルノx",
+  "shop": "rudeya",
+  "unit": "BOX",
+  "condition": "SEALED",
+  "price": 14000,
+  "checked_at": "2026-11-26T15:21:34.167855+09:00",
+  "date": "2026-11-26"
+ },
+ {
   "product_id": "pokemon-拡張パック-ストームエメラルダ",
   "shop": "kaitorishouten",
   "unit": "BOX",
@@ -667,11 +685,38 @@
  },
  {
   "product_id": "pokemon-拡張パック-メガシンフォニア",
+  "shop": "morimori",
+  "unit": "BOX",
+  "condition": "NEW",
+  "price": 6600,
+  "checked_at": "2026-11-26T15:22:36.028439+09:00",
+  "date": "2026-11-26"
+ },
+ {
+  "product_id": "pokemon-拡張パック-メガシンフォニア",
   "shop": "rudeya",
   "unit": "BOX",
   "condition": "SEALED",
   "price": 6000,
   "checked_at": "2026-11-26T00:49:39.794930+09:00",
+  "date": "2026-11-26"
+ },
+ {
+  "product_id": "pokemon-拡張パック-メガブレイブ",
+  "shop": "morimori",
+  "unit": "BOX",
+  "condition": "NEW",
+  "price": 6800,
+  "checked_at": "2026-11-26T15:22:36.028439+09:00",
+  "date": "2026-11-26"
+ },
+ {
+  "product_id": "pokemon-拡張パック-メガブレイブ",
+  "shop": "rudeya",
+  "unit": "BOX",
+  "condition": "SEALED",
+  "price": 6000,
+  "checked_at": "2026-11-26T15:21:34.167855+09:00",
   "date": "2026-11-26"
  },
  {

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26 04:44 JST",
+  "generated_at": "2026-11-26 14:49 JST",
   "scope": "公式ソース登録・検証（利益/AI/Opportunity/Notification/Capital/Execution は不変）",
   "methodology": {
     "verification": "WebFetch で HTTP200/公式ドメイン/canonical/商品一致を実確認したURLのみ verified",
@@ -1756,7 +1756,7 @@
         "product_id": "prod_ps5_pro",
         "action": "stock_observed",
         "stock": "入荷待ち",
-        "at": "2026-11-26T04:37:52+09:00"
+        "at": "2026-11-26T14:42:38+09:00"
       },
       {
         "product_id": "prod_switch2",
@@ -1765,11 +1765,6 @@
       },
       {
         "product_id": "prod_airpods_pro3",
-        "action": "price_reconfirmed",
-        "on": "2026-11-26"
-      },
-      {
-        "product_id": "prod_r5ii",
         "action": "price_reconfirmed",
         "on": "2026-11-26"
       },
@@ -1789,11 +1784,6 @@
         "on": "2026-11-26"
       },
       {
-        "product_id": "prod_r6ii",
-        "action": "price_reconfirmed",
-        "on": "2026-11-26"
-      },
-      {
         "product_id": "prod_zf",
         "action": "price_reconfirmed",
         "on": "2026-11-26"
@@ -1807,7 +1797,7 @@
         "product_id": "prod_a1ii",
         "action": "stock_observed",
         "stock": "在庫あり",
-        "at": "2026-11-26T04:41:59+09:00"
+        "at": "2026-11-26T14:46:44+09:00"
       },
       {
         "product_id": "prod_a7cr",
@@ -1822,6 +1812,16 @@
       {
         "product_id": "prod_iphoneduo_256",
         "action": "price_reconfirmed",
+        "on": "2026-11-26"
+      },
+      {
+        "product_id": "prod_r5ii",
+        "action": "price_reconfirmed_from_last_state",
+        "on": "2026-11-26"
+      },
+      {
+        "product_id": "prod_r6ii",
+        "action": "price_reconfirmed_from_last_state",
         "on": "2026-11-26"
       },
       {
@@ -1841,7 +1841,7 @@
       "product_id": "prod_ps5_pro",
       "action": "stock_observed",
       "stock": "入荷待ち",
-      "at": "2026-11-26T04:37:52+09:00"
+      "at": "2026-11-26T14:42:38+09:00"
     },
     {
       "product_id": "prod_switch2",
@@ -1850,11 +1850,6 @@
     },
     {
       "product_id": "prod_airpods_pro3",
-      "action": "price_reconfirmed",
-      "on": "2026-11-26"
-    },
-    {
-      "product_id": "prod_r5ii",
       "action": "price_reconfirmed",
       "on": "2026-11-26"
     },
@@ -1874,11 +1869,6 @@
       "on": "2026-11-26"
     },
     {
-      "product_id": "prod_r6ii",
-      "action": "price_reconfirmed",
-      "on": "2026-11-26"
-    },
-    {
       "product_id": "prod_zf",
       "action": "price_reconfirmed",
       "on": "2026-11-26"
@@ -1892,7 +1882,7 @@
       "product_id": "prod_a1ii",
       "action": "stock_observed",
       "stock": "在庫あり",
-      "at": "2026-11-26T04:41:59+09:00"
+      "at": "2026-11-26T14:46:44+09:00"
     },
     {
       "product_id": "prod_a7cr",
@@ -1907,6 +1897,16 @@
     {
       "product_id": "prod_iphoneduo_256",
       "action": "price_reconfirmed",
+      "on": "2026-11-26"
+    },
+    {
+      "product_id": "prod_r5ii",
+      "action": "price_reconfirmed_from_last_state",
+      "on": "2026-11-26"
+    },
+    {
+      "product_id": "prod_r6ii",
+      "action": "price_reconfirmed_from_last_state",
       "on": "2026-11-26"
     },
     {

@@ -3946,6 +3946,25 @@
       "discovered_at": "2026-11-25T23:02:26+09:00",
       "last_seen_on": "2026-11-26",
       "updated_at": "2026-11-26T00:53:43+09:00"
+    },
+    "tcg-event-9d98b999b81c": {
+      "source": "MUGIWARA_STORE",
+      "kind": "LOTTERY",
+      "tcg": "ONE_PIECE",
+      "title": "プレミアムカードコレクション -熊本県スペシャル-",
+      "official_url": "https://www.mugiwara-store.com/news/3169/",
+      "product_code": "",
+      "product_mapping": "unmapped",
+      "application_start": "2026-11-27T00:00:00+09:00",
+      "application_end": "2026-11-29T23:59:00+09:00",
+      "event_status": "UPCOMING",
+      "missing_fields": [],
+      "candidate_id": "tcg-event-9d98b999b81c",
+      "status": "MATCHED_EVENT",
+      "reasons": [],
+      "discovered_at": "2026-11-26T15:26:37+09:00",
+      "last_seen_on": "2026-11-26",
+      "updated_at": "2026-11-26T15:26:37+09:00"
     }
   }
 }

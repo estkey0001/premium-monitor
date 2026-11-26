@@ -2,20 +2,25 @@
 """Task9: 二次流通（未開封BOX）価格の取り込み。
 
 取得元は ToS を遵守できる範囲に限定する。
-  1. data/tcg_secondary_prices.csv … 手動・CSVインポート由来の実測値
-  2. eBay Finding API … ENABLE_EBAY_API=true かつ dry-run でない場合のみ
+  1. 人が確認した成約の台帳（既定 .private/tcg_sold_ledger.csv（gitignore 済み）。環境変数 TCG_SOLD_LEDGER_PATH で場所を変えられる）
+     … 形式・検証は src/tcg/market_prices.py。成約（ACTUAL_SALE）だけが相場の中央値に入る
+  2. eBay Browse API … ENABLE_EBAY_API=true かつ dry-run でない場合のみ。出品（LISTING）なので相場にも利益にも使わない
 
+監査 H-1 の対応: 出品（LISTING）・種類不明（UNKNOWN）・発売前の取引（PREORDER_TRADE / EARLY_SALE）・
+成約日（sold_at）が古い成約は、プレミア率（premium_percent → buy_now）の計算に入れない。
+出品は「出品参考相場」（listing_reference）として別に持つだけ。
 価格が取れない場合は推定せず、insufficient_samples=True のままにする。
 """
 from __future__ import annotations
 
-import csv
 import logging
 import os
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from .models import SHRINK_UNKNOWN, SHRINK_STATUSES
+from . import market_prices as mp
+from .models import SHRINK_SEALED
 from .shrink import detect_shrink_status
 from .premium import build_premium, split_by_shrink
 
@@ -24,49 +29,25 @@ logger = logging.getLogger(__name__)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SECONDARY_CSV = PROJECT_ROOT / "data" / "tcg_secondary_prices.csv"
 
-CSV_COLUMNS = (
-    "product_id", "product_name", "tcg", "source", "price",
-    "shrink_status", "condition", "observed_at", "url", "note",
-)
-
-# 許可する取得元（ToS 遵守できる範囲）
-ALLOWED_SOURCES = ("mercari", "yahoo_auctions", "rakuma", "ebay",
-                   "card_shop_sale", "card_shop_buyback", "manual")
+# 台帳の列（人が確認した成約）。正本は market_prices.LEDGER_COLUMNS
+CSV_COLUMNS = mp.LEDGER_COLUMNS
 
 
-def load_secondary_observations(path: Optional[Path] = None) -> list[dict]:
-    """二次流通価格の観測を読み込む。ファイルが無ければ空リスト。"""
-    path = path or SECONDARY_CSV
-    if not path.exists():
-        return []
-    out: list[dict] = []
-    with open(path, encoding="utf-8", newline="") as f:
-        for row in csv.DictReader(f):
-            try:
-                price = float(str(row.get("price", "")).replace(",", ""))
-            except (TypeError, ValueError):
-                continue
-            if price <= 0:
-                continue
-            shrink = (row.get("shrink_status") or SHRINK_UNKNOWN).strip()
-            if shrink not in SHRINK_STATUSES:
-                shrink = SHRINK_UNKNOWN
-            src = (row.get("source") or "manual").strip().lower()
-            if src not in ALLOWED_SOURCES:
-                logger.warning("未許可の取得元をスキップ: %s", src)
-                continue
-            out.append({
-                "product_id": (row.get("product_id") or "").strip(),
-                "product_name": (row.get("product_name") or "").strip(),
-                "tcg": (row.get("tcg") or "").strip(),
-                "source": src,
-                "price": price,
-                "shrink_status": shrink,
-                "condition": (row.get("condition") or "").strip(),
-                "observed_at": (row.get("observed_at") or "").strip(),
-                "url": (row.get("url") or "").strip(),
-            })
-    return out
+def load_secondary_observations(path: Optional[Path] = None, *, now: Optional[datetime] = None,
+                                units: Optional[dict] = None) -> list[dict]:
+    """人が確認した成約の台帳を読み、検証を通った成約だけを観測にする。ファイルが無ければ空リスト。
+
+    出品・入札・買取の行、sold_at の無い行、単位・状態が合わない行、旧形式（price_kind の無い）行は入らない。
+    """
+    cfg = mp.load_config()
+    if path is None:
+        path = mp.ledger_path(cfg)
+    res = mp.load_ledger(path, cfg=cfg, units=units, now=now)
+    if res.rejected:
+        logger.warning("成約の台帳で使えない行: %d 件 %s", len(res.rejected), res.reason_counts())
+    if res.conflicts:
+        logger.warning("同じ商品ページで価格・成約日が食い違う行を捨てた: %d 組", len(res.conflicts))
+    return [mp.record_to_observation(r) for r in res.records]
 
 
 def buyback_of(observations: list[dict]) -> Optional[int]:
@@ -81,20 +62,40 @@ def buyback_of(observations: list[dict]) -> Optional[int]:
 
 
 def premium_for_product(product_id: str, retail_price: Optional[int],
-                        observations: Optional[list[dict]] = None) -> dict:
-    """商品IDに対するプレミア情報を組み立てる。"""
+                        observations: Optional[list[dict]] = None,
+                        now: Optional[datetime] = None) -> dict:
+    """商品IDに対するプレミア情報を組み立てる。
+
+    相場（sealed / unsealed の中央値 → premium_percent）に入れるのは、検証済みの成約（ACTUAL_SALE）で
+    成約日が鮮度内のものだけ。出品（LISTING）は listing_reference に分け、利益・buy_now に使わない。
+    """
+    cfg = mp.load_config()
+    now = now or datetime.now(tz=mp.JST)
+    fresh_days = int(cfg.get("fresh_days") or 14)
     obs = [o for o in (observations if observations is not None
-                       else load_secondary_observations())
+                       else load_secondary_observations(now=now))
            if o["product_id"] == product_id]
-    sale_obs = [o for o in obs if o["source"] != "card_shop_buyback"]
-    sealed, unsealed = split_by_shrink(sale_obs)
-    return build_premium(
+    sold_obs = [o for o in obs
+                if o.get("source") != "card_shop_buyback"
+                and mp.is_eligible_sold_observation(o, now=now, fresh_days=fresh_days)]
+    listing_obs = [o for o in obs if o.get("price_kind") == mp.OBS_LISTING]
+    sealed, unsealed = split_by_shrink(sold_obs)
+    result = build_premium(
         retail_price=retail_price,
         sealed_prices=sealed,
         unsealed_prices=unsealed,
         buyback_price=buyback_of(obs),
-        sample_sources=sorted({o["source"] for o in sale_obs}),
+        sample_sources=(sorted({o["source"] for o in sold_obs}) if cfg.get("publish_market_names") else []),
     )
+    result.update({
+        "price_basis": mp.SOLD_MEDIAN,          # 中央値は確認済みの成約だけ（出品ではない）
+        "sold_count_total": len(sold_obs),
+        "excluded_not_sold": sum(1 for o in obs if o.get("price_kind") != mp.OBS_SOLD
+                                 and o.get("source") != "card_shop_buyback"),
+        "listing_reference": mp.listing_reference(listing_obs, product_id, condition=SHRINK_SEALED),
+        "executable": False,                    # 二次流通の値は「想定」。実行可能な利益にしない
+    })
+    return result
 
 
 def ebay_enabled() -> bool:
@@ -108,7 +109,7 @@ def ebay_enabled() -> bool:
 
 def fetch_ebay_observations(product_id: str, keyword: str,
                             fetcher=None, fx_loader=None) -> list[dict]:
-    """eBay から未開封BOXの出品価格を取得して観測に変換する。
+    """eBay から未開封BOXの出品価格を取得して観測に変換する（price_kind=LISTING。成約ではない）。
 
     kill-switch（ENABLE_EBAY_API）と dry-run（API_DRY_RUN）で無効な間は
     何も取得しない。為替レートが取れない場合も価格を作らない。
@@ -151,5 +152,7 @@ def fetch_ebay_observations(product_id: str, keyword: str,
             "condition": it.get("condition") or "",
             "observed_at": "",
             "url": it.get("url") or "",
+            "price_kind": mp.OBS_LISTING,          # 出品。相場（中央値）・buy_now に入れない
+            "sale_phase": None,
         })
     return out

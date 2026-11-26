@@ -62,3 +62,14 @@ def test_ledger_images_all_pass_and_have_evidence():
         ev = r["evidence"]
         assert str(ev.get("image_source_url", "")).startswith("https://"), r["name"]
         assert ev.get("image_checked_on"), r["name"]
+
+
+def test_publishable_requires_cleared_terms(monkeypatch):
+    """URL が公式でも、利用条件を確認した TCG でなければ公開しない（既定は空）。"""
+    url = "https://www.pokemon-card.com/products/2025/images/M2.jpg"
+    assert vp.IMAGE_USE_CLEARED == {}
+    assert not vp.image_publishable("POKEMON", url)
+    monkeypatch.setattr(vp, "IMAGE_USE_CLEARED", {"POKEMON": "test"})
+    assert vp.image_publishable("POKEMON", url)
+    assert not vp.image_publishable("POKEMON", "https://evil.example/a.jpg")
+    assert not vp.image_publishable("ONE_PIECE", "https://www.onepiece-cardgame.com/x/img_item01.webp")

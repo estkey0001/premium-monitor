@@ -15,7 +15,7 @@ import io
 from dataclasses import dataclass
 
 # 観測日時の列（ファイルごとに列名が違う）
-TIMESTAMP_FIELDS = ("observed_at", "checked_at", "recorded_at", "reported_at")
+TIMESTAMP_FIELDS = ("observed_at", "checked_at", "recorded_at", "reported_at", "sold_at")  # sold_at: TCG の成約の台帳
 # 自動取得とみなす data_source（観測日時が毎回変わってよい）
 AUTO_SOURCES = frozenset({
     "auto_scraped", "fetch_failed", "product_not_listed", "suspicious_rejected", "api", "html",
@@ -24,7 +24,7 @@ AUTO_SOURCES = frozenset({
 KEY_CANDIDATES = (
     "product_alias", "product_id", "buyback_shop", "shop", "shop_name", "source", "platform",
     "market", "price_type", "is_sold", "currency", "condition", "event_id", "lottery_id",
-    "product_name", "product", "retailer", "store_name", "tcg", "shrink_status",
+    "product_name", "product", "retailer", "store_name", "tcg", "shrink_status", "price_kind", "unit",
 )
 # 手動で管理する CSV（検査の対象）。自動で追記する履歴（overseas_price_history.csv 等）は含めない
 MANUAL_CSV_GLOBS = ("data/manual_*.csv", "data/tcg_secondary_prices.csv",

@@ -211,7 +211,8 @@ def enrich(events: list[dict], retail_prices: dict[str, int],
         score = opportunity_score(ev, ev["premium"], signals=sig)
         ev["opportunity_score"] = score["score"]
         ev["score_breakdown"] = score["breakdown"]
-        buy = buy_now_signal(ev, ev["premium"])
+        # 二次流通の成約の中央値は「想定」の売値（同じ価格で売れる保証はない）。今すぐ買いの判定には使わない（表示・スコアの参考のみ）
+        buy = buy_now_signal(ev, {**(ev["premium"] or {}), "premium_percent": None})
         ev["buy_now"] = buy["buy_now"]
         ev["buy_now_blocked_reasons"] = buy["blocked_reasons"]
         ev["buy_now_notes"] = buy["notes"]

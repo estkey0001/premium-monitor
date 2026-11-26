@@ -1261,6 +1261,20 @@ def _reconcile_registered(out: Path, pcs: dict, evs: dict, now) -> dict:
 
 # ---- Phase 5: 自動巡回 ----
 
+
+@cli.command("discover-engine")
+@click.option("--apply", is_flag=True, help="台帳と .private/discovery/ に書く（既定は dry-run）")
+@click.option("--bootstrap", is_flag=True, help="初回の取得元でも Lead を作る（既定は基準づくりだけ）")
+@click.option("--config", "config_path", type=click.Path(path_type=Path), default=None)
+def discover_engine(apply, bootstrap, config_path):
+    """発見のエンジン（公式ドメインの sitemap・RSS・一覧の差分だけ。検索 API・LLM は使わない）。候補を作るだけで公開・登録しない。件数だけを出す。"""
+    import json as _json
+    from datetime import datetime as _dt
+    from src.discovery.engine.run import run_engine
+    from src.tcg.models import JST as _JST
+    rep = run_engine(now=_dt.now(tz=_JST), apply=apply, bootstrap=bootstrap, config_path=config_path)
+    click.echo(_json.dumps({k: v for k, v in rep.items() if not k.startswith("_")}, ensure_ascii=False, indent=2))
+
 @cli.command("run-once")
 def run_once():
     """全体を1回実行（official→stock→price→score→dispatch→scan）。"""

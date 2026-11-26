@@ -189,7 +189,8 @@ def run(tcg_dir: Path, out_dir: Path, *, now: datetime) -> dict:
     # 抽選の収集そのものが失敗した日（取得元の行が1件も無い空の出力）も STALE にしない（レビュー M-3 の残り）
     if lots is not None and srcs is not None and latest is not None and not (latest or {}).get("error") \
             and (srcs or {}).get("sources"):
-        st.age_out(evs, seen, now=now, scope=lambda r: str(r.get("source") or "") not in failing)
+        st.age_out(evs, seen, now=now, scope=lambda r: str(r.get("source") or "") not in failing
+                 and r.get("origin") != "discovery_engine")   # 発見エンジンの候補は、エンジン側で鮮度を管理する
     st.save(ev_path, evs)
 
     # TCG の商品の候補（TCG の正本は無いので、公式の一覧の商品はすべて人の確認の候補。商品コードが無ければ要確認）

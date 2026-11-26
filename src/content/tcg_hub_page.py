@@ -349,9 +349,9 @@ def _product_link(url) -> str:
 
 
 def _image_src(url, tcg: str = "POKEMON") -> Optional[str]:
-    """商品画像の URL。その TCG の公式ドメイン（https・サブドメイン可。判定は verified_products.image_ok が唯一の定義）。noimage は使わない。"""
+    """商品画像の URL。その TCG の公式ドメインの画像で、利用条件を確認済みのときだけ（判定は verified_products.image_publishable が唯一の定義）。"""
     from src.tcg import verified_products as _vp
-    return url if _vp.image_ok(tcg, url) else None
+    return url if _vp.image_publishable(tcg, url) else None
 
 
 def show_time(time, verified: bool = True) -> Optional[str]:

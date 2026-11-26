@@ -66,6 +66,19 @@ def image_ok(tcg: Any, url: Any) -> bool:
     return "noimage" not in path
 
 
+# 公開ページに画像を出してよい TCG（権利者の利用条件で、外部サイトへの掲載が許されると確認できたものだけ。値は根拠の URL と確認日）。
+# URL が取れること・公式のホストであること（image_ok）と、利用が許されていること（ここ）は別。確認できない間は空にして、
+# 台帳の画像 URL は「許諾を確認したら切り替える候補」として残す。
+# 2026-11-26: ポケモンカード公式のサイトポリシー（pokemon-card.com/policy.html）は、データのコピー・複製・掲示・配布を断り、
+# リンクはテキストリンクに限ると定めている。ONE PIECE カードゲーム公式は利用条件のページを確認できていない。どちらも掲載しない。
+IMAGE_USE_CLEARED: dict[str, str] = {}
+
+
+def image_publishable(tcg: Any, url: Any) -> bool:
+    """公開ページに出してよい画像か（公式のホストの画像で、かつその TCG の利用条件を確認済み）。"""
+    return isinstance(tcg, str) and tcg in IMAGE_USE_CLEARED and image_ok(tcg, url)
+
+
 def load(path: Path | None = None) -> list[dict]:
     """台帳の行（検証を通ったものだけ）。無い・壊れているときは空。"""
     try:

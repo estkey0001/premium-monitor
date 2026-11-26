@@ -31,12 +31,15 @@ ANNOUNCEMENT_DISPLAY_DAYS = 14
 
 
 def _adapters():
+    from src.collectors.tcg.lottery.bnam_onepiece import BnamOnePieceShopLotteryAdapter
+    from src.collectors.tcg.lottery.cardbox import CardBoxLotteryAdapter
     from src.collectors.tcg.lottery.clabo import CardLaboLotteryAdapter
     from src.collectors.tcg.lottery.geo import GeoLotteryAdapter
     from src.collectors.tcg.lottery.fukufuku import FukufukuLotteryAdapter
     from src.collectors.tcg.lottery.hbst import HobbyStationLotteryAdapter
     from src.collectors.tcg.lottery.kidsrepublic import KidsRepublicLotteryAdapter
     from src.collectors.tcg.lottery.mugiwara import MugiwaraStoreLotteryAdapter
+    from src.collectors.tcg.lottery.torecaplaza55 import TorecaPlaza55LotteryAdapter
     from src.collectors.tcg.lottery.others import (
         LawsonLotteryAdapter, OnePieceNewsLotteryAdapter, PremiumBandaiLotteryAdapter,
     )
@@ -55,6 +58,9 @@ def _adapters():
         "lawson_lottery": LawsonLotteryAdapter,
         "onepiece_news_lottery": OnePieceNewsLotteryAdapter,
         "premium_bandai_lottery": PremiumBandaiLotteryAdapter,
+        "cardbox_lottery": CardBoxLotteryAdapter,
+        "bnam_onepiece_shop_lottery": BnamOnePieceShopLotteryAdapter,
+        "torecaplaza55_lottery": TorecaPlaza55LotteryAdapter,
     }
 
 

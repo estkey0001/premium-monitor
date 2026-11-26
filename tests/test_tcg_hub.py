@@ -15,6 +15,12 @@ from src.tcg.hub import status as st
 from src.tcg.hub.product_view import build_hub
 from src.tcg.models import JST
 
+
+def _allow_images(monkeypatch):
+    """画像の利用条件を確認済みにした場合の挙動を試す（既定の IMAGE_USE_CLEARED は空で、画像は出さない）。"""
+    from src.tcg import verified_products as vp
+    monkeypatch.setattr(vp, "IMAGE_USE_CLEARED", {"POKEMON": "test", "ONE_PIECE": "test"})
+
 ROOT = Path(__file__).resolve().parents[1]
 NOW = datetime(2026, 11, 20, 12, 0, tzinfo=JST)
 
@@ -272,7 +278,8 @@ def _reg_with_image(url):
     return reg
 
 
-def test_product_image_only_from_pokemon_official_https():
+def test_product_image_only_from_pokemon_official_https(monkeypatch):
+    _allow_images(monkeypatch)
     ok = page.render(_hub([_ev()], reg=_reg_with_image("https://www.pokemon-card.com/products/2026/images/x.jpg")))
     assert 'src="https://www.pokemon-card.com/products/2026/images/x.jpg"' in ok
     assert 'referrerpolicy="no-referrer"' in ok
@@ -286,8 +293,9 @@ def test_product_image_only_from_pokemon_official_https():
         assert "<img" not in html and "evil.example.com" not in html and "javascript:" not in html
 
 
-def test_one_piece_image_only_from_onepiece_official_https():
+def test_one_piece_image_only_from_onepiece_official_https(monkeypatch):
     """ONE PIECE は onepiece-cardgame.com の https だけ画像にする。ポケカのホスト・外部ホスト・http・noimage はプレースホルダ。"""
+    _allow_images(monkeypatch)
     def html_with(url, canonical="MASTER"):
         h = _hub([_ev(tcg="ONE_PIECE", product_id="op-18", product_name="ブースター OP-18")])
         for p in (h["products"][0], h["cards"][0]):
@@ -414,8 +422,9 @@ def test_product_card_no_open_lottery_text_is_scoped_to_linked_and_points_to_unl
     assert h2["stats"]["unbound_applying"] == 0
 
 
-def test_image_load_failure_falls_back_to_the_placeholder():
+def test_image_load_failure_falls_back_to_the_placeholder(monkeypatch):
     # 公式の画像が読み込めないとき（リンク切れ・ブロック）、壊れた画像の枠＋alt の文字だけにならず、頭文字のプレースホルダに切り替える
+    _allow_images(monkeypatch)
     html = page.render(_hub([_ev()], reg=_reg_with_image("https://www.pokemon-card.com/products/2026/images/x.jpg")))
     img_div = re.search(r'<div class="pimg [^"]*"><img .*?</div>', html, flags=re.S).group(0)
     assert "onerror=" in img_div and "classList.add('ph')" in img_div and "this.remove()" in img_div
@@ -443,3 +452,9 @@ def test_build_writes_both_tcg_pages_or_neither_and_reports_them_for_the_sitemap
     assert "_tcg_pages = _build_tcg_hub_html(PUBLIC_DIR)" in src and "for n in _tcg_pages" in src
     dc = (ROOT / "scripts" / "deploy_check.py").read_text(encoding="utf-8")
     assert 'if "tcg-lottery.html" in _h853:' in dc
+
+
+def test_images_are_not_published_until_the_terms_are_cleared():
+    """既定では、公式のホストの画像でも公開ページに出さない（利用条件の確認前。頭文字のプレースホルダ）。"""
+    html = page.render(_hub([_ev()], reg=_reg_with_image("https://www.pokemon-card.com/products/2026/images/x.jpg")))
+    assert "<img" not in html and "pokemon-card.com/products/2026/images/x.jpg" not in html and "商品画像なし" in html

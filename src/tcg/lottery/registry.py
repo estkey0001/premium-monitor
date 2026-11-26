@@ -154,8 +154,32 @@ LOTTERY_SOURCES: list[dict] = [
          news_url="https://www.onepiece-cardgame.com/news/", adapter="onepiece_news_lottery",
          verified=True),
     _src("ONEPIECE_CARD_OFFICIAL_SHOP", "ONE PIECEカードゲーム公式ショップ", (ONE_PIECE,), "P0",
-         "", CM_UNAVAILABLE,
-         note="公式ショップの URL を確認できていない（DNS 解決不可）。推測 URL で監視しない"),
+         "https://bandainamco-am.co.jp/official_shop/onepiece-cardgame/", CM_HTML,
+         news_url="https://bandainamco-am.co.jp/official_shop/onepiece-cardgame/", channel="STORE",
+         adapter="bnam_onepiece_shop_lottery", verified=True,
+         note="公式ショップのトップの「重要なお知らせ」に事前抽選の告知が載り、詳細の表に申込受付期間（年つき。終了側の年・月は省略されるので開始から補う）と"
+              "抽選販売日（購入期間として読む）がテキストである。/news/ の一覧は 404 なのでトップから辿る。応募は会員制の購入権チケットのページ"
+              "（parks2.bandainamco-am.co.jp。取得しない）で、OFFICIAL_DOMAINS に無いので entry_url は空。全店共通の1本の告知。"
+              "robots.txt は User-agent: * と Sitemap だけで禁止の行が無い（確認日 2026-11-26）。サイトポリシー（https://bandainamco-am.co.jp/attention/、"
+              "確認日 2026-11-26）は私的使用を超える複製を禁じる（本文は保存・転載しない）。自動取得を禁じる条項は見当たらないが、許可の明記でもない"),
+    _src("CARDBOX", "CARD BOX（加盟店）", _BOTH, "P1", "https://cardbox.online/", CM_HTML,
+         news_url="https://cardbox.online/news/shop_list/", channel="STORE", adapter="cardbox_lottery", verified=True,
+         note="加盟店（公式サイト上の表記で107店）の店舗ニュースを1つの一覧に載せる。taxonomy（ポケモンカードゲーム／ONE PIECEカードゲーム）と件名の"
+              "「抽選」「購入権」で絞り、詳細の「抽選受付期間」「当選番号の発表」を読む（年は投稿日時で補う）。当選者発表だけの告知は受付にしない。"
+              "店ごとの抽選。応募は店ごとの外部フォームで公式ドメインではない（entry_url は空）。1回の実行で一覧2ページ＋詳細6件まで。"
+              "robots.txt は「User-agent: * / Allow:/」で全体を許可（確認日 2026-11-26）。"
+              "利用規約のページは見つからず、許可も禁止も未確認（見つけたら、この記述と取得可否を見直す）"),
+    _src("PLANT", "スーパーセンター PLANT", _BOTH, "P2", "https://www.plant-co.jp/", CM_UNAVAILABLE,
+         note="取得しない（2026-11-26）。「サイトのご利用について」（https://www.plant-co.jp/terms/web.html）が、私的使用を超えて他のウェブサイト・"
+              "SNS で公開・使用することを認めず、リンクはトップページの URL に限り、サイトを使った営利目的の行為を禁じている。公開の LP への掲載と衝突しうるので、"
+              "先方の許可を確認するまで取得器（src/collectors/tcg/lottery/plant.py。締切だけの抽選の補助関数はトレカプラザ55 が使う）を登録しない"),
+    _src("TORECAPLAZA55", "トレカプラザ55", _BOTH, "P2", "https://torecaplaza55.com/", CM_HTML,
+         news_url="https://torecaplaza55.com/", channel="ONLINE", adapter="torecaplaza55_lottery", verified=True,
+         note="トップ（EUC-JP）の「抽選販売一覧」に、締切（MM.DD 終日締切）・ゲーム名・題名が静的 HTML で載る。詳細ページは無く、応募先は"
+              "Google フォーム（取得しない。entry_url は空）。開始日は無い（締切だけの抽選）。締切の年は取得日から補い、各項目の公開の時刻（data-ts）と"
+              "矛盾すれば日程にしない。ポケカ・ONE PIECE 以外は除外。1回の実行でトップ1ページだけ。"
+              "robots.txt は User-agent: * に /cart/ だけを禁止で、トップは禁止していない（確認日 2026-11-26）。"
+              "利用規約のページは見つからず、許可も禁止も未確認（見つけたら、この記述と取得可否を見直す）"),
     _src("PREMIUM_BANDAI", "プレミアムバンダイ", (ONE_PIECE,), "P0",
          "https://p-bandai.jp/", CM_HTML,
          news_url="https://p-bandai.jp/chara/onepiece/", adapter="premium_bandai_lottery",

@@ -1,0 +1,6 @@
+# 発見のエンジン（src/discovery/engine）が読む、公式ドメインの sitemap・RSS・一覧ページ。
+# enabled: true かつ checked_on（人が robots.txt と利用規約を確認した日）と evidence（確認した URL）があるものだけ読む。
+# 未確認の取得元は enabled: false のまま置く（推測で有効にしない）。
+schema: 1
+sources:
+  - {id: onepiece_info, kind: list, url: "https://www.onepiece-cardgame.com/information/", enabled: false, checked_on: "", evidence: ""}

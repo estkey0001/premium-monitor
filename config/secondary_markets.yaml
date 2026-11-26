@@ -81,3 +81,24 @@ retail_apis:
     credential_env: [YAHOO_SHOPPING_APP_ID]
     enable_var: ENABLE_YAHOO_API
     scope: "新品・中古の販売店"
+
+# TCG（未開封 BOX 等）の「人が確認した成約」の台帳。src/tcg/market_prices.py が読む（src/research/secondary_markets.py は読まない）。
+# 成約価格を自動で取る経路は無い（フリマ・StockX・スニダン等は規約上、自動取得できない）。台帳は人が商品ページで成約を確認して書く。
+# 台帳の場所は環境変数 TCG_SOLD_LEDGER_PATH で変えられる（PUBLIC リポジトリの外に置ける）。既定の場所に無ければ「成約なし」として動く。
+tcg_sold_ledger:
+  path: .private/tcg_sold_ledger.csv      # リポジトリからの相対パス（.private/ は gitignore 済み。PUBLIC リポジトリにサービス名・商品 URL・金額を載せない）
+  # 成約中央値（SOLD_MEDIAN）を「相場」として出す最低件数。満たさないときは「参考（N件）」で、利益（想定）を出さない
+  min_samples: 3                          # src/market/price_types.MIN_SOLD_SAMPLES と同じ値
+  # 成約日（sold_at）からこの日数を超えた成約は使わない。確認日（verified_at）で延ばさない
+  fresh_days: 14                          # src/market/normalized_prices.STALE_DAYS と同じ値
+  # 市場名（サービス名）を公開の出力に載せるか。false のときは件数だけを出す
+  publish_market_names: false
+  # 商品の単位（BOX / PACK …）。ここに無い商品は config/tcg_buyback.yaml の targets の unit を使う。どちらにも無い商品の成約は使わない
+  product_units: {}
+  # 想定利益（B）の費用。根拠を確認できていない費用は null（その費用が要る計算は NOT_CALCULATED。0 円にしない）。
+  # 販売手数料の料率は config/camera_routes.yaml の fees（市場ごと・status=CONFIRMED のものだけ）を正本として使う
+  costs:
+    outbound_shipping_jpy: null           # 買い手への発送（BOX のサイズ・方法ごとの根拠が未確認）
+    outbound_shipping_evidence: null
+    payout_fee_jpy: {}                    # 市場 → 振込手数料（円）。根拠を確認した市場だけ書く。無い市場は NOT_CALCULATED
+    other_jpy: 0

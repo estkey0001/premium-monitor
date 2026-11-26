@@ -378,6 +378,7 @@ def test_unbound_applying_guidance_is_kept(monkeypatch):
 
 # ── 画像 ──
 def test_pokemon_image_only_from_official_https_alt_is_name_and_credit_once(monkeypatch):
+    monkeypatch.setattr(__import__("src.tcg.verified_products", fromlist=["x"]), "IMAGE_USE_CLEARED", {"POKEMON": "test", "ONE_PIECE": "test"})
     img = "https://www.pokemon-card.com/products/2026/images/x.jpg"
     master = [_master("deck", "デッキセット", official_image_url=img), _master("solo", "ソロ", rel="2026-01-01", official_image_url="https://evil.example/x.jpg")]
     html = _html(_build(ROWS + [row(price=9500, jan=SOLO_JAN)], master=master, monkeypatch=monkeypatch))
@@ -398,6 +399,7 @@ def test_pokemon_image_only_from_official_https_alt_is_name_and_credit_once(monk
 ])
 def test_one_piece_card_image_only_from_onepiece_official_https(monkeypatch, url, ok):
     """ONE PIECE は onepiece-cardgame.com の https なら画像。ポケカのホスト・外部ホスト・http・noimage はプレースホルダ。"""
+    monkeypatch.setattr(__import__("src.tcg.verified_products", fromlist=["x"]), "IMAGE_USE_CLEARED", {"POKEMON": "test", "ONE_PIECE": "test"})
     hub = _build([row(price=9000, jan=OP_JAN, name="OP BOX")], [_ev("op1", "OP ブースター", tcg="ONE_PIECE")], monkeypatch=monkeypatch)
     for c in hub["cards"]:
         if c["tcg"] == "ONE_PIECE":

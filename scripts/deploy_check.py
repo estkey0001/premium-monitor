@@ -4210,6 +4210,7 @@ def check() -> list[dict]:
     # ══════════════════════════════════════════════════════════════════
     results.extend(_check_data_correctness())
     results.extend(_check_runtime_freshness_cam_iphone_home())
+    results.extend(_check_tcg_sold_ledger())
 
     return results
 
@@ -9761,6 +9762,51 @@ def check_home_runtime_cards(html: str, now_ms: float) -> tuple:
     if "nu-fc__profit" not in seg or "更新待ち（取得日つきの参考）" not in seg:
         bad.append(f"{w}: 期限後に黒字の金額行（nu-fc__profit）を差し替える JS が無い")
     return sorted(set(bad)), n_green
+
+
+def check_tcg_premium_basis(items: list, min_samples: int) -> list[str]:
+    """#897: TCG のプレミア率（premium_percent）が、確認済み成約の中央値（最低件数以上）からだけ出ているか。出品を相場にしない。"""
+    bad = []
+    for i in items or []:
+        p = (i or {}).get("premium") or {}
+        if p.get("premium_percent") is None:
+            continue
+        if p.get("price_basis") != "SOLD_MEDIAN" or (p.get("sealed_sample_count") or 0) < min_samples:
+            bad.append(str(i.get("product_id")))
+    return bad
+
+
+def _check_tcg_sold_ledger() -> list[dict]:
+    """#896・#897。二次流通の成約の台帳と、公開の opportunities.json のプレミア率の根拠。"""
+    import json as _j
+    from src.tcg import market_prices as _mp
+    out: list[dict] = []
+
+    def _add(no, key, ok, msg, ng=""):
+        out.append({"level": "ok" if ok else "error", "check": key, "message": f"#{no} {msg}" + ("" if ok else f" ← {ng}")})
+
+    res = _mp.load_ledger()
+    bad = [r.product_id for r in res.records if r.sale_phase not in _mp.SALE_PHASES or not r.sold_at]
+    legacy = PROJECT_ROOT / "data" / "tcg_secondary_prices.csv"        # PUBLIC リポジトリ内の旧台帳。成約の値は .private/ に置く
+    if legacy.exists() and len([ln for ln in legacy.read_text(encoding="utf-8").splitlines() if ln.strip()]) > 1:
+        bad.append("data/tcg_secondary_prices.csv に行がある（成約の台帳は .private/ に置き、PUBLIC リポジトリに載せない）")
+    rejected = res.reason_counts()
+    if sum(rejected.values()):
+        out.append({"level": "warning", "check": "tcg_sold_ledger_rejected_rows",
+                    "message": f"#896 成約の台帳に、受け付けなかった行がある（出品・入札・旧形式・成約日なし等）: {rejected}"})
+    _add(896, "tcg_sold_ledger_only_sales", not bad,
+         f"TCG の成約の台帳は、成約日つきの成約だけを受け付けている（採用 {len(res.records)} 行・拒否 {res.reason_counts()}）",
+         f"不正な行: {bad[:5]}")
+    p = PROJECT_ROOT / "exports" / "tcg" / "opportunities.json"
+    try:
+        items = (_j.loads(p.read_text(encoding="utf-8")) or {}).get("items") or [] if p.exists() else []
+    except ValueError:
+        items = None
+    bad = ["opportunities.json が読めない"] if items is None else check_tcg_premium_basis(items, _mp.load_config()["min_samples"])
+    _add(897, "tcg_premium_from_sold_median_only", not bad,
+         "TCG のプレミア率は、確認済み成約の中央値（最低件数以上）からだけ出ている（出品を相場にしない）",
+         f"根拠の無いプレミア率: {bad[:5]}")
+    return out
 
 
 def _check_runtime_freshness_cam_iphone_home() -> list[dict]:

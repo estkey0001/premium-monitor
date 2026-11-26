@@ -1,0 +1,25 @@
+schema: 1
+sources:
+  - id: pkm_sitemap
+    kind: sitemap
+    url: https://www.pokemon-card.com/sitemap.xml
+    enabled: true
+    checked_on: "2026-11-26"
+    evidence: "テスト用"
+    include: ["lottery", "抽選"]
+  - id: op_rss
+    kind: rss
+    url: https://www.onepiece-cardgame.com/rss.xml
+    enabled: true
+    checked_on: "2026-11-26"
+    evidence: "テスト用"
+  - id: disabled_one
+    kind: list
+    url: https://www.pokemon-card.com/info/
+    enabled: false
+    checked_on: "2026-11-26"
+  - id: unchecked_one
+    kind: list
+    url: https://www.pokemon-card.com/info/
+    enabled: true
+    checked_on: ""

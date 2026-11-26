@@ -58,7 +58,12 @@ def image_ok(tcg: Any, url: Any) -> bool:
     host = (u.hostname or "").lower()
     if u.scheme != "https" or not (host == base or host.endswith("." + base)):
         return False
-    return "noimage" not in u.path.lower()
+    path = u.path.lower()
+    # ONE PIECE 公式の /renewal/ 配下の画像は cross-origin-resource-policy: same-site を返す（他サイトへの埋め込みを公式が許可していない）。
+    # 回避（中継・保存しての再配信）はせず、使わない（2026-11-26 確認）
+    if tcg == "ONE_PIECE" and path.startswith("/renewal/"):
+        return False
+    return "noimage" not in path
 
 
 def load(path: Path | None = None) -> list[dict]:

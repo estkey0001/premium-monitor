@@ -20,7 +20,7 @@ def _load(tmp_path, recs):
 
 
 def test_official_https_images_are_kept_per_tcg():
-    assert vp.image_ok("ONE_PIECE", "https://www.onepiece-cardgame.com/renewal/images/products/decks/st29/img_item01.webp")
+    assert vp.image_ok("ONE_PIECE", "https://www.onepiece-cardgame.com/onepiececg/bccard/jp/products/2026/03/19/ppvbEWL5lA3yBgPr/img_item01.webp")
     assert vp.image_ok("POKEMON", "https://www.pokemon-card.com/products/2025/images/M2.jpg")
 
 
@@ -33,6 +33,12 @@ def test_wrong_host_http_noimage_and_lookalike_hosts_are_rejected():
     assert not vp.image_ok("POKEMON", "https://evilpokemon-card.com/a.jpg")
     assert not vp.image_ok("YUGIOH", "https://www.pokemon-card.com/a.jpg")
     assert not vp.image_ok("POKEMON", None)
+
+
+def test_onepiece_renewal_images_are_not_embedded():
+    """/renewal/ 配下は公式が CORP same-site を返す（他サイトに埋め込めない）。使わずにプレースホルダにする。"""
+    assert not vp.image_ok("ONE_PIECE", "https://www.onepiece-cardgame.com/renewal/images/products/decks/st29/img_item01.webp")
+    assert not vp.image_ok("ONE_PIECE", "https://www.onepiece-cardgame.com/RENEWAL/images/products/boosters/op15/img_item01.webp")
 
 
 def test_bad_image_drops_only_the_image_not_the_row(tmp_path):

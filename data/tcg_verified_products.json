@@ -229,14 +229,13 @@
    "retail_price_basis": "pack",
    "box_opportunity_eligible": false,
    "official_url": "https://www.onepiece-cardgame.com/products/boosters/op15.php",
-   "official_image_url": "https://www.onepiece-cardgame.com/renewal/images/products/boosters/op15/img_item01.webp",
+   "official_image_url": null,
    "manual_verified": true,
    "evidence": {
     "source_url": "https://www.onepiece-cardgame.com/products/boosters/op15.php",
     "checked_on": "2026-11-21",
     "method": "official_page",
-    "image_source_url": "https://www.onepiece-cardgame.com/products/op15.php",
-    "image_checked_on": "2026-11-26"
+    "image_not_embeddable": "公式の画像が cross-origin-resource-policy: same-site を返し、他サイトに埋め込めない（2026-11-26 確認）"
    }
   },
   {
@@ -465,14 +464,13 @@
    "retail_price_basis": "product_unit",
    "box_opportunity_eligible": false,
    "official_url": "https://www.onepiece-cardgame.com/products/decks/st29.php",
-   "official_image_url": "https://www.onepiece-cardgame.com/renewal/images/products/decks/st29/img_item01.webp",
+   "official_image_url": null,
    "manual_verified": true,
    "evidence": {
     "source_url": "https://www.onepiece-cardgame.com/products/decks/st29.php",
     "checked_on": "2026-11-21",
     "method": "official_page",
-    "image_source_url": "https://www.onepiece-cardgame.com/products/?subcategory=decks",
-    "image_checked_on": "2026-11-26"
+    "image_not_embeddable": "公式の画像が cross-origin-resource-policy: same-site を返し、他サイトに埋め込めない（2026-11-26 確認）"
    }
   },
   {

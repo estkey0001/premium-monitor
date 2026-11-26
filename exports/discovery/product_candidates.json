@@ -505,7 +505,7 @@
       ],
       "discovered_at": "2026-10-17T17:34:02+09:00",
       "last_seen_on": "2026-11-26",
-      "updated_at": "2026-11-26T15:26:37+09:00"
+      "updated_at": "2026-11-26T19:33:00+09:00"
     },
     "tcg-pokemon-nocode-771077b562f9": {
       "source": "pokemon_card_official",
@@ -2166,7 +2166,153 @@
       ],
       "discovered_at": "2026-11-21T12:43:22+09:00",
       "last_seen_on": "2026-11-26",
-      "updated_at": "2026-11-26T15:26:37+09:00"
+      "updated_at": "2026-11-26T19:33:00+09:00"
+    },
+    "tcg-pokemon-153812ae5fea": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "スペシャルカードセット メガエルレイドex",
+      "model_number": "M3",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "",
+      "colors": [],
+      "official_url": "https://www.pokemon-card.com/ex/m3/",
+      "official_price": 1980,
+      "release_date": "2026-01-23T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-153812ae5fea",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-11-26T19:33:00+09:00",
+      "last_seen_on": "2026-11-26",
+      "updated_at": "2026-11-26T19:33:00+09:00"
+    },
+    "tcg-pokemon-2396a1256ac4": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "拡張パック「ニンジャスピナー」",
+      "model_number": "M4",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "",
+      "colors": [],
+      "official_url": "https://www.pokemon-card.com/ex/m4/",
+      "official_price": null,
+      "release_date": "2026-03-13T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-2396a1256ac4",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-11-26T19:33:00+09:00",
+      "last_seen_on": "2026-11-26",
+      "updated_at": "2026-11-26T19:33:00+09:00"
+    },
+    "tcg-pokemon-b5f2031eb62e": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "拡張パック「アビスアイ」",
+      "model_number": "M5",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "",
+      "colors": [],
+      "official_url": "https://www.pokemon-card.com/ex/m5/",
+      "official_price": null,
+      "release_date": "2026-05-22T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-b5f2031eb62e",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-11-26T19:33:00+09:00",
+      "last_seen_on": "2026-11-26",
+      "updated_at": "2026-11-26T19:33:00+09:00"
+    },
+    "tcg-pokemon-2af506904de6": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "ハイクラスパック「MEGAドリームex」",
+      "model_number": "M2A",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "",
+      "colors": [],
+      "official_url": "https://www.pokemon-card.com/ex/m2a/",
+      "official_price": null,
+      "release_date": "2025-11-28T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-2af506904de6",
+      "status": "PENDING_REVIEW",
+      "reasons": [
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-11-26T19:33:00+09:00",
+      "last_seen_on": "2026-11-26",
+      "updated_at": "2026-11-26T19:33:00+09:00"
+    },
+    "tcg-pokemon-nocode-18cc2b083ac0": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "ブースターパック 受け継がれる意志【OP-13】",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "",
+      "colors": [],
+      "official_url": "https://www.onepiece-cardgame.com/products/boosters/op13/",
+      "official_price": null,
+      "release_date": "2025-08-23T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-18cc2b083ac0",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-11-26T19:33:00+09:00",
+      "last_seen_on": "2026-11-26",
+      "updated_at": "2026-11-26T19:33:00+09:00"
+    },
+    "tcg-pokemon-nocode-6187c919505c": {
+      "source": "pokemon_card_official",
+      "brand": "Pokemon",
+      "genre": "tcg",
+      "product_name": "プレミアムブースター ONE PIECE CARD THE BEST vol.2【PRB-02】",
+      "model_number": "",
+      "sku": "",
+      "jan": "",
+      "capacity": "",
+      "edition": "",
+      "colors": [],
+      "official_url": "https://www.onepiece-cardgame.com/products/boosters/prb02.php",
+      "official_price": null,
+      "release_date": "2025-07-26T00:00:00+09:00",
+      "match_to_existing": "",
+      "candidate_id": "tcg-pokemon-nocode-6187c919505c",
+      "status": "REVIEW_REQUIRED",
+      "reasons": [
+        "no_product_code",
+        "tcg_not_in_canonical"
+      ],
+      "discovered_at": "2026-11-26T19:33:00+09:00",
+      "last_seen_on": "2026-11-26",
+      "updated_at": "2026-11-26T19:33:00+09:00"
     }
   },
   "apple": {

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T15:20:32.153153+09:00",
+  "generated_at": "2026-11-26T19:26:56.005498+09:00",
   "items": [
     {
       "first_seen_at": "2026-11-26T15:20:32.140102+09:00",
@@ -27,7 +27,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": "2026-11-26T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "UPCOMING"
     },
     {
@@ -56,7 +56,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-24T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -85,7 +85,65 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-24T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "status": "ENDING_SOON"
+    },
+    {
+      "first_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "lottery_id": "lot-3a3120caff7f",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンMEGA 30th CELEBRATIONカードセット",
+      "product_id": null,
+      "retailer": "CARDBOX",
+      "retailer_name": "CARD BOX（加盟店）",
+      "store_name": "北国書林辰口店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": "2026-11-23T00:00:00+09:00",
+      "application_end": "2026-11-27T00:00:00+09:00",
+      "winner_announcement_at": "2026-11-28T10:00:00+09:00",
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": null,
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://cardbox.online/news/detail/?id=1864",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-22T19:58:00+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "status": "ENDING_SOON"
+    },
+    {
+      "first_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "lottery_id": "lot-167315095511",
+      "tcg": "POKEMON",
+      "product_name": "ストームエメラルダ",
+      "product_id": null,
+      "retailer": "CARDBOX",
+      "retailer_name": "CARD BOX（加盟店）",
+      "store_name": "北国書林辰口店",
+      "store_specific": true,
+      "event_type": "LOTTERY",
+      "application_start": "2026-11-23T00:00:00+09:00",
+      "application_end": "2026-11-27T00:00:00+09:00",
+      "winner_announcement_at": "2026-11-28T10:00:00+09:00",
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": null,
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://cardbox.online/news/detail/?id=1863",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-22T19:49:00+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDING_SOON"
     },
     {
@@ -143,7 +201,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": "2026-11-20T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -172,7 +230,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": "2026-11-19T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -230,7 +288,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "CLOSED"
     },
     {
@@ -263,6 +321,35 @@
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
+      "first_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "lottery_id": "lot-23dbaf592ad6",
+      "tcg": "ONE_PIECE",
+      "product_name": "ブースターパック 神の支配【OP-18】",
+      "product_id": "ブースターパック-神の支配-op-18",
+      "retailer": "ONEPIECE_CARD_OFFICIAL_SHOP",
+      "retailer_name": "ONE PIECEカードゲーム公式ショップ",
+      "store_name": null,
+      "store_specific": false,
+      "event_type": "LOTTERY",
+      "application_start": "2026-11-11T10:00:00+09:00",
+      "application_end": "2026-11-15T23:59:00+09:00",
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": null,
+      "purchase_start_date": "2026-11-21",
+      "purchase_end_date": "2026-11-27",
+      "retail_price": null,
+      "source_url": "https://bandainamco-am.co.jp/official_shop/onepiece-cardgame/news/important/20261110.html",
+      "source_type": "RETAILER_OFFICIAL",
+      "confidence": "high",
+      "published_at": "2026-11-11T00:00:00+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "status": "WINNER_PURCHASE_PERIOD"
+    },
+    {
       "first_seen_at": "2026-11-10T21:38:50.157358+09:00",
       "lottery_id": "lot-735b8e25fe07",
       "tcg": "POKEMON",
@@ -288,7 +375,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-10T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "CLOSED"
     },
     {
@@ -346,7 +433,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -375,7 +462,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -491,7 +578,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-20T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -520,7 +607,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -694,7 +781,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-06T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -752,7 +839,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -839,7 +926,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-10-02T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -868,7 +955,7 @@
       "source_type": "MANUAL_VERIFIED",
       "confidence": "medium",
       "published_at": null,
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -1042,7 +1129,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-18T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -1100,7 +1187,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -1129,7 +1216,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-09-01T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -1709,7 +1796,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -4493,7 +4580,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -4551,7 +4638,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -4609,7 +4696,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -4667,7 +4754,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-17T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -4696,7 +4783,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-17T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -4754,7 +4841,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-18T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -4783,7 +4870,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-18T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -4870,7 +4957,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-20T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_PURCHASE_PERIOD"
     },
     {
@@ -4899,7 +4986,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-18T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -4928,7 +5015,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-17T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -4957,7 +5044,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -4986,7 +5073,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -5015,7 +5102,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-16T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -5073,7 +5160,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-15T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -5102,7 +5189,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-14T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -5131,7 +5218,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-14T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -5160,7 +5247,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-14T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -5189,7 +5276,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -5218,7 +5305,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -5247,7 +5334,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -5276,7 +5363,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-13T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -5305,7 +5392,7 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "ENDED"
     },
     {
@@ -5334,7 +5421,7 @@
       "source_type": "MANUFACTURER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-25T18:10:40.645950+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "UNKNOWN"
     },
     {
@@ -5363,7 +5450,7 @@
       "source_type": "MANUFACTURER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-25T18:10:40.645950+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "UNKNOWN"
     },
     {
@@ -5392,7 +5479,7 @@
       "source_type": "STORE_OFFICIAL",
       "confidence": "medium",
       "published_at": "2026-11-23T00:00:00+09:00",
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "WINNER_ANNOUNCED"
     },
     {
@@ -5421,7 +5508,94 @@
       "source_type": "RETAILER_OFFICIAL",
       "confidence": "high",
       "published_at": null,
-      "last_seen_at": "2026-11-26T15:20:32.140102+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "status": "OPEN"
+    },
+    {
+      "first_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "lottery_id": "lot-c9664b1ce4d3",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンカードゲーム カードボックス福山特選お楽しみ袋",
+      "product_id": null,
+      "retailer": "CARDBOX",
+      "retailer_name": "CARD BOX（加盟店）",
+      "store_name": "カードボックス福山店",
+      "store_specific": true,
+      "event_type": "PURCHASE_RIGHT",
+      "application_start": null,
+      "application_end": "2026-11-27T21:59:00+09:00",
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-18",
+      "application_end_date": null,
+      "winner_announcement_date": null,
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://cardbox.online/news/detail/?id=1851",
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "published_at": "2026-11-18T12:00:00+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "status": "OPEN"
+    },
+    {
+      "first_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "lottery_id": "lot-9e98d40c7198",
+      "tcg": "POKEMON",
+      "product_name": "拡張パック「ハドウシーカー」",
+      "product_id": "pokemon-拡張パック-ハドウシーカー",
+      "retailer": "TORECAPLAZA55",
+      "retailer_name": "トレカプラザ55",
+      "store_name": null,
+      "store_specific": false,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": "2026-11-22",
+      "winner_announcement_date": null,
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://torecaplaza55.com/",
+      "source_type": "RETAILER_OFFICIAL",
+      "confidence": "high",
+      "published_at": "2026-11-18T20:00:00+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "status": "CLOSED"
+    },
+    {
+      "first_seen_at": "2026-11-26T19:26:55.986441+09:00",
+      "lottery_id": "lot-dc8fc347af85",
+      "tcg": "POKEMON",
+      "product_name": "セット商品 再入荷分/キャンセル分",
+      "product_id": null,
+      "retailer": "TORECAPLAZA55",
+      "retailer_name": "トレカプラザ55",
+      "store_name": null,
+      "store_specific": false,
+      "event_type": "LOTTERY",
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": "2026-11-30",
+      "winner_announcement_date": null,
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "retail_price": null,
+      "source_url": "https://torecaplaza55.com/",
+      "source_type": "RETAILER_OFFICIAL",
+      "confidence": "high",
+      "published_at": "2026-11-23T20:00:00+09:00",
+      "last_seen_at": "2026-11-26T19:26:55.986441+09:00",
       "status": "OPEN"
     }
   ],
@@ -5439,6 +5613,20 @@
       "events_last_90d": 18,
       "average_lead_time_hours": 13.2,
       "average_application_window_hours": 60.0
+    },
+    "CARDBOX": {
+      "events_total": 3,
+      "events_last_30d": 3,
+      "events_last_90d": 3,
+      "average_lead_time_hours": 4.1,
+      "average_application_window_hours": 143.3
+    },
+    "ONEPIECE_CARD_OFFICIAL_SHOP": {
+      "events_total": 1,
+      "events_last_30d": 1,
+      "events_last_90d": 1,
+      "average_lead_time_hours": 10.0,
+      "average_application_window_hours": 110.0
     },
     "SURUGAYA": {
       "events_total": 2,
@@ -5481,6 +5669,13 @@
       "events_last_90d": 7,
       "average_lead_time_hours": null,
       "average_application_window_hours": 154.3
+    },
+    "TORECAPLAZA55": {
+      "events_total": 2,
+      "events_last_30d": 0,
+      "events_last_90d": 0,
+      "average_lead_time_hours": null,
+      "average_application_window_hours": null
     }
   }
 }

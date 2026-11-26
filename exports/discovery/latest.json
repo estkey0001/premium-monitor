@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T15:26:37+09:00",
+  "generated_at": "2026-11-26T19:33:00+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -31,32 +31,32 @@
       "latest": true
     },
     "inputs_stale": [],
-    "review_required": 2,
-    "matched_events": 43,
+    "review_required": 3,
+    "matched_events": 49,
     "release": 5,
     "by_kind": {
-      "LOTTERY": 44,
+      "LOTTERY": 51,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
       "RELEASE": 5
     },
-    "tcg_products": 53,
+    "tcg_products": 60,
     "sources": {
-      "configured": 22,
-      "implemented": 11,
+      "configured": 25,
+      "implemented": 14,
       "unimplemented": 11,
-      "blocked": 7,
-      "robots_unreachable": 3,
-      "unreachable": 3,
+      "blocked": 5,
+      "robots_unreachable": 4,
+      "unreachable": 4,
       "table": [
         {
           "source_id": "POKEMON_CENTER_ONLINE",
           "retailer": "ポケモンセンターオンライン",
           "adapter": "pco_lottery",
-          "state": "SOURCE_BLOCKED",
+          "state": "NO_ACTIVE_LOTTERY",
           "health": "OK_NO_EVENTS",
-          "blocked": true,
+          "blocked": false,
           "robots": null,
           "unreachable": false
         },
@@ -194,11 +194,11 @@
           "source_id": "YODOBASHI",
           "retailer": "ヨドバシカメラ",
           "adapter": null,
-          "state": "SOURCE_BLOCKED",
-          "health": "BLOCKED",
-          "blocked": true,
-          "robots": null,
-          "unreachable": false
+          "state": "SOURCE_UNREACHABLE",
+          "health": "FAILED",
+          "blocked": false,
+          "robots": "robots_unreachable",
+          "unreachable": true
         },
         {
           "source_id": "AMAZON",
@@ -253,9 +253,39 @@
         {
           "source_id": "ONEPIECE_CARD_OFFICIAL_SHOP",
           "retailer": "ONE PIECEカードゲーム公式ショップ",
+          "adapter": "bnam_onepiece_shop_lottery",
+          "state": "ACTIVE_LOTTERY",
+          "health": "HEALTHY",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "CARDBOX",
+          "retailer": "CARD BOX（加盟店）",
+          "adapter": "cardbox_lottery",
+          "state": "ACTIVE_LOTTERY",
+          "health": "HEALTHY",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "PLANT",
+          "retailer": "スーパーセンター PLANT",
           "adapter": null,
           "state": "SOURCE_NOT_MONITORED",
-          "health": null,
+          "health": "OK_NO_EVENTS",
+          "blocked": false,
+          "robots": null,
+          "unreachable": false
+        },
+        {
+          "source_id": "TORECAPLAZA55",
+          "retailer": "トレカプラザ55",
+          "adapter": "torecaplaza55_lottery",
+          "state": "ACTIVE_LOTTERY",
+          "health": "HEALTHY",
           "blocked": false,
           "robots": null,
           "unreachable": false
@@ -279,10 +309,10 @@
     "events": 0
   },
   "metrics": {
-    "product_candidates": 69,
-    "new_product_candidates": 64,
-    "pending_review": 26,
-    "review_required": 38,
+    "product_candidates": 75,
+    "new_product_candidates": 70,
+    "pending_review": 30,
+    "review_required": 40,
     "matched_existing": 1,
     "approved": 0,
     "rejected": 0,
@@ -290,29 +320,29 @@
     "stale": 1,
     "unknown_official_products": 58,
     "apple_candidates": 15,
-    "tcg_products": 50,
-    "event_candidates": 200,
+    "tcg_products": 56,
+    "event_candidates": 206,
     "review_required_announcements": 3,
-    "matched_events": 80,
+    "matched_events": 86,
     "stale_events": 117,
     "approved_events": 0,
     "registered_events": 0
   },
   "sources": {
-    "configured": 22,
-    "implemented": 11,
+    "configured": 25,
+    "implemented": 14,
     "unimplemented": 11,
-    "blocked": 7,
-    "robots_unreachable": 3,
-    "unreachable": 3,
+    "blocked": 5,
+    "robots_unreachable": 4,
+    "unreachable": 4,
     "table": [
       {
         "source_id": "POKEMON_CENTER_ONLINE",
         "retailer": "ポケモンセンターオンライン",
         "adapter": "pco_lottery",
-        "state": "SOURCE_BLOCKED",
+        "state": "NO_ACTIVE_LOTTERY",
         "health": "OK_NO_EVENTS",
-        "blocked": true,
+        "blocked": false,
         "robots": null,
         "unreachable": false
       },
@@ -450,11 +480,11 @@
         "source_id": "YODOBASHI",
         "retailer": "ヨドバシカメラ",
         "adapter": null,
-        "state": "SOURCE_BLOCKED",
-        "health": "BLOCKED",
-        "blocked": true,
-        "robots": null,
-        "unreachable": false
+        "state": "SOURCE_UNREACHABLE",
+        "health": "FAILED",
+        "blocked": false,
+        "robots": "robots_unreachable",
+        "unreachable": true
       },
       {
         "source_id": "AMAZON",
@@ -509,9 +539,39 @@
       {
         "source_id": "ONEPIECE_CARD_OFFICIAL_SHOP",
         "retailer": "ONE PIECEカードゲーム公式ショップ",
+        "adapter": "bnam_onepiece_shop_lottery",
+        "state": "ACTIVE_LOTTERY",
+        "health": "HEALTHY",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "CARDBOX",
+        "retailer": "CARD BOX（加盟店）",
+        "adapter": "cardbox_lottery",
+        "state": "ACTIVE_LOTTERY",
+        "health": "HEALTHY",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "PLANT",
+        "retailer": "スーパーセンター PLANT",
         "adapter": null,
         "state": "SOURCE_NOT_MONITORED",
-        "health": null,
+        "health": "OK_NO_EVENTS",
+        "blocked": false,
+        "robots": null,
+        "unreachable": false
+      },
+      {
+        "source_id": "TORECAPLAZA55",
+        "retailer": "トレカプラザ55",
+        "adapter": "torecaplaza55_lottery",
+        "state": "ACTIVE_LOTTERY",
+        "health": "HEALTHY",
         "blocked": false,
         "robots": null,
         "unreachable": false

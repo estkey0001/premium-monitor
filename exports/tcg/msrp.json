@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-26T15:20:32.153153+09:00",
+  "generated_at": "2026-11-26T19:26:56.005498+09:00",
   "note": "公式の商品 API で商品1個の希望小売価格と明示されたものだけ（パック価格から BOX の価格は作らない）。利益の計算には使っていない",
   "verified": [
     {
@@ -15,7 +15,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/products/mega/mg.html",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-スターターセットex-イーブイex",
@@ -29,7 +29,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/ex/me/",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-スターターセットex-ゾロア-ゾロアークex",
@@ -43,7 +43,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/ex/me/",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-スターターセットex-ニャオハ-マスカーニャex",
@@ -57,7 +57,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.pokemon-card.com/ex/me/",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-プレミアムデッキセット-エーフィ-ブラッキー",
@@ -71,7 +71,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/mf",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ニャオハ-ホゲータ-クワッス",
@@ -85,7 +85,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-サルノリ-ヒバニー-メッソン",
@@ -99,7 +99,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-モクロー-ニャビー-アシマリ",
@@ -113,7 +113,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ハリマロン-フォッコ-ケロマツ",
@@ -127,7 +127,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ツタージャ-ポカブ-ミジュマル",
@@ -141,7 +141,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-ナエトル-ヒコザル-ポッチャマ",
@@ -155,7 +155,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-キモリ-アチャモ-ミズゴロウ",
@@ -169,7 +169,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-チコリータ-ヒノアラシ-ワニノコ",
@@ -183,7 +183,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-カードセット-フシギダネ-ヒトカゲ-ゼニガメ",
@@ -197,7 +197,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/cardset",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "pokemon-30th-celebration-futuristic-box",
@@ -211,7 +211,7 @@
       "basis": "product_unit",
       "source": "official_product_api",
       "official_url": "https://www.30th.pokemon-card.com/product/furbox",
-      "checked_at": "2026-11-26T15:20:32.153153+09:00"
+      "checked_at": "2026-11-26T19:26:56.005498+09:00"
     },
     {
       "product_id": "スタートデッキ-砂漠の王女と海賊たち-st-37",
@@ -408,6 +408,20 @@
       "source": "official_page",
       "official_url": "https://www.pokemon-card.com/ex/m1/",
       "checked_at": "2026-11-21"
+    },
+    {
+      "product_id": "pokemon-スペシャルカードセット-メガエルレイドex",
+      "name": "スペシャルカードセット メガエルレイドex",
+      "tcg": "POKEMON",
+      "product_type": "SPECIAL_SET",
+      "box_opportunity_eligible": true,
+      "release_date": "2026-01-23T00:00:00+09:00",
+      "retail_price": 1980,
+      "price_text": "1,980円（税込）",
+      "basis": "product_unit",
+      "source": "official_page",
+      "official_url": "https://www.pokemon-card.com/ex/m3/",
+      "checked_at": "2026-11-26"
     }
   ],
   "excluded": [
@@ -518,12 +532,48 @@
       "name": "拡張パック「メガシンフォニア」",
       "tcg": "POKEMON",
       "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "pokemon-拡張パック-ムニキスゼロ",
+      "name": "拡張パック「ムニキスゼロ」",
+      "tcg": "POKEMON",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "pokemon-拡張パック-ニンジャスピナー",
+      "name": "拡張パック「ニンジャスピナー」",
+      "tcg": "POKEMON",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "pokemon-拡張パック-アビスアイ",
+      "name": "拡張パック「アビスアイ」",
+      "tcg": "POKEMON",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "pokemon-ハイクラスパック-megaドリームex",
+      "name": "ハイクラスパック「MEGAドリームex」",
+      "tcg": "POKEMON",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "ブースターパック-受け継がれる意志-op-13",
+      "name": "ブースターパック 受け継がれる意志【OP-13】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
+    },
+    {
+      "product_id": "プレミアムブースター-one-piece-card-the-best-vol-2-prb-02",
+      "name": "プレミアムブースター ONE PIECE CARD THE BEST vol.2【PRB-02】",
+      "tcg": "ONE_PIECE",
+      "reason": "PACK_PRICE_ONLY"
     }
   ],
   "counts": {
-    "verified": 29,
-    "excluded": 18,
-    "box_eligible": 10,
+    "verified": 30,
+    "excluded": 24,
+    "box_eligible": 11,
     "carried_over": 0
   }
 }

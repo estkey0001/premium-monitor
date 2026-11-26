@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26 15:42 JST",
+  "generated_at": "2026-11-26 19:49 JST",
   "scope": "販売/買取/二次流通の取得品質・正規化・同一性（利益/AI/UI/SaaSロジックは不変）",
   "rules": {
     "identity": "容量・型番・カラー・新品/中古 を厳格一致",
@@ -9,21 +9,20 @@
   },
   "category_summary": {
     "buyback": {
-      "observations": 147,
-      "with_price": 127,
+      "observations": 146,
+      "with_price": 126,
       "exact_match": 15,
       "high_confidence": 15,
-      "fresh": 57,
+      "fresh": 56,
       "main_promotable": 15,
       "zero": 20,
       "stale": 90,
-      "rejected": 118,
+      "rejected": 117,
       "failure_reasons": {
         "stale_over_14d": 90,
         "price_zero": 20,
         "accessory_or_wrong_product": 5,
-        "duplicate_price_collision": 2,
-        "model_mismatch": 1
+        "duplicate_price_collision": 2
       }
     },
     "resale": {
@@ -154,18 +153,17 @@
       }
     },
     "カメラのキタムラ": {
-      "observations": 10,
-      "with_price": 10,
+      "observations": 9,
+      "with_price": 9,
       "exact_match": 0,
       "high_confidence": 0,
-      "fresh": 1,
+      "fresh": 0,
       "main_promotable": 0,
       "zero": 0,
       "stale": 9,
-      "rejected": 10,
+      "rejected": 9,
       "failure_reasons": {
-        "stale_over_14d": 9,
-        "model_mismatch": 1
+        "stale_over_14d": 9
       }
     },
     "ソフマップ": {
@@ -350,21 +348,6 @@
         "price_zero": 6
       }
     },
-    "カメラのキタムラ": {
-      "observations": 10,
-      "with_price": 10,
-      "exact_match": 0,
-      "high_confidence": 0,
-      "fresh": 1,
-      "main_promotable": 0,
-      "zero": 0,
-      "stale": 9,
-      "rejected": 10,
-      "failure_reasons": {
-        "stale_over_14d": 9,
-        "model_mismatch": 1
-      }
-    },
     "ソフマップ": {
       "observations": 10,
       "with_price": 8,
@@ -396,6 +379,20 @@
       }
     },
     "マップカメラ": {
+      "observations": 9,
+      "with_price": 9,
+      "exact_match": 0,
+      "high_confidence": 0,
+      "fresh": 0,
+      "main_promotable": 0,
+      "zero": 0,
+      "stale": 9,
+      "rejected": 9,
+      "failure_reasons": {
+        "stale_over_14d": 9
+      }
+    },
+    "カメラのキタムラ": {
       "observations": 9,
       "with_price": 9,
       "exact_match": 0,
@@ -479,25 +476,24 @@
     }
   },
   "identity_audit": {
-    "checked": 239,
+    "checked": 238,
     "capacity_mismatch": 0,
     "wrong_model": 0,
     "accessory": 7,
     "not_body_only": 7,
     "condition_dist": {
       "new": 196,
-      "used": 42,
-      "unknown": 1
+      "used": 42
     }
   },
   "normalization_audit": {
     "has_price_type": 1.0,
     "shipping_separated": 1.0,
     "points_separated": 1.0,
-    "tradein_excluded": 0.8931,
-    "buyback_labeled": 124,
+    "tradein_excluded": 0.8924,
+    "buyback_labeled": 123,
     "price_type_dist": {
-      "buyback_price": 124,
+      "buyback_price": 123,
       "shop_sale_price": 25,
       "overseas_listing_price": 5,
       "flea_listing_price": 5
@@ -528,7 +524,7 @@
         "new",
         "used"
       ],
-      "first_seen": 96.2,
+      "first_seen": 96.3,
       "last_seen": 0.1,
       "risk_level": "high",
       "possible_reason": [
@@ -559,7 +555,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.7,
+      "last_seen": 0.8,
       "risk_level": "high",
       "possible_reason": [
         "different_model_same_price",
@@ -590,7 +586,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 0.7,
+      "last_seen": 0.8,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -620,8 +616,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 108.2,
-      "last_seen": 108.2,
+      "first_seen": 108.3,
+      "last_seen": 108.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -650,8 +646,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 108.2,
-      "last_seen": 108.2,
+      "first_seen": 108.3,
+      "last_seen": 108.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -680,8 +676,8 @@
       "conditions": [
         "new"
       ],
-      "first_seen": 108.2,
-      "last_seen": 108.2,
+      "first_seen": 108.3,
+      "last_seen": 108.3,
       "risk_level": "medium",
       "possible_reason": [
         "different_model_same_price"
@@ -710,7 +706,7 @@
         "new"
       ],
       "first_seen": 9999.0,
-      "last_seen": 49.7,
+      "last_seen": 49.8,
       "risk_level": "low",
       "possible_reason": [
         "same_price_multiple_skus"

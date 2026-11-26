@@ -1,6 +1,6 @@
 # Collector Quality Report
 
-生成日時: 2026-11-26 13:53:48 UTC+09:00
+生成日時: 2026-11-26 18:00:07 UTC+09:00
 
 ## サマリ
 
@@ -196,16 +196,13 @@
 | ps5_pro | tsutaya | SKIP | not_supported |
 | iphone16pro256 | kaitori_shouten | FAILED | product_not_listed |
 
-## 価格変動一覧 (2件)
+## 価格変動一覧 (0件)
 
-| 商品 | 店舗 | 前回 | 今回 | 変化率 |
-|------|------|------|------|--------|
-| iphone17pm256 | mobile_ichiban | ¥193,000 | ¥194,000 | ↑0.5% |
-| switch2 | kaitori_shouten | ¥54,100 | ¥54,300 | ↑0.4% |
+（前回との変動なし）
 
 ## ⚠️ suspicious_price 一覧 (2件)
 
 | 商品 | 店舗 | 価格 | 理由 | 詳細 |
 |------|------|------|------|------|
-| ps5_pro | kaitori_shouten | ¥221,000 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥221,000。他店の裏付けなし・要確認） |
-| ps5_pro | mobile_ichiban | ¥221,000 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥221,000。他店の裏付けなし・要確認） |
+| ps5_pro | kaitori_shouten | ¥222,700 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥222,700。他店の裏付けなし・要確認） |
+| ps5_pro | mobile_ichiban | ¥223,000 | above_genre_max | game_console正常帯¥10,000〜¥200,000の上限超過（¥223,000。他店の裏付けなし・要確認） |

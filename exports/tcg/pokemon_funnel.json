@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T15:20:32.153153+09:00",
+  "generated_at": "2026-11-26T19:26:56.005498+09:00",
   "sources": [
     {
       "source": "ポケモンカードゲーム公式（商品API）",
@@ -52,21 +52,26 @@
     {
       "source": "ポケモンセンターオンライン",
       "collector": "PokemonCenterOnlineCollector",
-      "status": "BLOCKED",
-      "status_reason": "アクセス拒否（HTTP 403 / robots 等）: 1ページ",
+      "status": "HEALTHY",
+      "status_reason": "正常（採用 2件）",
       "pages_discovered": 1,
       "pages_requested": 1,
-      "pages_loaded": 0,
+      "pages_loaded": 1,
       "product_links_discovered": 0,
       "product_pages_discovered": 0,
       "product_pages_loaded": 0,
       "news_pages_discovered": 0,
       "news_pages_loaded": 0,
-      "candidate_events": 0,
-      "accepted_sales_events": 0,
-      "rejected_events": 0,
-      "errors": 1,
-      "rejection_reasons": {},
+      "candidate_events": 22,
+      "accepted_sales_events": 2,
+      "rejected_events": 20,
+      "errors": 0,
+      "rejection_reasons": {
+        "no_product_context": 3,
+        "no_sale_context": 6,
+        "unknown_sale_method": 10,
+        "non_sale_announcement": 1
+      },
       "notes": []
     },
     {
@@ -95,24 +100,26 @@
   "total": {
     "pages_discovered": 10,
     "pages_requested": 10,
-    "pages_loaded": 9,
+    "pages_loaded": 10,
     "product_links_discovered": 18,
     "product_pages_discovered": 8,
     "product_pages_loaded": 1,
     "news_pages_discovered": 122,
     "news_pages_loaded": 2,
-    "candidate_events": 142,
-    "accepted_sales_events": 2,
-    "rejected_events": 140,
-    "errors": 1
+    "candidate_events": 164,
+    "accepted_sales_events": 4,
+    "rejected_events": 160,
+    "errors": 0
   },
   "rejection_reasons": {
     "past_release": 18,
-    "no_sale_context": 3,
+    "no_sale_context": 9,
     "event_category": 86,
-    "non_sale_announcement": 14,
+    "non_sale_announcement": 15,
     "article_too_old": 18,
-    "non_card_product": 1
+    "non_card_product": 1,
+    "no_product_context": 3,
+    "unknown_sale_method": 10
   },
-  "current_events": 2
+  "current_events": 4
 }

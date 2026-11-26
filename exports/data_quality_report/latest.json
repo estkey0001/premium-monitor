@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T15:42:41+09:00",
+  "generated_at": "2026-11-26T19:49:06+09:00",
   "collection": {
     "total_shops": 16,
     "shops_with_success": 3,
@@ -11,11 +11,11 @@
     "success_rate_pct": 30.3
   },
   "comparison": {
-    "prev_success_rate_pct": 28.8,
+    "prev_success_rate_pct": 30.3,
     "current_success_rate_pct": 30.3,
-    "delta_pct": 1.5,
-    "trend": "改善",
-    "moving_avg_7d_pct": 29.2,
+    "delta_pct": 0.0,
+    "trend": "横ばい",
+    "moving_avg_7d_pct": 29.4,
     "top5_failure_reasons": [
       {
         "reason": "http_403",
@@ -84,7 +84,6 @@
   "effective_data": {
     "products_with_valid_buyback": 15,
     "valid_buyback_by_product": {
-      "prod_x100vi": 2,
       "prod_iphone17pro_256": 2,
       "prod_iphone17pro_512": 2,
       "prod_iphone17pm_256": 3,
@@ -94,6 +93,7 @@
       "prod_airpods_pro3": 1,
       "prod_iphoneair_256": 1,
       "prod_iphoneduo_256": 1,
+      "prod_x100vi": 1,
       "prod_gr4": 1,
       "prod_gr4_hdf": 1,
       "prod_gr4_mono": 1,
@@ -269,55 +269,55 @@
   "consecutive_failed_shops": [
     {
       "shop_id": "2ndstreet",
-      "consecutive_failures": 275
+      "consecutive_failures": 276
     },
     {
       "shop_id": "bookoff",
-      "consecutive_failures": 275
+      "consecutive_failures": 276
     },
     {
       "shop_id": "dosupara",
-      "consecutive_failures": 275
+      "consecutive_failures": 276
     },
     {
       "shop_id": "geo_mobile",
-      "consecutive_failures": 275
+      "consecutive_failures": 276
     },
     {
       "shop_id": "hardoff",
-      "consecutive_failures": 275
+      "consecutive_failures": 276
     },
     {
       "shop_id": "janpara",
-      "consecutive_failures": 275
+      "consecutive_failures": 276
     },
     {
       "shop_id": "pasoko",
-      "consecutive_failures": 275
+      "consecutive_failures": 276
     },
     {
       "shop_id": "sofmap",
-      "consecutive_failures": 275
+      "consecutive_failures": 276
     },
     {
       "shop_id": "surugaya",
-      "consecutive_failures": 275
+      "consecutive_failures": 276
     },
     {
       "shop_id": "tsutaya",
-      "consecutive_failures": 275
+      "consecutive_failures": 276
     },
     {
       "shop_id": "iosys",
-      "consecutive_failures": 208
+      "consecutive_failures": 209
     },
     {
       "shop_id": "netoff",
-      "consecutive_failures": 135
+      "consecutive_failures": 136
     },
     {
       "shop_id": "geo",
-      "consecutive_failures": 67
+      "consecutive_failures": 68
     }
   ],
   "improvement_priority": [
@@ -341,13 +341,13 @@
     }
   ],
   "camera_reliability": {
-    "camera_auto_scraped_count": 18,
-    "camera_auto_high_confidence_count": 18,
+    "camera_auto_scraped_count": 17,
+    "camera_auto_high_confidence_count": 17,
     "camera_auto_low_confidence_count": 0,
-    "camera_manual_fallback_count": 42,
-    "camera_rejected_candidate_count": 245,
+    "camera_manual_fallback_count": 43,
+    "camera_rejected_candidate_count": 201,
     "camera_rejection_reasons": {
-      "model_mismatch": 194,
+      "model_mismatch": 150,
       "not_buyback_context": 51
     },
     "per_brand_success_rates": {

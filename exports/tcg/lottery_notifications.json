@@ -34,7 +34,62 @@
     "lot-d951335b1a89:deadline_1h": "2026-11-23T23:03:43.635105+09:00",
     "lot-26b0b34c2845:lottery_open": "2026-11-25T00:09:28.081082+09:00",
     "lot-9c89a76fab48:deadline_24h": "2026-11-26T00:48:37.519375+09:00",
-    "lot-26b0b34c2845:deadline_24h": "2026-11-26T00:48:37.519375+09:00"
+    "lot-26b0b34c2845:deadline_24h": "2026-11-26T00:48:37.519375+09:00",
+    "lot-9c89a76fab48:deadline_6h": "2026-11-26T19:26:55.986441+09:00",
+    "lot-26b0b34c2845:deadline_6h": "2026-11-26T19:26:55.986441+09:00",
+    "lot-3a3120caff7f:deadline_24h": "suppressed:2026-11-26T19:26:55.986441+09:00",
+    "lot-3a3120caff7f:deadline_6h": "2026-11-26T19:26:55.986441+09:00",
+    "lot-167315095511:deadline_24h": "suppressed:2026-11-26T19:26:55.986441+09:00",
+    "lot-167315095511:deadline_6h": "2026-11-26T19:26:55.986441+09:00"
   },
-  "candidates": []
+  "candidates": [
+    {
+      "lottery_id": "lot-9c89a76fab48",
+      "milestone": "deadline_6h",
+      "label": "締切6時間前",
+      "fires_at": "2026-11-26T17:59:00+09:00",
+      "tcg": "POKEMON",
+      "product_name": "拡張パック「ハドウシーカー」",
+      "retailer": "ホビーステーション",
+      "entry_url": null,
+      "source_url": "https://www.hbst.net/?p=412193",
+      "message": "拡張パック「ハドウシーカー」（ホビーステーション） 締切6時間前"
+    },
+    {
+      "lottery_id": "lot-26b0b34c2845",
+      "milestone": "deadline_6h",
+      "label": "締切6時間前",
+      "fires_at": "2026-11-26T17:59:00+09:00",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンカードゲームMEGA 拡張パック二種（再販）",
+      "retailer": "ホビーステーション",
+      "entry_url": null,
+      "source_url": "https://www.hbst.net/?p=412193",
+      "message": "ポケモンカードゲームMEGA 拡張パック二種（再販）（ホビーステーション） 締切6時間前"
+    },
+    {
+      "lottery_id": "lot-3a3120caff7f",
+      "milestone": "deadline_6h",
+      "label": "締切6時間前",
+      "fires_at": "2026-11-26T18:00:00+09:00",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンMEGA 30th CELEBRATIONカードセット",
+      "retailer": "CARD BOX（加盟店）",
+      "entry_url": null,
+      "source_url": "https://cardbox.online/news/detail/?id=1864",
+      "message": "ポケモンMEGA 30th CELEBRATIONカードセット（CARD BOX（加盟店）・北国書林辰口店） 締切6時間前"
+    },
+    {
+      "lottery_id": "lot-167315095511",
+      "milestone": "deadline_6h",
+      "label": "締切6時間前",
+      "fires_at": "2026-11-26T18:00:00+09:00",
+      "tcg": "POKEMON",
+      "product_name": "ストームエメラルダ",
+      "retailer": "CARD BOX（加盟店）",
+      "entry_url": null,
+      "source_url": "https://cardbox.online/news/detail/?id=1863",
+      "message": "ストームエメラルダ（CARD BOX（加盟店）・北国書林辰口店） 締切6時間前"
+    }
+  ]
 }

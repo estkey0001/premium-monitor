@@ -1026,24 +1026,28 @@ def _rb_card(o: dict, i: int, ann: Optional[dict] = None) -> str:
     ex = bbv["highest_executable"]
     mx = rf.thresholds(cfg)[0]
     g = f"rb{i}"
-    live = f'data-fb-live data-fb-group="{g}" {rf.attrs(pr.get("sell_observed_at"), cfg)} hidden'
-    live_ex = f'data-fb-live data-fb-group="{g}" {rf.attrs(ex["checked_at"], cfg)} hidden'
+    # 鮮度の約束（#853）: グループは取得時刻が同じ・同じ種類の要素だけ（最高買取 = {g}-b・利益と ROI = {g}-p・状態バッジ = {g}-s）。
+    # live の内側に <div>/<span> を入れない（バッジは <b>）。各 live の直後に同じグループの stale を置く
+    gb, gp, gs = f"{g}-b", f"{g}-p", f"{g}-s"
+    live_s = f'data-fb-live data-fb-group="{gs}" {rf.attrs(pr.get("sell_observed_at"), cfg)} hidden'
+    live_p = f'data-fb-live data-fb-group="{gp}" {rf.attrs(pr.get("sell_observed_at"), cfg)} hidden'
+    live_b = f'data-fb-live data-fb-group="{gb}" {rf.attrs(ex["checked_at"], cfg)} hidden'
     unit = _e(o["unit"])
     neg = pr["net_profit"] <= 0
     until = _e(str(r.get("apply_end") or ""))
-    badge = (f'<span {live}>{_badge("条件付き" + ("（赤字）" if neg else ""), "warn")}</span>'
-             f'<span data-fb-stale data-fb-group="{g}" data-fb-max="{mx:g}">{_badge("確認待ち", "out")}</span>')
+    badge = (f'<span {live_s}><b class="sb warn">{_e("条件付き" + ("（赤字）" if neg else ""))}</b></span>'
+             f'<span data-fb-stale data-fb-group="{gs}" data-fb-max="{mx:g}"><b class="sb out">確認待ち</b></span>')
     meta = f'<div><dt>販売店価格</dt><dd>{_yen(r["price_jpy"])}<small>{_e(r["shop"])}・{unit}</small></dd></div>'
     apply_end = r.get("apply_end")
     deadline = f"締切 {_e(_apply_deadline(apply_end))}" if apply_end else "締切未確認"
     start = "・開始日未確認" if r.get("start_unconfirmed") else ""
     meta += (f'<div><dt>応募</dt><dd><span data-rb-open>{_e(r["accept_label"])}・{deadline}{start}</span><span data-rb-expired hidden>応募期限を過ぎました</span>'
              f'<small>購入 {_e(_short(r.get("purchase_start")))}〜{_e(_short(r.get("purchase_end")))}・{_e(r.get("shipping") or "受取未確認")}</small></dd></div>')
-    meta += (f'<div {live_ex}><dt>最高買取</dt><dd>{_yen(ex["price"])}<small>{_e(ex["shop_name"])}</small></dd></div>')
-    meta += (f'<div {live}><dt>条件付きの純利益</dt><dd title="{_e(pr.get("route") or "")}">{_e(pr["label"])}'
-             f'<small>当選した場合{"・赤字" if neg else ""}</small></dd></div>'
-             f'<div {live}><dt>ROI</dt><dd>{_roi(pr["roi_pct"])}</dd></div>')
-    meta += (f'<div data-fb-stale data-fb-group="{g}" data-fb-max="{mx:g}"><dt>純利益・ROI</dt><dd>価格再確認待ち</dd></div>')
+    meta += (f'<div {live_b}><dt>最高買取</dt><dd>{_yen(ex["price"])}<small>{_e(ex["shop_name"])}</small></dd></div>'
+             f'<div data-fb-stale data-fb-group="{gb}" data-fb-max="{mx:g}"><dt>最高買取（再確認）</dt><dd>価格再確認待ち</dd></div>')
+    meta += (f'<div {live_p}><dt>条件付きの純利益</dt><dd title="{_e(pr.get("route") or "")}">{_e(pr["label"])}'
+             f'<small>当選した場合{"・赤字" if neg else ""}・ROI {_roi(pr["roi_pct"])}</small></dd></div>'
+             f'<div data-fb-stale data-fb-group="{gp}" data-fb-max="{mx:g}"><dt>純利益・ROI</dt><dd>価格再確認待ち</dd></div>')
     tail = ""
     return (f'<section class="pcard opp" id="{g}" data-rb-card data-rb-until="{until}">{_img_block(o)}<div class="phead">'
             f'<div class="tc-tags">{badge}{_badge("当選時のみ", "out")}</div><h3>{_e(o["name"])}</h3>{_rb_target(r)}</div>'

@@ -287,3 +287,69 @@ def test_review_l3_future_apply_start_reason_says_before_start():
     assert "応募開始前" in c["reason"] and "開始日" in c["reason"] and "受付状態を確認できません" not in c["reason"]
     d = _kind(ent(apply_start="来週"))                                          # 読めない開始日は従来の文言のまま
     assert "受付状態を確認できません" in d["reason"]
+
+
+# ── 2026-11-26 21:29 JST の Daily LP が deploy-check #853 で止まった件の回帰（販売店 BOX の条件付きカード _rb_card） ──
+# 失敗した実行の入力（その日の買取データと tcg.html）は CI の成果物に残っていないので、hub() の fixture で同じカードを描いて確かめる。
+def _rb_page(sell=9000, entries=None):
+    from src.content.tcg_hub_page import render_pages
+    return render_pages(hub(entries if entries is not None else [ent()], sell=sell), generated_label="x")["tcg.html"]
+
+
+def _check853(html):
+    import re
+
+    import scripts.deploy_check as dc
+    from src.content.tcg_hub_page import _CFG
+    from src.tcg import runtime_freshness as rf
+    mx, fut = rf.thresholds(_CFG())
+    obs = set(re.findall(r'data-fb-obs="([^"]+)"', html))
+    return dc.check_tcg_page_runtime_freshness(html, mx, fut, obs)
+
+
+def test_rb_card_passes_853_profit_loss_and_none():
+    for sell in (9000, 1000):                                      # 黒字・赤字
+        html = _rb_page(sell)
+        assert '<section class="pcard opp"' in html and _check853(html) == []
+    none = _rb_page(entries=[])
+    assert '<section class="pcard opp"' not in none and _check853(none) == []                  # カードなし
+
+
+def test_rb_card_groups_split_by_observed_time_and_kind():
+    """買取（最高買取）と利益の取得時刻が違っても、同じ group にしない（group ごとに 1 つの取得時刻）。"""
+    import re
+    html = _rb_page()
+    card = re.search(r'<section class="pcard opp".*?</section>', html, re.S).group(0)
+    groups = {}
+    for g, o in re.findall(r'data-fb-live data-fb-group="([^"]+)" data-fb-obs="([^"]+)"', card):
+        groups.setdefault(g, set()).add(o)
+    assert set(groups) == {"rb0-b", "rb0-p", "rb0-s"} and all(len(v) == 1 for v in groups.values())
+    other = "2026-11-21T09:00:00+09:00"
+    moved = re.sub(r'(data-fb-group="rb0-b" data-fb-obs=")[^"]+', r"\g<1>" + other, html)     # 買取だけ別の時刻
+    import scripts.deploy_check as dc
+    from src.content.tcg_hub_page import _CFG
+    from src.tcg import runtime_freshness as rf
+    mx, fut = rf.thresholds(_CFG())
+    obs = set(re.findall(r'data-fb-obs="([^"]+)"', moved))
+    assert dc.check_tcg_page_runtime_freshness(moved, mx, fut, obs) == []
+
+
+def test_rb_card_every_amount_is_inside_live_and_has_a_stale_partner():
+    """鮮度切れ（JS が live を隠して stale を出す）で、最高買取・純利益・ROI・状態バッジが「再確認待ち」に切り替わる作り。"""
+    import re
+    card = re.search(r'<section class="pcard opp".*?</section>', _rb_page(), re.S).group(0)
+    for g in ("rb0-b", "rb0-p", "rb0-s"):
+        assert re.search(rf'data-fb-live data-fb-group="{g}"[^>]*hidden>', card)          # 最初は隠す（JS が新しいと確かめたら出す）
+        assert re.search(rf'data-fb-stale data-fb-group="{g}"', card)                     # 古ければこちらが出る
+    live_text = " ".join(re.findall(r"<(?:span|div) data-fb-live[^>]*>(.*?)</(?:span|div)>", card, re.S))
+    assert "¥" in live_text and "ROI" in live_text and "条件付き" in live_text
+
+
+def test_rb_card_label_change_does_not_hide_rows_from_853():
+    """見出しを変えても検査の対象から外れない: 最高買取・純利益の行から live を外すと #853 が検出する。"""
+    html = _rb_page()
+    for label in ("最高買取", "条件付きの純利益"):
+        i = html.index(f"<dt>{label}</dt>")
+        j = html.rindex("<div ", 0, i)
+        broken = html[:j] + html[j:i].replace("data-fb-live ", "").replace(" hidden", "") + html[i:]
+        assert broken != html and _check853(broken) != []

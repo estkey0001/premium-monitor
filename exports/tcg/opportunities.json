@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T19:26:56.005498+09:00",
+  "generated_at": "2026-11-27T22:42:27.388392+09:00",
   "items": [
     {
       "tcg": "POKEMON",
@@ -24,7 +24,7 @@
       "source_url": "https://www.pokemon-card.com/ex/m7/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-26T19:01:52.533374+09:00",
+      "observed_at": "2026-11-27T22:19:24.874792+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -62,7 +62,7 @@
       "notification_kind": null,
       "availability_basis": "release_date_only",
       "verification": "Confirmed",
-      "status": "STARTING_SOON",
+      "status": "UNVERIFIED",
       "priority": "MEDIUM",
       "stale": false,
       "ttl_sec": null,
@@ -113,7 +113,7 @@
         "purchase_limit": 2.0
       },
       "buy_now_blocked_reasons": [
-        "現在購入可能な状態ではない（STARTING_SOON）",
+        "現在購入可能な状態ではない（UNVERIFIED）",
         "プレミア率が閾値未満、または市場価格のサンプル不足"
       ],
       "buy_now_notes": [
@@ -143,7 +143,7 @@
       "source_url": "https://www.pokemon-card.com/products/index.html",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-26T19:01:52.533374+09:00",
+      "observed_at": "2026-11-27T22:19:24.874792+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -181,7 +181,7 @@
       "notification_kind": null,
       "availability_basis": "release_date_only",
       "verification": "Confirmed",
-      "status": "STARTING_SOON",
+      "status": "UNVERIFIED",
       "priority": "MEDIUM",
       "stale": false,
       "ttl_sec": null,
@@ -232,7 +232,7 @@
         "purchase_limit": 2.0
       },
       "buy_now_blocked_reasons": [
-        "現在購入可能な状態ではない（STARTING_SOON）",
+        "現在購入可能な状態ではない（UNVERIFIED）",
         "プレミア率が閾値未満、または市場価格のサンプル不足"
       ],
       "buy_now_notes": [
@@ -262,7 +262,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-26T19:02:53.996428+09:00",
+      "observed_at": "2026-11-27T22:20:26.247100+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -378,7 +378,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-26T19:02:53.996428+09:00",
+      "observed_at": "2026-11-27T22:20:26.247100+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -494,7 +494,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-26T19:02:53.996428+09:00",
+      "observed_at": "2026-11-27T22:20:26.247100+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -610,7 +610,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-26T19:02:53.996428+09:00",
+      "observed_at": "2026-11-27T22:20:26.247100+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -726,7 +726,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-26T19:02:53.996428+09:00",
+      "observed_at": "2026-11-27T22:20:26.247100+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -842,7 +842,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-26T19:02:53.996428+09:00",
+      "observed_at": "2026-11-27T22:20:26.247100+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -958,7 +958,7 @@
       "source_url": "https://www.pokemoncenter-online.com/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-26T19:01:53.177627+09:00",
+      "observed_at": "2026-11-27T22:19:25.390475+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -1074,7 +1074,7 @@
       "source_url": "https://www.pokemoncenter-online.com/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-26T19:01:53.177627+09:00",
+      "observed_at": "2026-11-27T22:19:25.390475+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,

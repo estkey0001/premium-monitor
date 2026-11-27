@@ -1,6 +1,6 @@
 # Source Matching Accuracy 監査
 
-> 生成: 2026-11-26 19:49 JST / 商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）
+> 生成: 2026-11-27 23:04 JST / 商品同一性マッチング精度（利益/AI/UI/SaaS/DQ思想は不変）
 
 ## 精度サマリ（目標対比）
 | 指標 | 実績 | 目標 |
@@ -10,13 +10,13 @@
 | Model Match Accuracy | 100.0% | 100% |
 | Condition Match Accuracy | 100.0% | 100% |
 | False Main Promotion | 0 | 0 |
-| High Risk Duplicates | 2 | (要レビュー) |
-| Manual Review Queue | 74 | – |
+| High Risk Duplicates | 3 | (要レビュー) |
+| Manual Review Queue | 73 | – |
 
 ## ソース精度ランキング（100点）
 | # | source | 観測 | score | identity | capacity | model | fresh | main |
 |--:|---|--:|--:|--:|--:|--:|--:|--:|
-| 1 | 買取商店 | 22 | 90 | 0.68 | 1.00 | 1.00 | 0.68 | 15 |
+| 1 | 買取商店 | 22 | 88 | 0.59 | 1.00 | 1.00 | 0.68 | 13 |
 | 2 | メーカー公式/定価 | 49 | 75 | 0.00 | 1.00 | 1.00 | 0.98 | 0 |
 | 3 | 買取一丁目 | 4 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
 | 4 | ゲオモバイル | 4 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
@@ -29,9 +29,9 @@
 | 11 | TSUTAYA | 2 | 75 | 0.00 | 1.00 | 1.00 | 1.00 | 0 |
 | 12 | イオシス | 20 | 72 | 0.00 | 1.00 | 1.00 | 0.30 | 0 |
 | 13 | フジヤカメラ | 25 | 71 | 0.00 | 1.00 | 1.00 | 0.68 | 0 |
-| 14 | モバイル一番 | 4 | 71 | 0.00 | 1.00 | 1.00 | 0.25 | 0 |
-| 15 | じゃんぱら | 34 | 71 | 0.00 | 1.00 | 1.00 | 0.18 | 0 |
-| 16 | ソフマップ | 10 | 71 | 0.00 | 1.00 | 1.00 | 0.20 | 0 |
+| 14 | じゃんぱら | 34 | 71 | 0.00 | 1.00 | 1.00 | 0.18 | 0 |
+| 15 | ソフマップ | 10 | 71 | 0.00 | 1.00 | 1.00 | 0.20 | 0 |
+| 16 | モバイル一番 | 3 | 70 | 0.00 | 1.00 | 1.00 | 0.00 | 0 |
 | 17 | ゲオ | 9 | 70 | 0.00 | 1.00 | 1.00 | 0.22 | 0 |
 | 18 | マップカメラ | 9 | 70 | 0.00 | 1.00 | 1.00 | 0.00 | 0 |
 | 19 | カメラのキタムラ | 9 | 70 | 0.00 | 1.00 | 1.00 | 0.00 | 0 |
@@ -52,6 +52,7 @@
 |---|---|---|--:|--:|---|---|
 | high | フジヤカメラ | sell | ¥194,000 | 3 | new_vs_used_same_price | pending |
 | high | メーカー公式/定価 | official | ¥189,800 | 2 | different_model_same_price, pro_vs_promax_same_price | manual_review_required |
+| high | 買取商店 | sell | ¥220,000 | 2 | different_model_same_price, pro_vs_promax_same_price | pending |
 | medium | メーカー公式/定価 | official | ¥159,800 | 2 | different_model_same_price | reviewed_true_same_price |
 | medium | じゃんぱら | sell | ¥148,000 | 2 | different_model_same_price | pending |
 | medium | じゃんぱら | sell | ¥78,000 | 2 | different_model_same_price | pending |

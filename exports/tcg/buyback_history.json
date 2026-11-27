@@ -763,5 +763,185 @@
   "price": 7100,
   "checked_at": "2026-11-26T00:48:39.651326+09:00",
   "date": "2026-11-26"
+ },
+ {
+  "product_id": "pokemon-30th-celebration-futuristic-box",
+  "shop": "kaitorishouten",
+  "unit": "BOX",
+  "condition": "NEW",
+  "price": 43000,
+  "checked_at": "2026-11-27T22:48:31.455981+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-30th-celebration-futuristic-box",
+  "shop": "rudeya",
+  "unit": "BOX",
+  "condition": "UNOPENED",
+  "price": 40000,
+  "checked_at": "2026-11-27T22:43:28.954538+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-30th-celebration-プレミアムデッキセット-エーフィ-ブラッキー",
+  "shop": "kaitorishouten",
+  "unit": "SET",
+  "condition": "NEW",
+  "price": 8000,
+  "checked_at": "2026-11-27T22:47:31.424804+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-30th-celebration-プレミアムデッキセット-エーフィ-ブラッキー",
+  "shop": "rudeya",
+  "unit": "SET",
+  "condition": "UNOPENED",
+  "price": 8000,
+  "checked_at": "2026-11-27T22:43:28.954538+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-30th-celebration",
+  "shop": "kaitorishouten",
+  "unit": "BOX",
+  "condition": "NEW",
+  "price": 14000,
+  "checked_at": "2026-11-27T22:44:31.304132+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-30th-celebration",
+  "shop": "rudeya",
+  "unit": "BOX",
+  "condition": "SEALED",
+  "price": 14000,
+  "checked_at": "2026-11-27T22:43:28.954538+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-インフェルノx",
+  "shop": "morimori",
+  "unit": "BOX",
+  "condition": "NEW",
+  "price": 15300,
+  "checked_at": "2026-11-27T22:44:30.408767+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-インフェルノx",
+  "shop": "rudeya",
+  "unit": "BOX",
+  "condition": "SEALED",
+  "price": 14000,
+  "checked_at": "2026-11-27T22:43:28.954538+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-ストームエメラルダ",
+  "shop": "kaitorishouten",
+  "unit": "BOX",
+  "condition": "NEW",
+  "price": 6500,
+  "checked_at": "2026-11-27T22:45:31.466321+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-ストームエメラルダ",
+  "shop": "rudeya",
+  "unit": "BOX",
+  "condition": "SEALED",
+  "price": 6500,
+  "checked_at": "2026-11-27T22:43:28.954538+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-ハドウシーカー",
+  "shop": "rudeya",
+  "unit": "BOX",
+  "condition": "SEALED",
+  "price": 6300,
+  "checked_at": "2026-11-27T22:43:28.954538+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-メガシンフォニア",
+  "shop": "kaitorishouten",
+  "unit": "BOX",
+  "condition": "NEW",
+  "price": 6500,
+  "checked_at": "2026-11-27T22:46:31.339881+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-メガシンフォニア",
+  "shop": "morimori",
+  "unit": "BOX",
+  "condition": "NEW",
+  "price": 6600,
+  "checked_at": "2026-11-27T22:44:30.408767+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-メガシンフォニア",
+  "shop": "rudeya",
+  "unit": "BOX",
+  "condition": "SEALED",
+  "price": 6000,
+  "checked_at": "2026-11-27T22:43:28.954538+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-メガブレイブ",
+  "shop": "morimori",
+  "unit": "BOX",
+  "condition": "NEW",
+  "price": 6800,
+  "checked_at": "2026-11-27T22:44:30.408767+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "pokemon-拡張パック-メガブレイブ",
+  "shop": "rudeya",
+  "unit": "BOX",
+  "condition": "SEALED",
+  "price": 6000,
+  "checked_at": "2026-11-27T22:43:28.954538+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "スタートデッキ-egghead-st-29",
+  "shop": "rudeya",
+  "unit": "DECK",
+  "condition": "UNOPENED",
+  "price": 2500,
+  "checked_at": "2026-11-27T22:42:28.997310+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "スタートデッキex-ルフィ-エース-st-30",
+  "shop": "rudeya",
+  "unit": "DECK",
+  "condition": "UNOPENED",
+  "price": 1800,
+  "checked_at": "2026-11-27T22:42:28.997310+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "ブースターパック-神の支配-op-18",
+  "shop": "morimori",
+  "unit": "BOX",
+  "condition": "UNOPENED",
+  "price": 5800,
+  "checked_at": "2026-11-27T22:43:30.191776+09:00",
+  "date": "2026-11-27"
+ },
+ {
+  "product_id": "ブースターパック-神の支配-op-18",
+  "shop": "rudeya",
+  "unit": "BOX",
+  "condition": "UNOPENED",
+  "price": 6200,
+  "checked_at": "2026-11-27T22:42:28.997310+09:00",
+  "date": "2026-11-27"
  }
 ]

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T19:33:00+09:00",
+  "generated_at": "2026-11-27T22:48:31+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -32,10 +32,10 @@
     },
     "inputs_stale": [],
     "review_required": 3,
-    "matched_events": 49,
+    "matched_events": 48,
     "release": 5,
     "by_kind": {
-      "LOTTERY": 51,
+      "LOTTERY": 50,
       "PREORDER": 0,
       "FIRST_COME": 0,
       "RESTOCK": 1,
@@ -321,9 +321,9 @@
     "unknown_official_products": 58,
     "apple_candidates": 15,
     "tcg_products": 56,
-    "event_candidates": 206,
+    "event_candidates": 207,
     "review_required_announcements": 3,
-    "matched_events": 86,
+    "matched_events": 87,
     "stale_events": 117,
     "approved_events": 0,
     "registered_events": 0

@@ -40,56 +40,34 @@
     "lot-3a3120caff7f:deadline_24h": "suppressed:2026-11-26T19:26:55.986441+09:00",
     "lot-3a3120caff7f:deadline_6h": "2026-11-26T19:26:55.986441+09:00",
     "lot-167315095511:deadline_24h": "suppressed:2026-11-26T19:26:55.986441+09:00",
-    "lot-167315095511:deadline_6h": "2026-11-26T19:26:55.986441+09:00"
+    "lot-167315095511:deadline_6h": "2026-11-26T19:26:55.986441+09:00",
+    "lot-0b4087e4779c:purchase_deadline_24h": "2026-11-27T22:42:27.365407+09:00",
+    "lot-64952d7e929e:lottery_open": "2026-11-27T22:42:27.365407+09:00"
   },
   "candidates": [
     {
-      "lottery_id": "lot-9c89a76fab48",
-      "milestone": "deadline_6h",
-      "label": "締切6時間前",
-      "fires_at": "2026-11-26T17:59:00+09:00",
+      "lottery_id": "lot-0b4087e4779c",
+      "milestone": "purchase_deadline_24h",
+      "label": "購入期限24時間前",
+      "fires_at": "2026-11-27T20:00:00+09:00",
       "tcg": "POKEMON",
-      "product_name": "拡張パック「ハドウシーカー」",
-      "retailer": "ホビーステーション",
+      "product_name": "ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」",
+      "retailer": "カードラボ",
       "entry_url": null,
-      "source_url": "https://www.hbst.net/?p=412193",
-      "message": "拡張パック「ハドウシーカー」（ホビーステーション） 締切6時間前"
+      "source_url": "https://www.c-labo.jp/shop/gifu/blog/624678/",
+      "message": "ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」（カードラボ・カードラボ岐阜店） 購入期限24時間前"
     },
     {
-      "lottery_id": "lot-26b0b34c2845",
-      "milestone": "deadline_6h",
-      "label": "締切6時間前",
-      "fires_at": "2026-11-26T17:59:00+09:00",
-      "tcg": "POKEMON",
-      "product_name": "ポケモンカードゲームMEGA 拡張パック二種（再販）",
-      "retailer": "ホビーステーション",
+      "lottery_id": "lot-64952d7e929e",
+      "milestone": "lottery_open",
+      "label": "抽選開始",
+      "fires_at": "2026-11-27T00:00:00+09:00",
+      "tcg": "ONE_PIECE",
+      "product_name": "プレミアムカードコレクション -熊本県スペシャル-",
+      "retailer": "ONE PIECE 麦わらストア",
       "entry_url": null,
-      "source_url": "https://www.hbst.net/?p=412193",
-      "message": "ポケモンカードゲームMEGA 拡張パック二種（再販）（ホビーステーション） 締切6時間前"
-    },
-    {
-      "lottery_id": "lot-3a3120caff7f",
-      "milestone": "deadline_6h",
-      "label": "締切6時間前",
-      "fires_at": "2026-11-26T18:00:00+09:00",
-      "tcg": "POKEMON",
-      "product_name": "ポケモンMEGA 30th CELEBRATIONカードセット",
-      "retailer": "CARD BOX（加盟店）",
-      "entry_url": null,
-      "source_url": "https://cardbox.online/news/detail/?id=1864",
-      "message": "ポケモンMEGA 30th CELEBRATIONカードセット（CARD BOX（加盟店）・北国書林辰口店） 締切6時間前"
-    },
-    {
-      "lottery_id": "lot-167315095511",
-      "milestone": "deadline_6h",
-      "label": "締切6時間前",
-      "fires_at": "2026-11-26T18:00:00+09:00",
-      "tcg": "POKEMON",
-      "product_name": "ストームエメラルダ",
-      "retailer": "CARD BOX（加盟店）",
-      "entry_url": null,
-      "source_url": "https://cardbox.online/news/detail/?id=1863",
-      "message": "ストームエメラルダ（CARD BOX（加盟店）・北国書林辰口店） 締切6時間前"
+      "source_url": "https://www.mugiwara-store.com/news/3169/",
+      "message": "プレミアムカードコレクション -熊本県スペシャル-（ONE PIECE 麦わらストア） 抽選開始"
     }
   ]
 }

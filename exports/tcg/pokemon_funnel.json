@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T19:26:56.005498+09:00",
+  "generated_at": "2026-11-27T22:42:27.388392+09:00",
   "sources": [
     {
       "source": "ポケモンカードゲーム公式（商品API）",
@@ -27,22 +27,22 @@
       "source": "ポケモンカードゲーム公式（ニュース）",
       "collector": "PokemonNewsCollector",
       "status": "OK_NO_EVENTS",
-      "status_reason": "正常に取得。現在の販売イベントは0件（棄却: event_category=86, article_too_old=18, non_sale_announcement=14）",
+      "status_reason": "正常に取得。現在の販売イベントは0件（棄却: event_category=88, article_too_old=18, non_sale_announcement=14）",
       "pages_discovered": 3,
       "pages_requested": 3,
       "pages_loaded": 3,
       "product_links_discovered": 0,
       "product_pages_discovered": 0,
       "product_pages_loaded": 0,
-      "news_pages_discovered": 122,
+      "news_pages_discovered": 124,
       "news_pages_loaded": 2,
-      "candidate_events": 122,
+      "candidate_events": 124,
       "accepted_sales_events": 0,
-      "rejected_events": 122,
+      "rejected_events": 124,
       "errors": 0,
       "rejection_reasons": {
+        "event_category": 88,
         "no_sale_context": 3,
-        "event_category": 86,
         "non_sale_announcement": 14,
         "article_too_old": 18,
         "non_card_product": 1
@@ -62,14 +62,14 @@
       "product_pages_loaded": 0,
       "news_pages_discovered": 0,
       "news_pages_loaded": 0,
-      "candidate_events": 22,
+      "candidate_events": 13,
       "accepted_sales_events": 2,
-      "rejected_events": 20,
+      "rejected_events": 11,
       "errors": 0,
       "rejection_reasons": {
-        "no_product_context": 3,
-        "no_sale_context": 6,
-        "unknown_sale_method": 10,
+        "no_product_context": 4,
+        "no_sale_context": 5,
+        "unknown_sale_method": 1,
         "non_sale_announcement": 1
       },
       "notes": []
@@ -104,22 +104,22 @@
     "product_links_discovered": 18,
     "product_pages_discovered": 8,
     "product_pages_loaded": 1,
-    "news_pages_discovered": 122,
+    "news_pages_discovered": 124,
     "news_pages_loaded": 2,
-    "candidate_events": 164,
+    "candidate_events": 157,
     "accepted_sales_events": 4,
-    "rejected_events": 160,
+    "rejected_events": 153,
     "errors": 0
   },
   "rejection_reasons": {
     "past_release": 18,
-    "no_sale_context": 9,
-    "event_category": 86,
+    "event_category": 88,
+    "no_sale_context": 8,
     "non_sale_announcement": 15,
     "article_too_old": 18,
     "non_card_product": 1,
-    "no_product_context": 3,
-    "unknown_sale_method": 10
+    "no_product_context": 4,
+    "unknown_sale_method": 1
   },
   "current_events": 4
 }

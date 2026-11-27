@@ -414,7 +414,8 @@ def test_lottery_id_unchanged_for_lottery_events():
 def _pre_vm(**kw):
     from src.content.ui import runtime as rt
     ev = {"tcg": "POKEMON", "product_name": "拡張パック「Z」BOX", "retailer_name": "ポケモンセンターオンライン",
-          "status": "OPEN", "source_url": f"{PCO}/news/1", "entry_url": f"{PCO}/preorder/1",
+          "status": "OPEN", "source_url": "https://geo-online.co.jp/news/detail/1.html",
+          "entry_url": "https://draw.geo-online.co.jp/lottery/1", "retailer": "GEO", "source_type": "RETAILER_OFFICIAL",
           "verified": True, "confidence": "high", "lottery_id": "lot-pre", "event_type": "PREORDER",
           "application_start": "2026-10-06T12:00:00+09:00", "application_end": "2026-10-09T16:59:00+09:00"}
     ev.update(kw)

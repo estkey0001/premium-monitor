@@ -4211,6 +4211,8 @@ def check() -> list[dict]:
     results.extend(_check_data_correctness())
     results.extend(_check_runtime_freshness_cam_iphone_home())
     results.extend(_check_tcg_sold_ledger())
+    results.extend(_check_tcg_lottery_public_text())
+    results.extend(_check_home_images())
 
     return results
 
@@ -9441,7 +9443,9 @@ class _TcgLinkScan:
 
 
 def check_tcg_images(html: str, where: str) -> list:
-    """商品画像: src はその TCG の公式サイトの https（verified_products.image_ok）、onerror は定数と完全一致（外部の値を埋め込まない）。"""
+    """商品画像: src はその TCG の公式サイトの https で、その画像に権利者の利用許可の記録がある（verified_products.image_publishable。
+    社内の使用判断だけでは不可）。<img> 以外（srcset・CSS の url()）から公式のホストの画像を読む書き方も、許可の記録が無ければ不可。
+    onerror は定数と完全一致（外部の値を埋め込まない）。TCG ハブの .pimg と新UI（HOME・抽選ページ）の .nu-thumb の両方を見る。"""
     from html.parser import HTMLParser
     from src.tcg import verified_products as _vp
     from src.content import tcg_hub_page as _tp
@@ -9452,11 +9456,13 @@ def check_tcg_images(html: str, where: str) -> list:
         def handle_starttag(self, tag, attrs):
             a = dict(attrs)
             if tag == "img":
-                par = next((x for x in reversed(stack) if "pimg" in (x.get("class") or "").split()), None)
-                cls = (par or {}).get("class") or ""
-                tcg = "POKEMON" if "pokemon" in cls.split() else "ONE_PIECE" if "onepiece" in cls.split() else ""
-                if not par or not _vp.image_ok(tcg, a.get("src")):
-                    bad.append(f"{where}: 商品画像の src が、その TCG の公式サイトの https ではない（{str(a.get('src'))[:40]}）")
+                par = next((x for x in reversed(stack) if {"pimg", "nu-thumb"} & set((x.get("class") or "").split())), None)
+                cls = ((par or {}).get("class") or "").split()
+                tcg = "POKEMON" if "pokemon" in cls else "ONE_PIECE" if "onepiece" in cls else ""
+                if not tcg:                                      # 新UI の枠は TCG のクラスを持たない。公式のホストから決める
+                    tcg = next((t for t in _vp.IMAGE_HOSTS if _vp.image_ok(t, a.get("src"))), "")
+                if not par or not _vp.image_publishable(tcg, a.get("src")):
+                    bad.append(f"{where}: 商品画像の src が、その TCG の公式サイトの https でないか、その画像に権利者の利用許可の記録が無い（{str(a.get('src'))[:40]}）")
                 if a.get("onerror") != _tp.IMG_ONERROR:
                     bad.append(f"{where}: 商品画像の onerror が定数と違う（外部の値・別の処理を埋め込んでいる）")
                 return
@@ -9467,6 +9473,71 @@ def check_tcg_images(html: str, where: str) -> list:
             if stack:
                 stack.pop()
     _P().feed(html)
+    # <img src> の外から公式のホストの画像を読む書き方（srcset の全候補・data-src・poster・<source>・<link href>・style・<style> の url()/image-set()）。
+    # 拡張子は問わない。<a href>（テキストリンク）と、HOME の VM の JSON の中のリンク先（属性でも url() でもない）は対象外。
+    import html as _hm
+    hosts = tuple(_vp.IMAGE_HOSTS.items())
+
+    def _tcg_of(u):
+        from urllib.parse import urlparse
+        try:
+            h = (urlparse(u).hostname or "").lower()
+        except ValueError:
+            return ""
+        return next((t for t, base in hosts if h == base or h.endswith("." + base)), "")
+
+    def _need(u, what):
+        u = _hm.unescape(str(u or "")).strip().strip("'\"")
+        t = _tcg_of(u) if u.lower().startswith(("http://", "https://", "//")) else ""
+        if not t:
+            return
+        if u.startswith("//"):
+            u = "https:" + u
+        if not _vp.image_publishable(t, u):
+            bad.append(f"{where}: 権利者の利用許可の記録が無い公式画像を {what} から読み込んでいる（{u[:48]}）")
+
+    def _css(text, what):
+        for m in re.finditer(r"url\(\s*([^)]*?)\s*\)", _hm.unescape(text or ""), re.I):
+            _need(m.group(1), what)
+        for m in re.finditer(r"image-set\(([^)]*)\)", _hm.unescape(text or ""), re.I):
+            for q in re.findall(r"[\"']([^\"']+)[\"']", m.group(1)):
+                _need(q, what)
+
+    class _Q(HTMLParser):
+        in_style = False
+
+        def handle_starttag(self, tag, attrs):
+            a = dict(attrs)
+            for k in ("srcset", "data-srcset", "imagesrcset"):
+                for part in str(a.get(k) or "").split(","):
+                    _need(part.strip().split(" ")[0] if part.strip() else "", f"{tag} の {k}")
+            for k in ("data-src", "poster", "data-bg", "background"):
+                if a.get(k):
+                    _need(a[k], f"{tag} の {k}")
+            if tag in ("source", "video", "audio", "embed", "iframe", "input") and a.get("src"):
+                _need(a["src"], f"{tag} の src")
+            if tag == "link" and a.get("href"):
+                _need(a["href"], "link の href")
+            if tag == "image":
+                for k in ("href", "xlink:href"):
+                    if a.get(k):
+                        _need(a[k], f"svg image の {k}")
+            if tag == "object" and a.get("data"):
+                _need(a["data"], "object の data")
+            if tag == "meta" and a.get("content") and re.search(r"image", (a.get("property") or a.get("name") or ""), re.I):
+                _need(a["content"], "meta の content（og:image 等）")
+            if a.get("style"):
+                _css(a["style"], f"{tag} の style")
+            self.in_style = tag == "style"
+
+        def handle_endtag(self, tag):
+            if tag == "style":
+                self.in_style = False
+
+        def handle_data(self, data):
+            if self.in_style:
+                _css(data, "<style>")
+    _Q().feed(html)
     return sorted(set(bad))
 
 
@@ -9488,6 +9559,8 @@ def check_tcg_apply_buttons(html: str, where: str) -> list:
         verified = lot.get("data-verified", "1" if "data-lot-status" in lot else "0") == "1"
         if state not in ("OPEN", "ENDING_SOON") or not verified or "data-conflict" in lot:
             bad.append(f"{where}: 受付中・締切間近・確認済み以外の抽選に応募ボタンがある（{state}・確認 {verified}）")
+        if "data-deadline-only" in lot:
+            bad.append(f"{where}: 受付開始の根拠が無い（締切だけの）抽選に応募ボタンがある")
         if c["rb"] and not c["in_open"]:
             bad.append(f"{where}: 締切のある抽選の応募ボタンが、期限後に隠れる位置（data-rb-open）に無い")
         if not c["js_only"]:
@@ -9774,6 +9847,54 @@ def check_tcg_premium_basis(items: list, min_samples: int) -> list[str]:
         if p.get("price_basis") != "SOLD_MEDIAN" or (p.get("sealed_sample_count") or 0) < min_samples:
             bad.append(str(i.get("product_id")))
     return bad
+
+
+def _check_tcg_lottery_public_text() -> list[dict]:
+    """#898: 公開の抽選 JSON（lotteries.json の items・latest.json の lotteries）に、応募条件の原文（eligibility_text）・
+    支払い方法の原文・条件の根拠の行（quote）・other_conditions が入っていないか（src/tcg/lottery/public.py の出口を通っているか）。"""
+    import json as _j
+    from src.tcg.lottery.public import leaked_fields
+    bad: list[str] = []
+    for name, key in (("lotteries.json", "items"), ("latest.json", "lotteries")):
+        p = PROJECT_ROOT / "exports" / "tcg" / name
+        if not p.exists():
+            continue
+        try:
+            items = (_j.loads(p.read_text(encoding="utf-8")) or {}).get(key) or []
+        except ValueError:
+            bad.append(f"{name} が読めない")
+            continue
+        for ev in items if isinstance(items, list) else []:
+            if isinstance(ev, dict) and leaked_fields(ev):
+                bad.append(f"{name}:{ev.get('lottery_id')}:{','.join(leaked_fields(ev))}")
+    # 公開ページ（メインの LP と TCG の 2 ページ）に、応募条件の原文の欄が残っていないか。
+    # Daily LP では抽選の収集 → LP の生成 → この検査の順なので、その実行の新しいページを検査する
+    html_bad = []
+    for name in ("index.html", "tcg.html", "tcg-lottery.html"):
+        hp = PROJECT_ROOT / "docs" / name
+        if hp.exists():
+            ht = hp.read_text(encoding="utf-8")
+            for mk in ("条件の詳細（公式の告知より）", "tcg-elig", "応募条件の原文", "支払い: ", "支払い："):
+                if mk in ht:
+                    html_bad.append(f"docs/{name}: 応募条件・支払いの原文の欄（{mk}）がある")
+    bad += html_bad
+    ok = not bad
+    return [{"level": "ok" if ok else "error", "check": "tcg_lottery_public_text",
+             "message": "#898 公開の抽選 JSON と公開ページに、応募条件の原文・支払い方法の原文・根拠の行が入っていない"
+                        + ("" if ok else f" ← {len(bad)} 件: {bad[:5]}")}]
+
+
+def _check_home_images() -> list[dict]:
+    """#899: HOME（docs/index.html。新UI の抽選カード・抽選ページの行）の商品画像も、公式のホストで、その画像に権利者の利用許可の記録が
+    あるものだけ・onerror は定数（TCG ハブの画像は #853 の中の check_tcg_images で見ている）。"""
+    p = PUBLIC_DIR / "index.html"
+    if not p.exists():
+        return [{"level": "warn", "check": "home_images", "message": "#899 docs/index.html が無いので HOME の商品画像を検査できない"}]
+    bad = check_tcg_images(p.read_text(encoding="utf-8"), "docs/index.html")
+    ok = not bad
+    return [{"level": "ok" if ok else "error", "check": "home_images",
+             "message": "#899 HOME の公式画像は権利者の利用許可の記録があるものだけ（無ければ代わりの画像）・onerror は定数"
+                        + ("" if ok else f" ← {len(bad)} 件: {bad[:5]}")}]
 
 
 def _check_tcg_sold_ledger() -> list[dict]:

@@ -144,6 +144,11 @@ def notification_candidates(events: list[dict], now=None,
     for ev in events:
         if ev.get("source_type") not in OFFICIAL_LOTTERY_SOURCES or ev.get("conflict"):
             continue
+        # 中止が明記された抽選は通知を出さない（状態は ENDED）
+        if ev.get("cancelled") is True:
+            continue
+        # 受付の早期終了は締切を過ぎた扱い: 受付・締切前の通知（lottery_open・deadline_*）だけを出さない。当選発表・購入期限の通知は残す
+        closed = ev.get("application_closed") is True
         # 人による確認が済んでいない手動データは通知しない
         if ev.get("collection_method") == "MANUAL_VERIFIED" and not ev.get("verified"):
             continue
@@ -153,6 +158,8 @@ def notification_candidates(events: list[dict], now=None,
             if at is None:
                 continue
             if f"{lid}:{key}" in sent:
+                continue
+            if closed and (key == "lottery_open" or key.startswith("deadline_")):
                 continue
             # 発火時刻を過ぎ、かつ有効期限（締切・購入期限）前のものだけ
             limit = min(x for x in (at + grace, expires) if x is not None)

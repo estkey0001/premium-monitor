@@ -102,7 +102,7 @@ def _aliases(variant: str) -> tuple[str, str]:
 def _components() -> str:
     return (
         # 共通の土台
-        "html{color-scheme:light dark}"
+        "html{color-scheme:light}"
         # 4 ページ共通の地・本文色・フォント（ページ固有の body{...} より詳細度を上げて固定）
         f"html body{{background:var(--color-bg);color:var(--color-text);font-family:{t.FONT_STACK}}}"
         # フォーカス（旧ページには無かった）

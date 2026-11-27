@@ -378,15 +378,16 @@ def test_unbound_applying_guidance_is_kept(monkeypatch):
 
 # ── 画像 ──
 def test_pokemon_image_only_from_official_https_alt_is_name_and_credit_once(monkeypatch):
-    monkeypatch.setattr(__import__("src.tcg.verified_products", fromlist=["x"]), "IMAGE_USE_CLEARED", {"POKEMON": "test", "ONE_PIECE": "test"})
+    __import__("tests._image_permit", fromlist=["x"]).permit_all(monkeypatch)
     img = "https://www.pokemon-card.com/products/2026/images/x.jpg"
     master = [_master("deck", "デッキセット", official_image_url=img), _master("solo", "ソロ", rel="2026-01-01", official_image_url="https://evil.example/x.jpg")]
     html = _html(_build(ROWS + [row(price=9500, jan=SOLO_JAN)], master=master, monkeypatch=monkeypatch))
     cards = _cards(html)
     assert f'src="{img}"' in cards["POKEMON:deck"] and 'alt="デッキセット"' in cards["POKEMON:deck"]
-    assert 'referrerpolicy="no-referrer"' in cards["POKEMON:deck"] and 'loading="lazy"' in cards["POKEMON:deck"] and 'width="320" height="240"' in cards["POKEMON:deck"]
+    assert 'referrerpolicy="strict-origin-when-cross-origin"' in cards["POKEMON:deck"] and 'loading="lazy"' in cards["POKEMON:deck"] and 'width="320" height="240"' in cards["POKEMON:deck"]
     assert "<img" not in cards["POKEMON:solo"] and "evil.example" not in html                 # 公式以外のドメインは使わない
-    assert 'role="img"' in cards["POKEMON:solo"] and "<small>ポケカ</small>" in cards["POKEMON:solo"]
+    assert '<div class="pimg pokemon ph"><svg ' in cards["POKEMON:solo"] and 'role="img" aria-label="ソロ"' in cards["POKEMON:solo"]
+    assert ">ポケモンカード</text>" in cards["POKEMON:solo"]                                  # 代わりの画像（TCG の種類・商品名）
     assert html.count(page.IMG_CREDIT) == 1 and "公式サイトの画像を参照表示しています" in html          # 出典表記はページに 1 か所
 
 
@@ -399,7 +400,7 @@ def test_pokemon_image_only_from_official_https_alt_is_name_and_credit_once(monk
 ])
 def test_one_piece_card_image_only_from_onepiece_official_https(monkeypatch, url, ok):
     """ONE PIECE は onepiece-cardgame.com の https なら画像。ポケカのホスト・外部ホスト・http・noimage はプレースホルダ。"""
-    monkeypatch.setattr(__import__("src.tcg.verified_products", fromlist=["x"]), "IMAGE_USE_CLEARED", {"POKEMON": "test", "ONE_PIECE": "test"})
+    __import__("tests._image_permit", fromlist=["x"]).permit_all(monkeypatch)
     hub = _build([row(price=9000, jan=OP_JAN, name="OP BOX")], [_ev("op1", "OP ブースター", tcg="ONE_PIECE")], monkeypatch=monkeypatch)
     for c in hub["cards"]:
         if c["tcg"] == "ONE_PIECE":
@@ -407,9 +408,9 @@ def test_one_piece_card_image_only_from_onepiece_official_https(monkeypatch, url
     html = _html(hub)
     op = _cards(html)["ONE_PIECE:op1"]
     if ok:
-        assert f'src="{url}"' in op and 'referrerpolicy="no-referrer"' in op and "onerror=" in op
+        assert f'src="{url}"' in op and 'referrerpolicy="strict-origin-when-cross-origin"' in op and "onerror=" in op
     else:
-        assert "<img" not in op and "<small>ワンピ</small>" in op and "<b>OP</b>" in op and "商品画像なし" in op
+        assert "<img" not in op and '<div class="pimg onepiece ph"><svg ' in op and ">ONE PIECE カード</text>" in op
         assert "evil.example" not in html and "javascript:" not in html
     assert "公式に商品固有の画像がない" not in html
 
@@ -840,7 +841,7 @@ def test_lottery_open_states_expire_after_deadline_in_rows_chips_links_and_summa
     assert "data-rb-card" not in tabs and G not in tabs
     note = re.search(r'<p class="pnote expn"[^>]*>.*?</p>', lot, re.S).group(0)
     assert lot.count('class="pnote expn"') == 1 and 'data-rb-until="2026-11-22T10:00:00+09:00"' in note
-    N = "締切を過ぎた抽選があります"
+    N = "締切を過ぎた抽選は除いています"
     assert N not in _rb_visible(note, "2026-11-22T09:00:00+09:00") and N in _rb_visible(note, "2026-11-22T10:30:00+09:00")
     # 商品ページの「締切が近い抽選」の帯: 期限後は応募ボタンを隠して「応募期限を過ぎました」
     band = html[html.index('id="soon"'):html.index("</section>", html.index('id="soon"'))]
@@ -878,7 +879,7 @@ def test_static_open_labels_switch_at_the_deadline_and_the_page_states_the_updat
     """静的な「受付中」は JS_RB の open 側にだけ置く（期限後は消える）。生成時点は行ごとに繰り返さず、ページ上部の更新時刻 1 か所で示す。"""
     hub = _lot_hub(monkeypatch, [_ev(n=1, application_end="2026-11-26T23:59:00+09:00")])
     for html in (_html(hub), _lhtml(hub)):
-        assert "（生成時点）" not in html and html.count('<p class="upd">') == 1 and "更新</p>" in html
+        assert "（生成時点）" not in html and html.count('<p class="upd">') + html.count('<span class="u">') == 1 and re.search(r'<(?:p class="upd"|span class="u")>[^<]* 取得</', html)
     assert re.search(r'<span data-rb-open><span class="sb info">受付中</span></span><span data-rb-expired hidden>', _lhtml(hub))
 
 
@@ -1195,17 +1196,18 @@ def test_products_without_any_price_are_folded_at_the_end(monkeypatch):
 
 
 def test_lottery_buttons_follow_state_and_confirmation(monkeypatch):
-    """受付中・確認済みで応募 URL が無い行は「応募方法を見る（公式）」（告知へ・橙）。未確認・開始前は枠線の告知。結果待ちは灰色の小さなリンク。"""
+    """受付中・確認済みで応募 URL が無い行は「公式の告知を見る」（告知へ・枠線の青。直接応募の「公式ページで応募する」は塗りの青）。
+    未確認・開始前は枠線の「公式の告知」。結果待ちは灰色の小さなリンク。"""
     evs = [_ev(n=1, entry_url=None), _ev(n=2, entry_url=None, verified=False),
            _ev(n=3, entry_url=None, application_start="2026-11-24T10:00:00+09:00", application_end="2026-11-28T23:59:00+09:00"),
            _ev(n=4, entry_url=None, application_end="2026-11-20T23:59:00+09:00", winner_announcement_at="2026-11-23T12:00:00+09:00")]
     lot = _lhtml(_build([], evs, monkeypatch=monkeypatch))
     rows = {m.group(1): m.group(0) for m in re.finditer(r'<tr class="ev[^>]*id="(L-L-deck-\d)".*?</tr>', lot, re.S)}
-    assert f'class="btn cta" href="https://www.geo-online.co.jp/store/news/1"' in rows["L-L-deck-1"] and page.APPLY_HOWTO in rows["L-L-deck-1"]
+    assert f'class="btn cta ann" href="https://www.geo-online.co.jp/store/news/1"' in rows["L-L-deck-1"] and page.APPLY_HOWTO in rows["L-L-deck-1"]
     for k in ("L-L-deck-2", "L-L-deck-3", "L-L-deck-4"):
         assert "btn cta" not in rows[k] and page.APPLY_HOWTO not in rows[k], k
     assert 'class="lk"' in rows["L-L-deck-4"] and 'class="btn"' in rows["L-L-deck-3"]
-    assert re.search(r'<span data-rb-open><a class="btn cta"', rows["L-L-deck-1"])            # 期限後は JS_RB が隠す
+    assert re.search(r'<span data-rb-open><a class="btn cta ann"', rows["L-L-deck-1"])            # 期限後は JS_RB が隠す
     import scripts.deploy_check as dc
     assert dc.check_tcg_apply_buttons(lot, "x") == []
     bad = lot.replace('<a class="btn" href="https://www.geo-online.co.jp/store/news/3"',
@@ -1324,7 +1326,7 @@ def test_counts_drop_expired_lotteries_at_view_time(monkeypatch):
            _ev(n=3, product_match="none", product_id=None, product_name="二種（再販）", application_end="2026-11-24T23:59:00+09:00")]
     hub = _build([], evs, monkeypatch=monkeypatch)
     lot, html = _lhtml(hub), _html(hub)
-    head = re.search(r'<h2 id="lottery">(.*?)</h2>', lot).group(1)
+    head = re.search(r'<div class="lt-bar">(.*?)</div>', lot).group(1)
     assert re.search(r'data-cnt-untils="[^"]*2026-11-22T10:00:00\+09:00[^"]*"', head)
     assert re.search(r'data-tab="ending"[^>]*>締切間近 <b><span data-cnt-untils="2026-11-22T10:00:00\+09:00" data-cnt-hide="a">1</span></b>', lot)
     assert re.search(r'このほかの受付中の抽選 <span data-cnt-untils="2026-11-24T23:59:00\+09:00" data-cnt-hide="\.unb">1</span>件', html)
@@ -1385,6 +1387,8 @@ def test_today_frame_is_moved_by_js_and_unbound_rows_use_a_shop_tile(monkeypatch
     lot = _lhtml(_build([], evs, monkeypatch=monkeypatch))
     assert "classList.toggle('today',k===today)" in page.JS_LEFT and re.search(r'<div[^>]*data-day="2026-11-2\d"><span class="d">', lot)
     row = re.search(r'<tr class="ev[^>]*data-product="none".*?</tr>', lot, re.S).group(0)
-    assert '<div class="pimg ph shop" role="img"' in row and "<b>&lt;b</b>" in row and "<b>ホビ</b>ステ" not in row   # 店名の頭の文字（エスケープ）
+    # 商品に紐付いていない抽選は代わりの画像（SVG。商品名の要点・TCG・種類）。文字はエスケープ
+    assert '<div class="pimg pokemon ph"><svg ' in row and ">二種（再販）</text>" in row and ">抽選</text>" in row
+    assert "<b>ホビ</b>ステ" not in row
     assert "ポケカ</small>" not in row
     assert "details.note .tc-others ul,details.note .tc-lotd ul{padding-left:0}" in page.CSS

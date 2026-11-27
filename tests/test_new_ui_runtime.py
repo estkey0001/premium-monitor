@@ -22,6 +22,8 @@ from src.tcg.models import JST
 
 NOW = datetime(2026, 10, 2, 10, 0, tzinfo=JST)
 PCO = "https://www.pokemoncenter-online.com"
+GEO = "https://geo-online.co.jp"
+GEO_DRAW = "https://draw.geo-online.co.jp"
 ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -30,8 +32,10 @@ def _iso(delta: timedelta, base: datetime = NOW) -> str:
 
 
 def _ev(**kw) -> dict:
-    ev = {"tcg": "POKEMON", "product_name": "テストBOX", "retailer_name": "ポケモンセンターオンライン",
-          "status": "OPEN", "source_url": f"{PCO}/news/1", "entry_url": f"{PCO}/lottery/1",
+    # 応募 URL は TCG ハブと同じ判定（action_url.classify）で認められる形（GEO の公式の告知と抽選ページ）を使う
+    ev = {"tcg": "POKEMON", "product_name": "テストBOX", "retailer_name": "ゲオ", "retailer": "GEO",
+          "source_type": "RETAILER_OFFICIAL",
+          "status": "OPEN", "source_url": f"{GEO}/news/detail/1.html", "entry_url": f"{GEO_DRAW}/lottery/1",
           "verified": True, "confidence": "high", "lottery_id": "lot-x"}
     ev.update(kw)
     return ev
@@ -208,6 +212,46 @@ def test_home_counts_and_order_change_with_time():
     assert m2.states["soon"]["cta"]["kind"] == "info"
 
 
+def test_home_does_not_count_deadline_only_rows_as_open():
+    """締切だけ分かり受付開始の根拠が無い抽選は、HOME の「受付中」「今日締切」に数えない（TCG ハブ・抽選ページと同じ）。
+    開始日のある受付中は数え、締切を過ぎたらどちらも数えない。"""
+    end = NOW + timedelta(hours=6)                                   # 同じ締切・同じ時刻で比べる
+    report = {"lotteries": [
+        _ev(lottery_id="open", application_start=_iso(-timedelta(days=1)), application_end=end.isoformat()),
+        _ev(lottery_id="dlo", application_start=None, application_end=end.isoformat()),
+    ]}
+
+    def model(t):
+        return home.build_home_model(tcg_report=report, opportunities={}, profit_routes={},
+                                     legacy_lotteries=[], now=t)
+    m = model(NOW)
+    o, d = m.states["open"], m.states["dlo"]
+    assert o["status"] == d["status"] == "ENDING_SOON"                # 状態の判定そのものは同じ
+    assert o["open"] and o["ending_today"] and not o["deadline_only"]
+    assert not d["open"] and not d["ending_today"] and d["deadline_only"]
+    assert d["label"] == rt.DEADLINE_ONLY_LABEL and d["cta"]["kind"] == "info"   # 「応募する」は出さない
+    assert m.counts["lottery_open"] == 1 and m.counts["ending_today"] == 1
+    assert [r[4]["id"] for r in m.actions] == ["open", "dlo"]                     # 存在は見せるが、受付中より後ろ
+    after = model(end)                                                           # 締切後
+    assert after.counts["lottery_open"] == 0 and after.counts["ending_today"] == 0
+    assert not after.states["dlo"]["deadline_only"] and after.states["dlo"]["status"] not in rt.OPEN_STATUSES
+
+
+def test_home_feed_and_lottery_page_keep_deadline_only_out_of_open(monkeypatch):
+    """HOME の抽選カード（締切間近・現在受付中の節）には出さず、抽選ページの行には「受付中」の絞り込みから外す印を付ける。"""
+    import re
+    end = NOW + timedelta(days=2)
+    report = {"lotteries": [_ev(lottery_id="open", application_start=_iso(-timedelta(days=1)), application_end=end.isoformat()),
+                            _ev(lottery_id="dlo", application_start=None, application_end=end.isoformat())]}
+    html = _render_lp(monkeypatch, report)
+    home_cards = set(re.findall(r'<article class="nu-card" data-nu-lot="([^"]+)"', html))
+    assert "open" in home_cards and "dlo" not in home_cards
+    rows = dict(re.findall(r'<article class="nu-lrow" data-nu-lot="([^"]+)"[^>]*?data-nu-dlo="([01])"', html))
+    assert rows["open"] == "0" and rows["dlo"] == "1"
+    shell_js = (ROOT / "src" / "content" / "ui" / "shell.py").read_text(encoding="utf-8")
+    assert "!it.dlo && (it.status === 'OPEN'" in shell_js and "!it.dlo && it.status === 'ENDING_SOON'" in shell_js
+
+
 # ── Python と JS の一致 ────────────────────────────────────────────
 
 _NODE = shutil.which("node")
@@ -245,6 +289,8 @@ def _fixture_vms() -> list[dict]:
         dict(application_start=_iso(-timedelta(days=30)), application_end=_iso(-timedelta(days=20))),
         dict(application_start="2026-10-01T03:00:00Z", application_end="2026-10-05T07:59:00Z",
              source_url="https://example.com/n"),
+        dict(application_start=None, application_end=_iso(timedelta(hours=20))),               # 締切だけ分かる（開始日未確認）
+        dict(application_start=None, application_end=None, application_end_date="2026-10-02"),  # 締切日だけ・今日締切
     ]
     vms = [rt.tcg_vm(_ev(lottery_id=f"lot-{i}", **kw), i) for i, kw in enumerate(evs)]
     vms.append(rt.legacy_vm({"id": "lg", "product_name": "GR", "entry_start_at": "2026-10-02 12:00",
@@ -669,3 +715,10 @@ def test_legacy_parity_urls_ok(monkeypatch):
                     result_announcement_at=_fmt(n + timedelta(days=5)))
     rows = _parity_rows(_render_lp(monkeypatch, _fixture_report(n), legacy=items, lp_time=datetime.now()))
     assert rows.get("legacy_open") == "1", rows
+
+
+def test_apply_button_requires_the_same_check_as_the_tcg_hub():
+    """公式ドメインの一覧に入っているだけの URL（形を確かめていない応募ページ・モール）では「応募する」を出さない。"""
+    assert _vm(retailer="POKEMON_CENTER_ONLINE", source_url=f"{PCO}/news/1", entry_url=f"{PCO}/lottery/1")["apply"] == ""
+    assert _vm(entry_url="https://books.rakuten.co.jp/rb/123/")["apply"] == ""
+    assert _vm()["apply"] == f"{GEO_DRAW}/lottery/1"

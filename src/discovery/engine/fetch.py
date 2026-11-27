@@ -54,7 +54,7 @@ class Fetcher:
         """(本文 | None, 理由, 取得の状態)。"""
         host = host_of(url)
         if self.cutoff.is_cut(host):
-            return None, self.cutoff.skip(host, url), m.BLOCKED
+            return None, self.cutoff.skip(host, url), m.SKIPPED_CUTOFF     # 要求していない（遮断された URL とは区別する）
         if self.total >= self.max_total or self.per_host.get(host, 0) >= self.max_per_host:
             return None, "budget_exhausted", m.SKIPPED_BUDGET
         self.total += 1

@@ -761,7 +761,7 @@ def render(market: dict, *, now: datetime | None = None, cfg: dict | None = None
         f'／{_e(_live(l, now))}／根拠: {_e(l.get("evidence"))}</li>' for l in market.get("lotteries") or []) or "<li>公式ページで確認できた抽選はありません</li>"
     hc = (market.get("hidden_counts") or {}).get("discovered_products_unverified", 0)
     html = f"""<!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="ja" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>カメラ せどり判断 | プレ値速報</title><meta name="robots" content="index,follow"><style>{legacy_css()}{_CSS}{_CAMERA_CSS}</style></head>
 <body>{site_nav("camera")}<main>
 <p><a class="back" href="./">← プレ値速報へ戻る</a></p>

@@ -15,6 +15,7 @@ from src.content.ui.icons import icon
 from src.content.ui.lottery_card import cta_html
 from src.content.ui.lottery_view import REQUIREMENTS_UNKNOWN, LotteryReservationView
 from src.content.ui.navigation import page_href
+from src.content.ui import product_image as pi
 
 PAGE_SIZE = 20
 # 状態の絞り込み（「当選・購入」は補助）
@@ -169,7 +170,8 @@ def _row(v: LotteryReservationView, state: dict, idx: int, pd_ids: set | None = 
     return (
         f'<article class="nu-lrow" data-nu-lot="{esc(v.event_id)}" data-nu-bucket="{state["bucket"]}"'
         f' data-nu-sort="{state["sort"]}" data-nu-idx="{idx}" data-nu-status="{esc(state["status"])}"'
-        f' data-nu-today="{"1" if state["ending_today"] else "0"}" data-nu-kind="{esc(v.kind)}"'
+        f' data-nu-today="{"1" if state["ending_today"] else "0"}" data-nu-dlo="{"1" if state.get("deadline_only") else "0"}"'
+        f' data-nu-kind="{esc(v.kind)}"'
         f' data-nu-cat="{esc(v.category)}" data-nu-brand="{BRAND_OF.get(str(vm.get("cat") or "").upper(), "")}"'
         f' data-ae="{_ms(end, end=True)}" data-as="{_ms(start)}"'
         f' data-nu-unv="{"1" if not v.human_confirmed else "0"}"'
@@ -180,9 +182,11 @@ def _row(v: LotteryReservationView, state: dict, idx: int, pd_ids: set | None = 
         f'<div class="nu-lrow__status"><span class="nu-badge nu-tone-{esc(state["tone"])}"'
         f' data-status="{esc(state["status"])}"><span aria-hidden="true">{esc(state["icon"])}</span>'
         f' {esc(state["label"])}</span><span class="nu-cd">{esc(state["cd_text"])}</span></div>'
-        f'<div class="nu-lrow__main"><h3 class="nu-lrow__title">{esc(v.product_name)}</h3>'
+        f'<div class="nu-lrow__main nu-lmedia" style="display:flex;gap:12px;align-items:flex-start">{pi.vm_figure(vm)}'
+        '<div class="nu-lrow__txt" style="flex:1;min-width:0">'
+        f'<h3 class="nu-lrow__title">{esc(v.product_name)}</h3>'
         f'<p class="nu-lrow__shop">{esc(shop)}<span class="nu-lrow__cat"> ・ {esc(v.category_label)}</span></p>'
-        f'<p class="nu-lrow__chips">{_chips(v)}</p></div>'
+        f'<p class="nu-lrow__chips">{_chips(v)}</p></div></div>'
         f'<div class="nu-lrow__price">{_price(v)}</div>'
         f'<div class="nu-lrow__profit">{_profit(v)}</div>'
         f'<div class="nu-lrow__when"><span class="nu-when">{esc(state["when"])}</span>'
@@ -262,5 +266,11 @@ def render(catalog, model, *, has_data: bool = True) -> str:
         f'{empty}'
         '<nav class="nu-pager" aria-label="ページ" data-nu-lpager hidden></nav>'
         f'<p class="nu-rule">{esc(pages.RULES["lottery"])}</p>'
+        f'{_credit(rows)}'
         '</section>'
     )
+
+
+def _credit(html: str) -> str:
+    """公式画像を出しているときだけ、出典表記を 1 か所に出す。"""
+    return f'<p class="nu-imgcredit" style="{pi.CREDIT_STYLE}">{esc(pi.IMG_CREDIT)}</p>' if "<img " in html else ""

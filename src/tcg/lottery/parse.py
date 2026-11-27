@@ -213,6 +213,89 @@ def extract_schedule(text: str, published_at: Optional[str] = None,
     return out
 
 
+# ── 中止・早期終了 ───────────────────────────────────────────────────────
+# 中止（抽選そのものを取りやめた → 終了）と、受付の早期終了（締切を過ぎた扱い → 当選発表・購入期間の判定へ進む）を分ける。
+# 見るのは題名と本文の先頭の 3 文だけ。可能性・条件つきの注意書き・過去の抽選・一部の経路・ほかの商品の文は除く
+_CANCEL_WORD = re.compile(r"(?:抽選|抽選販売|販売|応募)[^。\n]{0,12}?(?:を|は|が)?\s*(中止(?:いたします|となりました|します|いたしました)?|見合わせ)")
+_CLOSE_WORD = re.compile(r"(?:受付|応募)[^。\n]{0,12}?(?:を|は|が)?\s*(早期終了|終了(?:いた)?しました|終了いたしました|終了となりました|締め切りました|締切りました)")
+_CANCEL_SKIP = re.compile(r"場合|可能性|次第|時は|際は|前回|過去|先日の|以前の|電話|メール|郵送|FAX|予定です|予定となります|"
+                          # 一部の店舗だけの中止は、抽選全体の中止にしない
+                          r"店舗では|店では|店舗のみ|一部|以下の|下記の|"
+                          # 否定・一時的な停止・特定の人への販売の停止は、抽選の中止ではない
+                          r"しません|いたしません|ではありません|一時|不具合|方への|方には")
+# 経路（WEB・オンライン・アプリ・店頭）の中止は、別の経路で続けると書かれているときだけ一部の中止とみなす（「WEB抽選を中止」だけなら全体の中止）
+_CHANNEL_WORD = re.compile(r"WEB|Web|ウェブ|オンライン|アプリ|店頭")
+_CONTINUES = re.compile(r"継続|引き続き|代わりに|に変更|実施します|実施いたします|行います|中止し[、，,]|中止して|は予定通り")
+# 取得元の名前に含まれる経路の語（「ポケモンセンターオンライン」）は、経路の判定の前に外す
+_SOURCE_NAMES = re.compile(r"ポケモンセンターオンライン|プレミアムバンダイ|楽天ブックス|セブンネット")
+CANCELLED, CLOSED_EARLY = "CANCELLED", "CLOSED_EARLY"
+
+
+def detect_cancellation(title: str, body: str, *, product_name: str = "",
+                        other_products=()) -> Optional[tuple[str, str]]:
+    """(CANCELLED か CLOSED_EARLY, 語)。明記が無ければ None（推測しない）。
+
+    ほかの商品の名前があり、この商品の名前が無い文は使わない（複数商品の告知で、別の商品の中止をこの商品に付けない）。
+    """
+    sents = [x for x in re.split(r"[。！!\n]", body or "") if x.strip()][:3]
+    tag = _product_tag(product_name) or ""
+    others = [o for o in (other_products or ()) if o and o != product_name]
+    other_tags = [(_product_tag(o) or o) for o in others]
+    seq = [title or ""] + sents
+    for i, raw in enumerate(seq):
+        sent = _SOURCE_NAMES.sub("", raw)
+        if _CANCEL_SKIP.search(sent):
+            continue
+        # 一部の経路だけの中止: 同じ文か、続く 2 文に別の経路の継続が書かれている（「店頭は中止。WEB抽選は予定通り」）
+        # 続く文の継続は、別の経路の語と同じ文にあるときだけ数える（「今後とも引き続きよろしく」のようなあいさつは数えない）
+        if _CHANNEL_WORD.search(sent) and (_CONTINUES.search(sent) or any(
+                _CHANNEL_WORD.search(_SOURCE_NAMES.sub("", x)) and _CONTINUES.search(_SOURCE_NAMES.sub("", x))
+                for x in seq[i + 1:i + 3])):
+            continue
+        if other_tags and any(t and t in sent for t in other_tags) and not (tag and tag in sent):
+            continue
+        m = _CANCEL_WORD.search(sent)
+        if m:
+            return CANCELLED, m.group(1)
+        m = _CLOSE_WORD.search(sent)
+        if m:
+            return CLOSED_EARLY, m.group(1)
+    return None
+
+
+# ── 応募方法（告知の本文に書かれた応募のしかた。応募先の URL を保存できるかとは別） ─────────────
+# 許可済みの外部フォームの規則（action_url.EXTERNAL_FORM_RULES）に入っていなくても、本文から分かる方法で分類する（URL は保存しない）
+M_WEB_FORM, M_SNS, M_STORE, M_APP, M_MEMBER_LOGIN = "web_form", "sns", "store", "app", "member_login"
+_M_WEB = re.compile(r"livepocket\.jp|e-starbox\.com|forms\.gle|docs\.google\.com/forms|WEB抽選|Web抽選|ＷＥＢ抽選|応募フォーム|"
+                    r"下記の?フォーム|フォームから(?:ご)?応募|オンライン抽選")
+_M_SNS = re.compile(r"(?:フォロー|リポスト|リツイート)[^。\n]{0,20}(?:応募|参加)|(?:応募|参加)[^。\n]{0,20}(?:フォロー|リポスト)")
+_M_STORE = re.compile(r"店頭(?:にて|で)(?:の)?(?:抽選|応募|受付|お申し?込み)|レジ(?:にて|で)[^。\n]{0,20}(?:応募|QR)|QRコードを[^。\n]{0,20}読み取")
+_M_APP = re.compile(r"アプリ(?:限定|のみ|から(?:の)?(?:ご)?応募|で(?:の)?(?:ご)?応募)")
+_M_MEMBER = re.compile(r"会員ログイン|ログインして(?:ご)?応募|応募には(?:会員)?ログイン")
+
+
+# 方法の語の直後にある否定。「アプリでの応募はできません」「店頭での受付は行いません」は、その方法として数えない
+# 「〜できない場合」は条件の説明なので否定にしない。方法そのものが主語（「〜は」）で、読点をまたがずに否定が続くときだけ。「重複応募はできません」「先着順ではありません」は方法の否定ではない
+_M_NEG = re.compile(r"(?:での|の|で)?(?:ご)?(?:応募|受付|抽選)?は[^。、，,\n]{0,10}?"
+                    r"(?:でき(?:ません|ない)(?!場合)|ございません|行いません|行っておりません|"
+                    r"受け?付けておりません|受け?付けません|(?<!では)ありません|不可|"
+                    r"実施(?:しません|いたしません|して(?:い)?(?:ません|おりません))|公開して(?:い)?(?:ません|おりません)|"
+                    r"条件ではありません)"
+                    r"|(?:応募)?条件(?:では|に(?:は)?)(?:ありません|含まれません)"     # 「フォローは応募条件ではありません」
+                    # 「不要」「対象外」は方法そのものが主語の直後だけ（「WEB抽選は会員登録不要」は方法の否定ではない）
+                    r"|(?:での|の|で)?(?:ご)?(?:応募|受付|抽選)?は(?:不要|対象外)")
+
+
+def detect_application_methods(text: str) -> list:
+    """本文に明記された応募方法（複数ありうる。書かれていなければ空。推測しない）。否定された方法は数えない。"""
+    t = text or ""
+    out = []
+    for m, rx in ((M_WEB_FORM, _M_WEB), (M_SNS, _M_SNS), (M_STORE, _M_STORE), (M_APP, _M_APP), (M_MEMBER_LOGIN, _M_MEMBER)):
+        if any(not _M_NEG.match(t, x.end()) for x in rx.finditer(t)):
+            out.append(m)
+    return out
+
+
 # ── 対象商品 ──────────────────────────────────────────────────────────────
 _TARGET_HEAD = re.compile(r"【\s*(?:対象商品|抽選販売を実施する商品|抽選販売対象商品|商品)\s*】")
 _BULLET = re.compile(r"^\s*[・●■◆]\s*(.+?)\s*$")

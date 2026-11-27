@@ -88,7 +88,7 @@ def render(summary: dict, *, now: datetime | None = None) -> str:
     disc = (f'<li>未確認の新商品 {_e(hc.get("discovered_products_unverified", 0))} 件・未確認の抽選 {_e(hc.get("unverified_lotteries", 0))} 件・'
             f'原本を確認していない売却先の価格 {_e(hc.get("unverified_sell_candidates", 0))} 件は、確認できるまで公開していません</li>')
     return f"""<!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="ja" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>カメラ 週次調査 | プレ値速報</title><meta name="robots" content="index,follow"><style>{legacy_css()}{_CSS}</style></head>
 <body>{site_nav("camera")}<main>
 <p><a href="./">← プレ値速報へ戻る</a></p>

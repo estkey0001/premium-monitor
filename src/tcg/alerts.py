@@ -218,15 +218,19 @@ def build_premium_message(event: dict) -> Optional[str]:
         return None
     retail = prem.get("retail_price")
     median = prem.get("market_median")
+    n = prem.get("sealed_sample_count") or prem.get("sold_count") or 0
+    days = prem.get("window_days") or prem.get("max_age_days")
+    basis = f"成約の中央値（{n}件" + (f"・直近{days}日" if days else "") + "）"
+    # 成約の中央値からの値は「想定」（実際に売れる値ではない）。「今すぐ買い」の判断に使わないので、購入可否の行は出さない
     lines = [
-        "📈 TCG Premium Alert", "",
+        "📈 TCG Premium Alert（想定）", "",
         f"商品: {event.get('product_name', '')}",
         f"定価: ¥{retail:,}" if retail else "定価: 不明",
-        f"シュリンク市場中央値: ¥{median:,}" if median else "市場中央値: 不明",
-        f"Premium: {prem['premium_percent']:+.1f}%"
+        f"{basis}: ¥{median:,}" if median else "成約の中央値: 不明",
+        f"想定プレミア: {prem['premium_percent']:+.1f}%"
         + (f" ({prem['premium_yen']:+,}円)" if prem.get("premium_yen") is not None else ""),
         f"Liquidity: {_liquidity_label(prem.get('sealed_sample_count', 0))}",
-        f"現在購入可能: {'YES' if event.get('status') == 'AVAILABLE_NOW' else 'NO'}",
+        "※想定値です。成約の中央値は過去の取引で、同じ値で売れることを示しません。",
         "",
         DISCLAIMER_OFFICIAL,
     ]

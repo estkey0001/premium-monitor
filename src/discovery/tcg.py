@@ -41,7 +41,8 @@ def product_codes(registry: dict | None, events: list) -> dict:
     """公式の商品コード → 商品（ポケモン: 公式の商品ページ /ex/<コード>/・ONE PIECE: 商品名の【XX-NN】）。"""
     out = {}
     for p in (registry or {}).get("products") or []:
-        m = _PKM_CODE.search(str(p.get("official_url") or "").rstrip("/") + "/") if isinstance(p, dict) else None
+        m = (_PKM_CODE.search(str(p.get("official_url") or "").rstrip("/") + "/")
+             if isinstance(p, dict) and p.get("tcg") != "ONE_PIECE" else None)
         if m:
             out[m.group(1).upper()] = {"tcg": "POKEMON", "name": p.get("name"), "product_id": p.get("product_id")}
     for e in events or []:
@@ -199,7 +200,8 @@ def run(tcg_dir: Path, out_dir: Path, *, now: datetime) -> dict:
     pseen: set[str] = set()
     n_new = 0
     for p in (reg or {}).get("products") or []:
-        if not isinstance(p, dict):
+        # pokemon_registry.json には ONE PIECE の正本の行も合流している。ポケモン公式の候補にはポケモンの行だけを使う
+        if not isinstance(p, dict) or p.get("tcg") == "ONE_PIECE":
             continue
         m = _PKM_CODE.search(str(p.get("official_url") or "").rstrip("/") + "/")
         code = m.group(1).upper() if m else ""

@@ -83,6 +83,28 @@ STORE_PRIMARY_DOMAINS: dict[str, dict] = {
         "checked_on": "2026-11-14",
         "strength": "tokusho",
     },
+    "hbst.net": {
+        "operator": "株式会社アークライト",
+        "evidence": "会社案内に「屋号 株式会社アークライト」「所在地 東京都千代田区神田小川町」（ホビーステーションの運営）",
+        "evidence_url": "https://www.hbst.net/company/",
+        "checked_on": "2026-11-26",
+        "strength": "company_profile",
+    },
+    "pokemon.fukufukutoreka.com": {
+        "operator": "アソビビジョンシステム株式会社",
+        "evidence": "特定商取引法に基づく表記に「販売業者 アソビビジョンシステム株式会社」（住所: 東京都千代田区神田東松下町）。"
+                    "根拠はこのサブドメインのページだけなので、キーもサブドメインに限る",
+        "evidence_url": "https://pokemon.fukufukutoreka.com/help/tradelaw",
+        "checked_on": "2026-11-26",
+        "strength": "tokusho",
+    },
+    "torecaplaza55.com": {
+        "operator": "株式会社ライトアップ",
+        "evidence": "特定商取引法に基づく表記に「販売業者 株式会社ライトアップ」（住所: 愛知県名古屋市中区大須）",
+        "evidence_url": "https://torecaplaza55.com/?mode=sk",
+        "checked_on": "2026-11-26",
+        "strength": "tokusho",
+    },
 }
 # 一次情報の根拠にしてよい運営者の証拠の強さ。フッターの著作権表示・社名だけ（footer / footer_only）は根拠にしない
 # （ドメインの運営者は、会社概要か特定商取引法に基づく表記に、法人名と所在地が書かれていることで確かめる）。
@@ -93,6 +115,11 @@ def is_store_primary_url(url: str) -> bool:
     host = (urlparse(url or "").hostname or "").lower()
     return bool(host) and any((host == d or host.endswith("." + d)) and ev.get("strength") in PRIMARY_EVIDENCE_STRENGTHS
                               for d, ev in STORE_PRIMARY_DOMAINS.items())
+
+
+def _manual_conditions(text: str) -> dict:
+    from src.tcg.lottery.conditions import extract_conditions, strip_quotes
+    return strip_quotes({k: v for k, v in extract_conditions(text).items() if v})
 
 
 def _flag(v: str) -> Optional[bool]:
@@ -182,6 +209,8 @@ def _row_to_event(row: dict) -> tuple[Optional[dict], Optional[str]]:
         identity_verification_required=_flag(row.get("identity_verification_required") or ""),
         purchase_history_required=_flag(row.get("purchase_history_required") or ""),
         payment_method_requirement=(row.get("payment_method_requirement") or "").strip() or None,
+        # 手動台帳の要約からも応募条件を構造化する（公開するのは値だけ。要約の文そのものは public.public_event が外す）
+        conditions=_manual_conditions(row.get("eligibility") or ""),
         entry_url=entry,
         source_url=src, source_type=source_type,
         confidence=("high" if (official and human) else "medium" if official else "low"),

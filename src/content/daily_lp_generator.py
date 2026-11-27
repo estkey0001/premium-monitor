@@ -358,7 +358,7 @@ class DailyLPGenerator:
                        else all_deals),
             buyback_by_product=buyback_by_product)
         return f"""<!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

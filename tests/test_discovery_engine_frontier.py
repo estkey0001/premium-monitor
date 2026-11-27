@@ -209,7 +209,7 @@ def test_fetcher_budget_and_cutoff():
     assert f.get("https://a.example/2")[2] == m.FETCHED
     assert f.get("https://a.example/3")[2] == m.SKIPPED_BUDGET         # 同じホストの枠
     assert f.get("https://b.example/1")[2] == m.BLOCKED                # 403 → その実行では打ち切り
-    assert f.get("https://b.example/2")[2] == m.BLOCKED                # 取りに行かない（回避しない）
+    assert f.get("https://b.example/2")[2] == m.SKIPPED_CUTOFF         # 取りに行かない（回避しない）。要求していないので遮断とは区別する
     assert "https://b.example/2" not in ff.calls
     assert f.cut_hosts() == {"b.example": "http_403"}
 

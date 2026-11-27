@@ -33,6 +33,7 @@ from urllib.parse import urlencode
 from src.content.ui import categories as cats
 from src.content.ui import home
 from src.content.ui import lottery_card
+from src.content.ui import product_image
 from src.content.ui import runtime as rt
 from src.content.ui.components import esc, safe_href
 from src.content.ui.navigation import page_href
@@ -570,7 +571,9 @@ def _lottery_cards(catalog, model, tcg_report: dict, now: datetime) -> dict[str,
         if vm.get("unv") or vm.get("conflict"):          # 確認待ち・参考情報・日程の食い違いは HOME に出さない
             continue
         rank = 0 if prio == "S" else 1                    # 優先度 S を同じ節の先頭へ（それ以外の並びは変えない）
-        if st["status"] == "ENDING_SOON":
+        if st.get("deadline_only"):                       # 締切だけ分かる行は、締切間近・受付中の節と件数に入れない（新着には出す）
+            pass
+        elif st["status"] == "ENDING_SOON":
             ending.append(((rank, st["sort"]), idx, card))
         elif st["status"] == "OPEN":
             opened.append(((rank, st["sort"]), idx, card))
@@ -786,8 +789,11 @@ def _section_html(sec: Section) -> str:
 def render_sections(sections: list[Section]) -> str:
     if not sections:
         return ""
-    return ('<div class="nu-feed" data-nu-feed aria-label="今日の注目">'
-            + "".join(_section_html(s) for s in sections) + "</div>")
+    body = "".join(_section_html(s) for s in sections)
+    # 抽選カードに公式画像を出しているときだけ、出典表記を 1 か所に出す（画像の枠と代わりの画像は product_image）
+    credit = (f'<p class="nu-imgcredit" style="{product_image.CREDIT_STYLE}">{esc(product_image.IMG_CREDIT)}</p>'
+              if "<img " in body else "")
+    return '<div class="nu-feed" data-nu-feed aria-label="今日の注目">' + body + credit + "</div>"
 
 
 # ── 今日の状況（サマリー。feed の外。nu-card は使わない） ──────────────────────

@@ -16,6 +16,7 @@ Exit code は常に 0（取得失敗は health に記録し、パイプライン
 """
 from __future__ import annotations
 
+
 import json
 import sys
 import time
@@ -28,6 +29,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from src.collectors.tcg import ALL_COLLECTORS, POKEMON_COLLECTORS, runcache  # noqa: E402
 from src.tcg import collection_metrics as cm                          # noqa: E402
 from src.tcg.lottery.pipeline import collect_sources                  # noqa: E402
+from src.tcg.lottery.public import public_events                      # noqa: E402
 from src.collectors.tcg.pokemon_products import secondary_mapping    # noqa: E402
 from src.tcg.alerts import (                                        # noqa: E402
     build_premium_message, build_restock_signal_message,
@@ -341,7 +343,7 @@ def build_exports(events: list[dict], signals: list[dict],
         "source_health": health,
         "source_registry_count": len(SOURCES),
         "pokemon_funnel": funnel,
-        "lotteries": lottery["lotteries"],
+        "lotteries": public_events(lottery["lotteries"]),   # 公開の出口（自由文・根拠の原文を外す）
         "lottery_sources": lottery["sources"],
         "lottery_coverage": lottery["coverage"],
         "lottery_source_candidates": load_source_candidates(),
@@ -367,7 +369,7 @@ def build_exports(events: list[dict], signals: list[dict],
     (EXPORT_DIR / "lotteries.json").write_text(
         json.dumps({"generated_at": now.isoformat(),
                     "evaluated_at": lottery.get("evaluated_at"),
-                    "items": lottery["lotteries"],
+                    "items": public_events(lottery["lotteries"]),
                     "coverage": lottery["coverage"],
                     "announcements": lottery["announcements"]},
                    ensure_ascii=False, indent=2), encoding="utf-8")

@@ -7,6 +7,7 @@ updateCard）は同じ構造の要素を書き換えるので、ここの構造�
 from __future__ import annotations
 
 from src.content.ui.components import esc
+from src.content.ui.product_image import vm_figure
 from src.content.ui.runtime import _fmt_day, _fmt_exact, _time_ok
 
 
@@ -80,7 +81,7 @@ def render(vm: dict, state: dict, idx: int, *, hidden: bool = False) -> str:
         f' data-nu-sort="{state["sort"]}" data-nu-idx="{idx}" data-nu-status="{esc(state["status"])}"'
         f' data-nu-source="{esc(vm.get("src") or "")}" data-track="lottery_view"'
         f'{" hidden" if hidden else ""}>',
-        f'<div class="nu-card__head"><h3 class="nu-card__title">{esc(vm.get("t"))}</h3>'
+        f'<div class="nu-card__head">{vm_figure(vm, 72)}<h3 class="nu-card__title" style="flex:1;min-width:0">{esc(vm.get("t"))}</h3>'
         f'<span class="nu-badge nu-tone-{esc(state["tone"])}" data-status="{esc(state["status"])}">'
         f'<span aria-hidden="true">{esc(state["icon"])}</span> {esc(state["label"])}</span>{_prio_badge(vm)}{_profit_badge(vm)}</div>',
     ]

@@ -21,7 +21,11 @@ from tests.test_tcg_retailer_box import REG, ent, hub
 ROOT = Path(__file__).resolve().parent
 CL = ROOT / "fixtures" / "tcg_price_facts"      # 価格・日程の事実行だけの最小の fixture（clabo / hbst の fixture は合成のみの方針なので分ける）
 HB = CL
-REGISTRY = json.loads((ROOT.parent / "exports/tcg/pokemon_registry.json").read_text(encoding="utf-8"))["products"]
+# hbst の fixture は「ムニキスゼロは registry に無い商品」の前提で書いてある。2026-11-26 に正本へ登録され、Daily LP が
+# 書き出しに加えたので、前提を保つためにここでだけ外す（本番の書き出しの中身にテストの結果を左右させない）
+_UNREGISTERED_IN_FIXTURE = {"拡張パック「ムニキスゼロ」"}
+REGISTRY = [p for p in json.loads((ROOT.parent / "exports/tcg/pokemon_registry.json").read_text(encoding="utf-8"))["products"]
+            if p.get("name") not in _UNREGISTERED_IN_FIXTURE]
 POKEMON = [p for p in REGISTRY if p["tcg"] == "POKEMON"]
 ONE_PIECE = [p for p in REGISTRY if p["tcg"] == "ONE_PIECE"]
 MASTER = {(p["tcg"], p["product_id"]): p for p in REGISTRY}

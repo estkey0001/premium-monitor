@@ -115,8 +115,14 @@ class LotteryEvent:
     identity_verification_required: Optional[bool] = None
     store_pickup_required: Optional[bool] = None
     payment_method_requirement: Optional[str] = None
+    # 応募条件の構造化（src/tcg/lottery/conditions.extract_conditions。明記のある項目だけ。各項目は value・quote 等）
+    conditions: dict = field(default_factory=dict)
 
     entry_url: Optional[str] = None     # 公式の応募ページのみ（Task27）
+    # 公式の告知の本文に載った外部フォーム（取得元ごとに認めた形だけ。action_url.EXTERNAL_FORM_RULES）。応募ボタンにはしない
+    external_form_url: Optional[str] = None
+    # 告知の本文に明記された応募方法（web_form / sns / store / app / member_login。複数ありうる。書かれていなければ空）
+    application_methods: list = field(default_factory=list)
     result_url: Optional[str] = None
     purchase_url: Optional[str] = None
 
@@ -131,6 +137,12 @@ class LotteryEvent:
     observed_at: Optional[str] = None
     last_verified_at: Optional[str] = None
     collection_method: Optional[str] = None
+
+    # 中止（抽選そのものを取りやめた）: 公式の告知に明記されたときだけ True。None は不明で、終了とみなさない
+    cancelled: Optional[bool] = None
+    # 受付の早期終了（予定数に達した等）: 締切を過ぎた扱い（当選発表・購入期間の判定は続ける）。None は不明
+    application_closed: Optional[bool] = None
+    cancel_text: Optional[str] = None      # 判定に使った語（「中止」「受付を終了」等。原文の文ではなく語だけ）
 
     status: str = L_UNKNOWN
     conflict: bool = False
@@ -251,6 +263,16 @@ def compute_lottery_status(ev: dict, now: Optional[datetime] = None) -> str:
     ps_passed, _ps_not_yet = _bound(ev, "purchase_start", "purchase_start_date")
     pe_passed, pe_not_yet = _bound(ev, "purchase_end", "purchase_end_date")
 
+    if ev.get("cancelled") is True:
+        return L_ENDED          # 公式に抽選の中止が明記された（締切前でも受付中にしない）
+    if ev.get("application_closed") is True and (end_passed is None or now < end_passed):
+        # 受付の早期終了: 締切を早めた扱い。結果発表待ち・購入期間の判定はそのまま続ける（終了にしない）。
+        # 締切が無い記録は、告知の公開日か最初に記録した時刻を締切の代わりにする（評価のたびに「今」にして保持期間を延ばし続けない）
+        alt = (parse_dt(ev.get("published_at")) or parse_dt(ev.get("first_seen_at")) or parse_dt(ev.get("observed_at"))
+               or start_passed)
+        if end_passed is None and alt is None:
+            return L_UNKNOWN            # 日程の手がかりが何も無い（受付中にも開始前にもしない）
+        end_passed = end_not_yet = min(alt, now) if end_passed is None else now
     if start_passed is None and end_passed is None:
         return L_UNKNOWN
     ended = end_passed is not None and now >= end_passed

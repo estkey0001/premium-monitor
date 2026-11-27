@@ -23,7 +23,7 @@ from src.tcg.funnel import (
 )
 from src.tcg.lottery.manual import is_official_url
 from src.tcg.lottery.parse import (
-    extract_eligibility, extract_schedule, extract_target_products,
+    detect_application_methods, detect_cancellation, extract_eligibility, extract_schedule, extract_target_products,
     product_name_from_title,
 )
 from src.tcg.lottery.schema import (
@@ -79,6 +79,58 @@ def product_code_of(name: str) -> Optional[str]:
     from src.tcg.lottery.products import _codes
     codes = _codes(name or "")
     return next(iter(codes)) if len(codes) == 1 else None
+
+
+_URL_IN_TEXT = re.compile(r"https://[A-Za-z0-9.\-]+/[A-Za-z0-9_\-./]*")
+
+
+def external_form_in(body: str, retailer: str, product_name: str = "", names=()) -> Optional[str]:
+    """公式の告知の本文に載った外部フォームの URL（action_url.EXTERNAL_FORM_RULES でその取得元に認めた形だけ）。
+
+    - 対象商品が 1 つの告知: 認めた形の URL が 1 つだけならそれ
+    - 対象商品が複数の告知（names が 2 つ以上）: この商品の名前（「」の中）の直後 30 字以内にあり、そのあいだにほかの商品の名前・
+      ほかの URL が無く、URL の直後の括弧がほかの商品の名前でないものだけ（「URL（ほかの商品）」の書き方を取り違えない）
+    決められなければ None（推測しない）。
+    """
+    from src.tcg.action_url import EXTERNAL_FORM_RULES, _rule_ok
+    from src.tcg.lottery.parse import _product_tag
+    rules = EXTERNAL_FORM_RULES.get(str(retailer or "").upper(), ())
+    if not rules or not body:
+        return None
+    all_urls = [(m.start(), m.end(), m.group(0).rstrip(".")) for m in _URL_IN_TEXT.finditer(body)]
+    found = [(s0, e0, u) for s0, e0, u in all_urls if _rule_ok(u, rules)]
+    uniq = list(dict.fromkeys(u for _, _, u in found))
+    multi = len([n for n in (names or ()) if n]) >= 2
+    if not multi:
+        return uniq[0] if len(uniq) == 1 else None
+    tag = _product_tag(product_name) or ""
+    others = [t for t in ((_product_tag(n) or "") for n in names if n and n != product_name) if t and t != tag]
+    if not tag:
+        return None
+    hits = []
+    for m in re.finditer(re.escape(tag), body):
+        for s0, e0, u in found:
+            gap = body[m.end():s0]
+            if not (0 <= s0 - m.end() <= 30):
+                continue
+            if any(o in gap for o in others) or any(m.end() <= a0 < s0 for a0, _, _ in all_urls):
+                continue
+            after = body[e0:e0 + 4 + max((len(o) for o in others), default=0)]
+            if any(re.match(r"\s*[（(]\s*" + re.escape(o), after) for o in others):
+                continue                 # 「URL（ほかの商品）」の書き方（URL の後ろの括弧が商品名）
+            hits.append(u)
+            break
+    hits = list(dict.fromkeys(hits))
+    return hits[0] if len(hits) == 1 else None
+
+
+def _cancel_fields(found) -> dict:
+    """detect_cancellation の結果 → 抽選の項目（中止は cancelled・受付の早期終了は application_closed。明記が無ければ何も付けない）。"""
+    from src.tcg.lottery.parse import CANCELLED
+    if not found:
+        return {}
+    kind, word = found
+    return {"cancelled": True, "cancel_text": word} if kind == CANCELLED else {"application_closed": True, "cancel_text": word}
 
 
 class LotteryAdapter(BaseTcgCollector):
@@ -208,8 +260,20 @@ class LotteryAdapter(BaseTcgCollector):
             {"product_name": product_name_from_title(title), "retail_price": None}]
         source_type = source_type or self.lottery_source_type
         entry = entry_url if entry_url and is_official_url(entry_url) else None
+        ext_names = [str(t.get("product_name") or "") for t in targets]
         result = result_url if result_url and is_official_url(result_url) else None
         elig = extract_eligibility(body)
+        from src.tcg.lottery.conditions import extract_conditions, strip_quotes
+        from src.tcg.lottery.registry import NO_REPRINT, quote_allowed
+        names = [str(t.get("product_name") or "") for t in targets]
+
+        def conds_for(name: str) -> dict:
+            # 複数商品の告知では、ほかの商品の名前が書かれた行を、この商品の条件にしない
+            c = {k: v for k, v in extract_conditions(body, other_products=[n for n in names if n != name]).items() if v}
+            # 規約で原文の転載の可否を確かめていない取得元は、根拠の行（quote・other_conditions）を出力に残さない
+            return c if quote_allowed(self.retailer) else strip_quotes(c)
+        if self.retailer in NO_REPRINT:
+            elig = {**elig, "eligibility_text": None}       # 規約が転載を断る取得元: 応募条件の原文は出さない（真偽値の項目は残す）
         shrink = detect_shrink_status(body)
         event_type = LT_PURCHASE_RIGHT if "購入権" in head else LT_LOTTERY
         out: list[dict] = []
@@ -233,11 +297,17 @@ class LotteryAdapter(BaseTcgCollector):
                 price_unit=tgt.get("price_unit") or "UNKNOWN", product_code=tgt.get("product_code"),
                 price_text=tgt.get("price_text"),
                 shrink_status=shrink if shrink != "UNKNOWN" else None,
-                entry_url=entry, result_url=result, source_url=url, source_type=source_type,
+                # 公式の告知の本文に載った外部フォーム（取得元ごとに認めた形だけ）は entry_url（公式ドメインだけ）と別の項目に持つ。
+                # 判定は action_url.classify が行い、外部フォームは external_entry_url になる（「応募する」のボタンにはしない）
+                entry_url=entry, external_form_url=None if entry else external_form_in(body, self.retailer, name, ext_names),
+                result_url=result, source_url=url, source_type=source_type,
                 confidence=confidence_for_source(source_type), verified=True,
                 published_at=published_at, observed_at=self._fetched_at or now_jst().isoformat(),
                 last_verified_at=now_jst().isoformat(),
-                collection_method="HTML",
+                collection_method="HTML", conditions=conds_for(name),
+                application_methods=detect_application_methods(body),
+                **_cancel_fields(detect_cancellation(title, body, product_name=name,
+                                                     other_products=[n for n in names if n != name])),
                 **{k: v for k, v in sched.items()},
                 **{k: v for k, v in elig.items()},
             )

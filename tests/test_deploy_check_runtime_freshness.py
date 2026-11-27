@@ -905,9 +905,12 @@ def test_tcg_apply_button_href_js_only_and_images_are_checked(tcg_pages):
     assert early != prod and any("data-rb-expired" in x for x in dc.check_tcg_apply_buttons(early, "tcg.html"))
 
 
-def test_tcg_images_src_and_onerror_are_checked():
+def test_tcg_images_src_and_onerror_are_checked(monkeypatch):
+    from tests._image_permit import permit_all
     ok = ('<div class="pimg pokemon"><img src="https://www.pokemon-card.com/x.jpg" alt="x" onerror="' + _html_attr(page_mod.IMG_ONERROR) + '"></div>'
           '<div class="pimg onepiece"><img src="https://www.onepiece-cardgame.com/x.png" alt="y" onerror="' + _html_attr(page_mod.IMG_ONERROR) + '"></div>')
+    assert len(dc.check_tcg_images(ok, "x")) == 2                       # 権利者の利用許可の記録が無い公式画像は不可（本番の記録は空）
+    permit_all(monkeypatch)
     assert dc.check_tcg_images(ok, "x") == []
     assert any("src" in x for x in dc.check_tcg_images(ok.replace("www.pokemon-card.com", "evil.example.com", 1), "x"))
     assert any("src" in x for x in dc.check_tcg_images(ok.replace("www.onepiece-cardgame.com", "www.pokemon-card.com", 1), "x"))   # TCG とホストの食い違い

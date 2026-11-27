@@ -82,7 +82,7 @@ var NuLotteryRuntime = (function () {
       when: waiting ? fmtDay(vm.rd) + ' 発売予定' : (d0 !== null ? '発売日を過ぎました' : '日程は未公表です'),
       cd_text: rest ? '発売まで あと' + rest : '', cta: infoCta(vm),
       bucket: waiting ? 5 : 99, sort: waiting ? d0 : 0,
-      open: false, ending_today: false, starting_24h: false, upcoming: false
+      open: false, ending_today: false, starting_24h: false, upcoming: false, deadline_only: false
     };
   }
 
@@ -97,6 +97,8 @@ var NuLotteryRuntime = (function () {
     var status = vm.conflict ? 'SOURCE_CONFLICT' : base;
     var s = bound(vm, 'as', 'asd'), e = bound(vm, 'ae', 'aed');
     var isOpen = !!OPEN[status], cta = null;
+    // 締切だけ分かり受付開始の根拠が無い行（runtime.is_deadline_only と同じ）。受付中・今日締切に数えない
+    var deadlineOnly = isOpen && !vm.as && !vm.asd;
     if (isOpen) {
       if (vm.apply && !vm.unv && s[0] !== null && now >= s[0] && e[1] !== null && now < e[1]) {
         cta = { kind: 'apply', label: preorder ? '予約する' : '応募する', url: vm.apply, style: 'primary', track: 'lottery_apply_click' };
@@ -131,7 +133,8 @@ var NuLotteryRuntime = (function () {
     var asMs = vm.as ? exact(vm.as) : null;
     var counted = !vm.ann;
     var bucket = 99, sort = 0;
-    if (counted && status === 'ENDING_SOON') { bucket = 0; sort = e[0] || 0; }
+    if (counted && deadlineOnly) { bucket = 4; sort = e[0] || 0; }
+    else if (counted && status === 'ENDING_SOON') { bucket = 0; sort = e[0] || 0; }
     else if (counted && status === 'OPEN') { bucket = 1; sort = e[0] || 0; }
     else if (counted && status === 'UPCOMING') { bucket = 3; sort = s[1] || 0; }
     else if (counted && status === 'SOURCE_CONFLICT') { bucket = 4; sort = 0; }
@@ -140,12 +143,15 @@ var NuLotteryRuntime = (function () {
     var meta = C.statuses[status] || C.statuses.UNKNOWN;
     var label = preorder && (C.preorder_labels || {})[status] ? C.preorder_labels[status] : meta.label;
     var tone = meta.tone, unconfirmed = !!vm.unv && isOpen;
+    var icon = meta.icon;
+    if (deadlineOnly) { label = C.deadline_only_label || '締切前（開始日未確認）'; tone = 'warning'; icon = (C.statuses.UNKNOWN || meta).icon; }
     if (unconfirmed) { label = label + '（確認待ち）'; tone = 'warning'; }
     return {
-      status: status, label: label, icon: meta.icon, tone: tone,
+      status: status, label: label, icon: icon, tone: tone,
       when: w, cd_text: cd, cta: cta, bucket: bucket, sort: sort,
-      open: counted && isOpen && !preorder && !unconfirmed,
-      ending_today: counted && isOpen && aeDay === today,
+      open: counted && isOpen && !preorder && !unconfirmed && !deadlineOnly,
+      ending_today: counted && isOpen && aeDay === today && !deadlineOnly,
+      deadline_only: deadlineOnly,
       starting_24h: counted && !preorder && status === 'UPCOMING' &&
         ((asMs !== null && asMs - now <= DAY) || (asMs === null && vm.asd === today)),
       upcoming: counted && !preorder && status === 'UPCOMING'
@@ -215,6 +221,7 @@ var NuLotteryRuntime = (function () {
     card.setAttribute('data-nu-sort', String(st.sort));
     // 抽選・予約のページの絞り込み（今日締切）に使う
     card.setAttribute('data-nu-today', st.ending_today ? '1' : '0');
+    card.setAttribute('data-nu-dlo', st.deadline_only ? '1' : '0');
     var badge = card.querySelector('.nu-badge');
     if (badge) setBadge(badge, st, st.status);
     var w = card.querySelector('.nu-when');

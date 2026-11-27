@@ -587,15 +587,19 @@ def test_lp_shows_lottery_first_and_only_official_entry_links():
     監視元のアクセス拒否（0件の理由）は運営者向けのページに出す。"""
     from src.content.ui import admin
     n = now_jst()
+    # 応募ページは TCG ハブと同じ判定（取得元の告知と、その取得元で確かめた応募ページの形）。別の店のドメイン・一覧ページには付けない
     lot = _lot(application_start=_iso(n - timedelta(days=1)), application_end=_iso(n + timedelta(days=2)),
-               entry_url="https://draw.geo-online.co.jp/lottery/", confidence="high")
+               retailer="GEO", source_url="https://geo-online.co.jp/news/detail/7.html",
+               entry_url="https://draw.geo-online.co.jp/lottery/7", confidence="high")
     lot["status"] = "OPEN"
     bad = _lot(product_name="拡張パック「Y」BOX", source_type="COMMUNITY", source_url="https://x.com/a",
                entry_url=None, application_start=_iso(n - timedelta(days=1)), application_end=_iso(n + timedelta(days=2)))
     bad["status"] = "OPEN"
     html = _render({"events": [], "lotteries": [lot, bad], "source_health": [], "lottery_sources": [],
                     "lottery_coverage": {"configured_sources": 17}}, n)
-    assert html.count('data-nu-cta="apply"') == 1 and 'href="https://draw.geo-online.co.jp/lottery/"' in html
+    assert html.count('data-nu-cta="apply"') == 1 and 'href="https://draw.geo-online.co.jp/lottery/7"' in html
+    other_shop = dict(lot, retailer="TOYSRUS", source_url="https://www.toysrus.co.jp/a")
+    assert _state(other_shop, n)["cta"] is None or _state(other_shop, n)["cta"]["kind"] != "apply"
     ok, ng = _state(lot, n), _state(bad, n)
     assert ok["cta"]["kind"] == "apply" and ok["cd_text"].startswith("締切まで")
     assert ng["cta"] is None or ng["cta"]["kind"] != "apply"

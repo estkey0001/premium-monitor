@@ -125,9 +125,16 @@ class KidsRepublicLotteryAdapter(LotteryAdapter):
                 self.funnel.structure_changed_pages += 1
                 self.health["error_messages"].append("詳細ページに本文の領域（main）が無かった（HTML の構造の変更の可能性）")
             prod = product_of(c["title"], d["body"])
-            self.lottery_events.extend(self.build_from_article(
+            evs = self.build_from_article(
                 title=c["title"], body=d["body"], url=c["url"], published_at=c["published_at"], entry_url=None, result_url=None,
-                tcg_hint=_tcg_of(c["title"]), targets=[{"product_name": prod, "retail_price": None}] if prod else None))
+                tcg_hint=_tcg_of(c["title"]), targets=[{"product_name": prod, "retail_price": None}] if prod else None)
+            # サイト利用規約（https://www.kidsrepublic.jp/terms 第7条。確認日 2026-11-26）が私的使用を超える複製を禁じる。
+            # 応募条件の原文は公開の出力に残さない（構造化した値だけ）
+            from src.tcg.lottery.conditions import strip_quotes
+            for e in evs:
+                e["eligibility_text"] = ""
+                e["conditions"] = strip_quotes(e.get("conditions"))
+            self.lottery_events.extend(evs)
         skipped = max(0, len(cands) - self.max_detail_fetch)
         self.health.update({"detail_candidates": len(cands), "detail_fetched": fetched, "skipped_due_to_limit": skipped, "skipped_ended": 0})
         if skipped:

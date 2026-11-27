@@ -18,7 +18,8 @@ TONES: dict[str, dict[str, str]] = {
 
 # 基本の色
 BASE_COLORS: dict[str, str] = {
-    "bg": "#f8fafc",
+    # ページの背景は全ページ純白に統一（2026-11-27。TCG の --tc-bg と同じ）。面の区切りは surface-2 と枠線で付ける
+    "bg": "#ffffff",
     "surface": "#ffffff",
     "surface-2": "#f1f5f9",
     "border": "#e2e8f0",

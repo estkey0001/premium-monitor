@@ -65,11 +65,20 @@ def test_ledger_images_all_pass_and_have_evidence():
 
 
 def test_publishable_requires_cleared_terms(monkeypatch):
-    """URL が公式でも、利用条件を確認した TCG でなければ公開しない（既定は空）。"""
+    """URL が公式でも、その画像に権利者の利用許可の記録（URL ごと・根拠の URL・確認日）が無ければ公開しない。
+    社内の使用判断（IMAGE_INTERNAL_DECISION）は記録として残すが、それだけでは公開しない。2026-11-27 時点の記録は空。"""
     url = "https://www.pokemon-card.com/products/2025/images/M2.jpg"
-    assert vp.IMAGE_USE_CLEARED == {}
-    assert not vp.image_publishable("POKEMON", url)
-    monkeypatch.setattr(vp, "IMAGE_USE_CLEARED", {"POKEMON": "test"})
+    assert set(vp.IMAGE_INTERNAL_DECISION) == {"POKEMON", "ONE_PIECE"}
+    assert all("社内の判断" in v and "権利者の許可ではない" in v for v in vp.IMAGE_INTERNAL_DECISION.values())
+    assert vp.IMAGE_RIGHTS_PERMISSION == {} and not vp.image_publishable("POKEMON", url)
+    rec = {"tcg": "POKEMON", "basis": "権利者の書面の許可", "source_url": "https://example.test/ok", "checked_on": "2026-11-27"}
+    monkeypatch.setattr(vp, "IMAGE_RIGHTS_PERMISSION", {url: rec})
     assert vp.image_publishable("POKEMON", url)
+    assert not vp.image_publishable("ONE_PIECE", url)                                   # TCG が違う
+    assert not vp.image_publishable("POKEMON", "https://www.pokemon-card.com/products/2025/images/other.jpg")   # 許可は画像ごと
+    for broken in ({**rec, "source_url": ""}, {**rec, "checked_on": " "}, {**rec, "source_url": "http://x"}, {k: v for k, v in rec.items() if k != "basis"}):
+        monkeypatch.setattr(vp, "IMAGE_RIGHTS_PERMISSION", {url: broken})
+        assert not vp.image_publishable("POKEMON", url), broken                          # 根拠の項目が欠けた記録は無いのと同じ
+    monkeypatch.setattr(vp, "IMAGE_RIGHTS_PERMISSION", {url: rec})
     assert not vp.image_publishable("POKEMON", "https://evil.example/a.jpg")
     assert not vp.image_publishable("ONE_PIECE", "https://www.onepiece-cardgame.com/x/img_item01.webp")

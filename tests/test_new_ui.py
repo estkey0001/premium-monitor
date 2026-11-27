@@ -41,7 +41,8 @@ def _lot(status, **kw):
     """TCG 抽選。status は exports 側の値（新UIは日時から状態を計算し直す）。"""
     ev = {"tcg": "POKEMON", "product_name": f"テストBOX {status} {len(kw)}{sorted(kw)}",
           "retailer_name": "公式ストア", "status": status, "event_type": "LOTTERY",
-          "source_url": f"{PCO}/news/1", "entry_url": f"{PCO}/lottery/1", "retail_price": 5400,
+          "source_url": "https://geo-online.co.jp/news/detail/1.html", "entry_url": "https://draw.geo-online.co.jp/lottery/1",
+          "retailer": "GEO", "source_type": "RETAILER_OFFICIAL", "retail_price": 5400,
           "verified": True, "confidence": "high"}
     ev.update(kw)
     return ev
@@ -134,7 +135,7 @@ def test_page_is_new_ui_only(monkeypatch):
     # 新UIの部分を除くと、ページの外枠（title・description・計測）だけが残る
     rest = with_ui.replace(head, "", 1).replace(root, "", 1)
     assert rest == without and re.sub(r"\s+", "", re.sub(r"<title>.*?</title>|<meta[^>]*>", "", rest)) == \
-        "<!DOCTYPEhtml><htmllang=\"ja\"><head></head><body></body></html>"
+        "<!DOCTYPEhtml><htmllang=\"ja\"data-theme=\"light\"><head></head><body></body></html>"      # 全ページ白に固定（2026-11-27）
     import importlib.util
     spec = importlib.util.spec_from_file_location("deploy_check_nu", "scripts/deploy_check.py")
     _dc = importlib.util.module_from_spec(spec)

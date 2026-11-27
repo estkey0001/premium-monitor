@@ -370,7 +370,7 @@ def _router_script() -> str:
       return {el: el, cat: el.getAttribute('data-nu-cat'), kind: el.getAttribute('data-nu-kind'),
               brand: el.getAttribute('data-nu-brand') || '', status: el.getAttribute('data-nu-status'), bucket: +el.getAttribute('data-nu-bucket'),
               sort: +el.getAttribute('data-nu-sort'), idx: +el.getAttribute('data-nu-idx'),
-              today: el.getAttribute('data-nu-today') === '1', unv: el.getAttribute('data-nu-unv') === '1',
+              today: el.getAttribute('data-nu-today') === '1', dlo: el.getAttribute('data-nu-dlo') === '1', unv: el.getAttribute('data-nu-unv') === '1',
               ae: numAttr(el, 'data-ae'), as: numAttr(el, 'data-as'),
               upd: +el.getAttribute('data-upd') || 0, profit: numAttr(el, 'data-profit'),
               text: el.getAttribute('data-search') || ''};
@@ -381,9 +381,10 @@ def _router_script() -> str:
       '': function(){ return true; },
       // 抽選受付中: 抽選で受付中・締切間近（予約の受付は「予約・発売待ち」）
       // 人の確認待ちの告知は「抽選受付中」に入れない（HOME の「受付中」の件数と同じ）
-      open: function(it){ return it.kind === 'lottery' && !it.unv && (it.status === 'OPEN' || it.status === 'ENDING_SOON'); },
+      // 締切だけ分かり受付開始の根拠が無い行（data-nu-dlo）は、受付中・締切間近に入れない（HOME の件数と同じ）
+      open: function(it){ return it.kind === 'lottery' && !it.unv && !it.dlo && (it.status === 'OPEN' || it.status === 'ENDING_SOON'); },
       // 締切間近・近日開始: 人の確認待ちの告知は入れない（受付中と同じ扱い）。予約・発売待ちの開始前は「予約・発売待ち」にも出る
-      ending: function(it){ return !it.unv && it.status === 'ENDING_SOON'; },
+      ending: function(it){ return !it.unv && !it.dlo && it.status === 'ENDING_SOON'; },
       upcoming: function(it){ return !it.unv && it.status === 'UPCOMING'; },
       today: function(it){ return it.today; },
       wait: function(it){ return it.kind === 'preorder' || it.kind === 'release'; },

@@ -87,17 +87,26 @@ def _safe_kind(ev: dict) -> str:
         return "LOTTERY"
 
 
+DEADLINE_ONLY_LABEL = "締切前（開始日未確認）"
+
+
 def _event_view(ev: dict, now: datetime, bound_exact: bool) -> dict:
     status = st.live_status(ev, now)
     try:
         cls = au.classify(ev, now)
     except Exception:  # noqa: BLE001
         cls = {"application_url": None, "channel": au.CH_UNKNOWN, "requirements": [], "quality": au.Q_PARTIAL}
+    start = when(ev, "application_start", "application_start_date")
+    # 締切だけが分かり、受付開始の公式の根拠が無い行（締切前という事実だけ）。受付中の集計と分ける
+    # 日程の食い違いがある行は「未確認」として別に扱う（HOME の runtime.is_deadline_only と同じ定義）
+    deadline_only = status in st.APPLYING and not (start or {}).get("date") and not ev.get("conflict")
     return {
         "ev": ev,
         "lottery_id": _s(ev.get("lottery_id")) or _safe_id(ev),
-        "status": status, "status_label": st.STATUS_LABEL[status],
-        "applicable_today": st.is_applicable_today(ev, now),
+        "status": status, "status_label": DEADLINE_ONLY_LABEL if deadline_only else st.STATUS_LABEL[status],
+        "deadline_only": deadline_only,
+        # 受付開始の根拠が無い行は「今日応募可能」と断定しない（締切前という事実だけを出す）
+        "applicable_today": st.is_applicable_today(ev, now) and not deadline_only,
         "priority": st.priority_of_event(ev, now, bound_exact=bound_exact),
         "verified": ev.get("verified") is True,
         "application_url": cls.get("application_url"),       # 検証済みの公式の応募 URL だけ（entry_url が無ければ None）
@@ -215,7 +224,10 @@ def lottery_item(v: dict, eff: str) -> dict:
         label = "未確認（公式で再確認待ち）"
     elif v["status"] == ls.L_WINNER_PURCHASE_PERIOD:
         label = "購入期間中（当選者のみ）"
-    return {"lottery_id": v["lottery_id"], "shop": retailer_label(ev),
+    deadline_only = bool(v.get("deadline_only")) and eff in st.APPLYING
+    if deadline_only:                                          # 締切だけ分かる行は「受付中・締切間近」と書かない
+        label = DEADLINE_ONLY_LABEL
+    return {"deadline_only": deadline_only,"lottery_id": v["lottery_id"], "shop": retailer_label(ev),
             "retailer": _s(ev.get("retailer")), "kind": v["entry_kind"],
             "status": v["status"], "eff_status": eff, "status_label": label, "winner_only": v["status"] == ls.L_WINNER_PURCHASE_PERIOD,
             "end": v["end"], "start": v["start"], "result": v["result"],
@@ -466,7 +478,7 @@ def _unbound_by_tcg(unbound: list) -> dict:
     """未紐付けの受付中（確認済み・日程の食い違いなし）を TCG 別に数える。TCG が読めない告知は "" に数える（どの TCG の商品カードでも案内を消さない側に倒す）。"""
     out: dict = {}
     for v in unbound:
-        if v["status"] in st.APPLYING and v["verified"] and not v["ev"].get("conflict"):
+        if v["status"] in st.APPLYING and v["verified"] and not v["ev"].get("conflict") and not v.get("deadline_only"):
             k = _s(v["ev"].get("tcg"))
             out[k] = out.get(k, 0) + 1
     return out
@@ -543,9 +555,13 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback
             "buyback": bbv[0],                                     # 買取店自身のページの価格だけ（JAN で同一性・単位・条件・鮮度を確認したもの）
             "pack_price": (m.get("pack_price") if isinstance(m.get("pack_price"), int) and not isinstance(m.get("pack_price"), bool)
                            and m.get("pack_price") > 0 and _s(m.get("retail_price_basis")) == "pack" else None),     # 1 パックの公式価格（BOX の定価ではない）
-            "events": evs, "status": st.aggregate_status(statuses),
+            # 締切だけの行は、商品の状態を受付中・締切間近に寄せない（未確認として集約する）
+            "events": evs, "status": st.aggregate_status([ls.L_UNKNOWN if v.get("deadline_only") else x for v, x in zip(evs, statuses)]),
             "counts": {"total": len(evs), "live": sum(1 for s in statuses if s != ls.L_ENDED),
-                       "open": statuses.count(ls.L_OPEN), "ending_soon": statuses.count(ls.L_ENDING_SOON),
+                       # 受付中・締切間近は、受付開始の根拠がある行だけ。締切だけの行は deadline_only に分ける
+                       "open": sum(1 for v, x in zip(evs, statuses) if x == ls.L_OPEN and not v.get("deadline_only")),
+                       "ending_soon": sum(1 for v, x in zip(evs, statuses) if x == ls.L_ENDING_SOON and not v.get("deadline_only")),
+                       "deadline_only": sum(1 for v, x in zip(evs, statuses) if x in st.APPLYING and v.get("deadline_only")),
                        "upcoming": statuses.count(ls.L_UPCOMING),
                        "result_pending": statuses.count(ls.L_RESULT_PENDING) + statuses.count(ls.L_CLOSED),
                        "purchase_period": statuses.count(ls.L_WINNER_PURCHASE_PERIOD),
@@ -575,7 +591,7 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback
 
     today_list = sorted((v for v in views if v["applicable_today"]), key=lambda v: (v["end"]["date"] or "9999", v["end"]["time"] or "99"))
     deadline_today = [v for v in today_list if v["end"]["date"] == today]
-    ending_soon = [v for v in views if v["status"] == ls.L_ENDING_SOON and not v["ev"].get("conflict")]
+    ending_soon = [v for v in views if v["status"] == ls.L_ENDING_SOON and not v["ev"].get("conflict") and not v.get("deadline_only")]
     upcoming = sorted((v for v in views if v["status"] == ls.L_UPCOMING), key=lambda v: (v["start"]["date"] or "9999", v["start"]["time"] or ""))
     new = []
     for v in views:
@@ -609,12 +625,15 @@ def build_hub(lotteries, registry, msrp, now: Optional[datetime] = None, buyback
         "events_total": len(views), "events_live": len(live),
         "bound_exact": exact_n, "unbound": len(unbound),
         # 商品に紐付いていない（「二種」等の告知）受付中の抽選。確認済み・日程の食い違いなしのものだけ（商品カードの「抽選なし」の誤読防止用。紐付けは推測しない）
-        "unbound_applying": sum(1 for v in unbound if v["status"] in st.APPLYING and v["verified"] and not v["ev"].get("conflict")),
+        # 締切だけの行（受付開始の根拠なし）は受付中に数えない
+        "unbound_applying": sum(1 for v in unbound if v["status"] in st.APPLYING and v["verified"] and not v["ev"].get("conflict")
+                                and not v.get("deadline_only")),
         "unbound_applying_by_tcg": _unbound_by_tcg(unbound),
         "bind_rate": (exact_n / len(views)) if views else None,
         "bind_rate_live": (sum(1 for v in live if v["canonical"] in (C_MASTER, C_DISCOVERED)) / len(live)) if live else None,
         "products": len(products), "products_with_events": sum(1 for p in products if p["events"]),
-        "applying": sum(1 for v in views if v["status"] in st.APPLYING),         # 受付中 + 締切間近（表示用の合計。判定は変えない）
+        "applying": sum(1 for v in views if v["status"] in st.APPLYING and not v.get("deadline_only")),   # 受付中 + 締切間近（締切だけの行は除く）
+        "deadline_only": sum(1 for v in views if v.get("deadline_only")),
         "today": len(today_list), "deadline_today": len(deadline_today), "ending_soon": len(ending_soon), "upcoming": len(upcoming),
         "new": len(new), "calendar": len(cal), "skipped_malformed": skipped,
         "retailer_conditional": len(retailer_opps), "retailer_reference": len(retailer_refs),

@@ -41,6 +41,9 @@ SOURCE_CHANNEL: dict[str, str] = {
     "MUGIWARA_STORE": CH_EXTERNAL_FORM,  # LivePocket（外部・店舗ごとに別のページ）
     "KIDS_REPUBLIC": CH_APP,            # アプリ（iAEON ID 連携）
     "FUKUFUKU_TOREKA": CH_MEMBER_LOGIN,  # 会員ログインが必要
+    # 抽選販売一覧の各項目の応募先は Google フォーム（2026-11-26・11-27 に公式トップで確認。項目の data-ref に符号化）。
+    # 経路の分類だけ。応募先の URL は取得も復号もしない・保存しない（EXTERNAL_FORM_RULES には入れない＝URL は認めない）
+    "TORECAPLAZA55": CH_EXTERNAL_FORM,
 }
 
 R_MEMBERSHIP, R_APP, R_PURCHASE_HISTORY, R_IDENTITY, R_STORE_PICKUP, R_SNS = (
@@ -281,6 +284,12 @@ def classify(i: dict, now: datetime) -> dict:
     # 外部フォーム = 取得元ごとに明示した許可ホストにある、出来事固有の https の URL（公式の情報元のときだけ）
     external = (_no_query(safe[1]) if (safe and application is None and official_source and not is_ann and not source_unreadable
                                        and _rule_ok(entry, EXTERNAL_FORM_RULES.get(retailer, ()))) else None)
+    # 取得器が公式の告知の本文から拾った外部フォーム（external_form_url。entry_url は公式ドメインだけの項目なので別に持つ）
+    xf = str(i.get("external_form_url") or "").strip() or None
+    xsafe = safe_https(xf) if xf else None
+    if external is None and application is None and xsafe and official_source and not source_unreadable \
+            and _rule_ok(xf, EXTERNAL_FORM_RULES.get(retailer, ())):
+        external = _no_query(xsafe[1])
     if application:
         channel = CH_WEB_OFFICIAL
     elif external:

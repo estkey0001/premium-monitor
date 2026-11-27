@@ -32,7 +32,8 @@ FETCHED = "FETCHED"
 BLOCKED = "BLOCKED"                      # robots・403・429 等（回避しない）
 FAILED = "FAILED"
 SKIPPED_BUDGET = "SKIPPED_BUDGET"
-FETCH_STATES = (NOT_FETCHED, FETCHED, BLOCKED, FAILED, SKIPPED_BUDGET)
+SKIPPED_CUTOFF = "SKIPPED_CUTOFF"        # 同じ実行で同じホストが遮断されたので取りに行かなかった（要求していない。遮断とは区別する）
+FETCH_STATES = (NOT_FETCHED, FETCHED, BLOCKED, FAILED, SKIPPED_BUDGET, SKIPPED_CUTOFF)
 
 # ── 抽出する項目 ───────────────────────────────────────────────────────
 SCHEDULE_FIELDS = (

@@ -68,12 +68,9 @@ def tcg_mismatch(ev: dict, vm: dict) -> bool:
             got = vm.get(sd) or ""
             if vm.get(se) or (bool(want) != bool(got)) or (want and got != want):
                 return True
-    url = str(ev.get("entry_url") or "")
-    plain = (url.startswith("https://") and is_official_url(url)
-             and not any(c in url for c in "\\@ ") and "%5c" not in url.lower())
-    if vm.get("apply") and (vm["apply"] != url or not is_official_url(url)):
-        return True
-    if plain and vm.get("apply") != url:
+    # 応募の URL は TCG ハブと同じ判定（action_url.classify）で得たものと一致すること（それ以外の URL に「応募する」を付けない）
+    from src.content.ui.runtime import _tcg_application_url
+    if (vm.get("apply") or "") != _tcg_application_url(ev):
         return True
     # 公式情報（source_url）は元データと同じ URL だけ
     if vm.get("info") and vm["info"] != str(ev.get("source_url") or "").strip():

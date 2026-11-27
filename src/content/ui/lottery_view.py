@@ -117,6 +117,9 @@ def _profit(v: LotteryReservationView, views_by_pid: dict, *, adopt_msrp: bool =
 
 
 def _from_tcg(vm: dict, ev: dict) -> LotteryReservationView:
+    # 公開の出口（応募条件の原文・支払い方法の原文・価格や発送の原文を、どの入力から来てもページに出さない）
+    from src.tcg.lottery.public import public_event
+    ev = public_event(ev if isinstance(ev, dict) else {})
     price = _int_price(ev.get("retail_price"))
     shrink = str(ev.get("shrink_status") or "")
     store = str(ev.get("store_name") or "") if ev.get("store_specific") else ""

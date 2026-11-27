@@ -17,9 +17,9 @@ from src.tcg.models import JST
 
 
 def _allow_images(monkeypatch):
-    """画像の利用条件を確認済みにした場合の挙動を試す（既定の IMAGE_USE_CLEARED は空で、画像は出さない）。"""
-    from src.tcg import verified_products as vp
-    monkeypatch.setattr(vp, "IMAGE_USE_CLEARED", {"POKEMON": "test", "ONE_PIECE": "test"})
+    """公式画像に権利者の利用許可の記録があることにして、表示の仕組みを試す（本番の記録は空 = 全部が代わりの画像）。"""
+    from tests._image_permit import permit_all
+    permit_all(monkeypatch)
 
 ROOT = Path(__file__).resolve().parents[1]
 NOW = datetime(2026, 11, 20, 12, 0, tzinfo=JST)
@@ -221,7 +221,8 @@ def test_new_section_only_has_not_yet_finished_applying_statuses():
 def test_page_states_the_snapshot_time_and_warns_when_source_is_old():
     hub = build_hub({"items": [_ev()], "generated_at": "2026-11-15T22:00:00+09:00"}, REG, MSRP, NOW)
     for html in (page.render(hub), page.render_lottery(hub)):
-        assert "11/20 12:00 更新" in html and "確認時点のものです" in html            # 生成時点（更新時刻）と最下部の 1 行
+        # 見出しは抽選データの取得時刻（作り直しただけで新しく見せない）。生成時刻は最下部の 1 行
+        assert "11/15 22:00 取得" in html and "11/20 12:00 生成" not in html and "画面生成 2026-11-20" in html and "確認時点のものです" in html
         assert "抽選データの取得が 5 日前です" in html
     fresh = _both(_hub([_ev()]))
     assert "抽選データの取得が" not in fresh
@@ -253,7 +254,7 @@ def test_malformed_event_types_skip_only_that_event_and_page_still_renders():
     bad = [_ev(retailer=["x"]), _ev(tcg={"a": 1}), _ev(prefecture=5), _ev(product_name=True)]
     h = _hub([_ev()] + bad)
     assert h["stats"]["skipped_malformed"] == 4 and h["stats"]["events_total"] == 1
-    assert "TCG 抽選ハブ" in page.render(h) and "TCG 抽選ハブ" in page.render_lottery(h)
+    assert "ポケカ・ワンピの抽選と利益" in page.render(h) and "ポケカ・ワンピの抽選販売一覧" in page.render_lottery(h)
 
 
 def test_real_exports_pass_the_build_guard_and_dict_without_items_does_not_overwrite(tmp_path, monkeypatch):
@@ -282,7 +283,7 @@ def test_product_image_only_from_pokemon_official_https(monkeypatch):
     _allow_images(monkeypatch)
     ok = page.render(_hub([_ev()], reg=_reg_with_image("https://www.pokemon-card.com/products/2026/images/x.jpg")))
     assert 'src="https://www.pokemon-card.com/products/2026/images/x.jpg"' in ok
-    assert 'referrerpolicy="no-referrer"' in ok
+    assert 'referrerpolicy="strict-origin-when-cross-origin"' in ok
     # onerror は『読み込み失敗でプレースホルダに切り替える』定数の文字列だけ（画像 URL・商品名などの外部の値を埋め込まない）
     oe = re.search(r'onerror="([^"]*)"', ok).group(1)
     assert "classList.add('ph')" in oe and "this.remove()" in oe
@@ -302,7 +303,7 @@ def test_one_piece_image_only_from_onepiece_official_https(monkeypatch):
             p["image_url"], p["canonical"] = url, canonical
         return page.render(h)
     ok = html_with("https://www.onepiece-cardgame.com/images/products/boosters/op18/img_thumbnail.png")
-    assert 'src="https://www.onepiece-cardgame.com/images/products/boosters/op18/img_thumbnail.png"' in ok and 'referrerpolicy="no-referrer"' in ok
+    assert 'src="https://www.onepiece-cardgame.com/images/products/boosters/op18/img_thumbnail.png"' in ok and 'referrerpolicy="strict-origin-when-cross-origin"' in ok
     for bad in ("https://www.pokemon-card.com/x.jpg", "https://evil.example.com/x.png", "http://www.onepiece-cardgame.com/x.png",
                 "https://www.onepiece-cardgame.com/images/noimage.png", "javascript:alert(1)"):
         html = html_with(bad)
@@ -377,7 +378,7 @@ def test_count_labels_and_timestamp_labels_are_distinguished():
     """未確認の抽選は「受付中」のタブに数えず「未確認」のタブに分ける。確認日（元データ）と画面生成は別の項目で出す。"""
     html = _lot(_hub([_ev(verified=False)]))
     assert 'data-tab="open"' not in html and 'data-tab="unknown"' not in html                   # タブは件数のある 締切間近・受付中 だけ（未確認はタブにしない）
-    assert re.search(r"抽選一覧（受付中・締切間近 <span data-cnt-untils=\"\">0</span>件）", html)                                                # 見出しの件数は表示中の段だけ
+    assert re.search(r'<div class="lt-bar"><span>全<span data-cnt-untils="">0</span>件</span>', html)                                    # 件数は表示中の段だけ
     assert re.search(r'<details class="note lt-more" data-lt-group="unknown" id="lt-unknown"><summary>未確認（1件）</summary>', html)   # 未確認は閉じた折りたたみ
     assert "画面生成" in html and "抽選データ 2026-11-19 22:00" in html
 
@@ -428,11 +429,12 @@ def test_image_load_failure_falls_back_to_the_placeholder(monkeypatch):
     html = page.render(_hub([_ev()], reg=_reg_with_image("https://www.pokemon-card.com/products/2026/images/x.jpg")))
     img_div = re.search(r'<div class="pimg [^"]*"><img .*?</div>', html, flags=re.S).group(0)
     assert "onerror=" in img_div and "classList.add('ph')" in img_div and "this.remove()" in img_div
-    assert img_div.count("data-phb hidden") == 2                    # 頭文字と種別（最初は隠れている）
+    assert img_div.count("data-phb hidden") == 1                    # 代わりの画像（SVG。最初は隠れている）
+    assert '<span class="phs" data-phb hidden><svg ' in img_div and 'aria-label="拡張パック「テスト弾」"' in img_div
     assert 'alt="拡張パック「テスト弾」"' in img_div                   # alt は商品名のまま
-    # 画像が無い商品（プレースホルダ）には onerror もフォールバック用の要素も付かない
+    # 画像が無い商品（代わりの画像）には onerror もフォールバック用の要素も付かない
     ph = page.render(_hub([_ev()], reg=_reg_with_image("https://evil.example.com/x.jpg")))
-    assert "data-phb" not in ph
+    assert "data-phb" not in ph and '<div class="pimg pokemon ph"><svg ' in ph
 
 
 def test_build_writes_both_tcg_pages_or_neither_and_reports_them_for_the_sitemap(tmp_path, monkeypatch):
@@ -454,7 +456,124 @@ def test_build_writes_both_tcg_pages_or_neither_and_reports_them_for_the_sitemap
     assert 'if "tcg-lottery.html" in _h853:' in dc
 
 
-def test_images_are_not_published_until_the_terms_are_cleared():
-    """既定では、公式のホストの画像でも公開ページに出さない（利用条件の確認前。頭文字のプレースホルダ）。"""
-    html = page.render(_hub([_ev()], reg=_reg_with_image("https://www.pokemon-card.com/products/2026/images/x.jpg")))
-    assert "<img" not in html and "pokemon-card.com/products/2026/images/x.jpg" not in html and "商品画像なし" in html
+def test_images_are_not_published_until_the_terms_are_cleared(monkeypatch):
+    """画像ごとに権利者の利用許可の記録が無ければ、公式のホストの画像でも公開ページに出さない（代わりの画像）。
+    社内の使用判断（IMAGE_INTERNAL_DECISION）だけでは出さない。本番の記録は空なので、既定で出さない。"""
+    from tests._image_permit import permit_all
+    url = "https://www.pokemon-card.com/products/2026/images/x.jpg"
+    permit_all(monkeypatch)
+    assert f'src="{url}"' in page.render(_hub([_ev()], reg=_reg_with_image(url)))           # 記録があれば出す
+    monkeypatch.undo()
+    html = page.render(_hub([_ev()], reg=_reg_with_image(url)))
+    assert "<img" not in html and "pokemon-card.com/products/2026/images/x.jpg" not in html and '<div class="pimg pokemon ph"><svg ' in html
+
+
+def test_deadline_only_row_is_not_shown_as_open_anywhere():
+    """受付開始の根拠が無く締切だけ分かる行は、商品カードの一覧・今日応募可能・チップ・見出しのどこでも「受付中」と断定しない。"""
+    d = _ev(application_start_date=None, application_end_date="2026-11-25")
+    h = _hub([d])
+    assert h["stats"]["today"] == 0 and h["today_list"] == []                       # 今日応募可能に入れない
+    cards = [c for c in h.get("cards") or h.get("products") or [] if c.get("lottery_items")]
+    items = [i for c in cards for i in c["lottery_items"]]
+    assert items and all(i["deadline_only"] and i["status_label"] == "締切前（開始日未確認）" for i in items)
+    assert all(c["counts"]["open"] == 0 and c["counts"]["ending_soon"] == 0 and c["counts"]["deadline_only"] == 1 for c in cards)
+    html = page.render(h)
+    chip = re.search(r'<span class="chip warn" data-chip-deadline-only[^>]*>', html)
+    assert chip and "data-rb-until=" in chip.group(0)                               # 締切を過ぎたら表示時に消える
+    assert "受付中<b>" not in html and "締切間近<b>" not in html
+    lot = page.render_lottery(h)
+    assert '<h2 class="lt-h" id="lt-deadline_only">締切前・開始日未確認の抽選</h2>' in lot     # 締切だけの行は「受付中の抽選」と別の見出し
+    assert 'data-tab="deadline_only"' not in lot and not re.search(r'data-tab="open"[^>]*>受付中 <b><span[^>]*>[1-9]', lot)
+
+
+def test_open_chip_deadline_ignores_deadline_only_rows():
+    """受付中のチップの締切は、受付中の行の締切だけから取る（締切だけの行の早い締切で先に失効させない）。"""
+    h = _hub([_ev(application_end_date="2026-11-28"),
+              _ev(application_start_date=None, application_end_date="2026-11-24", retailer="HBST",
+                  source_url="https://www.hbst.net/?p=1")])
+    html = page.render(h)
+    m = re.search(r'data-rb-until="([^"]+)"><span data-rb-open>受付中<b>1</b>件', html)
+    assert m and m.group(1).startswith("2026-11-28")
+
+
+def test_deadline_only_rows_are_not_counted_in_unbound_open_or_product_status():
+    """締切だけの行は、商品未特定の「このほかの受付中」・商品の集約状態・受付中の合計にも数えない（監査 HIGH の回帰）。"""
+    unbound_dlo = _ev(application_start_date=None, application_end_date="2026-11-25", product_id=None, product_match="none",
+                      lottery_id="u-dlo", retailer="HBST", source_url="https://www.hbst.net/?p=9")
+    unbound_open = _ev(product_id=None, product_match="none", lottery_id="u-open")
+    bound_dlo = _ev(application_start_date=None, application_end_date="2026-11-25", lottery_id="b-dlo")
+    h = _hub([unbound_dlo, unbound_open, bound_dlo])
+    s = h["stats"]
+    assert s["unbound_applying"] == 1 and s["unbound_applying_by_tcg"] == {"POKEMON": 1}
+    assert s["applying"] == 1 and s["deadline_only"] == 2 and s["ending_soon"] == 0
+    prod = next(p for p in h["products"] if p["events"])
+    assert prod["status"] not in st.APPLYING                                   # 締切だけの行で商品を受付中にしない
+    html = page.render(h)
+    assert re.search(r'このほかの受付中の抽選 <span data-cnt-untils="[^"]*"[^>]*>1</span>件', html)
+    conflict = _hub([_ev(application_start_date=None, application_end_date="2026-11-25", conflict=True)])
+    assert conflict["stats"]["deadline_only"] == 0                             # 日程の食い違いは「締切前」ではなく未確認
+
+
+def test_page_header_separates_generation_time_from_data_time():
+    h = _hub([_ev()])
+    for html in (page.render(h, generated_label="2026-11-27 17:14 JST"), page.render_lottery(h, generated_label="2026-11-27 17:14 JST")):
+        m = re.search(r'<(?:p class="upd"|span class="u")>([^<]*)</', html)
+        assert m and m.group(1) == "11/19 22:00 取得" and "画面生成 2026-11-27 17:14 JST" in html     # 見出しはデータの時刻だけ（更新・生成と書かない）
+
+
+def test_product_with_only_deadline_only_lottery_is_not_hidden_in_other_products():
+    """締切だけ分かる抽選しかない商品も初期表示に残す（「ほかの商品」の折りたたみに隠さない）。"""
+    h = _hub([_ev(application_start_date=None, application_end_date="2026-11-25")])
+    html = page.render(h)
+    nobb = html.split('<details class="note nobb">', 1)[1].split("</details>", 1)[0] if '<details class="note nobb">' in html else ""
+    assert "テスト弾" not in nobb and "テスト弾" in html
+
+
+def test_mixed_open_and_deadline_only_counts_agree_everywhere():
+    """受付中 2 件と開始日未確認（締切だけ）1 件が混ざると: 「受付中の抽選」の見出し・件数・方式別・商品別・タブは受付中の 2 件だけを数え、
+    締切だけの行は別の見出し「締切前・開始日未確認の抽選」の下に、状態「締切前（開始日未確認）」のカードで出る。絞り込みの印も受付中にしない。"""
+    evs = [_ev(lottery_id="A1", application_end_date="2026-11-25"),
+           _ev(lottery_id="A2", retailer="GEO", retailer_name="ゲオ", application_end_date="2026-11-26"),
+           _ev(lottery_id="D1", retailer="HOBBY_STATION", retailer_name="ホビーステーション", application_start_date=None, application_end_date="2026-11-27")]
+    h = _hub(evs)
+    lot = page.render_lottery(h)
+    groups = {v["lottery_id"]: page._group_of(v) for v in h["events"]}
+    assert groups["D1"] == "deadline_only" and groups["A1"] in ("ending", "open") and groups["A2"] in ("ending", "open")
+    # 見出しの範囲（「受付中の抽選」から次の h2 まで）に締切だけの行が入らない
+    head = lot[lot.index('<h2 id="lottery"'):]
+    live = lot[lot.index('<div id="lt-live">'):]
+    sep = live.index('<h2 class="lt-h" id="lt-deadline_only">締切前・開始日未確認の抽選</h2>')
+    assert "締切前" not in head[:head.index("</h2>")] and "開始日未確認" not in head[:head.index("</h2>")]
+    under_open, under_sep = live[:sep], live[sep:]
+    assert under_open.count('class="ev ') == 2 and under_sep.count('class="ev ') == 1
+    assert "締切前（開始日未確認）" in under_sep and "締切前（開始日未確認）" not in under_open       # カードの状態
+    # 件数: 見出しの下の「全N件」・方式別・商品別はすべて受付中の 2 件
+    assert re.search(r'<div class="lt-bar"><span>全<span data-cnt-untils="[^"]*">2</span>件</span>', lot)
+    ch_counts = re.findall(r'<span data-ch-count="(\w+)">(\d+)</span>', lot)
+    rows_open = [v for v in h["events"] if groups[v["lottery_id"]] in ("ending", "open")]
+    for ch, n in ch_counts:
+        assert int(n) == sum(1 for v in rows_open if page._ch_key(v["channel"]) == ch), ch
+    assert sum(int(n) for _, n in ch_counts) <= 2
+    pk = [(n, re.sub(r"<[^>]+>", "", t)) for n, t in re.findall(r'data-pk-open="(\d+)"[^>]*>.*?<small>(.*?)</small></a>', lot)]
+    assert pk == [("2", "受付中 2件")]                                                      # 同じ商品の 3 件のうち受付中の 2 件
+    # 絞り込みの印: 締切だけの行は open / ending / today に入らない。タブの「すべて」に件数を付けない
+    states = {re.search(r'id="([^"]*)"', m.group(1)).group(1): re.search(r'data-state="([^"]*)"', m.group(1)).group(1).split()
+              for m in re.finditer(r'<tr class="ev [^"]*" ([^>]*)>', lot)}
+    assert set(states) == {"L-A1", "L-A2", "L-D1"}
+    assert "deadline_only" in states["L-D1"] and not {"open", "ending", "today"} & set(states["L-D1"])
+    assert all({"open", "ending"} & set(states[k]) for k in ("L-A1", "L-A2"))
+    assert '<a href="#lottery" data-tab="all" aria-current="true">すべて</a>' in lot
+    d1 = lot[lot.index('id="L-D1"'):]
+    d1 = d1[:d1.index("</tr>")]
+    assert "data-deadline-only" in d1 and "btn cta" not in d1 and "data-left-until" not in d1 and page.APPLY_HOWTO not in d1   # 締切前の行に応募ボタン・残り時間を出さない
+    import scripts.deploy_check as dc
+    assert dc.check_tcg_apply_buttons(lot, "x") == []
+    forged = lot.replace(d1, d1.replace('<span class="btns">', '<span class="btns"><a class="btn cta" href="https://www.hbst.net/x" data-js-only hidden>x</a>', 1), 1)
+    assert forged != lot
+    assert any("締切だけ" in x for x in dc.check_tcg_apply_buttons(forged, "x"))                  # 差し込まれたら deploy-check が止める
+    band = page.render(h)
+    band = band[band.index('id="soon"'):band.index("</section>", band.index('id="soon"'))]
+    lis = re.findall(r'<li class="sr"[^>]*>', band)
+    assert lis and "data-deadline-only" in lis[-1] and not any("data-deadline-only" in x for x in lis[:-1])   # 帯では締切だけの行を受付中の行の後ろに
+    assert 'title="締切前（開始日未確認）" class="sb warn">締切前<' in band and "btn cta" not in band.split(lis[-1])[1]
+    assert "'受付中 '+n+'件'" in page.JS and "g==='ending'||g==='open'" in page.JS              # 絞り込み後の件数も受付中の段だけ

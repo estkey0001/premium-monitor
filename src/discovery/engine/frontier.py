@@ -148,13 +148,36 @@ def parse_list(html: str, base_url: str) -> list[tuple[str, Optional[str], str]]
         if not href or href.startswith(("#", "javascript:", "mailto:", "tel:")):
             continue
         u = urljoin(base_url, href).split("#", 1)[0]
-        out.append((u, None, " ".join(a.get_text(" ").split())))
+        text = " ".join(a.get_text(" ").split())
+        # 「詳しくはコチラ」のようなリンクの文字だけの一覧では、題名がリンクの外（同じカードの中）にある。
+        # リンクを囲む要素を、別の URL へのリンクを含まず・文字数が _CARD_TEXT_MAX を超えない範囲でさかのぼり、その文字も判定に使う
+        # （隣の記事の題名・一覧全体の文字は使わない）
+        card, node = "", a.parent
+        while node is not None and getattr(node, "name", None) not in (None, "[document]", "body", "html"):
+            others = {urljoin(base_url, str(x["href"]).strip()).split("#", 1)[0] for x in node.find_all("a", href=True)
+                      if str(x["href"]).strip() and not str(x["href"]).strip().startswith(_NOT_LINK)} - {u, base_url.split("#", 1)[0]}
+            t = " ".join(node.get_text(" ").split())
+            if others or len(t) > _CARD_TEXT_MAX:
+                break
+            card, node = t, node.parent
+        out.append((u, None, (text + " " + card).strip() if card and card != text else text))
     return out
+
+
+_CARD_TEXT_MAX = 300
+_NOT_LINK = ("#", "javascript:", "mailto:", "tel:")             # 共有ボタン等（別の記事へのリンクに数えない）
 
 
 def _wanted(url: str, text: str, include) -> bool:
     hay = (unquote(url) + " " + (text or "")).lower()
     return any(str(w).lower() in hay for w in include)
+
+
+def _path_matches(url: str, patterns) -> bool:
+    """URL のパス（＋クエリ）が、取得元の抽選の記事の形のどれかに合うか。"""
+    sp = urlsplit(url)
+    target = sp.path + (("?" + sp.query) if sp.query else "")
+    return any(p.search(target) for p in patterns)
 
 
 def _newer(new: Optional[str], old: Optional[str]) -> bool:
@@ -211,14 +234,23 @@ def discover(sources: list[dict], state: dict, fetcher, *, now: datetime, bootst
         else:
             entries = parse_list(body, surl)
         include = s.get("include") or DEFAULT_INCLUDE
+        patterns = [re.compile(p) for p in (s.get("url_patterns") or [])]
         prev_src = res.state["sources"].get(sid)
         known: dict = dict((prev_src or {}).get("urls") or {})
         current: dict = {}
+        # 同じ URL へのリンクが複数ある一覧（画像のリンク＋題名のリンク）では、リンクの文字をまとめて絞り込む
+        texts: dict = {}
+        for u, _lm, text in entries:
+            k = normalize_url(u)
+            texts[k] = (texts.get(k, "") + " " + (text or "")).strip()
+        entries = [(u, lm, texts.get(normalize_url(u), text)) for u, lm, text in entries]
         for u, lm, text in entries:
             if _bare(host_of(u)) != shost or urlsplit(u).scheme not in ("http", "https"):
                 continue                                     # 別ホスト・http(s) でないものは Lead にしない
             if not _wanted(u, text, include):
                 continue
+            if patterns and not _path_matches(u, patterns):
+                continue                                     # 抽選の記事の URL の形でない（一覧・タグ・カテゴリのページ）
             key = normalize_url(u)
             if key == normalize_url(surl) or key in current:
                 continue

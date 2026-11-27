@@ -13,6 +13,7 @@ from datetime import datetime
 
 from src.content.ui.components import esc
 from src.content.ui.icons import icon
+from src.content.ui import product_image as pi
 from src.content.ui.navigation import page_href
 from src.content.ui.restock_view import RestockView
 from src.market import stock_state as ss
@@ -113,10 +114,14 @@ def _row(v: RestockView, idx: int, now: datetime, pd_ids: set | None = None) -> 
         f' data-idx="{idx}" data-search="{esc(search)}" data-track="restock_view">'
         f'<div class="nu-lrow__status"><span class="nu-badge nu-tone-{tone}" data-nu-rbadge>'
         f'{esc(label)}</span></div>'
-        f'<div class="nu-lrow__main"><h3 class="nu-lrow__title">{esc(v.product_name)}</h3>'
+        # 商品には必ず画像（公式画像を使う取り決めの無いカメラ・ゲーム機は、商品名とカテゴリから作る代わりの画像）
+        f'<div class="nu-lrow__main nu-lmedia" style="display:flex;gap:12px;align-items:flex-start">'
+        f'{pi.figure(tcg="", name=v.product_name, kind=pi.kind_of(None, v.product_name, default="在庫"), band=v.category_label, width=96)}'
+        '<div class="nu-lrow__txt" style="flex:1;min-width:0">'
+        f'<h3 class="nu-lrow__title">{esc(v.product_name)}</h3>'
         f'<p class="nu-lrow__shop">{esc(v.retailer)}<span class="nu-lrow__cat"> ・ {esc(v.category_label)}</span></p>'
         f'<p class="nu-lrow__chips"><span class="nu-lchip">{esc(limit)}</span>'
-        + (f'<span class="nu-lchip">{esc(v.variant)}</span>' if v.variant else "") + '</p></div>'
+        + (f'<span class="nu-lchip">{esc(v.variant)}</span>' if v.variant else "") + '</p></div></div>'
         f'<div class="nu-lrow__price">{price}</div>'
         f'<div class="nu-lrow__profit">{profit}</div>'
         f'<div class="nu-lrow__when"><span class="nu-when">{_restock_text(v)}</span>'

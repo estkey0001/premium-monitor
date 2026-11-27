@@ -54,6 +54,8 @@ _PREORDER_AFTER_END = ("RESULT_PENDING", "WINNER_ANNOUNCED", "WINNER_PURCHASE_PE
 # HOME の並び順（小さいほど上）。99 は HOME に出さない
 BUCKET_ENDING, BUCKET_OPEN, BUCKET_BUY, BUCKET_UPCOMING, BUCKET_CONFLICT = 0, 1, 2, 3, 4
 BUCKET_WAIT, BUCKET_SKIP = 5, 6
+# 締切だけ分かり、受付開始の公式の根拠が無い抽選（TCG ハブ・抽選ページの「締切前（開始日未確認）」と同じ）
+from src.tcg.hub.product_view import DEADLINE_ONLY_LABEL  # noqa: E402  文言は TCG ハブと 1 か所で持つ
 BUCKET_HIDDEN = 99
 # 抽選・予約の件数に数える状態（「今ユーザーが確認する価値のある」もの。受付終了・終了・日程不明は数えない）
 COUNTED_STATUSES = ("ENDING_SOON", "OPEN", "UPCOMING", "SOURCE_CONFLICT", "WINNER_PURCHASE_PERIOD",
@@ -158,6 +160,25 @@ def confirmation_label(ev: dict) -> str:
     return "公式情報"
 
 
+def _tcg_application_url(ev: dict) -> str:
+    from src.tcg.action_url import classify
+    from src.tcg.models import now_jst
+    try:
+        u = classify(ev, now_jst()).get("application_url") or ""
+    except Exception:  # noqa: BLE001 - 壊れた入力で応募ボタンを作らない
+        return ""
+    return official_url(u) if u else ""
+
+
+def _pic(ev: dict, bound: bool) -> dict:
+    """VM に載せる画像の情報（product_image.pic_for_event）。読めなくても空の材料にする（状態の判定には関係しない）。"""
+    try:
+        from src.content.ui.product_image import pic_for_event
+        return pic_for_event(ev, bound=bound)
+    except Exception:  # noqa: BLE001 — 画像の情報が作れなくても VM は作る（代わりの画像になる）
+        return {"u": "", "n": str(ev.get("product_name") or ""), "pt": "", "c": ""}
+
+
 def tcg_vm(ev: dict, idx: int) -> dict:
     """TCG 抽選（exports/tcg/latest.json の lotteries の1件）→ VM。"""
     retailer = str(ev.get("retailer_name") or ev.get("retailer") or "")
@@ -173,7 +194,9 @@ def tcg_vm(ev: dict, idx: int) -> dict:
         "price": price_text(ev.get("retail_price")),
         "conflict": bool(ev.get("conflict")),
         "ann": bool(ev.get("announcement_only")),
-        "apply": official_url(ev.get("entry_url")),
+        # 応募先は TCG ハブと同じ判定（action_url.classify。取得元ごとに確かめた応募ページの形だけ）にそろえる。
+        # 公式ドメインの一覧に入っているだけの URL（モール・別の店・お知らせのページ）では「応募する」を出さない
+        "apply": _tcg_application_url(ev),
         "info": info, "info_official": is_official(info),
         "result": official_url(ev.get("result_url")),
         "purchase": official_url(ev.get("purchase_url")),
@@ -183,6 +206,8 @@ def tcg_vm(ev: dict, idx: int) -> dict:
         "unv": conf in ("確認待ち", "参考情報"),
         "k": KIND_PREORDER if str(ev.get("event_type") or "").upper() == "PREORDER" else KIND_LOTTERY,
         "rd": "",
+        # 画像（表示専用。状態の判定には使わない）: 商品に紐付いた抽選は公式画像の URL（出せるときだけ）、ほかは代わりの画像の材料
+        "pic": _pic(ev, bound=str(ev.get("product_match") or "") == "exact"),
     }
     for i in range(0, len(TIME_KEYS), 2):
         (s_exact, k_exact), (s_day, k_day) = TIME_KEYS[i], TIME_KEYS[i + 1]
@@ -267,6 +292,7 @@ def release_vm(ev: dict) -> dict | None:
         "as": "", "asd": "", "ae": "", "aed": "", "wa": "", "wad": "",
         "ps": "", "psd": "", "pe": "", "ped": "",
         "k": KIND_RELEASE, "rd": rd[:10],
+        "pic": _pic(ev, bound=True),           # 画像（表示専用。公式の発売予定は商品そのもの）
     }
 
 
@@ -379,8 +405,13 @@ def _release_state(vm: dict, now: datetime) -> dict:
         "cd_text": f"発売まで あと{rest}" if rest else "",
         "cta": _info_cta(vm),
         "bucket": BUCKET_WAIT if waiting else BUCKET_HIDDEN, "sort": _ms(day0) if waiting else 0,
-        "open": False, "ending_today": False, "starting_24h": False, "upcoming": False,
+        "open": False, "ending_today": False, "starting_24h": False, "upcoming": False, "deadline_only": False,
     }
+
+
+def is_deadline_only(vm: dict, status: str) -> bool:
+    """受付中・締切間近の状態で、受付開始の日時も日付も無い行（product_view._event_view の deadline_only と同じ定義）。"""
+    return status in OPEN_STATUSES and not vm.get("as") and not vm.get("asd")
 
 
 def derive_runtime_state(vm: dict, now: datetime) -> dict:
@@ -399,6 +430,8 @@ def derive_runtime_state(vm: dict, now: datetime) -> dict:
     s_passed, _s_not_yet = ls._bound(ev, "application_start", "application_start_date")
     e_passed, e_not_yet = ls._bound(ev, "application_end", "application_end_date")
     is_open = status in OPEN_STATUSES
+    # 締切前という事実だけ。受付中・今日締切の件数、受付中・締切間近の段には入れない（存在は日程要確認と同じ段で見せる）
+    deadline_only = is_deadline_only(vm, status)
 
     # ── ボタン（1カード1つ） ──
     cta = None
@@ -458,13 +491,15 @@ def derive_runtime_state(vm: dict, now: datetime) -> dict:
     ae_day = parse_dt(vm["ae"]).astimezone(JST).date().isoformat() if vm.get("ae") else vm.get("aed")
     as_ms = _ms(parse_dt(vm["as"])) if vm.get("as") else None
     counted = not vm.get("ann")
-    ending_today = counted and is_open and ae_day == today
+    ending_today = counted and is_open and ae_day == today and not deadline_only
     # 「まもなく開始」は抽選だけ（予約開始待ちは数えない）
     starting_24h = counted and not preorder and status == "UPCOMING" and (
         (as_ms is not None and as_ms - now_ms <= 86_400_000)
         or (as_ms is None and vm.get("asd") == today))
     if not counted:
         bucket, sort = BUCKET_HIDDEN, 0
+    elif deadline_only:
+        bucket, sort = BUCKET_CONFLICT, _ms(e_passed) or 0
     elif status == "ENDING_SOON":
         bucket, sort = BUCKET_ENDING, _ms(e_passed) or 0
     elif status == "OPEN":
@@ -484,17 +519,21 @@ def derive_runtime_state(vm: dict, now: datetime) -> dict:
     s = st.get(status)
     label = PREORDER_LABELS.get(status, s.label) if preorder else s.label
     tone = s.tone
+    icon = st.get("UNKNOWN").icon if deadline_only else s.icon       # 受付中と同じ印にしない
     unconfirmed = bool(vm.get("unv")) and is_open
+    if deadline_only:
+        label, tone = DEADLINE_ONLY_LABEL, "warning"
     if unconfirmed:
         # 人の確認がまだの告知は「受付中」と言い切らない（応募ボタンも出さない）
         label, tone = f"{label}（確認待ち）", "warning"
     return {
-        "status": status, "label": label, "icon": s.icon, "tone": tone,
+        "status": status, "label": label, "icon": icon, "tone": tone,
         "when": when, "cd_text": cd_text, "cta": cta,
         "bucket": bucket, "sort": sort,
         # 「抽選受付中」の件数は抽選だけ（予約の受付は数えない）
-        "open": counted and is_open and not preorder and not unconfirmed, "ending_today": ending_today,
+        "open": counted and is_open and not preorder and not unconfirmed and not deadline_only, "ending_today": ending_today,
         "starting_24h": starting_24h, "upcoming": counted and not preorder and status == "UPCOMING",
+        "deadline_only": deadline_only,
     }
 
 
@@ -518,6 +557,7 @@ def config() -> dict:
         "closed_ms": int(ls.CLOSED_RETENTION / timedelta(milliseconds=1)),
         "start_only_ms": int(ls.START_ONLY_RETENTION / timedelta(milliseconds=1)),
         "preorder_labels": PREORDER_LABELS,
+        "deadline_only_label": DEADLINE_ONLY_LABEL,
         "statuses": {k: {"label": s.label, "icon": s.icon, "tone": s.tone}
                      for k, s in st.STATUSES.items()},
     }

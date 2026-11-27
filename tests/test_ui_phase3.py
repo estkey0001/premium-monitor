@@ -39,7 +39,8 @@ def _iso(**kw) -> str:
 
 def lot(i, **kw):
     e = {"tcg": "POKEMON", "product_name": f"抽選{i:02d}", "retailer_name": "ポケモンセンターオンライン",
-         "lottery_id": f"L{i}", "source_url": f"{PCO}/news/{i}", "entry_url": f"{PCO}/lottery/{i}",
+         "lottery_id": f"L{i}", "source_url": f"https://geo-online.co.jp/news/detail/{i}.html",
+         "entry_url": f"https://draw.geo-online.co.jp/lottery/{i}", "retailer": "GEO", "source_type": "RETAILER_OFFICIAL",
          "verified": True, "confidence": "high", "collection_method": "HTML", "event_type": "LOTTERY",
          "application_start": _iso(days=-1), "application_end": _iso(days=2),
          "last_verified_at": _iso(minutes=-5)}
@@ -158,7 +159,7 @@ def test_unsafe_apply_url_never_cta(url):
 
 def test_official_https_apply_allowed():
     st = _state(_vm(), NOW)
-    assert st["cta"]["kind"] == "apply" and st["cta"]["url"].startswith("https://www.pokemoncenter-online.com/")
+    assert st["cta"]["kind"] == "apply" and st["cta"]["url"].startswith("https://draw.geo-online.co.jp/lottery/")
 
 
 # ── 一覧の描画 ─────────────────────────────────────────────────────

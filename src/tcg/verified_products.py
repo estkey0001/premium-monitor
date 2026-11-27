@@ -66,17 +66,45 @@ def image_ok(tcg: Any, url: Any) -> bool:
     return "noimage" not in path
 
 
-# 公開ページに画像を出してよい TCG（権利者の利用条件で、外部サイトへの掲載が許されると確認できたものだけ。値は根拠の URL と確認日）。
-# URL が取れること・公式のホストであること（image_ok）と、利用が許されていること（ここ）は別。確認できない間は空にして、
-# 台帳の画像 URL は「許諾を確認したら切り替える候補」として残す。
-# 2026-11-26: ポケモンカード公式のサイトポリシー（pokemon-card.com/policy.html）は、データのコピー・複製・掲示・配布を断り、
-# リンクはテキストリンクに限ると定めている。ONE PIECE カードゲーム公式は利用条件のページを確認できていない。どちらも掲載しない。
-IMAGE_USE_CLEARED: dict[str, str] = {}
+# 画像の公開には 2 つの段階がある。混同しない。
+#   (1) 社内の使用判断（IMAGE_INTERNAL_DECISION）: 運営者が「使いたい」と決めた記録。権利者の許可ではないので、これだけでは公開しない。
+#   (2) 権利者の利用許可・公開利用の根拠（IMAGE_RIGHTS_PERMISSION）: 画像ごと（URL ごと）に、許可の根拠の URL・確認日・根拠の種類を記録したもの。
+# 公開ページに公式画像を出すのは、(2) に記録がある画像だけ（image_publishable）。無ければ代わりの画像（SVG）。
+#
+# 2026-11-27 の確認（画像ごとの公開利用の根拠）:
+#   - ポケモンカード公式 pokemon-card.com/policy.html: 掲載データのコピー・複製・掲示・配布を断り、リンクはテキストリンクに限る。
+#     報道・小売・アフィリエイト向けの画像の利用許諾・素材の提供の記載なし → 根拠なし（禁止）。
+#   - ONE PIECE カードゲーム公式（トップのフッター）: 画像・テキスト・データの無断転用・転載を断る。
+#     バンダイのウェブサイトご利用条件（bandai.co.jp/site/notice/）: 事前許諾なしの複製・掲示・頒布を禁止。画像の利用許諾の規定なし → 根拠なし（禁止）。
+#   したがって、どの公式画像にも公開利用の根拠が無い。IMAGE_RIGHTS_PERMISSION は空（全部が代わりの画像）。
+#   権利者から許可を得たときは、その画像の URL ごとに {"tcg", "basis", "source_url", "checked_on"} を記録する。
+IMAGE_INTERNAL_DECISION: dict[str, str] = {
+    "POKEMON": "2026-11-27 運営者が公式画像の使用を希望（社内の判断。権利者の許可ではない。サイトポリシーは掲示を禁止）",
+    "ONE_PIECE": "2026-11-27 運営者が公式画像の使用を希望（社内の判断。権利者の許可ではない。公式・バンダイの規定は転載を禁止）",
+}
+
+IMAGE_RIGHTS_PERMISSION: dict[str, dict] = {}
+
+_PERMISSION_KEYS = ("tcg", "basis", "source_url", "checked_on")
+
+
+def rights_permission(url: Any) -> dict | None:
+    """その画像 URL の、権利者の利用許可・公開利用の根拠の記録。根拠の項目がそろっていなければ None（記録が無いのと同じ）。"""
+    rec = IMAGE_RIGHTS_PERMISSION.get(url) if isinstance(url, str) else None
+    if not isinstance(rec, dict) or not all(isinstance(rec.get(k), str) and rec.get(k).strip() for k in _PERMISSION_KEYS):
+        return None
+    if not str(rec["source_url"]).startswith("https://"):
+        return None
+    return rec
 
 
 def image_publishable(tcg: Any, url: Any) -> bool:
-    """公開ページに出してよい画像か（公式のホストの画像で、かつその TCG の利用条件を確認済み）。"""
-    return isinstance(tcg, str) and tcg in IMAGE_USE_CLEARED and image_ok(tcg, url)
+    """公開ページに出してよい公式画像か: 公式のホストの画像（image_ok）で、かつその画像に権利者の利用許可・公開利用の根拠の記録がある
+    （rights_permission。TCG も一致）。社内の使用判断（IMAGE_INTERNAL_DECISION）だけでは出さない。"""
+    if not (isinstance(tcg, str) and image_ok(tcg, url)):
+        return False
+    rec = rights_permission(url)
+    return bool(rec) and rec.get("tcg") == tcg
 
 
 def load(path: Path | None = None) -> list[dict]:

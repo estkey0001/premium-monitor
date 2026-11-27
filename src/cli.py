@@ -1266,13 +1266,40 @@ def _reconcile_registered(out: Path, pcs: dict, evs: dict, now) -> dict:
 @click.option("--apply", is_flag=True, help="台帳と .private/discovery/ に書く（既定は dry-run）")
 @click.option("--bootstrap", is_flag=True, help="初回の取得元でも Lead を作る（既定は基準づくりだけ）")
 @click.option("--config", "config_path", type=click.Path(path_type=Path), default=None)
-def discover_engine(apply, bootstrap, config_path):
+@click.option("--registry", "use_registry", is_flag=True,
+              help="公式ソースのレジストリのお知らせ一覧も読む（robots.txt の確認だけで、利用規約は未確認の取得元を含む）")
+@click.option("--search", "search_spec", default=None,
+              help="商品起点の検索の Provider。今は fixture:<JSON のパス>（通信しないサンプル）だけ。外部の検索 API は未接続")
+@click.option("--queries-only", is_flag=True, help="商品起点のクエリの数と段の内訳だけを出す（検索も取得もしない）")
+@click.option("--max-queries", type=int, default=75, show_default=True, help="1 回の実行で使うクエリの上限（超えた分は次の日へ）")
+def discover_engine(apply, bootstrap, config_path, use_registry, search_spec, queries_only, max_queries):
     """発見のエンジン（公式ドメインの sitemap・RSS・一覧の差分だけ。検索 API・LLM は使わない）。候補を作るだけで公開・登録しない。件数だけを出す。"""
     import json as _json
     from datetime import datetime as _dt
     from src.discovery.engine.run import run_engine
     from src.tcg.models import JST as _JST
-    rep = run_engine(now=_dt.now(tz=_JST), apply=apply, bootstrap=bootstrap, config_path=config_path)
+    from src.discovery.engine.search import queries as _q
+    now = _dt.now(tz=_JST)
+    reg = _json.loads((PROJECT_ROOT / "exports" / "tcg" / "pokemon_registry.json").read_text(encoding="utf-8"))
+    lots = _json.loads((PROJECT_ROOT / "exports" / "tcg" / "lotteries.json").read_text(encoding="utf-8"))
+    qs = _q.build_queries(_q.select_products(reg.get("products") or [], lots.get("items") or [], today=now.date()),
+                          today=now.date())
+    use, later = _q.apply_budget(qs, max_per_day=max_queries, today=now.date())
+    if queries_only:
+        from collections import Counter as _C
+        click.echo(_json.dumps({"queries_total": len(qs), "use_today": len(use), "carried_over": len(later),
+                                "by_tier": dict(_C(q.tier for q in qs)), "by_purpose": dict(_C(q.purpose for q in qs))},
+                               ensure_ascii=False, indent=2))
+        return
+    provider = None
+    if search_spec:
+        kind, _, path = search_spec.partition(":")
+        if kind != "fixture" or not path:
+            raise click.BadParameter("--search は fixture:<パス> だけ（外部の検索 API は未接続）")
+        from src.discovery.engine.search.fixture import FixtureSearchProvider
+        provider = FixtureSearchProvider(path)
+    rep = run_engine(now=now, apply=apply, bootstrap=bootstrap, config_path=config_path,
+                     use_registry=use_registry, search_provider=provider, queries=use if provider else None)
     click.echo(_json.dumps({k: v for k, v in rep.items() if not k.startswith("_")}, ensure_ascii=False, indent=2))
 
 @cli.command("run-once")

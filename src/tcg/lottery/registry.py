@@ -107,7 +107,9 @@ LOTTERY_SOURCES: list[dict] = [
          note="キャンペーン情報に、アプリ抽選の告知（応募受付期間・当選発表日・購入期間）が静的 HTML のテキストで載る。応募はキッズリパブリックの"
               "アプリ（iAEON ID 連携）で公式ドメインの応募ページは無い（entry_url は空）。本州・四国の直営おもちゃ売場。一覧にはポケカ・ONE PIECE 以外も"
               "混ざるのでタイトルで絞る。robots.txt は 404 で制限の記載なし（確認日 2026-10-29）。"
-              "利用規約の本文は読んだ記録（確認日・URL）がなく、許可も禁止も未確認（読んだら、この記述と取得可否を見直す）"),
+              "サイト利用規約（https://www.kidsrepublic.jp/terms、確認日 2026-11-26）: 運営はイオンリテール株式会社。第7条が私的使用を超える複製を禁じ、"
+              "第3条が承認の無い営利目的の利用を禁じる。自動取得を名指しで禁じる条項は無い。応募条件の原文は出力しない（構造化した値だけ）。"
+              "取得そのものを続けてよいかは人の判断待ち"),
     _src("FUKUFUKU_TOREKA", "福福トレカ", (POKEMON,), "P2", "https://pokemon.fukufukutoreka.com/", CM_HTML,
          news_url="https://pokemon.fukufukutoreka.com/lottery", channel="ONLINE", adapter="fukufuku_lottery", verified=True,
          note="小規模な通販店。抽選販売の一覧（/lottery）と詳細に、応募期間・抽選日・購入期限が静的 HTML のテキストで載る（応募期間は年が省略されるので、"
@@ -186,6 +188,171 @@ LOTTERY_SOURCES: list[dict] = [
          verified=True),
 ]
 SOURCE_BY_ID: dict[str, dict] = {s["source_id"]: s for s in LOTTERY_SOURCES}
+
+
+# ── 公式ソースのレジストリ（区分・公式ドメイン・お知らせ一覧・抽選ページの URL の形・robots.txt の確認日） ──
+# 区分は「誰の公式の告知か」を表す（信頼の段階ではない。どの区分も、その運営者自身の公式ページだけを根拠にする）。
+TIER_MAKER_OFFICIAL = "MAKER_OFFICIAL"     # メーカー・メーカー直営の公式ストア
+TIER_MAJOR_RETAILER = "MAJOR_RETAILER"     # 全国・地域チェーン（量販店・大手カードショップチェーン）
+TIER_CARD_SHOP = "CARD_SHOP"               # カードショップ・加盟店・個店（店舗自身の公式告知）
+TIERS = (TIER_MAKER_OFFICIAL, TIER_MAJOR_RETAILER, TIER_CARD_SHOP)
+TIER_LABELS = {TIER_MAKER_OFFICIAL: "メーカー公式", TIER_MAJOR_RETAILER: "大手チェーン", TIER_CARD_SHOP: "カードショップ"}
+
+# robots_checked_on: robots.txt を取得して、一覧のパスが禁止されていないことを確かめた日（空なら変更検知で読まない）。
+# robots_note: そのときの結果。list_urls: 変更検知で読むお知らせ一覧（取得器の一覧と同じページ。新しいページを増やさない）。
+# lottery_url_patterns: 抽選・予約の記事の URL の形（パス＋クエリに対する正規表現。取得器の解析器と同じ形）。
+SOURCE_PROFILE: dict[str, dict] = {
+    "POKEMON_CENTER_ONLINE": {"tier": TIER_MAKER_OFFICIAL, "list_urls": [],
+                              "robots_note": "告知はポケモンカード公式ニュースから発見する（POKEMON_CARD_OFFICIAL と同じ一覧。二重に読まない）"},
+    "POKEMON_CARD_OFFICIAL": {"tier": TIER_MAKER_OFFICIAL, "list_urls": ["https://www.pokemon-card.com/info/"],
+                              "lottery_url_patterns": [r"^/info/\d{6}\.html$"],   # 記事は 6 桁（/info/2025.html のような年の一覧を除く）
+                              "robots_checked_on": "2026-11-26", "robots_note": "robots.txt が無い（HTML を返す）。禁止の記載なし"},
+    "GEO": {"tier": TIER_MAJOR_RETAILER, "list_urls": [],
+            "robots_note": "2026-11-26 に robots.txt が HTTP 403（Akamai）。変更検知の対象にしない（回避しない）"},
+    "CARD_LABO": {"tier": TIER_MAJOR_RETAILER, "list_urls": ["https://www.c-labo.jp/blog/filter/tcg:25/"],
+                  "lottery_url_patterns": [r"^/shop/[^/]+/blog/\d+/$"],
+                  "robots_checked_on": "2026-10-24", "robots_note": "/wordpress/wp-admin/ だけを禁止"},
+    "HOBBY_STATION": {"tier": TIER_MAJOR_RETAILER, "list_urls": ["https://www.hbst.net/result/?category=news"],
+                      "lottery_url_patterns": [r"^/\?p=\d+$"],
+                      "robots_checked_on": "2026-10-28", "robots_note": "/wordpress/wp-admin/ だけを禁止"},
+    "KIDS_REPUBLIC": {"tier": TIER_MAJOR_RETAILER, "list_urls": ["https://www.kidsrepublic.jp/campaign"],
+                      "lottery_url_patterns": [r"^/campaign/campaign_detail/[A-Za-z0-9_\-]+$"],
+                      "robots_checked_on": "2026-10-29", "robots_note": "robots.txt が 404。禁止の記載なし"},
+    "FUKUFUKU_TOREKA": {"tier": TIER_CARD_SHOP, "list_urls": ["https://pokemon.fukufukutoreka.com/lottery"],
+                        "lottery_url_patterns": [r"^/lottery/\d+$"],
+                        "robots_checked_on": "2026-10-29", "robots_note": "/*.csv$・/cart・/shopping・/mypage だけを禁止"},
+    # 区分は運営者の証拠（会社概要・特定商取引法の表記）を確かめてから付ける。2026-11-26 の調査で証拠が見つからなかったので空（表示しない）
+    "MUGIWARA_STORE": {"tier": "", "list_urls": ["https://www.mugiwara-store.com/news/"],
+                       "lottery_url_patterns": [r"^/news/\d+/$"],
+                       "robots_checked_on": "2026-10-29", "robots_note": "/wp-admin/ だけを禁止"},
+    "TOYSRUS": {"tier": TIER_MAJOR_RETAILER}, "JOSHIN": {"tier": TIER_MAJOR_RETAILER},
+    "EDION": {"tier": TIER_MAJOR_RETAILER}, "YAMADA": {"tier": TIER_MAJOR_RETAILER},
+    "TSUTAYA": {"tier": TIER_MAJOR_RETAILER}, "BICCAMERA": {"tier": TIER_MAJOR_RETAILER},
+    "YODOBASHI": {"tier": TIER_MAJOR_RETAILER}, "AMAZON": {"tier": TIER_MAJOR_RETAILER},
+    "RAKUTEN_BOOKS": {"tier": TIER_MAJOR_RETAILER}, "SEVEN_NET": {"tier": TIER_MAJOR_RETAILER},
+    "LAWSON": {"tier": TIER_MAJOR_RETAILER, "list_urls": ["https://www.lawson.co.jp/campaign/"],
+               "robots_checked_on": "2026-11-26", "include": "TCG",
+               "robots_note": "/service/collaboration/ubereats/pharmaceuticals/ と /lab/challengers/ だけを禁止"},
+    "ONEPIECE_CARD_OFFICIAL": {"tier": TIER_MAKER_OFFICIAL, "list_urls": ["https://www.onepiece-cardgame.com/news/"],
+                               "lottery_url_patterns": [r"^/news/.+"],
+                               "robots_checked_on": "2026-11-26", "robots_note": "robots.txt が 404。禁止の記載なし"},
+    "ONEPIECE_CARD_OFFICIAL_SHOP": {"tier": "",
+                                    "list_urls": ["https://bandainamco-am.co.jp/official_shop/onepiece-cardgame/"],
+                                    "robots_checked_on": "2026-11-26", "robots_note": "User-agent: * と Sitemap だけで禁止の行が無い"},
+    "CARDBOX": {"tier": TIER_CARD_SHOP, "list_urls": ["https://cardbox.online/news/shop_list/"],
+                "lottery_url_patterns": [r"^/news/detail/\?id=\d+"],
+                "robots_checked_on": "2026-11-26", "robots_note": "User-agent: * / Allow:/ で全体を許可"},
+    "PLANT": {"tier": TIER_MAJOR_RETAILER},
+    "TORECAPLAZA55": {"tier": TIER_CARD_SHOP, "list_urls": [],
+                      "robots_note": "詳細ページが無く、一覧（トップ）に抽選が直接並ぶので URL の差分では検知できない（取得器が毎回読む）"},
+    "PREMIUM_BANDAI": {"tier": TIER_MAKER_OFFICIAL, "list_urls": ["https://p-bandai.jp/chara/onepiece/"],
+                       "robots_checked_on": "2026-11-26", "include": "TCG", "robots_note": "/mypage/・/search/ 等だけを禁止。/chara/ は禁止していない"},
+}
+# 一般的すぎる語（販売・受付）は入れない（キャンペーン・サービスの案内まで拾う）。URL の形が無い一覧は include で TCG の語に絞る
+LOTTERY_KEYWORDS = ("抽選", "予約", "再販", "応募", "入荷", "当選", "購入権", "BOX販売")
+TCG_KEYWORDS = ("ポケモンカード", "ポケカ", "ONE PIECEカード", "ワンピースカード", "カードゲーム")
+
+
+def _domain_of(url: str) -> str:
+    from urllib.parse import urlsplit
+    h = (urlsplit(url or "").hostname or "").lower()
+    return h[4:] if h.startswith("www.") else h
+
+
+def source_profile(source_id: str) -> dict:
+    """取得元の公式ソースの情報（区分・公式ドメイン・一覧・URL の形・robots.txt の確認）。登録に無ければ空。"""
+    s = SOURCE_BY_ID.get(source_id)
+    if not s:
+        return {}
+    p = SOURCE_PROFILE.get(source_id) or {}
+    domains = sorted({d for d in (_domain_of(s.get("official_url")), _domain_of(s.get("news_url")),
+                                  _domain_of(s.get("lottery_url"))) if d})
+    return {"source_id": source_id, "chain": s["retailer"], "tier": p.get("tier") or "",
+            "tier_label": TIER_LABELS.get(p.get("tier") or "", ""), "official_domains": domains,
+            "list_urls": list(p.get("list_urls") or []), "lottery_url_patterns": list(p.get("lottery_url_patterns") or []),
+            "robots_checked_on": p.get("robots_checked_on") or "", "robots_note": p.get("robots_note") or ""}
+
+
+# 応募条件の根拠の行（原文）を公開の出力に出してよい取得元（利用規約で転載が認められていることを人が確認したものだけ）。
+# 空のあいだは、どの取得元も構造化した値だけを出す（ポケカ公式・ONE PIECE 公式ショップ・キッズリパブリックは規約が転載・複製を断っている。
+# ほかは規約が未読・未確認）。
+QUOTE_ALLOWED: frozenset = frozenset()
+
+
+# 利用規約・サイトポリシーが転載・複製を断っている取得元（応募条件の原文 eligibility_text も出さない。構造化した値だけ）
+NO_REPRINT: frozenset = frozenset({"POKEMON_CENTER_ONLINE", "POKEMON_CARD_OFFICIAL", "ONEPIECE_CARD_OFFICIAL_SHOP", "KIDS_REPUBLIC"})
+
+
+def quote_allowed(source_id) -> bool:
+    return str(source_id or "") in QUOTE_ALLOWED
+
+
+def _drop_tracking(url: str) -> str:
+    """計測用のパラメータ（utm_*・fbclid・gclid）だけを外す（?p= ・?id= のように記事を区別するクエリは残す）。"""
+    from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+    sp = urlsplit(url)
+    q = [(k, v) for k, v in parse_qsl(sp.query, keep_blank_values=True)
+         if not (k.lower().startswith("utm_") or k.lower() in ("fbclid", "gclid"))]
+    return urlunsplit((sp.scheme, sp.netloc, sp.path, urlencode(q), ""))
+
+
+def store_master(history_items=None) -> list[dict]:
+    """店舗の台帳（登録済みの取得元）: 法人・チェーン・区分・公式ドメイン・告知の一覧・取得条件・robots の確認日・運営者の証拠・
+    発見した抽選の件数（履歴の source_url ごとに 1 件。支店はチェーンの中の store_name の数）。公式 SNS は人が確かめるまで空。"""
+    from src.tcg.lottery.manual import STORE_PRIMARY_DOMAINS, is_official_url, is_store_primary_url
+    from src.tcg.lottery.pipeline import normalize_url
+    found: dict = {}
+    branches: dict = {}
+    for h in history_items or []:
+        if isinstance(h, dict) and h.get("retailer"):
+            found.setdefault(h["retailer"], set()).add(_drop_tracking(normalize_url(str(h.get("source_url") or h.get("lottery_id") or ""))))
+            if h.get("store_specific") and h.get("store_name"):
+                branches.setdefault(h["retailer"], set()).add(h["store_name"])
+    rows = []
+    for s in LOTTERY_SOURCES:
+        p = source_profile(s["source_id"])
+        url = s.get("news_url") or s["official_url"]
+        ev = next((dict(v, domain=d) for d, v in STORE_PRIMARY_DOMAINS.items()
+                   if any(x == d or x.endswith("." + d) for x in p["official_domains"])), None)
+        rows.append({"source_id": s["source_id"], "chain": s["retailer"], "tier": p["tier"], "tier_label": p["tier_label"],
+                     "official_domains": p["official_domains"], "notice_list_urls": p["list_urls"],
+                     "collection": ("停止（方針）" if s.get("policy_excluded") or s.get("collection_method") == CM_UNAVAILABLE
+                                    else "取得器あり" if s.get("adapter") else "未実装"),
+                     "robots_checked_on": p["robots_checked_on"],
+                     "primary_evidence": ("maker_or_chain_official" if is_official_url(url) else
+                                          (ev or {}).get("strength") if is_store_primary_url(url) else None),
+                     "official_sns": [], "branches": len(branches.get(s["source_id"], ())),
+                     "lotteries_found": len(found.get(s["source_id"], ()))})
+    return rows
+
+
+def frontier_sources() -> list[dict]:
+    """変更検知（src/discovery/engine/frontier）で読む、登録済みの取得元のお知らせ一覧。
+
+    読むのは: 取得器があり（adapter）・内容を確認済み（verified）・取得しない方針でない・robots.txt の確認日があるものだけ。
+    一覧のページは取得器が読むものと同じ（新しいページへのアクセスを増やさない）。同じ URL は1回だけ。
+    """
+    out, seen = [], set()
+    for s in LOTTERY_SOURCES:
+        p = source_profile(s["source_id"])
+        if not (s.get("adapter") and s.get("verified") and not s.get("policy_excluded")
+                and s.get("collection_method") != CM_UNAVAILABLE and p.get("robots_checked_on")):
+            continue
+        for u in p["list_urls"]:
+            if u in seen:
+                continue
+            seen.add(u)
+            idx = p["list_urls"].index(u) + 1                  # 取得元の中の順番（全体の通し番号にしない。並び替えで状態が切れない）
+            out.append({"id": f"registry:{s['source_id']}" + ("" if len(p["list_urls"]) == 1 else f":{idx}"),
+                        "kind": "list", "url": u, "enabled": True, "checked_on": p["robots_checked_on"],
+                        # checked_on は robots.txt の確認日（利用規約の確認ではない。規約の確認は note を見る）
+                        "evidence": f"registry:{s['source_id']}（robots.txt のみ確認: {p['robots_note']}）",
+                        "terms_checked": False,
+                        "include": list(TCG_KEYWORDS if (SOURCE_PROFILE.get(s["source_id"]) or {}).get("include") == "TCG"
+                                        else LOTTERY_KEYWORDS),
+                        "url_patterns": p["lottery_url_patterns"],
+                        "source_id": s["source_id"], "tier": p["tier"]})
+    return out
 
 
 def source_state(source: dict, health: Optional[dict], active_lotteries: int) -> str:

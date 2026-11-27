@@ -318,14 +318,13 @@ def render_html(r: dict) -> str:
 
     score = r["beta_ready_score"]
     return f"""<!doctype html>
-<html lang="ja"><head>
+<html lang="ja" data-theme="light"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>AI Profit Assistant — Closed Beta</title>
 <style>
-:root{{--bg:#0f1216;--card:#1a1f27;--fg:#e8ecf1;--mut:#9aa7b4;--acc:#4f9dff;--ok:#3ecf8e;--line:#2a323d}}
-@media (prefers-color-scheme: light){{:root{{--bg:#f6f8fb;--card:#fff;--fg:#1a2230;--mut:#5b6675;--acc:#2f7fe0;--ok:#1a9d63;--line:#e2e8f0}}}}
+:root{{--bg:#fff;--card:#f6f8fb;--fg:#1a2230;--mut:#5b6675;--acc:#2563eb;--ok:#047857;--line:#e2e8f0;color-scheme:light}}
 *{{box-sizing:border-box}}body{{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}}
 .wrap{{max-width:860px;margin:0 auto;padding:20px}}
 .badge{{display:inline-block;background:var(--acc);color:#fff;font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}}

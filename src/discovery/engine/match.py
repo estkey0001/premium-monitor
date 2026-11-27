@@ -17,12 +17,15 @@ def load_registry(tcg_dir: Path = TCG_DIR) -> dict:
     out: dict = {"POKEMON": [], "ONE_PIECE": []}
     try:
         reg = json.loads((Path(tcg_dir) / "pokemon_registry.json").read_text(encoding="utf-8"))
-        out["POKEMON"] = [p for p in reg.get("products") or [] if isinstance(p, dict) and p.get("product_id")]
+        # pokemon_registry.json には ONE PIECE の正本の行（tcg_verified_products.json から合流）も入る。tcg で振り分ける
+        for p in reg.get("products") or []:
+            if isinstance(p, dict) and p.get("product_id"):
+                out["ONE_PIECE" if p.get("tcg") == "ONE_PIECE" else "POKEMON"].append(p)
     except (OSError, ValueError, AttributeError):
         pass
     try:
         latest = json.loads((Path(tcg_dir) / "latest.json").read_text(encoding="utf-8"))
-        seen = set()
+        seen = {p["product_id"] for p in out["ONE_PIECE"]}
         for e in latest.get("events") or []:
             if isinstance(e, dict) and e.get("store") == "ONEPIECE_CARD_OFFICIAL" and e.get("product_id") \
                     and e["product_id"] not in seen:

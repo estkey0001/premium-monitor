@@ -811,7 +811,7 @@ def _render(comp: dict, *, now: datetime | None = None, history=None, candidates
     else:
         fresh_tile = f'<b>{_e(counts.get("FRESH", 0))}</b>'
     return f"""<!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="ja" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>iPhone 買取比較 | プレ値速報</title><meta name="robots" content="index,follow"><style>{legacy_css()}{CSS}{HUB_CSS}{_hide_when_stale_css()}</style></head>
 <body>{site_nav("iphone")}<main>
 <p><a class="back" href="./">← プレ値速報へ戻る</a></p>

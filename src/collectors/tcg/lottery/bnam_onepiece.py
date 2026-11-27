@@ -233,6 +233,8 @@ class BnamOnePieceShopLotteryAdapter(LotteryAdapter):
                 self.funnel.notes.append(f"共通の解析器の応募期間が表の値と食い違ったので採用しない: {c['url']}")
             for e in ok:                        # サイトポリシーが私的使用を超える複製を禁じる。応募条件の原文は公開の出力に残さない（構造化したフラグだけ）
                 e["eligibility_text"] = ""
+                from src.tcg.lottery.conditions import strip_quotes
+                e["conditions"] = strip_quotes(e.get("conditions"))
             self.lottery_events.extend(ok)
         skipped = max(0, len(cands) - self.max_detail_fetch)
         self.health.update({"detail_candidates": len(cands), "detail_fetched": fetched, "skipped_due_to_limit": skipped, "skipped_ended": 0})

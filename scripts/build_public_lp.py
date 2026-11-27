@@ -298,17 +298,18 @@ def _build_collector_report_html(public_dir: Path) -> None:
     fail_badge = f'<span class="cr-badge {fail_badge_cls}">{"⚠️" if fail > 0 else "✅"} {fail}件失敗</span>'
 
     html_content = f"""<!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Collector Quality Report — プレ値速報</title>
 <style>
   :root {{
-    --bg: #0f1117; --surface: #1a1d27; --border: #2d3148;
-    --text: #e2e8f0; --muted: #94a3b8;
-    --ok: #22c55e; --warn: #f59e0b; --fail: #ef4444;
-    --accent: #6366f1;
+    /* 全ページ白に固定（2026-11-27）。文字と背景は 4.5:1 以上 */
+    --bg: #ffffff; --surface: #f1f5f9; --border: #e2e8f0;
+    --text: #0f172a; --muted: #475569;
+    --ok: #047857; --warn: #92400e; --fail: #b91c1c;
+    --accent: #2563eb; color-scheme: light;
   }}
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
   body {{ background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; line-height: 1.6; }}
@@ -331,7 +332,7 @@ def _build_collector_report_html(public_dir: Path) -> None:
   .cr-table th {{ background: var(--surface); padding: 8px 12px; text-align: left; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }}
   .cr-table td {{ padding: 7px 12px; border-bottom: 1px solid rgba(45,49,72,.5); }}
   .cr-table tr:last-child td {{ border-bottom: none; }}
-  .cr-table tr:hover td {{ background: rgba(255,255,255,.03); }}
+  .cr-table tr:hover td {{ background: var(--surface); }}
   .cr-failed td:nth-child(3), .cr-failed td:nth-child(4) {{ font-family: monospace; font-size: 12px; color: var(--warn); }}
   .cr-suspicious td:nth-child(4) {{ color: var(--warn); font-size: 12px; }}
   .cr-suspicious td:nth-child(5) {{ color: var(--muted); font-size: 12px; }}

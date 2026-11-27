@@ -38,8 +38,8 @@ FILL_FIELDS = (
     "release_date", "price_text", "eligibility_text",
     "membership_required", "app_required", "purchase_history_required",
     "identity_verification_required", "store_pickup_required",
-    "payment_method_requirement", "entry_url", "result_url", "purchase_url",
-    "shrink_status", "product_id",
+    "payment_method_requirement", "entry_url", "external_form_url", "result_url", "purchase_url",
+    "shrink_status", "product_id", "conditions", "cancelled", "application_closed", "cancel_text", "application_methods",
 )
 # retail_price は price_unit と「組」で補完する（FILL_FIELDS には入れない。下の _fill_price で処理）
 
@@ -230,7 +230,7 @@ def merge_lotteries(events: Iterable[dict]) -> list[dict]:
                 if e.get("source_type") not in OFFICIAL_LOTTERY_SOURCES:
                     continue
                 for f in FILL_FIELDS + SCHEDULE_FIELDS:
-                    if base.get(f) not in (None, "", []) or e.get(f) in (None, "", []):
+                    if base.get(f) not in (None, "", [], {}) or e.get(f) in (None, "", [], {}):
                         continue
                     # 基準側が「日付のみ」を持っていれば時刻付きの値で埋めない（逆も同じ）。
                     # 時刻の無い締切に別 source の時刻（00:00 等）を足さないため

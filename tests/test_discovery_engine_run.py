@@ -208,7 +208,7 @@ def test_unofficial_lead_is_not_fetched(tmp_path):
     ff = FakeFetch(_pages(**{SITEMAP: sm}))
     rep = _run(tmp_path, cfg, priv, ledger, ff, apply=False)
     assert all("other.example.com" not in u for u in ff.calls)
-    assert rep["search"] == {"provider": "null", "hits": 0}
+    assert rep["search"]["provider"] == "null" and rep["search"]["hits"] == 0 and rep["search"]["leads"] == 0
 
 
 def test_no_config_means_nothing_happens(tmp_path):
@@ -229,3 +229,52 @@ def test_unfetched_leads_are_retried_next_run(tmp_path):
     ff = FakeFetch(_pages())
     rep2 = _run(tmp_path, cfg, priv, ledger, ff)
     assert UPD in ff.calls and NEW not in ff.calls
+
+
+def test_budget_overflow_is_carried_over_and_fetched_next_run(tmp_path):
+    """取得枠を超えた Lead は次の実行に持ち越す（連続 2 回の実行で確かめる）。"""
+    cfg, priv, ledger = _setup(tmp_path)
+    pages = _pages(**{UPD: _read("lottery_page.html")})
+    rep = _run(tmp_path, cfg, priv, ledger, FakeFetch(pages), page_budget=(1, 1))
+    assert rep["fetch_state"].get("SKIPPED_BUDGET") == 1 and rep["retry_next_run"] == 1
+    ff = FakeFetch(pages)
+    rep2 = _run(tmp_path, cfg, priv, ledger, ff, page_budget=(1, 1))
+    fetched2 = [u for u in ff.calls if u in (NEW, UPD)]
+    assert len(fetched2) == 1 and rep2["retry_next_run"] == 0          # 前回取れなかった 1 件だけを取る
+
+
+def test_blocked_source_is_stopped_not_retried(tmp_path):
+    """403 で遮断された取得元の Lead は、次の実行で取り直さない（停止扱い）。"""
+    cfg, priv, ledger = _setup(tmp_path)
+    rep = _run(tmp_path, cfg, priv, ledger, FakeFetch(_pages(**{UPD: (None, "http_403")})))
+    assert rep["stopped_blocked"] == 1                                  # 遮断された URL だけを停止に記録する
+    assert rep["retry_next_run"] == 1                                   # 先に正常に取れた URL（後でホストが遮断）は次の実行で取り直す
+    state = json.loads((priv / "frontier_state.json").read_text(encoding="utf-8"))
+    assert state.get("stopped")
+    ff = FakeFetch(_pages())
+    _run(tmp_path, cfg, priv, ledger, ff)
+    assert UPD not in ff.calls
+
+
+def test_stopped_url_is_not_refetched_even_if_lastmod_advances(tmp_path):
+    cfg, priv, ledger = _setup(tmp_path)
+    _run(tmp_path, cfg, priv, ledger, FakeFetch(_pages(**{UPD: (None, "http_403")})))
+    newer = _read("sitemap.xml").replace("2026-11-21", "2026-12-01")       # UPD の lastmod を進める
+    ff = FakeFetch(_pages(**{SITEMAP: newer}))
+    _run(tmp_path, cfg, priv, ledger, ff, now=NOW)
+    assert UPD not in ff.calls
+
+
+def test_urls_skipped_by_the_cutoff_are_retried_and_expired_stops_return(tmp_path):
+    """遮断で打ち切って要求していない URL は停止扱いにせず次回に回す。停止は期限の後に Lead に戻って一度だけ試す。"""
+    from datetime import timedelta
+    cfg, priv, ledger = _setup(tmp_path, prev_urls={})
+    pages = _pages(**{NEW: (None, "http_403"), UPD: _read("lottery_page.html")})
+    rep = _run(tmp_path, cfg, priv, ledger, FakeFetch(pages), bootstrap=True)
+    assert rep["stopped_blocked"] == 1                                   # 要求して 403 だった NEW だけ
+    state = json.loads((priv / "frontier_state.json").read_text(encoding="utf-8"))
+    assert list(state["stopped"]) and UPD not in str(state["stopped"])
+    later = NOW + timedelta(days=31)
+    ff = FakeFetch(_pages())
+    _run(tmp_path, cfg, priv, ledger, ff, now=later)
+    assert NEW in ff.calls                                               # 期限の後に一度だけ試し直す

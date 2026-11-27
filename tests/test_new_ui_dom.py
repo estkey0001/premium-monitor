@@ -22,6 +22,8 @@ from src.tcg.models import JST
 
 NOW = datetime(2026, 10, 2, 10, 0, tzinfo=JST)
 PCO = "https://www.pokemoncenter-online.com"
+GEO = "https://geo-online.co.jp"
+GEO_DRAW = "https://draw.geo-online.co.jp"
 
 
 def _chrome() -> str | None:
@@ -38,7 +40,8 @@ pytestmark = pytest.mark.skipif(CHROME is None, reason="Chrome が無い")
 
 def _ev(i, **kw):
     e = {"tcg": "POKEMON", "product_name": f"抽選{i}", "retailer_name": "ポケモンセンターオンライン",
-         "lottery_id": f"t{i}", "source_url": f"{PCO}/news/{i}", "entry_url": f"{PCO}/lottery/{i}",
+         "lottery_id": f"t{i}", "source_url": f"{GEO}/news/detail/{i}.html", "entry_url": f"{GEO_DRAW}/lottery/{i}",
+         "retailer": "GEO", "source_type": "RETAILER_OFFICIAL",
          "verified": True, "confidence": "high", "retail_price": 5400}
     e.update(kw)
     e["status"] = compute_lottery_status(e, NOW)

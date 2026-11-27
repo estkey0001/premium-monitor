@@ -1,0 +1,425 @@
+{
+ "schema": 1,
+ "note": "実在の告知に基づく評価データ（テスト用の合成データとは別）。各行は公式ページを読んで作った正解。verified_by が human で始まる行だけを「人が確認した正解」として数える。ページの本文・個人情報・応募履歴・ログイン情報は入れない。 split: tuning は抽出器の修正に使った告知、holdout は修正に使っていない告知（同じサンプルで直した精度と分けて評価する）。 holdout2 は 2026-11-27 に本人確認の規則を直す前に正解を付けた告知（その修正にも使っていない）。",
+ "items": [
+  {
+   "golden_id": "g-001",
+   "retailer": "HOBBY_STATION",
+   "source_url": "https://www.hbst.net/?p=412193",
+   "product_name": "拡張パック「ハドウシーカー」",
+   "product_core": "ハドウシーカー",
+   "other_products": [
+    "ムニキスゼロ"
+   ],
+   "published_at": "2026-11-24",
+   "case": [
+    "複数商品の告知",
+    "外部フォーム（LivePocket）"
+   ],
+   "application_start": "2026-11-24T12:00:00+09:00",
+   "application_end": "2026-11-26T23:59:00+09:00",
+   "winner_announcement_date": "2026-12-03",
+   "purchase_start_date": "2026-12-07",
+   "purchase_end_date": "2026-12-13",
+   "retail_price": 6000,
+   "conditions": {
+    "membership_required": true,
+    "id_required_at_purchase": true,
+    "purchase_limit": "各2BOXまで"
+   },
+   "application_method": "external_form",
+   "application_host": "livepocket.jp",
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "membership_note": "必要なのは LivePocket の会員登録（店の会員ではない）",
+   "split": "tuning"
+  },
+  {
+   "golden_id": "g-002",
+   "retailer": "HOBBY_STATION",
+   "source_url": "https://www.hbst.net/?p=412193",
+   "product_name": "拡張パック「ムニキスゼロ」",
+   "product_core": "ムニキスゼロ",
+   "other_products": [
+    "ハドウシーカー"
+   ],
+   "published_at": "2026-11-24",
+   "case": [
+    "複数商品の告知（当選発表日が商品ごとに違う）"
+   ],
+   "application_start": "2026-11-24T12:00:00+09:00",
+   "application_end": "2026-11-26T23:59:00+09:00",
+   "winner_announcement_date": "2026-12-04",
+   "purchase_start_date": "2026-12-07",
+   "purchase_end_date": "2026-12-13",
+   "retail_price": 5400,
+   "conditions": {
+    "membership_required": true,
+    "id_required_at_purchase": true,
+    "purchase_limit": "各2BOXまで"
+   },
+   "application_method": "external_form",
+   "application_host": "livepocket.jp",
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "winner_announcement_note": "原文は 12月4日〜5日 の範囲。winner_announcement_date は範囲の初日",
+   "membership_note": "必要なのは LivePocket の会員登録（店の会員ではない）",
+   "split": "tuning"
+  },
+  {
+   "golden_id": "g-003",
+   "retailer": "CARDBOX",
+   "source_url": "https://cardbox.online/news/detail/?id=1864",
+   "product_name": "30th CELEBRATIONカードセット",
+   "product_core": "30th CELEBRATION",
+   "published_at": "2026-11-22",
+   "store_name": "北国書林辰口店",
+   "case": [
+    "支店の告知",
+    "外部フォーム"
+   ],
+   "application_start": "2026-11-23T00:00:00+09:00",
+   "application_end": "2026-11-27T00:00:00+09:00",
+   "winner_announcement_date": "2026-11-28",
+   "conditions": {
+    "application_limit": "お一人様1セットまで"
+   },
+   "application_method": "external_form",
+   "application_host": "shoplottery.e-starbox.com",
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "tuning"
+  },
+  {
+   "golden_id": "g-004",
+   "retailer": "CARDBOX",
+   "source_url": "https://cardbox.online/news/detail/?id=1851",
+   "product_name": "カードボックス福山特選お楽しみ袋",
+   "product_core": "お楽しみ袋",
+   "published_at": "2026-11-18",
+   "store_name": "カードボックス福山店",
+   "case": [
+    "条件付き抽選（会員・期間中の購入・本人確認）",
+    "開始が日付だけ",
+    "店頭のQRで応募"
+   ],
+   "application_start_date": "2026-11-18",
+   "application_end": "2026-11-27T21:59:00+09:00",
+   "purchase_start": "2026-11-28T13:00:00+09:00",
+   "purchase_end": "2026-12-04T21:59:00+09:00",
+   "retail_price": 10000,
+   "conditions": {
+    "membership_required": true,
+    "purchase_history_required": true,
+    "id_required_at_purchase": true
+   },
+   "application_method": "in_store",
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "tuning"
+  },
+  {
+   "golden_id": "g-005",
+   "retailer": "FUKUFUKU_TOREKA",
+   "source_url": "https://pokemon.fukufukutoreka.com/lottery/31",
+   "product_name": "ロケット団の栄光 1BOX",
+   "product_core": "ロケット団の栄光",
+   "published_at": null,
+   "case": [
+    "会員ログインと購入履歴が必要",
+    "開始が日付だけ・年の記載なし"
+   ],
+   "application_start_date": "2026-11-23",
+   "application_end": "2026-11-29T23:59:00+09:00",
+   "winner_announcement_date": "2026-11-30",
+   "purchase_end": "2026-12-03T23:59:00+09:00",
+   "conditions": {
+    "membership_required": true,
+    "purchase_history_required": true
+   },
+   "application_method": "member_login",
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "tuning"
+  },
+  {
+   "golden_id": "g-006",
+   "retailer": "CARD_LABO",
+   "source_url": "https://www.c-labo.jp/shop/shizuoka/blog/624731/",
+   "product_name": "拡張パック「30th CELEBRATION」",
+   "product_core": "30th",
+   "published_at": "2026-11-18",
+   "store_name": "カードラボ静岡店",
+   "case": [
+    "X のフォロー＆リポストで応募（応募先は X の投稿）"
+   ],
+   "application_start_date": "2026-11-18",
+   "application_end": "2026-11-22T23:59:00+09:00",
+   "winner_announcement_date": "2026-11-23",
+   "purchase_start_date": "2026-11-25",
+   "purchase_end_date": "2026-11-29",
+   "conditions": {
+    "x_follow_required": true,
+    "x_repost_required": true,
+    "purchase_limit": "お一人様1BOX"
+   },
+   "application_method": "x_post",
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "tuning"
+  },
+  {
+   "golden_id": "g-007",
+   "retailer": "CARD_LABO",
+   "source_url": "https://www.c-labo.jp/shop/ikebukuro/blog/624925/",
+   "product_name": "エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】",
+   "product_core": "Heroines",
+   "published_at": "2026-11-20",
+   "store_name": "カードラボ池袋店",
+   "case": [
+    "日付だけの締切",
+    "X のフォロー＆リポスト"
+   ],
+   "application_start_date": "2026-11-20",
+   "application_end_date": "2026-11-21",
+   "winner_announcement_date": "2026-11-22",
+   "purchase_start_date": "2026-11-24",
+   "purchase_end_date": "2026-11-30",
+   "retail_price": 5760,
+   "conditions": {
+    "x_follow_required": true,
+    "x_repost_required": true,
+    "purchase_limit": "お一人様1BOX"
+   },
+   "application_method": "x_post",
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "tuning"
+  },
+  {
+   "golden_id": "g-008",
+   "retailer": "MUGIWARA_STORE",
+   "source_url": "https://www.mugiwara-store.com/news/3169/",
+   "product_name": "プレミアムカードコレクション -熊本県スペシャル-",
+   "product_core": "熊本県スペシャル",
+   "published_at": null,
+   "store_name": "ONE PIECE 麦わらストア 熊本店",
+   "case": [
+    "応募開始前の告知",
+    "外部フォーム（LivePocket）",
+    "応募と購入の上限が別"
+   ],
+   "application_start": "2026-11-27T00:00:00+09:00",
+   "application_end": "2026-11-29T23:59:00+09:00",
+   "winner_announcement_date": "2026-11-30",
+   "purchase_start_date": "2026-12-06",
+   "purchase_end_date": "2026-12-12",
+   "retail_price": 2200,
+   "conditions": {
+    "membership_required": true,
+    "id_required_at_purchase": true,
+    "purchase_limit": "お一人様1セットまで",
+    "application_limit": "お1人様、1回"
+   },
+   "application_method": "external_form",
+   "application_host": "livepocket.jp",
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "membership_note": "必要なのは LivePocket の会員登録（店の会員ではない）",
+   "split": "tuning"
+  },
+  {
+   "golden_id": "n-001",
+   "kind": "non_lottery",
+   "retailer": "HOBBY_STATION",
+   "title_contains": "休業",
+   "case": [
+    "紛らわしい非抽選の告知（店舗の休業）"
+   ],
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "tuning"
+  },
+  {
+   "golden_id": "n-002",
+   "kind": "non_lottery",
+   "retailer": "TORECAPLAZA55",
+   "title_contains": "当選メール",
+   "case": [
+    "紛らわしい非抽選の告知（当選メールの送信のお知らせ）"
+   ],
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "tuning"
+  },
+  {
+   "golden_id": "h-001",
+   "retailer": "CARD_LABO",
+   "source_url": "https://www.c-labo.jp/blog/623914/",
+   "product_name": "拡張パック「ハドウシーカー」",
+   "product_core": "ハドウシーカー",
+   "published_at": "2026-11-06",
+   "store_name": "カードラボ岐阜店",
+   "case": [
+    "修正に使っていない告知",
+    "X のフォロー＆リポスト",
+    "固定店舗の巡回で未収集（手動検索で発見）"
+   ],
+   "application_start_date": "2026-11-06",
+   "application_end_date": "2026-11-08",
+   "winner_announcement_date": "2026-11-09",
+   "retail_price": 6000,
+   "conditions": {
+    "x_follow_required": true,
+    "x_repost_required": true,
+    "id_required_at_purchase": true,
+    "purchase_limit": "お1人様30パック"
+   },
+   "application_method": "x_post",
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "holdout",
+   "winner_announcement_note": "原文は範囲（h-001: 11/9〜11/15、h-003: 11/9〜11/12）。winner_announcement_date は範囲の初日",
+   "id_note": "原文の本人確認書類の提示は「予約時」。購入時の本人確認として扱うかは人の確認の項目"
+  },
+  {
+   "golden_id": "h-002",
+   "retailer": "CARD_LABO",
+   "source_url": "https://www.c-labo.jp/blog/623750/",
+   "product_name": "拡張パック「ハドウシーカー」",
+   "product_core": "ハドウシーカー",
+   "published_at": "2026-11-05",
+   "store_name": "カードラボ千葉中央店",
+   "case": [
+    "修正に使っていない告知",
+    "当選発表日に店側の誤記（10月8日）があるので正解を付けない",
+    "固定店舗の巡回で未収集（手動検索で発見）"
+   ],
+   "application_start_date": "2026-11-05",
+   "application_end_date": "2026-11-07",
+   "retail_price": 6000,
+   "conditions": {
+    "x_follow_required": true,
+    "x_repost_required": true,
+    "id_required_at_purchase": true,
+    "purchase_limit": "お一人様 1BOX"
+   },
+   "application_method": "x_post",
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "holdout",
+   "id_note": "原文の本人確認書類の提示は「予約時」。購入時の本人確認として扱うかは人の確認の項目"
+  },
+  {
+   "golden_id": "h-003",
+   "retailer": "CARD_LABO",
+   "source_url": "https://www.c-labo.jp/blog/623928/",
+   "product_name": "ブースターパック 神の支配【OP-18】",
+   "product_core": "神の支配",
+   "published_at": "2026-11-06",
+   "store_name": "カードラボ鹿児島店",
+   "case": [
+    "修正に使っていない告知",
+    "固定店舗の巡回で未収集（手動検索で発見）"
+   ],
+   "application_start_date": "2026-11-06",
+   "application_end_date": "2026-11-08",
+   "winner_announcement_date": "2026-11-09",
+   "retail_price": 5760,
+   "conditions": {
+    "x_follow_required": true,
+    "x_repost_required": true,
+    "id_required_at_purchase": true,
+    "purchase_limit": "お一人様 1BOX"
+   },
+   "application_method": "x_post",
+   "verified_on": "2026-11-26",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "holdout",
+   "winner_announcement_note": "原文は範囲（h-001: 11/9〜11/15、h-003: 11/9〜11/12）。winner_announcement_date は範囲の初日",
+   "id_note": "原文の本人確認書類の提示は「予約時」。購入時の本人確認として扱うかは人の確認の項目"
+  },
+  {
+   "golden_id": "h2-001",
+   "retailer": "CARD_LABO",
+   "source_url": "https://www.c-labo.jp/blog/623693/",
+   "product_name": "拡張パック「ハドウシーカー」",
+   "product_core": "ハドウシーカー",
+   "published_at": "2026-11-04",
+   "store_name": "カードラボ札幌店",
+   "case": [
+    "本人確認の修正の前に正解を付けた告知（修正に使っていない）",
+    "予約時の本人確認（ご本人様確認証）"
+   ],
+   "application_start_date": "2026-11-04",
+   "application_end_date": "2026-11-08",
+   "winner_announcement_date": "2026-11-09",
+   "conditions": {
+    "x_follow_required": true,
+    "x_repost_required": true,
+    "id_required_at_purchase": true,
+    "purchase_limit": "お一人様 30ﾊﾟｯｸ"
+   },
+   "application_method": "x_post",
+   "verified_on": "2026-11-27",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "holdout2"
+  },
+  {
+   "golden_id": "h2-002",
+   "retailer": "CARD_LABO",
+   "source_url": "https://www.c-labo.jp/blog/624409/",
+   "product_name": "拡張パック「ハドウシーカー」",
+   "product_core": "ハドウシーカー",
+   "published_at": "2026-11-13",
+   "store_name": "カードラボオタロード本店",
+   "case": [
+    "本人確認は「場合がある」（必須ではない）ので正解は付けない＝不明",
+    "修正に使っていない"
+   ],
+   "application_start_date": "2026-11-13",
+   "application_end_date": "2026-11-15",
+   "winner_announcement_date": "2026-11-16",
+   "retail_price": 6000,
+   "conditions": {
+    "x_follow_required": true,
+    "x_repost_required": true,
+    "purchase_limit": "お一人様 1BOX"
+   },
+   "application_method": "x_post",
+   "verified_on": "2026-11-27",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "holdout2",
+   "expected_unknown": [
+    "id_required_at_purchase"
+   ]
+  },
+  {
+   "golden_id": "h2-003",
+   "retailer": "CARD_LABO",
+   "source_url": "https://www.c-labo.jp/blog/623710/",
+   "product_name": "拡張パック「ハドウシーカー」",
+   "product_core": "ハドウシーカー",
+   "published_at": "2026-11-04",
+   "store_name": "カードラボ静岡店",
+   "case": [
+    "本人確認は「場合がございます」（必須ではない）",
+    "修正に使っていない"
+   ],
+   "application_start_date": "2026-11-04",
+   "application_end": "2026-11-11T23:59:00+09:00",
+   "conditions": {
+    "x_follow_required": true,
+    "x_repost_required": true,
+    "purchase_limit": "お一人様1BOX"
+   },
+   "application_method": "x_post",
+   "verified_on": "2026-11-27",
+   "verified_by": "ai:claude（公式ページを読んで作成・人の確認待ち）",
+   "split": "holdout2",
+   "expected_unknown": [
+    "id_required_at_purchase"
+   ]
+  }
+ ]
+}

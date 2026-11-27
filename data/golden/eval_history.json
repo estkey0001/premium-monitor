@@ -1,0 +1,58 @@
+{
+ "schema": 1,
+ "note": "評価の履歴（値は抽出器の当時の状態での実測。上書きしない）",
+ "runs": [
+  {
+   "date": "2026-11-26",
+   "code": "本人確認の規則の修正前",
+   "verified_by": "ai_unreviewed",
+   "split": "holdout",
+   "n": 3,
+   "accuracy": {
+    "id_required_at_purchase": "1/3",
+    "x_follow_required": "3/3",
+    "x_repost_required": "3/3",
+    "purchase_limit": "3/3",
+    "application_start_date": "2/3",
+    "application_end_date": "2/3",
+    "winner_announcement_date": "2/2"
+   }
+  },
+  {
+   "date": "2026-11-27",
+   "code": "本人確認の規則の修正後（「様」が挟まる書き方）・「場合がある」の扱いの修正前",
+   "verified_by": "ai_unreviewed",
+   "split": "holdout",
+   "n": 3,
+   "accuracy": {
+    "application_end_date": "2/3",
+    "application_start_date": "2/3",
+    "id_required_at_purchase": "3/3",
+    "purchase_limit": "3/3",
+    "winner_announcement_date": "2/2",
+    "x_follow_required": "3/3",
+    "x_repost_required": "3/3"
+   },
+   "note": ""
+  },
+  {
+   "date": "2026-11-27",
+   "code": "本人確認の規則の修正後（「様」が挟まる書き方）・「場合がある」の扱いの修正前",
+   "verified_by": "ai_unreviewed",
+   "split": "holdout2",
+   "n": 3,
+   "accuracy": {
+    "application_end": "1/1",
+    "application_end_date": "2/2",
+    "application_start_date": "3/3",
+    "id_required_at_purchase": "1/1",
+    "id_required_at_purchase（不明であるべき）": "0/2",
+    "purchase_limit": "2/3",
+    "winner_announcement_date": "2/2",
+    "x_follow_required": "3/3",
+    "x_repost_required": "3/3"
+   },
+   "note": "holdout2 はこの値が正式な評価（このあと holdout2 を見て「場合がある」の扱いを直したので、以後の holdout2 の値は参考）"
+  }
+ ]
+}

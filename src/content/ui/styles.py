@@ -28,7 +28,7 @@ def css() -> str:
         # ── 表示の切り替え（旧UIは DOM を残したまま隠す） ──
         f"html:not(.ui-new) {r}{{display:none!important}}"
         f"html.ui-new body>*:not({r}){{display:none!important}}"
-        "html{color-scheme:light dark}"
+        "html{color-scheme:light}"
         f"html.ui-new body{{background:{t.BASE_COLORS['bg']};color:{t.BASE_COLORS['text']};font-family:{t.FONT_STACK};margin:0}}"
         # 最小限のリセット（旧UIの全体のリセットから移した。:where で詳細度 0 にして、新UIの個別の指定を上書きしない）
         f":where({r}) *,:where({r}) *::before,:where({r}) *::after{{margin:0;padding:0;box-sizing:border-box}}"

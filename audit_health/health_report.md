@@ -1,6 +1,6 @@
 # Profit Health Dashboard
 
-生成: 2026-11-27 23:04 JST
+生成: 2026-11-28 22:31 JST
 
 ## Health Score: **50.5 / 100**
 
@@ -41,7 +41,6 @@
 - 取得成功率 0%: ネットオフ
 
 ### 🟡 Warning
-- item_url率 低下
 - item_url率 48% (<50%)
 
 ### ℹ️ Info

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-27T22:48:31+09:00",
+  "generated_at": "2026-11-28T22:15:43+09:00",
   "apple": {
     "source": "apple_jp_official",
     "list_status": "ok",
@@ -12,13 +12,13 @@
       "iphone-duo"
     ],
     "checked": [
-      "iphone-16",
-      "iphone-17"
+      "iphone-17e",
+      "iphone-18-pro"
     ],
     "errors": {},
-    "unknown_parts": 10,
-    "matched": 1,
-    "pending": 2,
+    "unknown_parts": 38,
+    "matched": 0,
+    "pending": 10,
     "requests": 3,
     "cutoff": "",
     "saved": true
@@ -41,7 +41,7 @@
       "RESTOCK": 1,
       "RELEASE": 5
     },
-    "tcg_products": 60,
+    "tcg_products": 35,
     "sources": {
       "configured": 25,
       "implemented": 14,
@@ -254,7 +254,7 @@
           "source_id": "ONEPIECE_CARD_OFFICIAL_SHOP",
           "retailer": "ONE PIECEカードゲーム公式ショップ",
           "adapter": "bnam_onepiece_shop_lottery",
-          "state": "ACTIVE_LOTTERY",
+          "state": "NO_ACTIVE_LOTTERY",
           "health": "HEALTHY",
           "blocked": false,
           "robots": null,
@@ -323,8 +323,8 @@
     "tcg_products": 56,
     "event_candidates": 207,
     "review_required_announcements": 3,
-    "matched_events": 87,
-    "stale_events": 117,
+    "matched_events": 61,
+    "stale_events": 143,
     "approved_events": 0,
     "registered_events": 0
   },
@@ -540,7 +540,7 @@
         "source_id": "ONEPIECE_CARD_OFFICIAL_SHOP",
         "retailer": "ONE PIECEカードゲーム公式ショップ",
         "adapter": "bnam_onepiece_shop_lottery",
-        "state": "ACTIVE_LOTTERY",
+        "state": "NO_ACTIVE_LOTTERY",
         "health": "HEALTHY",
         "blocked": false,
         "robots": null,

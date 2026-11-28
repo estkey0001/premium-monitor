@@ -1,3 +1,7 @@
-# アラートレポート — 2026-11-27 23:04 JST
+# アラートレポート — 2026-11-28 22:31 JST
 
-- 合計: 4 件（High: 0 / Medium: 0 / Low: 4）
+- 合計: 6 件（High: 0 / Medium: 2 / Low: 4）
+
+## 🟡 Medium Priority
+- [lottery_closing_soon] **RICOH GR IV HDF**: 抽選締め切り間近: RICOH GR IV HDF — 受付終了: 2026-11-30 (37時間後)
+- [lottery_closing_soon] **RICOH GR IV**: 抽選締め切り間近: RICOH GR IV — 受付終了: 2026-11-30 (37時間後)

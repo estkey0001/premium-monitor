@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-27T22:42:27.388392+09:00",
+  "generated_at": "2026-11-28T22:09:38.067691+09:00",
   "tcg_types": [
     "POKEMON",
     "ONE_PIECE"
@@ -40,7 +40,7 @@
       "source_url": "https://www.pokemon-card.com/ex/m7/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-27T22:19:24.874792+09:00",
+      "observed_at": "2026-11-28T21:46:35.405076+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -159,7 +159,7 @@
       "source_url": "https://www.pokemon-card.com/products/index.html",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-27T22:19:24.874792+09:00",
+      "observed_at": "2026-11-28T21:46:35.405076+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -278,7 +278,7 @@
       "source_url": "https://www.pokemoncenter-online.com/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-27T22:19:25.390475+09:00",
+      "observed_at": "2026-11-28T21:46:36.033814+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -394,7 +394,7 @@
       "source_url": "https://www.pokemoncenter-online.com/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-27T22:19:25.390475+09:00",
+      "observed_at": "2026-11-28T21:46:36.033814+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -510,7 +510,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-27T22:20:26.247100+09:00",
+      "observed_at": "2026-11-28T21:47:36.757077+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -626,7 +626,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-27T22:20:26.247100+09:00",
+      "observed_at": "2026-11-28T21:47:36.757077+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -742,7 +742,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-27T22:20:26.247100+09:00",
+      "observed_at": "2026-11-28T21:47:36.757077+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -858,7 +858,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-27T22:20:26.247100+09:00",
+      "observed_at": "2026-11-28T21:47:36.757077+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -974,7 +974,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-27T22:20:26.247100+09:00",
+      "observed_at": "2026-11-28T21:47:36.757077+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -1090,7 +1090,7 @@
       "source_url": "https://www.onepiece-cardgame.com/products/",
       "source_type": "OFFICIAL",
       "confidence": "high",
-      "observed_at": "2026-11-27T22:20:26.247100+09:00",
+      "observed_at": "2026-11-28T21:47:36.757077+09:00",
       "store_chain": null,
       "prefecture": null,
       "city": null,
@@ -1193,8 +1193,8 @@
       "source": "POKEMON_CARD_OFFICIAL",
       "source_name": "ポケモンカードゲーム公式（商品API）",
       "tcg": "POKEMON",
-      "last_checked": "2026-11-27T22:19:24.874777+09:00",
-      "last_success": "2026-11-27T22:23:25.595077+09:00",
+      "last_checked": "2026-11-28T21:46:35.405061+09:00",
+      "last_success": "2026-11-28T21:50:36.293614+09:00",
       "events_found": 2,
       "errors": 0,
       "blocked": false,
@@ -1228,10 +1228,10 @@
         "notes": [],
         "pages": [
           {
-            "url": "https://www.pokemon-card.com/products/resultAPI.php?productType=expansion&dateLowerY=2026&dateLowerM=7&dateLowerD=30&dateUpperY=2028&dateUpperM=1&dateUpperD=1",
+            "url": "https://www.pokemon-card.com/products/resultAPI.php?productType=expansion&dateLowerY=2026&dateLowerM=7&dateLowerD=31&dateUpperY=2028&dateUpperM=1&dateUpperD=2",
             "page_type": "listing",
             "http_status": 200,
-            "final_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=expansion&dateLowerY=2026&dateLowerM=7&dateLowerD=30&dateUpperY=2028&dateUpperM=1&dateUpperD=1",
+            "final_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=expansion&dateLowerY=2026&dateLowerM=7&dateLowerD=31&dateUpperY=2028&dateUpperM=1&dateUpperD=2",
             "page_title": null,
             "html_length": 1832,
             "text_length": 1357,
@@ -1244,10 +1244,10 @@
             "error": null
           },
           {
-            "url": "https://www.pokemon-card.com/products/resultAPI.php?productType=construction&dateLowerY=2026&dateLowerM=7&dateLowerD=30&dateUpperY=2028&dateUpperM=1&dateUpperD=1",
+            "url": "https://www.pokemon-card.com/products/resultAPI.php?productType=construction&dateLowerY=2026&dateLowerM=7&dateLowerD=31&dateUpperY=2028&dateUpperM=1&dateUpperD=2",
             "page_type": "listing",
             "http_status": 200,
-            "final_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=construction&dateLowerY=2026&dateLowerM=7&dateLowerD=30&dateUpperY=2028&dateUpperM=1&dateUpperD=1",
+            "final_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=construction&dateLowerY=2026&dateLowerM=7&dateLowerD=31&dateUpperY=2028&dateUpperM=1&dateUpperD=2",
             "page_title": null,
             "html_length": 4006,
             "text_length": 3202,
@@ -1260,10 +1260,10 @@
             "error": null
           },
           {
-            "url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=30&dateUpperY=2028&dateUpperM=1&dateUpperD=1",
+            "url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=31&dateUpperY=2028&dateUpperM=1&dateUpperD=2",
             "page_type": "listing",
             "http_status": 200,
-            "final_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=30&dateUpperY=2028&dateUpperM=1&dateUpperD=1",
+            "final_url": "https://www.pokemon-card.com/products/resultAPI.php?productType=others&dateLowerY=2026&dateLowerM=7&dateLowerD=31&dateUpperY=2028&dateUpperM=1&dateUpperD=2",
             "page_title": null,
             "html_length": 8469,
             "text_length": 6618,
@@ -1300,8 +1300,8 @@
       "source": "POKEMON_CARD_OFFICIAL",
       "source_name": "ポケモンカードゲーム公式（ニュース）",
       "tcg": "POKEMON",
-      "last_checked": "2026-11-27T22:19:24.875519+09:00",
-      "last_success": "2026-11-27T22:19:24.875525+09:00",
+      "last_checked": "2026-11-28T21:46:35.405418+09:00",
+      "last_success": "2026-11-28T21:46:35.405421+09:00",
       "events_found": 0,
       "errors": 0,
       "blocked": false,
@@ -1395,8 +1395,8 @@
       "source": "POKEMON_CENTER_ONLINE",
       "source_name": "ポケモンセンターオンライン",
       "tcg": "POKEMON",
-      "last_checked": "2026-11-27T22:19:24.876100+09:00",
-      "last_success": "2026-11-27T22:19:25.395035+09:00",
+      "last_checked": "2026-11-28T21:46:35.405701+09:00",
+      "last_success": "2026-11-28T21:46:36.036538+09:00",
       "events_found": 2,
       "errors": 0,
       "blocked": false,
@@ -1438,7 +1438,7 @@
             "http_status": 200,
             "final_url": "https://www.pokemoncenter-online.com/",
             "page_title": "ポケモンセンターオンライン｜ポケモングッズ・ポケモンカードの公式通販サイト",
-            "html_length": 89362,
+            "html_length": 89330,
             "text_length": 3922,
             "links_discovered": 233,
             "product_links_discovered": 0,
@@ -1457,8 +1457,8 @@
       "source": "LAWSON",
       "source_name": "ローソン（ポケモンカード告知）",
       "tcg": "POKEMON",
-      "last_checked": "2026-11-27T22:19:24.880033+09:00",
-      "last_success": "2026-11-27T22:20:25.848154+09:00",
+      "last_checked": "2026-11-28T21:46:35.406108+09:00",
+      "last_success": "2026-11-28T21:47:36.629819+09:00",
       "events_found": 0,
       "errors": 0,
       "blocked": false,
@@ -1532,8 +1532,8 @@
       "source": "ONEPIECE_CARD_OFFICIAL",
       "source_name": "ONE PIECEカードゲーム公式（ニュース）",
       "tcg": "ONE_PIECE",
-      "last_checked": "2026-11-27T22:19:24.884451+09:00",
-      "last_success": "2026-11-27T22:19:26.910673+09:00",
+      "last_checked": "2026-11-28T21:46:35.408255+09:00",
+      "last_success": "2026-11-28T21:46:37.607547+09:00",
       "events_found": 0,
       "errors": 0,
       "blocked": false,
@@ -1593,8 +1593,8 @@
       "source": "ONEPIECE_CARD_OFFICIAL",
       "source_name": "ONE PIECEカードゲーム公式（商品情報）",
       "tcg": "ONE_PIECE",
-      "last_checked": "2026-11-27T22:19:24.886261+09:00",
-      "last_success": "2026-11-27T22:20:26.248715+09:00",
+      "last_checked": "2026-11-28T21:46:35.409064+09:00",
+      "last_success": "2026-11-28T21:47:36.758228+09:00",
       "events_found": 6,
       "errors": 0,
       "blocked": false,
@@ -1652,8 +1652,8 @@
       "source": "PREMIUM_BANDAI",
       "source_name": "プレミアムバンダイ",
       "tcg": "ONE_PIECE",
-      "last_checked": "2026-11-27T22:19:24.886505+09:00",
-      "last_success": "2026-11-27T22:19:25.400585+09:00",
+      "last_checked": "2026-11-28T21:46:35.413255+09:00",
+      "last_success": "2026-11-28T21:46:36.511744+09:00",
       "events_found": 0,
       "errors": 0,
       "blocked": false,
@@ -1690,7 +1690,7 @@
             "http_status": 200,
             "final_url": "https://p-bandai.jp/global_newpc.html",
             "page_title": "【プレミアムバンダイ】INTERNATIONAL SHIPPING AVAILABLE｜PREMIUM BANDAI",
-            "html_length": 10523,
+            "html_length": 10524,
             "text_length": 783,
             "links_discovered": 12,
             "product_links_discovered": 0,
@@ -1872,7 +1872,23 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "purchase_history_required": {
+          "value": true,
+          "period": null,
+          "amount": null
+        },
+        "membership_required": {
+          "value": true,
+          "type": null,
+          "deadline": null
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "member_login"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -1885,9 +1901,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": null,
-      "observed_at": "2026-11-27T22:20:26.050171+09:00",
-      "last_verified_at": "2026-11-27T22:20:26.051012+09:00",
+      "observed_at": "2026-11-28T21:47:36.871430+09:00",
+      "last_verified_at": "2026-11-28T21:47:36.872075+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "OPEN",
       "conflict": false,
       "conflict_fields": {},
@@ -1895,14 +1914,15 @@
       "lottery_id": "lot-628d2001a832",
       "merged_count": 1,
       "deadline_countdown": {
-        "remaining_days": 2,
+        "remaining_days": 1,
         "remaining_hours": 1,
-        "remaining_minutes": 16,
-        "remaining_seconds": 177392,
-        "label": "2日1時間"
+        "remaining_minutes": 49,
+        "remaining_seconds": 92961,
+        "label": "1日1時間"
       },
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "ONE_PIECE",
@@ -1944,7 +1964,27 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": null,
+          "deadline": null
+        },
+        "application_limit": {
+          "value": "お1人様、1回"
+        },
+        "purchase_limit": {
+          "value": "お一人様 1セットまで"
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/od_5n",
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -1957,9 +1997,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-26T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:20:25.996689+09:00",
-      "last_verified_at": "2026-11-27T22:20:25.997166+09:00",
+      "observed_at": "2026-11-28T21:47:36.780276+09:00",
+      "last_verified_at": "2026-11-28T21:47:36.780853+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "OPEN",
       "conflict": false,
       "conflict_fields": {},
@@ -1967,14 +2010,15 @@
       "lottery_id": "lot-64952d7e929e",
       "merged_count": 1,
       "deadline_countdown": {
-        "remaining_days": 2,
+        "remaining_days": 1,
         "remaining_hours": 1,
-        "remaining_minutes": 16,
-        "remaining_seconds": 177392,
-        "label": "2日1時間"
+        "remaining_minutes": 49,
+        "remaining_seconds": 92961,
+        "label": "1日1時間"
       },
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -2016,7 +2060,10 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {},
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -2029,9 +2076,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-23T20:00:00+09:00",
-      "observed_at": "2026-11-27T22:19:26.218782+09:00",
-      "last_verified_at": "2026-11-27T22:19:26.221828+09:00",
+      "observed_at": "2026-11-28T21:46:37.027572+09:00",
+      "last_verified_at": "2026-11-28T21:46:37.030787+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "OPEN",
       "conflict": false,
       "conflict_fields": {},
@@ -2040,211 +2090,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
-    },
-    {
-      "tcg": "ONE_PIECE",
-      "product_name": "ONE PIECEカードゲーム ブースターパック 神の支配【OP-18】",
-      "retailer": "CARD_LABO",
-      "event_type": "LOTTERY",
-      "product_id": "ブースターパック-神の支配-op-18",
-      "provisional_product": false,
-      "product_match": "exact",
-      "retailer_name": "カードラボ",
-      "store_name": "カードラボ販売買取センターNAMBA",
-      "store_id": "namba2nd",
-      "prefecture": null,
-      "city": null,
-      "region": "JP",
-      "channel": "STORE",
-      "store_specific": true,
-      "online_only": null,
-      "application_start": null,
-      "application_end": null,
-      "winner_announcement_at": null,
-      "purchase_start": null,
-      "purchase_end": null,
-      "application_start_date": "2026-11-16",
-      "application_end_date": "2026-11-18",
-      "winner_announcement_date": "2026-11-19",
-      "purchase_start_date": "2026-11-21",
-      "purchase_end_date": "2026-11-27",
-      "shipping_period": null,
-      "release_date": null,
-      "retail_price": 5760,
-      "price_text": null,
-      "price_unit": "BOX",
-      "product_code": "OP-18",
-      "eligibility_text": null,
-      "membership_required": null,
-      "app_required": null,
-      "purchase_history_required": null,
-      "identity_verification_required": null,
-      "store_pickup_required": null,
-      "payment_method_requirement": null,
-      "entry_url": null,
-      "result_url": null,
-      "purchase_url": null,
-      "shrink_status": null,
-      "source_url": "https://www.c-labo.jp/shop/namba2nd/blog/624599/",
-      "source_urls": [
-        "https://www.c-labo.jp/shop/namba2nd/blog/624599/"
-      ],
-      "source_type": "STORE_OFFICIAL",
-      "confidence": "medium",
-      "verified": true,
-      "verified_by": null,
-      "published_at": "2026-11-16T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:34:27.080931+09:00",
-      "last_verified_at": "2026-11-27T22:34:27.081542+09:00",
-      "collection_method": "HTML",
-      "status": "WINNER_PURCHASE_PERIOD",
-      "conflict": false,
-      "conflict_fields": {},
-      "notes": [],
-      "lottery_id": "lot-964a5dca8653",
-      "merged_count": 1,
-      "deadline_countdown": null,
-      "start_countdown": null,
-      "purchase_countdown": null
-    },
-    {
-      "tcg": "ONE_PIECE",
-      "product_name": "ブースターパック 神の支配【OP-18】",
-      "retailer": "ONEPIECE_CARD_OFFICIAL_SHOP",
-      "event_type": "LOTTERY",
-      "product_id": "ブースターパック-神の支配-op-18",
-      "provisional_product": false,
-      "product_match": "exact",
-      "retailer_name": "ONE PIECEカードゲーム公式ショップ",
-      "store_name": null,
-      "store_id": null,
-      "prefecture": null,
-      "city": null,
-      "region": "JP",
-      "channel": "STORE",
-      "store_specific": false,
-      "online_only": null,
-      "application_start": "2026-11-11T10:00:00+09:00",
-      "application_end": "2026-11-15T23:59:00+09:00",
-      "winner_announcement_at": null,
-      "purchase_start": null,
-      "purchase_end": null,
-      "application_start_date": null,
-      "application_end_date": null,
-      "winner_announcement_date": null,
-      "purchase_start_date": "2026-11-21",
-      "purchase_end_date": "2026-11-27",
-      "shipping_period": null,
-      "release_date": null,
-      "retail_price": null,
-      "price_text": null,
-      "price_unit": "UNKNOWN",
-      "product_code": "OP-18",
-      "eligibility_text": "",
-      "membership_required": null,
-      "app_required": null,
-      "purchase_history_required": null,
-      "identity_verification_required": null,
-      "store_pickup_required": null,
-      "payment_method_requirement": null,
-      "entry_url": null,
-      "result_url": null,
-      "purchase_url": null,
-      "shrink_status": null,
-      "source_url": "https://bandainamco-am.co.jp/official_shop/onepiece-cardgame/news/important/20261110.html",
-      "source_urls": [
-        "https://bandainamco-am.co.jp/official_shop/onepiece-cardgame/news/important/20261110.html"
-      ],
-      "source_type": "RETAILER_OFFICIAL",
-      "confidence": "high",
-      "verified": true,
-      "verified_by": null,
-      "published_at": "2026-11-11T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:20:26.053778+09:00",
-      "last_verified_at": "2026-11-27T22:20:26.054373+09:00",
-      "collection_method": "HTML",
-      "status": "WINNER_PURCHASE_PERIOD",
-      "conflict": false,
-      "conflict_fields": {},
-      "notes": [],
-      "lottery_id": "lot-23dbaf592ad6",
-      "merged_count": 1,
-      "deadline_countdown": null,
-      "start_countdown": null,
-      "purchase_countdown": null
-    },
-    {
-      "tcg": "POKEMON",
-      "product_name": "ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」",
-      "retailer": "CARD_LABO",
-      "event_type": "LOTTERY",
-      "product_id": "pokemon-拡張パック-30th-celebration",
-      "provisional_product": false,
-      "product_match": "exact",
-      "retailer_name": "カードラボ",
-      "store_name": "カードラボ岐阜店",
-      "store_id": "gifu",
-      "prefecture": null,
-      "city": null,
-      "region": "JP",
-      "channel": "STORE",
-      "store_specific": true,
-      "online_only": null,
-      "application_start": null,
-      "application_end": null,
-      "winner_announcement_at": null,
-      "purchase_start": null,
-      "purchase_end": "2026-11-28T20:00:00+09:00",
-      "application_start_date": "2026-11-16",
-      "application_end_date": "2026-11-19",
-      "winner_announcement_date": "2026-11-20",
-      "purchase_start_date": "2026-11-21",
-      "purchase_end_date": null,
-      "shipping_period": null,
-      "release_date": "2026-09-16T00:00:00+09:00",
-      "retail_price": null,
-      "price_text": null,
-      "price_unit": "UNKNOWN",
-      "product_code": null,
-      "eligibility_text": null,
-      "membership_required": null,
-      "app_required": null,
-      "purchase_history_required": null,
-      "identity_verification_required": null,
-      "store_pickup_required": null,
-      "payment_method_requirement": null,
-      "entry_url": null,
-      "result_url": null,
-      "purchase_url": null,
-      "shrink_status": null,
-      "source_url": "https://www.c-labo.jp/shop/gifu/blog/624678/",
-      "source_urls": [
-        "https://www.c-labo.jp/shop/gifu/blog/624678/"
-      ],
-      "source_type": "STORE_OFFICIAL",
-      "confidence": "medium",
-      "verified": true,
-      "verified_by": null,
-      "published_at": "2026-11-16T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:32:27.301458+09:00",
-      "last_verified_at": "2026-11-27T22:32:27.302155+09:00",
-      "collection_method": "HTML",
-      "status": "WINNER_PURCHASE_PERIOD",
-      "conflict": false,
-      "conflict_fields": {},
-      "notes": [],
-      "lottery_id": "lot-0b4087e4779c",
-      "merged_count": 1,
-      "deadline_countdown": null,
-      "start_countdown": null,
-      "purchase_countdown": {
-        "remaining_days": 0,
-        "remaining_hours": 21,
-        "remaining_minutes": 17,
-        "remaining_seconds": 76652,
-        "label": "21時間17分"
-      }
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "ONE_PIECE",
@@ -2286,7 +2133,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様24パックまで"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": "TAPE_CUT",
@@ -2299,9 +2161,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-18T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:24:27.242699+09:00",
-      "last_verified_at": "2026-11-27T22:24:27.243251+09:00",
+      "observed_at": "2026-11-28T21:50:37.896798+09:00",
+      "last_verified_at": "2026-11-28T21:50:37.897209+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_PURCHASE_PERIOD",
       "conflict": false,
       "conflict_fields": {},
@@ -2310,7 +2175,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "POKEMON",
@@ -2352,7 +2218,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様1BOX"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -2365,9 +2246,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-18T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:26:27.452297+09:00",
-      "last_verified_at": "2026-11-27T22:26:27.452848+09:00",
+      "observed_at": "2026-11-28T21:53:37.957216+09:00",
+      "last_verified_at": "2026-11-28T21:53:37.957648+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_PURCHASE_PERIOD",
       "conflict": false,
       "conflict_fields": {},
@@ -2376,7 +2260,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "ONE_PIECE",
@@ -2418,7 +2303,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -2431,9 +2331,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-16T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:30:27.203366+09:00",
-      "last_verified_at": "2026-11-27T22:30:27.204074+09:00",
+      "observed_at": "2026-11-28T22:02:38.225364+09:00",
+      "last_verified_at": "2026-11-28T22:02:38.225884+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_PURCHASE_PERIOD",
       "conflict": false,
       "conflict_fields": {},
@@ -2443,12 +2346,13 @@
       "deadline_countdown": null,
       "start_countdown": null,
       "purchase_countdown": {
-        "remaining_days": 1,
+        "remaining_days": 0,
         "remaining_hours": 22,
-        "remaining_minutes": 17,
-        "remaining_seconds": 166652,
-        "label": "1日22時間"
-      }
+        "remaining_minutes": 50,
+        "remaining_seconds": 82221,
+        "label": "22時間50分"
+      },
+      "product_name_source": "announcement"
     },
     {
       "tcg": "POKEMON",
@@ -2490,7 +2394,19 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "サイト会員",
+          "deadline": null
+        },
+        "application_limit": {
+          "value": "1人1回"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -2506,6 +2422,9 @@
       "observed_at": "2026-11-14T00:04:06+09:00",
       "last_verified_at": "2026-11-14T00:04:06+09:00",
       "collection_method": "MANUAL_VERIFIED",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_PURCHASE_PERIOD",
       "conflict": false,
       "conflict_fields": {},
@@ -2518,12 +2437,13 @@
       "deadline_countdown": null,
       "start_countdown": null,
       "purchase_countdown": {
-        "remaining_days": 2,
+        "remaining_days": 1,
         "remaining_hours": 1,
-        "remaining_minutes": 16,
-        "remaining_seconds": 177392,
-        "label": "2日1時間"
-      }
+        "remaining_minutes": 49,
+        "remaining_seconds": 92961,
+        "label": "1日1時間"
+      },
+      "product_name_source": "master"
     },
     {
       "tcg": "ONE_PIECE",
@@ -2565,7 +2485,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様 1BOX"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -2578,9 +2513,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-20T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:22:27.270798+09:00",
-      "last_verified_at": "2026-11-27T22:22:27.271478+09:00",
+      "observed_at": "2026-11-28T21:49:37.677422+09:00",
+      "last_verified_at": "2026-11-28T21:49:37.677895+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_PURCHASE_PERIOD",
       "conflict": false,
       "conflict_fields": {},
@@ -2589,7 +2527,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -2631,7 +2570,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様 1BOX"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": "SHRINK_REMOVED",
@@ -2644,9 +2598,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-13T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:42:27.270481+09:00",
-      "last_verified_at": "2026-11-27T22:42:27.271104+09:00",
+      "observed_at": "2026-11-28T22:08:37.912626+09:00",
+      "last_verified_at": "2026-11-28T22:08:37.913079+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
@@ -2655,7 +2612,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "ONE_PIECE",
@@ -2697,7 +2655,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様 1BOXまで"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -2710,9 +2683,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-16T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:31:27.653502+09:00",
-      "last_verified_at": "2026-11-27T22:31:27.654197+09:00",
+      "observed_at": "2026-11-28T21:59:38.804825+09:00",
+      "last_verified_at": "2026-11-28T21:59:38.805338+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
@@ -2721,7 +2697,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -2763,7 +2740,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": "SHRINK_REMOVED",
@@ -2776,9 +2768,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-15T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:36:27.874625+09:00",
-      "last_verified_at": "2026-11-27T22:36:27.875311+09:00",
+      "observed_at": "2026-11-28T22:03:37.898744+09:00",
+      "last_verified_at": "2026-11-28T22:03:37.899227+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
@@ -2787,7 +2782,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -2829,7 +2825,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お1人様20パック"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": "PACK_ONLY",
@@ -2842,9 +2853,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-18T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:23:27.756509+09:00",
-      "last_verified_at": "2026-11-27T22:23:27.757192+09:00",
+      "observed_at": "2026-11-28T21:51:37.984772+09:00",
+      "last_verified_at": "2026-11-28T21:51:37.985303+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
@@ -2853,73 +2867,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
-    },
-    {
-      "tcg": "ONE_PIECE",
-      "product_name": "【ワンピースカードゲーム】再入荷商品",
-      "retailer": "CARD_LABO",
-      "event_type": "LOTTERY",
-      "product_id": null,
-      "provisional_product": true,
-      "product_match": "none",
-      "retailer_name": "カードラボ",
-      "store_name": "カードラボ浜松店",
-      "store_id": "hamamatsu",
-      "prefecture": null,
-      "city": null,
-      "region": "JP",
-      "channel": "STORE",
-      "store_specific": true,
-      "online_only": null,
-      "application_start": null,
-      "application_end": null,
-      "winner_announcement_at": null,
-      "purchase_start": null,
-      "purchase_end": null,
-      "application_start_date": "2026-11-17",
-      "application_end_date": "2026-11-19",
-      "winner_announcement_date": "2026-11-20",
-      "purchase_start_date": null,
-      "purchase_end_date": null,
-      "shipping_period": null,
-      "release_date": null,
-      "retail_price": null,
-      "price_text": null,
-      "price_unit": "UNKNOWN",
-      "product_code": null,
-      "eligibility_text": null,
-      "membership_required": null,
-      "app_required": null,
-      "purchase_history_required": null,
-      "identity_verification_required": null,
-      "store_pickup_required": null,
-      "payment_method_requirement": null,
-      "entry_url": null,
-      "result_url": null,
-      "purchase_url": null,
-      "shrink_status": null,
-      "source_url": "https://www.c-labo.jp/shop/hamamatsu/blog/624706/",
-      "source_urls": [
-        "https://www.c-labo.jp/shop/hamamatsu/blog/624706/"
-      ],
-      "source_type": "STORE_OFFICIAL",
-      "confidence": "medium",
-      "verified": true,
-      "verified_by": null,
-      "published_at": "2026-11-17T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:27:27.460129+09:00",
-      "last_verified_at": "2026-11-27T22:27:27.460880+09:00",
-      "collection_method": "HTML",
-      "status": "WINNER_ANNOUNCED",
-      "conflict": false,
-      "conflict_fields": {},
-      "notes": [],
-      "lottery_id": "lot-006b062f327b",
-      "merged_count": 1,
-      "deadline_countdown": null,
-      "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -2961,7 +2910,19 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": "PACK_ONLY",
@@ -2974,9 +2935,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-17T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:29:27.405123+09:00",
-      "last_verified_at": "2026-11-27T22:29:27.405770+09:00",
+      "observed_at": "2026-11-28T21:54:37.813598+09:00",
+      "last_verified_at": "2026-11-28T21:54:37.814041+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
@@ -2985,7 +2949,90 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
+    },
+    {
+      "tcg": "ONE_PIECE",
+      "product_name": "【ワンピースカードゲーム】再入荷商品",
+      "retailer": "CARD_LABO",
+      "event_type": "LOTTERY",
+      "product_id": null,
+      "provisional_product": true,
+      "product_match": "none",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ浜松店",
+      "store_id": "hamamatsu",
+      "prefecture": null,
+      "city": null,
+      "region": "JP",
+      "channel": "STORE",
+      "store_specific": true,
+      "online_only": null,
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-17",
+      "application_end_date": "2026-11-19",
+      "winner_announcement_date": "2026-11-20",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "shipping_period": null,
+      "release_date": null,
+      "retail_price": null,
+      "price_text": null,
+      "price_unit": "UNKNOWN",
+      "product_code": null,
+      "eligibility_text": null,
+      "membership_required": null,
+      "app_required": null,
+      "purchase_history_required": null,
+      "identity_verification_required": null,
+      "store_pickup_required": null,
+      "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        }
+      },
+      "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
+      "result_url": null,
+      "purchase_url": null,
+      "shrink_status": null,
+      "source_url": "https://www.c-labo.jp/shop/hamamatsu/blog/624706/",
+      "source_urls": [
+        "https://www.c-labo.jp/shop/hamamatsu/blog/624706/"
+      ],
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "verified": true,
+      "verified_by": null,
+      "published_at": "2026-11-17T00:00:00+09:00",
+      "observed_at": "2026-11-28T21:56:37.928094+09:00",
+      "last_verified_at": "2026-11-28T21:56:37.928615+09:00",
+      "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
+      "status": "WINNER_ANNOUNCED",
+      "conflict": false,
+      "conflict_fields": {},
+      "notes": [],
+      "lottery_id": "lot-006b062f327b",
+      "merged_count": 1,
+      "deadline_countdown": null,
+      "start_countdown": null,
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "POKEMON",
@@ -3027,7 +3074,25 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "application_limit": {
+          "value": "お1人様1回まで"
+        },
+        "purchase_limit": {
+          "value": "お1人様1ボックスまで"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -3040,9 +3105,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-16T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:33:27.235740+09:00",
-      "last_verified_at": "2026-11-27T22:33:27.236417+09:00",
+      "observed_at": "2026-11-28T22:01:38.127246+09:00",
+      "last_verified_at": "2026-11-28T22:01:38.127791+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
@@ -3051,7 +3119,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "ONE_PIECE",
@@ -3093,7 +3162,25 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様 24パック"
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": "SHRINK_REMOVED",
@@ -3106,9 +3193,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-16T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:35:29.180933+09:00",
-      "last_verified_at": "2026-11-27T22:35:29.181545+09:00",
+      "observed_at": "2026-11-28T21:57:37.824550+09:00",
+      "last_verified_at": "2026-11-28T21:57:37.825032+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
@@ -3117,7 +3207,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "ONE_PIECE",
@@ -3159,7 +3250,24 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": null,
+          "deadline": null
+        },
+        "application_limit": {
+          "value": "お1人様、各店舗1回"
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -3172,9 +3280,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-19T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:22:26.038135+09:00",
-      "last_verified_at": "2026-11-27T22:22:26.038629+09:00",
+      "observed_at": "2026-11-28T21:49:36.938953+09:00",
+      "last_verified_at": "2026-11-28T21:49:36.939451+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
@@ -3183,7 +3294,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "POKEMON",
@@ -3225,7 +3337,19 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -3238,9 +3362,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-17T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:28:27.480770+09:00",
-      "last_verified_at": "2026-11-27T22:28:27.481575+09:00",
+      "observed_at": "2026-11-28T21:55:38.294404+09:00",
+      "last_verified_at": "2026-11-28T21:55:38.294958+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
@@ -3249,7 +3376,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "ONE_PIECE",
@@ -3291,7 +3419,27 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": null,
+          "deadline": null
+        },
+        "application_limit": {
+          "value": "お1人様、1回"
+        },
+        "purchase_limit": {
+          "value": "お一人様 1セットまで"
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/qrbnh",
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -3304,9 +3452,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-20T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:21:25.970575+09:00",
-      "last_verified_at": "2026-11-27T22:21:25.971034+09:00",
+      "observed_at": "2026-11-28T21:48:36.822026+09:00",
+      "last_verified_at": "2026-11-28T21:48:36.822433+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
@@ -3315,7 +3466,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -3357,7 +3509,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様 1BOX"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": "SHRINK_REMOVED",
@@ -3370,9 +3537,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-23T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:21:28.159049+09:00",
-      "last_verified_at": "2026-11-27T22:21:28.159683+09:00",
+      "observed_at": "2026-11-28T21:48:37.882027+09:00",
+      "last_verified_at": "2026-11-28T21:48:37.882538+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
@@ -3381,139 +3551,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
-    },
-    {
-      "tcg": "POKEMON",
-      "product_name": "拡張パック「ムニキスゼロ」",
-      "retailer": "HOBBY_STATION",
-      "event_type": "LOTTERY",
-      "product_id": "pokemon-拡張パック-ムニキスゼロ",
-      "provisional_product": false,
-      "product_match": "exact",
-      "retailer_name": "ホビーステーション",
-      "store_name": null,
-      "store_id": null,
-      "prefecture": null,
-      "city": null,
-      "region": "JP",
-      "channel": "STORE",
-      "store_specific": false,
-      "online_only": null,
-      "application_start": "2026-11-24T12:00:00+09:00",
-      "application_end": "2026-11-26T23:59:00+09:00",
-      "winner_announcement_at": null,
-      "purchase_start": null,
-      "purchase_end": null,
-      "application_start_date": null,
-      "application_end_date": null,
-      "winner_announcement_date": "2026-12-03",
-      "purchase_start_date": null,
-      "purchase_end_date": null,
-      "shipping_period": null,
-      "release_date": "2026-01-23T00:00:00+09:00",
-      "retail_price": 5400,
-      "price_text": null,
-      "price_unit": "UNKNOWN",
-      "product_code": null,
-      "eligibility_text": null,
-      "membership_required": null,
-      "app_required": null,
-      "purchase_history_required": null,
-      "identity_verification_required": null,
-      "store_pickup_required": null,
-      "payment_method_requirement": null,
-      "entry_url": null,
-      "result_url": null,
-      "purchase_url": null,
-      "shrink_status": null,
-      "source_url": "https://www.hbst.net/?p=412193",
-      "source_urls": [
-        "https://www.hbst.net/?p=412193"
-      ],
-      "source_type": "STORE_OFFICIAL",
-      "confidence": "medium",
-      "verified": true,
-      "verified_by": null,
-      "published_at": "2026-11-24T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:20:26.434239+09:00",
-      "last_verified_at": "2026-11-27T22:20:26.437869+09:00",
-      "collection_method": "HTML",
-      "status": "RESULT_PENDING",
-      "conflict": false,
-      "conflict_fields": {},
-      "notes": [],
-      "lottery_id": "lot-12f1f0c0ab67",
-      "merged_count": 1,
-      "deadline_countdown": null,
-      "start_countdown": null,
-      "purchase_countdown": null
-    },
-    {
-      "tcg": "POKEMON",
-      "product_name": "拡張パック「ハドウシーカー」",
-      "retailer": "HOBBY_STATION",
-      "event_type": "LOTTERY",
-      "product_id": "pokemon-拡張パック-ハドウシーカー",
-      "provisional_product": false,
-      "product_match": "exact",
-      "retailer_name": "ホビーステーション",
-      "store_name": null,
-      "store_id": null,
-      "prefecture": null,
-      "city": null,
-      "region": "JP",
-      "channel": "STORE",
-      "store_specific": false,
-      "online_only": null,
-      "application_start": "2026-11-24T12:00:00+09:00",
-      "application_end": "2026-11-26T23:59:00+09:00",
-      "winner_announcement_at": null,
-      "purchase_start": null,
-      "purchase_end": null,
-      "application_start_date": null,
-      "application_end_date": null,
-      "winner_announcement_date": "2026-12-03",
-      "purchase_start_date": null,
-      "purchase_end_date": null,
-      "shipping_period": null,
-      "release_date": "2026-11-27T00:00:00+09:00",
-      "retail_price": 6000,
-      "price_text": null,
-      "price_unit": "UNKNOWN",
-      "product_code": null,
-      "eligibility_text": null,
-      "membership_required": null,
-      "app_required": null,
-      "purchase_history_required": null,
-      "identity_verification_required": null,
-      "store_pickup_required": null,
-      "payment_method_requirement": null,
-      "entry_url": null,
-      "result_url": null,
-      "purchase_url": null,
-      "shrink_status": null,
-      "source_url": "https://www.hbst.net/?p=412193",
-      "source_urls": [
-        "https://www.hbst.net/?p=412193"
-      ],
-      "source_type": "STORE_OFFICIAL",
-      "confidence": "medium",
-      "verified": true,
-      "verified_by": null,
-      "published_at": "2026-11-24T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:20:26.434239+09:00",
-      "last_verified_at": "2026-11-27T22:20:26.438148+09:00",
-      "collection_method": "HTML",
-      "status": "RESULT_PENDING",
-      "conflict": false,
-      "conflict_fields": {},
-      "notes": [],
-      "lottery_id": "lot-9c89a76fab48",
-      "merged_count": 1,
-      "deadline_countdown": null,
-      "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -3555,7 +3594,16 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "application_limit": {
+          "value": "お一人様1セットまで"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -3568,10 +3616,13 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-22T19:58:00+09:00",
-      "observed_at": "2026-11-27T22:21:26.109630+09:00",
-      "last_verified_at": "2026-11-27T22:21:26.110130+09:00",
+      "observed_at": "2026-11-28T21:48:36.450973+09:00",
+      "last_verified_at": "2026-11-28T21:48:36.451363+09:00",
       "collection_method": "HTML",
-      "status": "RESULT_PENDING",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
+      "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
       "notes": [],
@@ -3579,7 +3630,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "POKEMON",
@@ -3621,7 +3673,16 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "application_limit": {
+          "value": "お一人様1BOXまで"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -3634,10 +3695,13 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-22T19:49:00+09:00",
-      "observed_at": "2026-11-27T22:22:25.865643+09:00",
-      "last_verified_at": "2026-11-27T22:22:25.866062+09:00",
+      "observed_at": "2026-11-28T21:49:36.610535+09:00",
+      "last_verified_at": "2026-11-28T21:49:36.610863+09:00",
       "collection_method": "HTML",
-      "status": "RESULT_PENDING",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
+      "status": "WINNER_ANNOUNCED",
       "conflict": false,
       "conflict_fields": {},
       "notes": [],
@@ -3645,7 +3709,182 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
+    },
+    {
+      "tcg": "POKEMON",
+      "product_name": "拡張パック「ムニキスゼロ」",
+      "retailer": "HOBBY_STATION",
+      "event_type": "LOTTERY",
+      "product_id": "pokemon-拡張パック-ムニキスゼロ",
+      "provisional_product": false,
+      "product_match": "exact",
+      "retailer_name": "ホビーステーション",
+      "store_name": null,
+      "store_id": null,
+      "prefecture": null,
+      "city": null,
+      "region": "JP",
+      "channel": "STORE",
+      "store_specific": false,
+      "online_only": null,
+      "application_start": "2026-11-24T12:00:00+09:00",
+      "application_end": "2026-11-26T23:59:00+09:00",
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": "2026-12-03",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "shipping_period": null,
+      "release_date": "2026-01-23T00:00:00+09:00",
+      "retail_price": 5400,
+      "price_text": null,
+      "price_unit": "UNKNOWN",
+      "product_code": null,
+      "eligibility_text": null,
+      "membership_required": null,
+      "app_required": null,
+      "purchase_history_required": null,
+      "identity_verification_required": null,
+      "store_pickup_required": null,
+      "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "Livepocketの会員",
+          "deadline": null
+        },
+        "purchase_limit": {
+          "value": "各2BOXまで"
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
+      "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/x1x8-",
+      "application_methods": [
+        "web_form"
+      ],
+      "result_url": null,
+      "purchase_url": null,
+      "shrink_status": null,
+      "source_url": "https://www.hbst.net/?p=412193",
+      "source_urls": [
+        "https://www.hbst.net/?p=412193"
+      ],
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "verified": true,
+      "verified_by": null,
+      "published_at": "2026-11-24T00:00:00+09:00",
+      "observed_at": "2026-11-28T21:47:37.917691+09:00",
+      "last_verified_at": "2026-11-28T21:47:37.920408+09:00",
+      "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
+      "status": "RESULT_PENDING",
+      "conflict": false,
+      "conflict_fields": {},
+      "notes": [],
+      "lottery_id": "lot-12f1f0c0ab67",
+      "merged_count": 1,
+      "deadline_countdown": null,
+      "start_countdown": null,
+      "purchase_countdown": null,
+      "product_name_source": "master"
+    },
+    {
+      "tcg": "POKEMON",
+      "product_name": "拡張パック「ハドウシーカー」",
+      "retailer": "HOBBY_STATION",
+      "event_type": "LOTTERY",
+      "product_id": "pokemon-拡張パック-ハドウシーカー",
+      "provisional_product": false,
+      "product_match": "exact",
+      "retailer_name": "ホビーステーション",
+      "store_name": null,
+      "store_id": null,
+      "prefecture": null,
+      "city": null,
+      "region": "JP",
+      "channel": "STORE",
+      "store_specific": false,
+      "online_only": null,
+      "application_start": "2026-11-24T12:00:00+09:00",
+      "application_end": "2026-11-26T23:59:00+09:00",
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": "2026-12-03",
+      "purchase_start_date": null,
+      "purchase_end_date": null,
+      "shipping_period": null,
+      "release_date": "2026-11-27T00:00:00+09:00",
+      "retail_price": 6000,
+      "price_text": null,
+      "price_unit": "UNKNOWN",
+      "product_code": null,
+      "eligibility_text": null,
+      "membership_required": null,
+      "app_required": null,
+      "purchase_history_required": null,
+      "identity_verification_required": null,
+      "store_pickup_required": null,
+      "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "Livepocketの会員",
+          "deadline": null
+        },
+        "purchase_limit": {
+          "value": "各2BOXまで"
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
+      "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/d275s",
+      "application_methods": [
+        "web_form"
+      ],
+      "result_url": null,
+      "purchase_url": null,
+      "shrink_status": null,
+      "source_url": "https://www.hbst.net/?p=412193",
+      "source_urls": [
+        "https://www.hbst.net/?p=412193"
+      ],
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "verified": true,
+      "verified_by": null,
+      "published_at": "2026-11-24T00:00:00+09:00",
+      "observed_at": "2026-11-28T21:47:37.917691+09:00",
+      "last_verified_at": "2026-11-28T21:47:37.921282+09:00",
+      "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
+      "status": "RESULT_PENDING",
+      "conflict": false,
+      "conflict_fields": {},
+      "notes": [],
+      "lottery_id": "lot-9c89a76fab48",
+      "merged_count": 1,
+      "deadline_countdown": null,
+      "start_countdown": null,
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -3687,7 +3926,21 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "Livepocketの会員",
+          "deadline": null
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/jy-cp",
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -3700,9 +3953,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-13T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:21:26.458532+09:00",
-      "last_verified_at": "2026-11-27T22:21:26.460369+09:00",
+      "observed_at": "2026-11-28T21:48:37.850345+09:00",
+      "last_verified_at": "2026-11-28T21:48:37.851804+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": true,
+      "cancel_text": "終了しました",
       "status": "CLOSED",
       "conflict": false,
       "conflict_fields": {},
@@ -3711,7 +3967,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -3753,7 +4010,10 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {},
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -3766,9 +4026,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-18T20:00:00+09:00",
-      "observed_at": "2026-11-27T22:19:26.218782+09:00",
-      "last_verified_at": "2026-11-27T22:19:26.219809+09:00",
+      "observed_at": "2026-11-28T21:46:37.027572+09:00",
+      "last_verified_at": "2026-11-28T21:46:37.029217+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "CLOSED",
       "conflict": false,
       "conflict_fields": {},
@@ -3777,7 +4040,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -3819,7 +4083,23 @@
       "identity_verification_required": true,
       "store_pickup_required": true,
       "payment_method_requirement": null,
+      "conditions": {
+        "purchase_history_required": {
+          "value": true,
+          "period": null,
+          "amount": null
+        },
+        "membership_required": {
+          "value": true,
+          "type": null,
+          "deadline": null
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "store"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -3832,9 +4112,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-18T12:00:00+09:00",
-      "observed_at": "2026-11-27T22:23:25.863512+09:00",
-      "last_verified_at": "2026-11-27T22:23:25.864101+09:00",
+      "observed_at": "2026-11-28T21:50:37.179039+09:00",
+      "last_verified_at": "2026-11-28T21:50:37.179468+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "CLOSED",
       "conflict": false,
       "conflict_fields": {},
@@ -3843,7 +4126,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "POKEMON",
@@ -3885,7 +4169,10 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {},
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -3898,9 +4185,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": null,
-      "observed_at": "2026-11-27T22:19:25.390475+09:00",
+      "observed_at": "2026-11-28T21:46:36.033814+09:00",
       "last_verified_at": null,
       "collection_method": "LEGACY_TCG_EVENT",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "UNKNOWN",
       "conflict": false,
       "conflict_fields": {},
@@ -3911,7 +4201,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -3953,7 +4244,10 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {},
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -3966,9 +4260,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": null,
-      "observed_at": "2026-11-27T22:19:25.390475+09:00",
+      "observed_at": "2026-11-28T21:46:36.033814+09:00",
       "last_verified_at": null,
       "collection_method": "LEGACY_TCG_EVENT",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "UNKNOWN",
       "conflict": false,
       "conflict_fields": {},
@@ -3979,7 +4276,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -4021,7 +4319,24 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "Livepocketの会員",
+          "deadline": null
+        },
+        "purchase_limit": {
+          "value": "各1BOXまで"
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4034,9 +4349,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-01T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:28:26.448375+09:00",
-      "last_verified_at": "2026-11-27T22:28:26.451040+09:00",
+      "observed_at": "2026-11-28T21:55:37.883168+09:00",
+      "last_verified_at": "2026-11-28T21:55:37.884991+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": true,
+      "cancel_text": "終了しました",
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4045,7 +4363,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "POKEMON",
@@ -4087,7 +4406,21 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "Livepocketの会員",
+          "deadline": null
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/hna_d",
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4100,9 +4433,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-01T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:29:26.434487+09:00",
-      "last_verified_at": "2026-11-27T22:29:26.437089+09:00",
+      "observed_at": "2026-11-28T21:56:37.936522+09:00",
+      "last_verified_at": "2026-11-28T21:56:37.938176+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": true,
+      "cancel_text": "終了しました",
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4111,7 +4447,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -4153,7 +4490,21 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "Livepocketの会員",
+          "deadline": null
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/7zbl9",
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4166,9 +4517,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-09-18T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:27:26.649280+09:00",
-      "last_verified_at": "2026-11-27T22:27:26.651874+09:00",
+      "observed_at": "2026-11-28T21:54:37.727193+09:00",
+      "last_verified_at": "2026-11-28T21:54:37.729021+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": true,
+      "cancel_text": "終了しました",
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4177,7 +4531,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -4219,7 +4574,21 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "Livepocketの会員",
+          "deadline": null
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/7r2ey",
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4232,9 +4601,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-10-02T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:26:26.462028+09:00",
-      "last_verified_at": "2026-11-27T22:26:26.464639+09:00",
+      "observed_at": "2026-11-28T21:53:37.542436+09:00",
+      "last_verified_at": "2026-11-28T21:53:37.544333+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": true,
+      "cancel_text": "終了しました",
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4243,7 +4615,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -4285,7 +4658,16 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "プレイヤーズクラブ",
+          "deadline": null
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4301,6 +4683,9 @@
       "observed_at": "2026-10-01T18:51:40+09:00",
       "last_verified_at": "2026-10-01T18:51:40+09:00",
       "collection_method": "MANUAL_VERIFIED",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4312,7 +4697,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -4354,7 +4740,16 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "プレイヤーズクラブ",
+          "deadline": null
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4370,6 +4765,9 @@
       "observed_at": "2026-10-01T18:51:40+09:00",
       "last_verified_at": "2026-10-01T18:51:40+09:00",
       "collection_method": "MANUAL_VERIFIED",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4381,7 +4779,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -4423,7 +4822,21 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "Livepocketの会員",
+          "deadline": null
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/cp5ds",
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4436,9 +4849,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-10-06T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:25:26.319015+09:00",
-      "last_verified_at": "2026-11-27T22:25:26.321639+09:00",
+      "observed_at": "2026-11-28T21:52:37.916968+09:00",
+      "last_verified_at": "2026-11-28T21:52:37.918805+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": true,
+      "cancel_text": "終了しました",
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4447,7 +4863,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "ONE_PIECE",
@@ -4489,7 +4906,21 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "Livepocketの会員",
+          "deadline": null
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/s9-lf",
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4502,9 +4933,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-10-16T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:24:26.428155+09:00",
-      "last_verified_at": "2026-11-27T22:24:26.430795+09:00",
+      "observed_at": "2026-11-28T21:51:37.695616+09:00",
+      "last_verified_at": "2026-11-28T21:51:37.697495+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": true,
+      "cancel_text": "終了しました",
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4513,7 +4947,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -4555,7 +4990,21 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "Livepocketの会員",
+          "deadline": null
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/4_jau",
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4568,9 +5017,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-10-20T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:23:26.433651+09:00",
-      "last_verified_at": "2026-11-27T22:23:26.436319+09:00",
+      "observed_at": "2026-11-28T21:50:38.121043+09:00",
+      "last_verified_at": "2026-11-28T21:50:38.122914+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": true,
+      "cancel_text": "終了しました",
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4579,7 +5031,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -4621,7 +5074,21 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "purchase_history_required": {
+          "value": true,
+          "period": null,
+          "amount": null
+        },
+        "membership_required": {
+          "value": true,
+          "type": null,
+          "deadline": null
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4634,9 +5101,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": null,
-      "observed_at": "2026-11-27T22:22:26.106427+09:00",
-      "last_verified_at": "2026-11-27T22:22:26.107833+09:00",
+      "observed_at": "2026-11-28T21:49:36.775333+09:00",
+      "last_verified_at": "2026-11-28T21:49:36.775751+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4645,7 +5115,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "POKEMON",
@@ -4687,7 +5158,21 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": "Livepocketの会員",
+          "deadline": null
+        },
+        "id_required_at_purchase": {
+          "value": true
+        }
+      },
       "entry_url": null,
+      "external_form_url": "https://livepocket.jp/e/tjphs",
+      "application_methods": [
+        "web_form"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4700,9 +5185,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-10T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:22:26.458209+09:00",
-      "last_verified_at": "2026-11-27T22:22:26.460020+09:00",
+      "observed_at": "2026-11-28T21:49:37.683825+09:00",
+      "last_verified_at": "2026-11-28T21:49:37.685053+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": true,
+      "cancel_text": "終了しました",
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4711,7 +5199,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "announcement"
     },
     {
       "tcg": "ONE_PIECE",
@@ -4753,7 +5242,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様上限1BOXまで"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": "PACK_ONLY",
@@ -4766,9 +5270,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-14T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:37:27.405842+09:00",
-      "last_verified_at": "2026-11-27T22:37:27.406447+09:00",
+      "observed_at": "2026-11-28T22:05:37.935094+09:00",
+      "last_verified_at": "2026-11-28T22:05:37.935536+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4777,73 +5284,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
-    },
-    {
-      "tcg": "ONE_PIECE",
-      "product_name": "エクストラブースター ONE PIECE Heroines Edition vol.2",
-      "retailer": "CARD_LABO",
-      "event_type": "LOTTERY",
-      "product_id": "エクストラブースター-one-piece-heroines-edition-vol-2-eb-05",
-      "provisional_product": false,
-      "product_match": "exact",
-      "retailer_name": "カードラボ",
-      "store_name": "カードラボ大阪日本橋店",
-      "store_id": "nipponbashi",
-      "prefecture": null,
-      "city": null,
-      "region": "JP",
-      "channel": "STORE",
-      "store_specific": true,
-      "online_only": null,
-      "application_start": null,
-      "application_end": null,
-      "winner_announcement_at": null,
-      "purchase_start": null,
-      "purchase_end": null,
-      "application_start_date": "2026-11-13",
-      "application_end_date": "2026-11-15",
-      "winner_announcement_date": "2026-11-16",
-      "purchase_start_date": "2026-11-18",
-      "purchase_end_date": "2026-11-24",
-      "shipping_period": null,
-      "release_date": "2026-10-31T00:00:00+09:00",
-      "retail_price": null,
-      "price_text": null,
-      "price_unit": "PACK",
-      "product_code": null,
-      "eligibility_text": null,
-      "membership_required": null,
-      "app_required": null,
-      "purchase_history_required": null,
-      "identity_verification_required": null,
-      "store_pickup_required": null,
-      "payment_method_requirement": null,
-      "entry_url": null,
-      "result_url": null,
-      "purchase_url": null,
-      "shrink_status": null,
-      "source_url": "https://www.c-labo.jp/shop/nipponbashi/blog/624550/",
-      "source_urls": [
-        "https://www.c-labo.jp/shop/nipponbashi/blog/624550/"
-      ],
-      "source_type": "STORE_OFFICIAL",
-      "confidence": "medium",
-      "verified": true,
-      "verified_by": null,
-      "published_at": "2026-11-13T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:40:27.144538+09:00",
-      "last_verified_at": "2026-11-27T22:40:27.145172+09:00",
-      "collection_method": "HTML",
-      "status": "ENDED",
-      "conflict": false,
-      "conflict_fields": {},
-      "notes": [],
-      "lottery_id": "lot-d0380dbe2f03",
-      "merged_count": 1,
-      "deadline_countdown": null,
-      "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "ONE_PIECE",
@@ -4885,7 +5327,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様上限1BOXまで"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": "PACK_ONLY",
@@ -4898,9 +5355,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-13T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:41:27.113933+09:00",
-      "last_verified_at": "2026-11-27T22:41:27.114505+09:00",
+      "observed_at": "2026-11-28T22:07:37.905701+09:00",
+      "last_verified_at": "2026-11-28T22:07:37.906134+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4909,7 +5369,93 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
+    },
+    {
+      "tcg": "ONE_PIECE",
+      "product_name": "エクストラブースター ONE PIECE Heroines Edition vol.2",
+      "retailer": "CARD_LABO",
+      "event_type": "LOTTERY",
+      "product_id": "エクストラブースター-one-piece-heroines-edition-vol-2-eb-05",
+      "provisional_product": false,
+      "product_match": "exact",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ大阪日本橋店",
+      "store_id": "nipponbashi",
+      "prefecture": null,
+      "city": null,
+      "region": "JP",
+      "channel": "STORE",
+      "store_specific": true,
+      "online_only": null,
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-13",
+      "application_end_date": "2026-11-15",
+      "winner_announcement_date": "2026-11-16",
+      "purchase_start_date": "2026-11-18",
+      "purchase_end_date": "2026-11-24",
+      "shipping_period": null,
+      "release_date": "2026-10-31T00:00:00+09:00",
+      "retail_price": null,
+      "price_text": null,
+      "price_unit": "PACK",
+      "product_code": null,
+      "eligibility_text": null,
+      "membership_required": null,
+      "app_required": null,
+      "purchase_history_required": null,
+      "identity_verification_required": null,
+      "store_pickup_required": null,
+      "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様上限1BOXまで"
+        }
+      },
+      "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
+      "result_url": null,
+      "purchase_url": null,
+      "shrink_status": null,
+      "source_url": "https://www.c-labo.jp/shop/nipponbashi/blog/624550/",
+      "source_urls": [
+        "https://www.c-labo.jp/shop/nipponbashi/blog/624550/"
+      ],
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "verified": true,
+      "verified_by": null,
+      "published_at": "2026-11-13T00:00:00+09:00",
+      "observed_at": "2026-11-28T22:09:37.999368+09:00",
+      "last_verified_at": "2026-11-28T22:09:37.999797+09:00",
+      "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
+      "status": "ENDED",
+      "conflict": false,
+      "conflict_fields": {},
+      "notes": [],
+      "lottery_id": "lot-d0380dbe2f03",
+      "merged_count": 1,
+      "deadline_countdown": null,
+      "start_countdown": null,
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -4951,7 +5497,21 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "purchase_history_required": {
+          "value": true,
+          "period": null,
+          "amount": null
+        },
+        "membership_required": {
+          "value": true,
+          "type": null,
+          "deadline": null
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -4964,9 +5524,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": null,
-      "observed_at": "2026-11-27T22:21:25.966272+09:00",
-      "last_verified_at": "2026-11-27T22:21:25.967632+09:00",
+      "observed_at": "2026-11-28T21:48:36.920401+09:00",
+      "last_verified_at": "2026-11-28T21:48:36.921286+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -4975,41 +5538,42 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "ONE_PIECE",
-      "product_name": "ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2",
-      "retailer": "CARD_LABO",
+      "product_name": "ブースターパック 神の支配【OP-18】",
+      "retailer": "ONEPIECE_CARD_OFFICIAL_SHOP",
       "event_type": "LOTTERY",
-      "product_id": "エクストラブースター-one-piece-heroines-edition-vol-2-eb-05",
+      "product_id": "ブースターパック-神の支配-op-18",
       "provisional_product": false,
       "product_match": "exact",
-      "retailer_name": "カードラボ",
-      "store_name": "カードラボ名古屋駅前店",
-      "store_id": "nagoyaekimae",
+      "retailer_name": "ONE PIECEカードゲーム公式ショップ",
+      "store_name": null,
+      "store_id": null,
       "prefecture": null,
       "city": null,
       "region": "JP",
       "channel": "STORE",
-      "store_specific": true,
+      "store_specific": false,
       "online_only": null,
-      "application_start": null,
-      "application_end": null,
+      "application_start": "2026-11-11T10:00:00+09:00",
+      "application_end": "2026-11-15T23:59:00+09:00",
       "winner_announcement_at": null,
       "purchase_start": null,
       "purchase_end": null,
-      "application_start_date": "2026-11-14",
-      "application_end_date": "2026-11-16",
-      "winner_announcement_date": "2026-11-17",
-      "purchase_start_date": "2026-11-19",
-      "purchase_end_date": "2026-11-25",
+      "application_start_date": null,
+      "application_end_date": null,
+      "winner_announcement_date": null,
+      "purchase_start_date": "2026-11-21",
+      "purchase_end_date": "2026-11-27",
       "shipping_period": null,
-      "release_date": "2026-10-31T00:00:00+09:00",
+      "release_date": null,
       "retail_price": null,
       "price_text": null,
-      "price_unit": "PACK",
-      "product_code": null,
+      "price_unit": "UNKNOWN",
+      "product_code": "OP-18",
       "eligibility_text": null,
       "membership_required": null,
       "app_required": null,
@@ -5017,31 +5581,47 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "membership_required": {
+          "value": true,
+          "type": null,
+          "deadline": null
+        },
+        "application_limit": {
+          "value": "お一人様1回"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
-      "source_url": "https://www.c-labo.jp/shop/nagoyaekimae/blog/624574/",
+      "source_url": "https://bandainamco-am.co.jp/official_shop/onepiece-cardgame/news/important/20261110.html",
       "source_urls": [
-        "https://www.c-labo.jp/shop/nagoyaekimae/blog/624574/"
+        "https://bandainamco-am.co.jp/official_shop/onepiece-cardgame/news/important/20261110.html"
       ],
-      "source_type": "STORE_OFFICIAL",
-      "confidence": "medium",
+      "source_type": "RETAILER_OFFICIAL",
+      "confidence": "high",
       "verified": true,
       "verified_by": null,
-      "published_at": "2026-11-14T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:38:27.855636+09:00",
-      "last_verified_at": "2026-11-27T22:38:27.856246+09:00",
+      "published_at": "2026-11-11T00:00:00+09:00",
+      "observed_at": "2026-11-28T21:47:37.815138+09:00",
+      "last_verified_at": "2026-11-28T21:47:37.815660+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
       "notes": [],
-      "lottery_id": "lot-f5b6418f382f",
+      "lottery_id": "lot-23dbaf592ad6",
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "ONE_PIECE",
@@ -5083,7 +5663,22 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様24パック"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": "PACK_ONLY",
@@ -5096,9 +5691,12 @@
       "verified": true,
       "verified_by": null,
       "published_at": "2026-11-14T00:00:00+09:00",
-      "observed_at": "2026-11-27T22:39:27.450447+09:00",
-      "last_verified_at": "2026-11-27T22:39:27.451236+09:00",
+      "observed_at": "2026-11-28T22:04:38.058683+09:00",
+      "last_verified_at": "2026-11-28T22:04:38.059249+09:00",
       "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -5107,7 +5705,260 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
+    },
+    {
+      "tcg": "ONE_PIECE",
+      "product_name": "ONE PIECEカードゲーム エクストラブースター ONE PIECE Heroines Edition vol.2",
+      "retailer": "CARD_LABO",
+      "event_type": "LOTTERY",
+      "product_id": "エクストラブースター-one-piece-heroines-edition-vol-2-eb-05",
+      "provisional_product": false,
+      "product_match": "exact",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ名古屋駅前店",
+      "store_id": "nagoyaekimae",
+      "prefecture": null,
+      "city": null,
+      "region": "JP",
+      "channel": "STORE",
+      "store_specific": true,
+      "online_only": null,
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-14",
+      "application_end_date": "2026-11-16",
+      "winner_announcement_date": "2026-11-17",
+      "purchase_start_date": "2026-11-19",
+      "purchase_end_date": "2026-11-25",
+      "shipping_period": null,
+      "release_date": "2026-10-31T00:00:00+09:00",
+      "retail_price": null,
+      "price_text": null,
+      "price_unit": "PACK",
+      "product_code": null,
+      "eligibility_text": null,
+      "membership_required": null,
+      "app_required": null,
+      "purchase_history_required": null,
+      "identity_verification_required": null,
+      "store_pickup_required": null,
+      "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        }
+      },
+      "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
+      "result_url": null,
+      "purchase_url": null,
+      "shrink_status": null,
+      "source_url": "https://www.c-labo.jp/shop/nagoyaekimae/blog/624574/",
+      "source_urls": [
+        "https://www.c-labo.jp/shop/nagoyaekimae/blog/624574/"
+      ],
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "verified": true,
+      "verified_by": null,
+      "published_at": "2026-11-14T00:00:00+09:00",
+      "observed_at": "2026-11-28T22:06:38.055988+09:00",
+      "last_verified_at": "2026-11-28T22:06:38.056432+09:00",
+      "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
+      "status": "ENDED",
+      "conflict": false,
+      "conflict_fields": {},
+      "notes": [],
+      "lottery_id": "lot-f5b6418f382f",
+      "merged_count": 1,
+      "deadline_countdown": null,
+      "start_countdown": null,
+      "purchase_countdown": null,
+      "product_name_source": "master"
+    },
+    {
+      "tcg": "ONE_PIECE",
+      "product_name": "ONE PIECEカードゲーム ブースターパック 神の支配【OP-18】",
+      "retailer": "CARD_LABO",
+      "event_type": "LOTTERY",
+      "product_id": "ブースターパック-神の支配-op-18",
+      "provisional_product": false,
+      "product_match": "exact",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ販売買取センターNAMBA",
+      "store_id": "namba2nd",
+      "prefecture": null,
+      "city": null,
+      "region": "JP",
+      "channel": "STORE",
+      "store_specific": true,
+      "online_only": null,
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": null,
+      "application_start_date": "2026-11-16",
+      "application_end_date": "2026-11-18",
+      "winner_announcement_date": "2026-11-19",
+      "purchase_start_date": "2026-11-21",
+      "purchase_end_date": "2026-11-27",
+      "shipping_period": null,
+      "release_date": null,
+      "retail_price": 5760,
+      "price_text": null,
+      "price_unit": "BOX",
+      "product_code": "OP-18",
+      "eligibility_text": null,
+      "membership_required": null,
+      "app_required": null,
+      "purchase_history_required": null,
+      "identity_verification_required": null,
+      "store_pickup_required": null,
+      "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様 1BOX"
+        }
+      },
+      "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
+      "result_url": null,
+      "purchase_url": null,
+      "shrink_status": null,
+      "source_url": "https://www.c-labo.jp/shop/namba2nd/blog/624599/",
+      "source_urls": [
+        "https://www.c-labo.jp/shop/namba2nd/blog/624599/"
+      ],
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "verified": true,
+      "verified_by": null,
+      "published_at": "2026-11-16T00:00:00+09:00",
+      "observed_at": "2026-11-28T22:00:38.115676+09:00",
+      "last_verified_at": "2026-11-28T22:00:38.116182+09:00",
+      "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
+      "status": "ENDED",
+      "conflict": false,
+      "conflict_fields": {},
+      "notes": [],
+      "lottery_id": "lot-964a5dca8653",
+      "merged_count": 1,
+      "deadline_countdown": null,
+      "start_countdown": null,
+      "purchase_countdown": null,
+      "product_name_source": "master"
+    },
+    {
+      "tcg": "POKEMON",
+      "product_name": "ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」",
+      "retailer": "CARD_LABO",
+      "event_type": "LOTTERY",
+      "product_id": "pokemon-拡張パック-30th-celebration",
+      "provisional_product": false,
+      "product_match": "exact",
+      "retailer_name": "カードラボ",
+      "store_name": "カードラボ岐阜店",
+      "store_id": "gifu",
+      "prefecture": null,
+      "city": null,
+      "region": "JP",
+      "channel": "STORE",
+      "store_specific": true,
+      "online_only": null,
+      "application_start": null,
+      "application_end": null,
+      "winner_announcement_at": null,
+      "purchase_start": null,
+      "purchase_end": "2026-11-28T20:00:00+09:00",
+      "application_start_date": "2026-11-16",
+      "application_end_date": "2026-11-19",
+      "winner_announcement_date": "2026-11-20",
+      "purchase_start_date": "2026-11-21",
+      "purchase_end_date": null,
+      "shipping_period": null,
+      "release_date": "2026-09-16T00:00:00+09:00",
+      "retail_price": null,
+      "price_text": null,
+      "price_unit": "UNKNOWN",
+      "product_code": null,
+      "eligibility_text": null,
+      "membership_required": null,
+      "app_required": null,
+      "purchase_history_required": null,
+      "identity_verification_required": null,
+      "store_pickup_required": null,
+      "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "purchase_limit": {
+          "value": "お一人様 20パック"
+        }
+      },
+      "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [
+        "sns"
+      ],
+      "result_url": null,
+      "purchase_url": null,
+      "shrink_status": null,
+      "source_url": "https://www.c-labo.jp/shop/gifu/blog/624678/",
+      "source_urls": [
+        "https://www.c-labo.jp/shop/gifu/blog/624678/"
+      ],
+      "source_type": "STORE_OFFICIAL",
+      "confidence": "medium",
+      "verified": true,
+      "verified_by": null,
+      "published_at": "2026-11-16T00:00:00+09:00",
+      "observed_at": "2026-11-28T21:58:38.591214+09:00",
+      "last_verified_at": "2026-11-28T21:58:38.591709+09:00",
+      "collection_method": "HTML",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
+      "status": "ENDED",
+      "conflict": false,
+      "conflict_fields": {},
+      "notes": [],
+      "lottery_id": "lot-0b4087e4779c",
+      "merged_count": 1,
+      "deadline_countdown": null,
+      "start_countdown": null,
+      "purchase_countdown": null,
+      "product_name_source": "master"
     },
     {
       "tcg": "POKEMON",
@@ -5149,7 +6000,20 @@
       "identity_verification_required": null,
       "store_pickup_required": null,
       "payment_method_requirement": null,
+      "conditions": {
+        "x_follow_required": {
+          "value": true
+        },
+        "x_repost_required": {
+          "value": true
+        },
+        "application_limit": {
+          "value": "1人1回"
+        }
+      },
       "entry_url": null,
+      "external_form_url": null,
+      "application_methods": [],
       "result_url": null,
       "purchase_url": null,
       "shrink_status": null,
@@ -5165,6 +6029,9 @@
       "observed_at": "2026-11-14T00:04:06+09:00",
       "last_verified_at": "2026-11-14T00:04:06+09:00",
       "collection_method": "MANUAL_VERIFIED",
+      "cancelled": null,
+      "application_closed": null,
+      "cancel_text": null,
       "status": "ENDED",
       "conflict": false,
       "conflict_fields": {},
@@ -5176,7 +6043,8 @@
       "merged_count": 1,
       "deadline_countdown": null,
       "start_countdown": null,
-      "purchase_countdown": null
+      "purchase_countdown": null,
+      "product_name_source": "master"
     }
   ],
   "lottery_sources": [
@@ -5199,8 +6067,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.914012+09:00",
-      "last_success": "2026-11-27T22:20:25.458895+09:00",
+      "last_checked": "2026-11-28T21:46:35.427422+09:00",
+      "last_success": "2026-11-28T21:47:36.114602+09:00",
       "last_event_found": "2026-11-21T12:43:22.181703+09:00",
       "candidate_articles": 2,
       "accepted_lotteries": 0,
@@ -5298,8 +6166,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.918669+09:00",
-      "last_success": "2026-11-27T22:20:25.451125+09:00",
+      "last_checked": "2026-11-28T21:46:35.428145+09:00",
+      "last_success": "2026-11-28T21:47:36.124646+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -5374,7 +6242,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-11-27T22:19:24.910942+09:00",
+      "last_checked": "2026-11-28T21:46:35.426147+09:00",
       "last_success": null,
       "last_event_found": "2026-10-01T20:51:59.851413+09:00",
       "candidate_articles": 0,
@@ -5439,8 +6307,8 @@
       "state": "ACTIVE_LOTTERY",
       "state_label": "抽選あり",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.903361+09:00",
-      "last_success": "2026-11-27T22:20:26.244616+09:00",
+      "last_checked": "2026-11-28T21:46:35.422563+09:00",
+      "last_success": "2026-11-28T21:47:36.905340+09:00",
       "last_event_found": "2026-11-23T23:03:43.635105+09:00",
       "candidate_articles": 22,
       "accepted_lotteries": 21,
@@ -5454,7 +6322,7 @@
       "robots": null,
       "error": null,
       "health": "HEALTHY",
-      "active_lotteries": 16,
+      "active_lotteries": 14,
       "active_preorders": 0,
       "announcements": 0,
       "truncated": false,
@@ -5470,7 +6338,7 @@
           "http_status": 200,
           "final_url": "https://www.c-labo.jp/blog/filter/tcg:25/",
           "page_title": "トレーディングカード（トレカ / TCG）の取扱タイトル - カードラボ",
-          "html_length": 58231,
+          "html_length": 58229,
           "text_length": 3733,
           "links_discovered": 171,
           "product_links_discovered": 0,
@@ -5502,7 +6370,7 @@
           "http_status": 200,
           "final_url": "https://www.c-labo.jp/shop/namba2nd/blog/625078/",
           "page_title": "【ポケモンカード】 拡張パック「ハドウシーカー」 抽選販売のご案内 / 販売買取センターNAMBAの店舗ブログ - カードラボ",
-          "html_length": 56685,
+          "html_length": 56683,
           "text_length": 5784,
           "links_discovered": 317,
           "product_links_discovered": 0,
@@ -5529,22 +6397,6 @@
           "error": null
         },
         {
-          "url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/624714/",
-          "page_type": "news",
-          "http_status": 200,
-          "final_url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/624714/",
-          "page_title": "ポケモンカードゲーム MEGA 拡張パック『30th CELEBRATION』抽選販売のお知らせ / 名古屋大須店の店舗ブログ - カードラボ",
-          "html_length": 63882,
-          "text_length": 6454,
-          "links_discovered": 301,
-          "product_links_discovered": 0,
-          "candidate_blocks": 1,
-          "accepted": 1,
-          "rejected": 0,
-          "robots_status": "allowed",
-          "error": null
-        },
-        {
           "url": "https://www.c-labo.jp/shop/shizuoka/blog/624730/",
           "page_type": "news",
           "http_status": 200,
@@ -5561,12 +6413,28 @@
           "error": null
         },
         {
+          "url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/624714/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/nagoyaoosu/blog/624714/",
+          "page_title": "ポケモンカードゲーム MEGA 拡張パック『30th CELEBRATION』抽選販売のお知らせ / 名古屋大須店の店舗ブログ - カードラボ",
+          "html_length": 62684,
+          "text_length": 6388,
+          "links_discovered": 300,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
           "url": "https://www.c-labo.jp/shop/tsudanuma/blog/623682/",
           "page_type": "news",
           "http_status": 200,
           "final_url": "https://www.c-labo.jp/shop/tsudanuma/blog/623682/",
           "page_title": "【ワンピースカードゲーム】「エクストラブースター ONE PIECE Heroines Edition vol.2【EB-05】」抽選再販のお知らせ 1118 / 津田沼店の店舗ブログ - カードラボ",
-          "html_length": 53274,
+          "html_length": 53272,
           "text_length": 5983,
           "links_discovered": 283,
           "product_links_discovered": 0,
@@ -5582,41 +6450,9 @@
           "http_status": 200,
           "final_url": "https://www.c-labo.jp/shop/shizuoka/blog/624731/",
           "page_title": "【ポケモンカードゲーム】再販品 抽選販売について（20261118～） / 静岡店の店舗ブログ - カードラボ",
-          "html_length": 60612,
-          "text_length": 6256,
+          "html_length": 60608,
+          "text_length": 6254,
           "links_discovered": 291,
-          "product_links_discovered": 0,
-          "candidate_blocks": 1,
-          "accepted": 1,
-          "rejected": 0,
-          "robots_status": "allowed",
-          "error": null
-        },
-        {
-          "url": "https://www.c-labo.jp/shop/hamamatsu/blog/624706/",
-          "page_type": "news",
-          "http_status": 200,
-          "final_url": "https://www.c-labo.jp/shop/hamamatsu/blog/624706/",
-          "page_title": "【ワンピースカードゲーム】再入荷商品の抽選販売について / 浜松店の店舗ブログ - カードラボ",
-          "html_length": 64226,
-          "text_length": 6366,
-          "links_discovered": 301,
-          "product_links_discovered": 0,
-          "candidate_blocks": 1,
-          "accepted": 1,
-          "rejected": 0,
-          "robots_status": "allowed",
-          "error": null
-        },
-        {
-          "url": "https://www.c-labo.jp/shop/hamamatsu/blog/624708/",
-          "page_type": "news",
-          "http_status": 200,
-          "final_url": "https://www.c-labo.jp/shop/hamamatsu/blog/624708/",
-          "page_title": "【ポケモンカードゲーム】再入荷商品の抽選販売について / 浜松店の店舗ブログ - カードラボ",
-          "html_length": 64247,
-          "text_length": 6383,
-          "links_discovered": 301,
           "product_links_discovered": 0,
           "candidate_blocks": 1,
           "accepted": 1,
@@ -5630,7 +6466,7 @@
           "http_status": 200,
           "final_url": "https://www.c-labo.jp/shop/nagoyaekimae/blog/624695/",
           "page_title": "【ポケモンカードゲーム】「拡張パック 30th CELEBRATION」抽選販売のお知らせ / 名古屋駅前店の店舗ブログ - カードラボ",
-          "html_length": 61869,
+          "html_length": 61867,
           "text_length": 6280,
           "links_discovered": 299,
           "product_links_discovered": 0,
@@ -5641,14 +6477,14 @@
           "error": null
         },
         {
-          "url": "https://www.c-labo.jp/shop/tsudanuma/blog/624664/",
+          "url": "https://www.c-labo.jp/shop/hamamatsu/blog/624708/",
           "page_type": "news",
           "http_status": 200,
-          "final_url": "https://www.c-labo.jp/shop/tsudanuma/blog/624664/",
-          "page_title": "【ワンピースカードゲーム】「神の支配」抽選販売のお知らせ 1116 / 津田沼店の店舗ブログ - カードラボ",
-          "html_length": 52996,
-          "text_length": 5781,
-          "links_discovered": 283,
+          "final_url": "https://www.c-labo.jp/shop/hamamatsu/blog/624708/",
+          "page_title": "【ポケモンカードゲーム】再入荷商品の抽選販売について / 浜松店の店舗ブログ - カードラボ",
+          "html_length": 63026,
+          "text_length": 6292,
+          "links_discovered": 300,
           "product_links_discovered": 0,
           "candidate_blocks": 1,
           "accepted": 1,
@@ -5657,62 +6493,14 @@
           "error": null
         },
         {
-          "url": "https://www.c-labo.jp/shop/toyohashi/blog/624660/",
+          "url": "https://www.c-labo.jp/shop/hamamatsu/blog/624706/",
           "page_type": "news",
           "http_status": 200,
-          "final_url": "https://www.c-labo.jp/shop/toyohashi/blog/624660/",
-          "page_title": "【ワンピースカードゲーム】再販商品の抽選販売について / 豊橋店の店舗ブログ - カードラボ",
-          "html_length": 64115,
-          "text_length": 6513,
-          "links_discovered": 321,
-          "product_links_discovered": 0,
-          "candidate_blocks": 1,
-          "accepted": 1,
-          "rejected": 0,
-          "robots_status": "allowed",
-          "error": null
-        },
-        {
-          "url": "https://www.c-labo.jp/shop/gifu/blog/624678/",
-          "page_type": "news",
-          "http_status": 200,
-          "final_url": "https://www.c-labo.jp/shop/gifu/blog/624678/",
-          "page_title": "『 ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」』抽選販売のお知らせ / 岐阜店の店舗ブログ - カードラボ",
-          "html_length": 59059,
-          "text_length": 5694,
-          "links_discovered": 290,
-          "product_links_discovered": 0,
-          "candidate_blocks": 1,
-          "accepted": 1,
-          "rejected": 0,
-          "robots_status": "allowed",
-          "error": null
-        },
-        {
-          "url": "https://www.c-labo.jp/shop/niigata/blog/624590/",
-          "page_type": "news",
-          "http_status": 200,
-          "final_url": "https://www.c-labo.jp/shop/niigata/blog/624590/",
-          "page_title": "【再発売】『ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」』再販分の抽選販売のお知らせ / 新潟店の店舗ブログ - カードラボ",
-          "html_length": 56387,
-          "text_length": 6042,
-          "links_discovered": 295,
-          "product_links_discovered": 0,
-          "candidate_blocks": 1,
-          "accepted": 1,
-          "rejected": 0,
-          "robots_status": "allowed",
-          "error": null
-        },
-        {
-          "url": "https://www.c-labo.jp/shop/namba2nd/blog/624599/",
-          "page_type": "news",
-          "http_status": 200,
-          "final_url": "https://www.c-labo.jp/shop/namba2nd/blog/624599/",
-          "page_title": "【11月21日発売】『ONE PIECEカードゲーム ブースターパック 神の支配【OP-18】』抽選販売のお知らせ / 販売買取センターNAMBAの店舗ブログ - カードラボ",
-          "html_length": 52342,
-          "text_length": 5454,
-          "links_discovered": 282,
+          "final_url": "https://www.c-labo.jp/shop/hamamatsu/blog/624706/",
+          "page_title": "【ワンピースカードゲーム】再入荷商品の抽選販売について / 浜松店の店舗ブログ - カードラボ",
+          "html_length": 63005,
+          "text_length": 6275,
+          "links_discovered": 300,
           "product_links_discovered": 0,
           "candidate_blocks": 1,
           "accepted": 1,
@@ -5737,46 +6525,94 @@
           "error": null
         },
         {
+          "url": "https://www.c-labo.jp/shop/gifu/blog/624678/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/gifu/blog/624678/",
+          "page_title": "『 ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」』抽選販売のお知らせ / 岐阜店の店舗ブログ - カードラボ",
+          "html_length": 59057,
+          "text_length": 5694,
+          "links_discovered": 290,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/toyohashi/blog/624660/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/toyohashi/blog/624660/",
+          "page_title": "【ワンピースカードゲーム】再販商品の抽選販売について / 豊橋店の店舗ブログ - カードラボ",
+          "html_length": 64115,
+          "text_length": 6513,
+          "links_discovered": 321,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/namba2nd/blog/624599/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/namba2nd/blog/624599/",
+          "page_title": "【11月21日発売】『ONE PIECEカードゲーム ブースターパック 神の支配【OP-18】』抽選販売のお知らせ / 販売買取センターNAMBAの店舗ブログ - カードラボ",
+          "html_length": 52342,
+          "text_length": 5454,
+          "links_discovered": 282,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/niigata/blog/624590/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/niigata/blog/624590/",
+          "page_title": "【再発売】『ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」』再販分の抽選販売のお知らせ / 新潟店の店舗ブログ - カードラボ",
+          "html_length": 56385,
+          "text_length": 6042,
+          "links_discovered": 295,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/tsudanuma/blog/624664/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/tsudanuma/blog/624664/",
+          "page_title": "【ワンピースカードゲーム】「神の支配」抽選販売のお知らせ 1116 / 津田沼店の店舗ブログ - カードラボ",
+          "html_length": 52994,
+          "text_length": 5781,
+          "links_discovered": 283,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
           "url": "https://www.c-labo.jp/shop/sapporo/blog/624595/",
           "page_type": "news",
           "http_status": 200,
           "final_url": "https://www.c-labo.jp/shop/sapporo/blog/624595/",
           "page_title": "【ポケモンカードゲーム】「拡張パック 30th CELEBRATION」抽選販売のお知らせ / 札幌店の店舗ブログ - カードラボ",
-          "html_length": 62796,
+          "html_length": 62794,
           "text_length": 6262,
           "links_discovered": 298,
-          "product_links_discovered": 0,
-          "candidate_blocks": 1,
-          "accepted": 1,
-          "rejected": 0,
-          "robots_status": "allowed",
-          "error": null
-        },
-        {
-          "url": "https://www.c-labo.jp/shop/himeji/blog/624586/",
-          "page_type": "news",
-          "http_status": 200,
-          "final_url": "https://www.c-labo.jp/shop/himeji/blog/624586/",
-          "page_title": "『ONE PIECE Heroines Edition vol.2【EB-05】』再販抽選販売のお知らせ / 姫路店の店舗ブログ - カードラボ",
-          "html_length": 63652,
-          "text_length": 6318,
-          "links_discovered": 321,
-          "product_links_discovered": 0,
-          "candidate_blocks": 1,
-          "accepted": 1,
-          "rejected": 0,
-          "robots_status": "allowed",
-          "error": null
-        },
-        {
-          "url": "https://www.c-labo.jp/shop/nagoyaekimae/blog/624574/",
-          "page_type": "news",
-          "http_status": 200,
-          "final_url": "https://www.c-labo.jp/shop/nagoyaekimae/blog/624574/",
-          "page_title": "ワンピースカードゲーム『エクストラブースター ONE PIECE Heroines Edition vol.2』抽選販売のお知らせ / 名古屋駅前店の店舗ブログ - カードラボ",
-          "html_length": 63941,
-          "text_length": 6397,
-          "links_discovered": 321,
           "product_links_discovered": 0,
           "candidate_blocks": 1,
           "accepted": 1,
@@ -5801,13 +6637,29 @@
           "error": null
         },
         {
-          "url": "https://www.c-labo.jp/shop/nipponbashi/blog/624550/",
+          "url": "https://www.c-labo.jp/shop/himeji/blog/624586/",
           "page_type": "news",
           "http_status": 200,
-          "final_url": "https://www.c-labo.jp/shop/nipponbashi/blog/624550/",
-          "page_title": "ONE PIECEカードゲーム『ONE PIECE Heroines Edition vol.2』再抽選販売のお知らせ / 大阪日本橋店の店舗ブログ - カードラボ",
-          "html_length": 63739,
-          "text_length": 6355,
+          "final_url": "https://www.c-labo.jp/shop/himeji/blog/624586/",
+          "page_title": "『ONE PIECE Heroines Edition vol.2【EB-05】』再販抽選販売のお知らせ / 姫路店の店舗ブログ - カードラボ",
+          "html_length": 63646,
+          "text_length": 6312,
+          "links_discovered": 321,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/nagoyaekimae/blog/624574/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/nagoyaekimae/blog/624574/",
+          "page_title": "ワンピースカードゲーム『エクストラブースター ONE PIECE Heroines Edition vol.2』抽選販売のお知らせ / 名古屋駅前店の店舗ブログ - カードラボ",
+          "html_length": 63941,
+          "text_length": 6397,
           "links_discovered": 321,
           "product_links_discovered": 0,
           "candidate_blocks": 1,
@@ -5838,9 +6690,25 @@
           "http_status": 200,
           "final_url": "https://www.c-labo.jp/shop/nipponbashi/blog/624555/",
           "page_title": "『ポケモンカードゲーム MEGA 拡張パック ハドウシーカー』抽選予約のお知らせ / 大阪日本橋店の店舗ブログ - カードラボ",
-          "html_length": 63382,
+          "html_length": 63380,
           "text_length": 5977,
           "links_discovered": 301,
+          "product_links_discovered": 0,
+          "candidate_blocks": 1,
+          "accepted": 1,
+          "rejected": 0,
+          "robots_status": "allowed",
+          "error": null
+        },
+        {
+          "url": "https://www.c-labo.jp/shop/nipponbashi/blog/624550/",
+          "page_type": "news",
+          "http_status": 200,
+          "final_url": "https://www.c-labo.jp/shop/nipponbashi/blog/624550/",
+          "page_title": "ONE PIECEカードゲーム『ONE PIECE Heroines Edition vol.2』再抽選販売のお知らせ / 大阪日本橋店の店舗ブログ - カードラボ",
+          "html_length": 63739,
+          "text_length": 6355,
+          "links_discovered": 321,
           "product_links_discovered": 0,
           "candidate_blocks": 1,
           "accepted": 1,
@@ -5876,8 +6744,8 @@
       "state": "ACTIVE_LOTTERY",
       "state_label": "抽選あり",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.904873+09:00",
-      "last_success": "2026-11-27T22:19:26.445504+09:00",
+      "last_checked": "2026-11-28T21:46:35.423233+09:00",
+      "last_success": "2026-11-28T21:46:37.982133+09:00",
       "last_event_found": "2026-11-27T22:42:27.365407+09:00",
       "candidate_articles": 10,
       "accepted_lotteries": 11,
@@ -6099,12 +6967,12 @@
       "collection_method": "HTML",
       "adapter": "kids_republic_lottery",
       "verified": true,
-      "note": "キャンペーン情報に、アプリ抽選の告知（応募受付期間・当選発表日・購入期間）が静的 HTML のテキストで載る。応募はキッズリパブリックのアプリ（iAEON ID 連携）で公式ドメインの応募ページは無い（entry_url は空）。本州・四国の直営おもちゃ売場。一覧にはポケカ・ONE PIECE 以外も混ざるのでタイトルで絞る。robots.txt は 404 で制限の記載なし（確認日 2026-10-29）。利用規約の本文は読んだ記録（確認日・URL）がなく、許可も禁止も未確認（読んだら、この記述と取得可否を見直す）",
+      "note": "キャンペーン情報に、アプリ抽選の告知（応募受付期間・当選発表日・購入期間）が静的 HTML のテキストで載る。応募はキッズリパブリックのアプリ（iAEON ID 連携）で公式ドメインの応募ページは無い（entry_url は空）。本州・四国の直営おもちゃ売場。一覧にはポケカ・ONE PIECE 以外も混ざるのでタイトルで絞る。robots.txt は 404 で制限の記載なし（確認日 2026-10-29）。サイト利用規約（https://www.kidsrepublic.jp/terms、確認日 2026-11-26）: 運営はイオンリテール株式会社。第7条が私的使用を超える複製を禁じ、第3条が承認の無い営利目的の利用を禁じる。自動取得を名指しで禁じる条項は無い。応募条件の原文は出力しない（構造化した値だけ）。取得そのものを続けてよいかは人の判断待ち",
       "policy_excluded": null,
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-11-27T22:19:24.906356+09:00",
+      "last_checked": "2026-11-28T21:46:35.423950+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -6168,8 +7036,8 @@
       "state": "ACTIVE_LOTTERY",
       "state_label": "抽選あり",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.912287+09:00",
-      "last_success": "2026-11-27T22:19:26.025098+09:00",
+      "last_checked": "2026-11-28T21:46:35.426711+09:00",
+      "last_success": "2026-11-28T21:46:36.875790+09:00",
       "last_event_found": "2026-11-23T23:03:43.635105+09:00",
       "candidate_articles": 3,
       "accepted_lotteries": 3,
@@ -6198,7 +7066,7 @@
           "http_status": 200,
           "final_url": "https://pokemon.fukufukutoreka.com/lottery",
           "page_title": "抽選販売 一覧 | ポケカ通販 福福トレカ",
-          "html_length": 55527,
+          "html_length": 88555,
           "text_length": 938,
           "links_discovered": 63,
           "product_links_discovered": 0,
@@ -6246,7 +7114,7 @@
           "http_status": 200,
           "final_url": "https://pokemon.fukufukutoreka.com/lottery/27",
           "page_title": "抽選販売 詳細 | ポケカ通販 福福トレカ",
-          "html_length": 134772,
+          "html_length": 36527,
           "text_length": 699,
           "links_discovered": 54,
           "product_links_discovered": 0,
@@ -6283,8 +7151,8 @@
       "state": "ACTIVE_LOTTERY",
       "state_label": "抽選あり",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.906861+09:00",
-      "last_success": "2026-11-27T22:19:25.986525+09:00",
+      "last_checked": "2026-11-28T21:46:35.424711+09:00",
+      "last_success": "2026-11-28T21:46:36.778897+09:00",
       "last_event_found": "2026-11-26T15:20:32.140102+09:00",
       "candidate_articles": 3,
       "accepted_lotteries": 3,
@@ -6399,7 +7267,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-11-27T22:19:24.920245+09:00",
+      "last_checked": "2026-11-28T21:46:35.428643+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -6464,7 +7332,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-11-27T22:19:24.921298+09:00",
+      "last_checked": "2026-11-28T21:46:35.429302+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -6529,7 +7397,7 @@
       "state": "SOURCE_BLOCKED",
       "state_label": "アクセス拒否",
       "reachable": false,
-      "last_checked": "2026-11-27T22:19:24.924016+09:00",
+      "last_checked": "2026-11-28T21:46:35.429938+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -6594,7 +7462,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-11-27T22:19:24.925823+09:00",
+      "last_checked": "2026-11-28T21:46:35.430505+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -6657,8 +7525,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.927128+09:00",
-      "last_success": "2026-11-27T22:19:26.297051+09:00",
+      "last_checked": "2026-11-28T21:46:35.431179+09:00",
+      "last_success": "2026-11-28T21:46:36.680594+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -6722,7 +7590,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-11-27T22:19:24.928439+09:00",
+      "last_checked": "2026-11-28T21:46:35.431964+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -6785,7 +7653,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-11-27T22:19:24.930025+09:00",
+      "last_checked": "2026-11-28T21:46:35.432533+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -6848,8 +7716,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.932128+09:00",
-      "last_success": "2026-11-27T22:19:25.112734+09:00",
+      "last_checked": "2026-11-28T21:46:35.433228+09:00",
+      "last_success": "2026-11-28T21:46:35.970064+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -6913,7 +7781,7 @@
       "state": "SOURCE_UNREACHABLE",
       "state_label": "接続できない",
       "reachable": false,
-      "last_checked": "2026-11-27T22:19:24.934031+09:00",
+      "last_checked": "2026-11-28T21:46:35.433856+09:00",
       "last_success": null,
       "last_event_found": null,
       "candidate_articles": 0,
@@ -6976,8 +7844,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.935402+09:00",
-      "last_success": "2026-11-27T22:19:25.461692+09:00",
+      "last_checked": "2026-11-28T21:46:35.434515+09:00",
+      "last_success": "2026-11-28T21:46:36.224797+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -7004,9 +7872,9 @@
           "http_status": 200,
           "final_url": "https://7net.omni7.jp/top",
           "page_title": "セブンネットショッピング｜本・雑誌・CD・DVD 通販",
-          "html_length": 81801,
-          "text_length": 1353,
-          "links_discovered": 82,
+          "html_length": 82854,
+          "text_length": 1400,
+          "links_discovered": 83,
           "product_links_discovered": 0,
           "candidate_blocks": 0,
           "accepted": 0,
@@ -7041,8 +7909,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.918875+09:00",
-      "last_success": "2026-11-27T22:20:25.856535+09:00",
+      "last_checked": "2026-11-28T21:46:35.428330+09:00",
+      "last_success": "2026-11-28T21:47:36.634640+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -7121,8 +7989,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.919243+09:00",
-      "last_success": "2026-11-27T22:19:26.912501+09:00",
+      "last_checked": "2026-11-28T21:46:35.428449+09:00",
+      "last_success": "2026-11-28T21:46:37.608748+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -7184,11 +8052,11 @@
       "verified": true,
       "note": "公式ショップのトップの「重要なお知らせ」に事前抽選の告知が載り、詳細の表に申込受付期間（年つき。終了側の年・月は省略されるので開始から補う）と抽選販売日（購入期間として読む）がテキストである。/news/ の一覧は 404 なのでトップから辿る。応募は会員制の購入権チケットのページ（parks2.bandainamco-am.co.jp。取得しない）で、OFFICIAL_DOMAINS に無いので entry_url は空。全店共通の1本の告知。robots.txt は User-agent: * と Sitemap だけで禁止の行が無い（確認日 2026-11-26）。サイトポリシー（https://bandainamco-am.co.jp/attention/、確認日 2026-11-26）は私的使用を超える複製を禁じる（本文は保存・転載しない）。自動取得を禁じる条項は見当たらないが、許可の明記でもない",
       "policy_excluded": null,
-      "state": "ACTIVE_LOTTERY",
-      "state_label": "抽選あり",
+      "state": "NO_ACTIVE_LOTTERY",
+      "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.917130+09:00",
-      "last_success": "2026-11-27T22:19:25.973532+09:00",
+      "last_checked": "2026-11-28T21:46:35.427553+09:00",
+      "last_success": "2026-11-28T21:46:36.801900+09:00",
       "last_event_found": "2026-11-26T19:26:55.986441+09:00",
       "candidate_articles": 1,
       "accepted_lotteries": 1,
@@ -7201,7 +8069,7 @@
       "robots": null,
       "error": null,
       "health": "HEALTHY",
-      "active_lotteries": 1,
+      "active_lotteries": 0,
       "active_preorders": 0,
       "announcements": 0,
       "truncated": false,
@@ -7271,15 +8139,15 @@
       "state": "ACTIVE_LOTTERY",
       "state_label": "抽選あり",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.908190+09:00",
-      "last_success": "2026-11-27T22:20:25.865385+09:00",
+      "last_checked": "2026-11-28T21:46:35.425477+09:00",
+      "last_success": "2026-11-28T21:47:36.615040+09:00",
       "last_event_found": "2026-11-26T19:26:55.986441+09:00",
       "candidate_articles": 3,
       "accepted_lotteries": 3,
       "rejected": 27,
       "rejection_reasons": {
-        "not_lottery_candidate": 24,
-        "result_announcement_only": 3
+        "result_announcement_only": 5,
+        "not_lottery_candidate": 22
       },
       "blocked": false,
       "unreachable": false,
@@ -7302,8 +8170,8 @@
           "http_status": 200,
           "final_url": "https://cardbox.online/news/shop_list/",
           "page_title": "店舗ニュース一覧｜カードボックス‐トレカ販売買取のカードショップCARD BOX",
-          "html_length": 46633,
-          "text_length": 3793,
+          "html_length": 46700,
+          "text_length": 3860,
           "links_discovered": 74,
           "product_links_discovered": 0,
           "candidate_blocks": 0,
@@ -7318,8 +8186,8 @@
           "http_status": 200,
           "final_url": "https://cardbox.online/news/shop_list/?&page=2",
           "page_title": "店舗ニュース一覧｜カードボックス‐トレカ販売買取のカードショップCARD BOX",
-          "html_length": 46944,
-          "text_length": 3936,
+          "html_length": 47128,
+          "text_length": 3962,
           "links_discovered": 78,
           "product_links_discovered": 0,
           "candidate_blocks": 0,
@@ -7404,8 +8272,8 @@
       "state": "SOURCE_NOT_MONITORED",
       "state_label": "未監視（未実装）",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.937615+09:00",
-      "last_success": "2026-11-27T22:19:25.993468+09:00",
+      "last_checked": "2026-11-28T21:46:35.435111+09:00",
+      "last_success": "2026-11-28T21:46:36.688883+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -7469,8 +8337,8 @@
       "state": "ACTIVE_LOTTERY",
       "state_label": "抽選あり",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.938904+09:00",
-      "last_success": "2026-11-27T22:19:26.218814+09:00",
+      "last_checked": "2026-11-28T21:46:35.435858+09:00",
+      "last_success": "2026-11-28T21:46:37.027599+09:00",
       "last_event_found": "2026-11-26T19:26:55.986441+09:00",
       "candidate_articles": 2,
       "accepted_lotteries": 2,
@@ -7535,8 +8403,8 @@
       "state": "NO_ACTIVE_LOTTERY",
       "state_label": "現在の抽選なし",
       "reachable": true,
-      "last_checked": "2026-11-27T22:19:24.920015+09:00",
-      "last_success": "2026-11-27T22:20:25.387492+09:00",
+      "last_checked": "2026-11-28T21:46:35.428548+09:00",
+      "last_success": "2026-11-28T21:47:36.690858+09:00",
       "last_event_found": null,
       "candidate_articles": 0,
       "accepted_lotteries": 0,
@@ -7563,7 +8431,7 @@
           "http_status": 200,
           "final_url": "https://p-bandai.jp/global_newpc.html",
           "page_title": "【プレミアムバンダイ】INTERNATIONAL SHIPPING AVAILABLE｜PREMIUM BANDAI",
-          "html_length": 10523,
+          "html_length": 10526,
           "text_length": 783,
           "links_discovered": 12,
           "product_links_discovered": 0,
@@ -7579,7 +8447,7 @@
           "http_status": 200,
           "final_url": "https://p-bandai.jp/global_newpc.html",
           "page_title": "【プレミアムバンダイ】INTERNATIONAL SHIPPING AVAILABLE｜PREMIUM BANDAI",
-          "html_length": 10523,
+          "html_length": 10524,
           "text_length": 783,
           "links_discovered": 12,
           "product_links_discovered": 0,
@@ -7605,8 +8473,8 @@
     "blocked_sources": 5,
     "unreachable_sources": 4,
     "not_implemented_sources": 11,
-    "sources_with_active_lottery": 7,
-    "lottery_events_found": 29,
+    "sources_with_active_lottery": 6,
+    "lottery_events_found": 26,
     "source_classes": {
       "WORKING": 12,
       "IMPLEMENTED_BUT_BLOCKED": 2,
@@ -7619,7 +8487,7 @@
       "parsed_events": 44,
       "review_required": 2,
       "rejected": 215,
-      "active_lotteries": 29,
+      "active_lotteries": 26,
       "sources_with_gap": 11,
       "sources_truncated": 0,
       "detail_candidates": 42,
@@ -7748,46 +8616,58 @@
   },
   "lottery_notifications": [
     {
-      "lottery_id": "lot-0b4087e4779c",
+      "lottery_id": "lot-d7f8c0b8ef58",
       "milestone": "purchase_deadline_24h",
       "label": "購入期限24時間前",
-      "fires_at": "2026-11-27T20:00:00+09:00",
-      "tcg": "POKEMON",
-      "product_name": "ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」",
+      "fires_at": "2026-11-28T21:00:00+09:00",
+      "tcg": "ONE_PIECE",
+      "product_name": "【ワンピースカードゲーム】「神の支配",
       "retailer": "カードラボ",
       "entry_url": null,
-      "source_url": "https://www.c-labo.jp/shop/gifu/blog/624678/",
-      "message": "ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」（カードラボ・カードラボ岐阜店） 購入期限24時間前"
+      "source_url": "https://www.c-labo.jp/shop/tsudanuma/blog/624664/",
+      "message": "【ワンピースカードゲーム】「神の支配（カードラボ・カードラボ津田沼店） 購入期限24時間前"
     },
     {
-      "lottery_id": "lot-64952d7e929e",
-      "milestone": "lottery_open",
-      "label": "抽選開始",
-      "fires_at": "2026-11-27T00:00:00+09:00",
-      "tcg": "ONE_PIECE",
-      "product_name": "プレミアムカードコレクション -熊本県スペシャル-",
-      "retailer": "ONE PIECE 麦わらストア",
+      "lottery_id": "lot-3a3120caff7f",
+      "milestone": "winner_announcement",
+      "label": "当選発表",
+      "fires_at": "2026-11-28T10:00:00+09:00",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンMEGA 30th CELEBRATIONカードセット",
+      "retailer": "CARD BOX（加盟店）",
       "entry_url": null,
-      "source_url": "https://www.mugiwara-store.com/news/3169/",
-      "message": "プレミアムカードコレクション -熊本県スペシャル-（ONE PIECE 麦わらストア） 抽選開始"
+      "source_url": "https://cardbox.online/news/detail/?id=1864",
+      "message": "ポケモンMEGA 30th CELEBRATIONカードセット（CARD BOX（加盟店）・北国書林辰口店） 当選発表"
+    },
+    {
+      "lottery_id": "lot-167315095511",
+      "milestone": "winner_announcement",
+      "label": "当選発表",
+      "fires_at": "2026-11-28T10:00:00+09:00",
+      "tcg": "POKEMON",
+      "product_name": "ストームエメラルダ",
+      "retailer": "CARD BOX（加盟店）",
+      "entry_url": null,
+      "source_url": "https://cardbox.online/news/detail/?id=1863",
+      "message": "ストームエメラルダ（CARD BOX（加盟店）・北国書林辰口店） 当選発表"
     }
   ],
   "lottery_rejection_reasons": {
     "announcement_too_old_or_undated": 1,
     "schedule_not_in_text": 1,
-    "not_lottery_candidate": 122,
+    "not_lottery_candidate": 120,
     "tournament_or_event": 88,
     "no_lottery_sale_context": 1,
-    "result_announcement_only": 3
+    "result_announcement_only": 5
   },
   "lottery_manual_errors": [],
-  "lottery_evaluated_at": "2026-11-27T22:42:27.365407+09:00",
+  "lottery_evaluated_at": "2026-11-28T22:09:38.055416+09:00",
   "collection_metrics": {
     "mode": "PARALLEL_CROSS_DOMAIN",
     "global_cap": 12,
     "per_domain_concurrency": 1,
-    "total_seconds": 1382.5,
-    "slowest_source_seconds": 1382.4,
+    "total_seconds": 1382.7,
+    "slowest_source_seconds": 1382.6,
     "sources_by_health": {
       "HEALTHY": 10,
       "ZERO_EVENTS": 13,

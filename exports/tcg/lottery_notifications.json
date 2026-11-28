@@ -42,32 +42,47 @@
     "lot-167315095511:deadline_24h": "suppressed:2026-11-26T19:26:55.986441+09:00",
     "lot-167315095511:deadline_6h": "2026-11-26T19:26:55.986441+09:00",
     "lot-0b4087e4779c:purchase_deadline_24h": "2026-11-27T22:42:27.365407+09:00",
-    "lot-64952d7e929e:lottery_open": "2026-11-27T22:42:27.365407+09:00"
+    "lot-64952d7e929e:lottery_open": "2026-11-27T22:42:27.365407+09:00",
+    "lot-d7f8c0b8ef58:purchase_deadline_24h": "2026-11-28T22:09:38.055416+09:00",
+    "lot-3a3120caff7f:winner_announcement": "2026-11-28T22:09:38.055416+09:00",
+    "lot-167315095511:winner_announcement": "2026-11-28T22:09:38.055416+09:00"
   },
   "candidates": [
     {
-      "lottery_id": "lot-0b4087e4779c",
+      "lottery_id": "lot-d7f8c0b8ef58",
       "milestone": "purchase_deadline_24h",
       "label": "購入期限24時間前",
-      "fires_at": "2026-11-27T20:00:00+09:00",
-      "tcg": "POKEMON",
-      "product_name": "ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」",
+      "fires_at": "2026-11-28T21:00:00+09:00",
+      "tcg": "ONE_PIECE",
+      "product_name": "【ワンピースカードゲーム】「神の支配",
       "retailer": "カードラボ",
       "entry_url": null,
-      "source_url": "https://www.c-labo.jp/shop/gifu/blog/624678/",
-      "message": "ポケモンカードゲーム MEGA 拡張パック「30th CELEBRATION」（カードラボ・カードラボ岐阜店） 購入期限24時間前"
+      "source_url": "https://www.c-labo.jp/shop/tsudanuma/blog/624664/",
+      "message": "【ワンピースカードゲーム】「神の支配（カードラボ・カードラボ津田沼店） 購入期限24時間前"
     },
     {
-      "lottery_id": "lot-64952d7e929e",
-      "milestone": "lottery_open",
-      "label": "抽選開始",
-      "fires_at": "2026-11-27T00:00:00+09:00",
-      "tcg": "ONE_PIECE",
-      "product_name": "プレミアムカードコレクション -熊本県スペシャル-",
-      "retailer": "ONE PIECE 麦わらストア",
+      "lottery_id": "lot-3a3120caff7f",
+      "milestone": "winner_announcement",
+      "label": "当選発表",
+      "fires_at": "2026-11-28T10:00:00+09:00",
+      "tcg": "POKEMON",
+      "product_name": "ポケモンMEGA 30th CELEBRATIONカードセット",
+      "retailer": "CARD BOX（加盟店）",
       "entry_url": null,
-      "source_url": "https://www.mugiwara-store.com/news/3169/",
-      "message": "プレミアムカードコレクション -熊本県スペシャル-（ONE PIECE 麦わらストア） 抽選開始"
+      "source_url": "https://cardbox.online/news/detail/?id=1864",
+      "message": "ポケモンMEGA 30th CELEBRATIONカードセット（CARD BOX（加盟店）・北国書林辰口店） 当選発表"
+    },
+    {
+      "lottery_id": "lot-167315095511",
+      "milestone": "winner_announcement",
+      "label": "当選発表",
+      "fires_at": "2026-11-28T10:00:00+09:00",
+      "tcg": "POKEMON",
+      "product_name": "ストームエメラルダ",
+      "retailer": "CARD BOX（加盟店）",
+      "entry_url": null,
+      "source_url": "https://cardbox.online/news/detail/?id=1863",
+      "message": "ストームエメラルダ（CARD BOX（加盟店）・北国書林辰口店） 当選発表"
     }
   ]
 }
